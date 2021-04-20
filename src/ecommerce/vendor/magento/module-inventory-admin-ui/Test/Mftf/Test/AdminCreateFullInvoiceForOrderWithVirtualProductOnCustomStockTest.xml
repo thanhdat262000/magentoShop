@@ -8,7 +8,7 @@
 
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
-    <test name="AdminCreateFullInvoiceForOrderWithVirtualProductOnCustomStockTest" deprecated="Use AdminCreateFullInvoiceForOrderWithVirtualProductOnOneCustomStockTest instead">
+    <test name="AdminCreateFullInvoiceForOrderWithVirtualProductOnCustomStockTest">
         <annotations>
             <stories value="Admin user create Full Invoice for order with Virtual product on Custom stock from Main Website"/>
             <title value="Admin user create Full Invoice for order with Virtual product on Custom stock from Main Website"/>
@@ -17,9 +17,6 @@
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="DEPRECATED">Use AdminCreateFullInvoiceForOrderWithVirtualProductOnOneCustomStockTest instead</issueId>
-            </skip>
         </annotations>
 
         <before>
@@ -37,7 +34,7 @@
                 <requiredEntity createDataKey="customStock"/>
                 <requiredEntity createDataKey="customSource2"/>
             </createData>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="amOnTheStockGridPage"/>
             <waitForPageLoad time="20" stepKey="waitForStockGridPageLoad"/>
             <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByKeyword">
@@ -85,7 +82,7 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableCreatedCustomSource2">
                 <argument name="sourceCode" value="$$customSource2.source[source_code]$$"/>
             </actionGroup>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <deleteData createDataKey="virtualProduct" stepKey="deleteProduct"/>

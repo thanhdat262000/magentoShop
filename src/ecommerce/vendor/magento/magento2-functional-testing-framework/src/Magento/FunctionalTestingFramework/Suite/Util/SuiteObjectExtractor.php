@@ -6,8 +6,6 @@
 namespace Magento\FunctionalTestingFramework\Suite\Util;
 
 use Exception;
-use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
-use Magento\FunctionalTestingFramework\Exceptions\GenerationErrorCollector;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
@@ -15,19 +13,9 @@ use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
 use Magento\FunctionalTestingFramework\Test\Util\BaseObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestHookObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\TestObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
+use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\Validation\NameValidationUtil;
-use Magento\FunctionalTestingFramework\Util\ModulePathExtractor;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
-/**
- * Class SuiteObjectExtractor
- * @package Magento\FunctionalTestingFramework\Suite\Util
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class SuiteObjectExtractor extends BaseObjectExtractor
 {
     const SUITE_ROOT_TAG = 'suites';
@@ -35,6 +23,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
     const INCLUDE_TAG_NAME = 'include';
     const EXCLUDE_TAG_NAME = 'exclude';
     const MODULE_TAG_NAME = 'module';
+    const MODULE_TAG_FILE_ATTRIBUTE = 'file';
     const TEST_TAG_NAME = 'test';
     const GROUP_TAG_NAME = 'group';
 
@@ -58,11 +47,10 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuiteData
      * @return array
-     * @throws FastFailException
+     * @throws XmlException
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function parseSuiteDataIntoObjects($parsedSuiteData)
     {
@@ -81,81 +69,28 @@ class SuiteObjectExtractor extends BaseObjectExtractor
 
             $this->validateSuiteName($parsedSuite);
 
-            try {
-                // extract include and exclude references
-                $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
-                $groupTestsToExclude = $parsedSuite[self::EXCLUDE_TAG_NAME] ?? [];
+            //extract include and exclude references
+            $groupTestsToInclude = $parsedSuite[self::INCLUDE_TAG_NAME] ?? [];
+            $groupTestsToExclude = $parsedSuite[self::EXCLUDE_TAG_NAME] ?? [];
 
-                // resolve references as test objects
-                // continue if failed in include
-                $include = $this->extractTestObjectsFromSuiteRef($groupTestsToInclude);
-                $includeTests = $include['objects'] ?? [];
-                $stepError = $include['status'] ?? 0;
-                $includeMessage = '';
-                if ($stepError != 0) {
-                    $includeMessage = "ERROR: " . strval($stepError) . " test(s) not included for suite "
-                        . $parsedSuite[self::NAME];
-                }
+            //resolve references as test objects
+            $includeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToInclude);
+            $excludeTests = $this->extractTestObjectsFromSuiteRef($groupTestsToExclude);
 
-                // it's ok if failed in exclude
-                $exclude = $this->extractTestObjectsFromSuiteRef($groupTestsToExclude);
-                $excludeTests = $exclude['objects'] ?? [];
+            // parse any object hooks
+            $suiteHooks = $this->parseObjectHooks($parsedSuite);
 
-                // parse any object hooks
-                $suiteHooks = $this->parseObjectHooks($parsedSuite);
+            //throw an exception if suite is empty
+            if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)) {
+                throw new XmlException(sprintf(
+                    "Suites must not be empty. Suite: \"%s\"",
+                    $parsedSuite[self::NAME]
+                ));
+            };
 
-                // log error if suite is empty
-                if ($this->isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)) {
-                    LoggingUtil::getInstance()->getLogger(self::class)->error(
-                        "Unable to parse suite " . $parsedSuite[self::NAME] . ". Suite must not be empty."
-                    );
-
-                    GenerationErrorHandler::getInstance()->addError(
-                        'suite',
-                        $parsedSuite[self::NAME],
-                        self::class . ': ' . 'Suite must not be empty.'
-                    );
-
-                    continue;
-                };
-
-                // add all test if include tests is completely empty
-                if (empty($includeTests)) {
-                    $includeTests = TestObjectHandler::getInstance()->getAllObjects();
-                }
-
-                if (!empty($includeMessage)) {
-                    LoggingUtil::getInstance()->getLogger(self::class)->error($includeMessage);
-                    if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                        && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                        print($includeMessage);
-                    }
-
-                    GenerationErrorHandler::getInstance()->addError(
-                        'suite',
-                        $parsedSuite[self::NAME],
-                        self::class . ': ' . $includeMessage,
-                        true
-                    );
-                }
-            } catch (FastFailException $e) {
-                throw $e;
-            } catch (\Exception $e) {
-                LoggingUtil::getInstance()->getLogger(self::class)->error(
-                    "Unable to parse suite " . $parsedSuite[self::NAME] . "\n" . $e->getMessage()
-                );
-                if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                    && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                    print("ERROR: Unable to parse suite " . $parsedSuite[self::NAME] . "\n");
-                }
-
-                GenerationErrorHandler::getInstance()->addError(
-                    'suite',
-                    $parsedSuite[self::NAME],
-                    self::class . ': Unable to parse suite ' . $e->getMessage()
-                );
-
-                continue;
+            // add all test if include tests is completely empty
+            if (empty($includeTests)) {
+                $includeTests = TestObjectHandler::getInstance()->getAllObjects();
             }
 
             // create the new suite object
@@ -177,14 +112,14 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $parsedSuite
      * @return void
-     * @throws FastFailException
+     * @throws XmlException
      */
     private function validateSuiteName($parsedSuite)
     {
         //check if name used is using special char or the "default" reserved name
         NameValidationUtil::validateName($parsedSuite[self::NAME], 'Suite');
         if ($parsedSuite[self::NAME] == 'default') {
-            throw new FastFailException("A Suite can not have the name \"default\"");
+            throw new XmlException("A Suite can not have the name \"default\"");
         }
 
         $suiteName = $parsedSuite[self::NAME];
@@ -197,7 +132,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
             }
             $exceptionmessage = "\"Suite names and Group names can not have the same value. \t\n" .
                 "Suite: \"{$suiteName}\" also exists as a group annotation in: \n{$testGroupConflictsFileNames}";
-            throw new FastFailException($exceptionmessage);
+            throw new XmlException($exceptionmessage);
         }
     }
 
@@ -207,32 +142,24 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      * @param array $parsedSuite
      * @return array
      * @throws XmlException
-     * @throws TestReferenceException
      */
     private function parseObjectHooks($parsedSuite)
     {
         $suiteHooks = [];
 
         if (array_key_exists(TestObjectExtractor::TEST_BEFORE_HOOK, $parsedSuite)) {
-            $hookObject = $this->testHookObjectExtractor->extractHook(
+            $suiteHooks[TestObjectExtractor::TEST_BEFORE_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $parsedSuite[self::NAME],
                 TestObjectExtractor::TEST_BEFORE_HOOK,
                 $parsedSuite[TestObjectExtractor::TEST_BEFORE_HOOK]
             );
-            // Validate hook actions
-            $hookObject->getActions();
-            $suiteHooks[TestObjectExtractor::TEST_BEFORE_HOOK] = $hookObject;
         }
-
         if (array_key_exists(TestObjectExtractor::TEST_AFTER_HOOK, $parsedSuite)) {
-            $hookObject = $this->testHookObjectExtractor->extractHook(
+            $suiteHooks[TestObjectExtractor::TEST_AFTER_HOOK] = $this->testHookObjectExtractor->extractHook(
                 $parsedSuite[self::NAME],
                 TestObjectExtractor::TEST_AFTER_HOOK,
                 $parsedSuite[TestObjectExtractor::TEST_AFTER_HOOK]
             );
-            // Validate hook actions
-            $hookObject->getActions();
-            $suiteHooks[TestObjectExtractor::TEST_AFTER_HOOK] = $hookObject;
         }
 
         if (count($suiteHooks) == 1) {
@@ -254,6 +181,7 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      */
     private function isSuiteEmpty($suiteHooks, $includeTests, $excludeTests)
     {
+
         $noHooks = count($suiteHooks) == 0 ||
             (
                 empty($suiteHooks['before']->getActions()) &&
@@ -272,74 +200,115 @@ class SuiteObjectExtractor extends BaseObjectExtractor
      *
      * @param array $suiteReferences
      * @return array
-     * @throws FastFailException
+     * @throws \Exception
      */
     private function extractTestObjectsFromSuiteRef($suiteReferences)
     {
         $testObjectList = [];
-        $errCount = 0;
         foreach ($suiteReferences as $suiteRefName => $suiteRefData) {
             if (!is_array($suiteRefData)) {
                 continue;
             }
 
-            try {
-                switch ($suiteRefData[self::NODE_NAME]) {
-                    case self::TEST_TAG_NAME:
-                        $testObject = TestObjectHandler::getInstance()->getObject($suiteRefData[self::NAME]);
-                        $testObjectList[$testObject->getName()] = $testObject;
-                        break;
-                    case self::GROUP_TAG_NAME:
-                        $testObjectList = $testObjectList +
-                            TestObjectHandler::getInstance()->getTestsByGroup($suiteRefData[self::NAME]);
-                        break;
-                    case self::MODULE_TAG_NAME:
-                        $testObjectList = array_merge(
-                            $testObjectList,
-                            $this->getTestsByModuleName($suiteRefData[self::NAME])
-                        );
-                        break;
-                }
-            } catch (FastFailException $e) {
-                throw $e;
-            } catch (\Exception $e) {
-                $errCount++;
-                LoggingUtil::getInstance()->getLogger(self::class)->error(
-                    "Unable to find <"
-                    . $suiteRefData[self::NODE_NAME]
-                    . "> reference "
-                    . $suiteRefData[self::NAME]
-                    . " for suite "
-                    . $suiteRefData[self::NAME]
-                );
+            switch ($suiteRefData[self::NODE_NAME]) {
+                case self::TEST_TAG_NAME:
+                    $testObject = TestObjectHandler::getInstance()->getObject($suiteRefData[self::NAME]);
+                    $testObjectList[$testObject->getName()] = $testObject;
+                    break;
+                case self::GROUP_TAG_NAME:
+                    $testObjectList = $testObjectList +
+                        TestObjectHandler::getInstance()->getTestsByGroup($suiteRefData[self::NAME]);
+                    break;
+                case self::MODULE_TAG_NAME:
+                    $testObjectList = array_merge($testObjectList, $this->extractModuleAndFiles(
+                        $suiteRefData[self::NAME],
+                        $suiteRefData[self::MODULE_TAG_FILE_ATTRIBUTE] ?? null
+                    ));
+                    break;
             }
         }
 
-        return [
-            'status' => $errCount,
-            'objects' => $testObjectList
-        ];
+        return $testObjectList;
     }
 
     /**
-     * Return all test objects for a module
+     * Takes an array of modules/files and resolves to an array of test objects.
      *
      * @param string $moduleName
+     * @param string $moduleFilePath
+     * @return array
+     * @throws \Exception
+     */
+    private function extractModuleAndFiles($moduleName, $moduleFilePath)
+    {
+        if (empty($moduleFilePath)) {
+            return $this->resolveModulePathTestNames($moduleName);
+        }
+
+        return $this->resolveFilePathTestNames($moduleFilePath, $moduleName);
+    }
+
+    /**
+     * Takes a filepath (and optionally a module name) and resolves to a test object.
+     *
+     * @param string $filename
+     * @param null   $moduleName
      * @return TestObject[]
      * @throws Exception
      */
-    private function getTestsByModuleName($moduleName)
+    private function resolveFilePathTestNames($filename, $moduleName = null)
+    {
+        $filepath = $filename;
+        if (!strstr($filepath, DIRECTORY_SEPARATOR)) {
+            $filepath = FilePathFormatter::format(TESTS_MODULE_PATH) .
+                $moduleName .
+                DIRECTORY_SEPARATOR .
+                'Test' .
+                DIRECTORY_SEPARATOR .
+                $filename;
+        }
+
+        if (!file_exists($filepath)) {
+            throw new Exception("Could not find file ${filename}");
+        }
+
+        $testObjects = [];
+        $xml = simplexml_load_file($filepath);
+        for ($i = 0; $i < $xml->count(); $i++) {
+            $testName = (string)$xml->test[$i]->attributes()->name;
+            $testObjects[$testName] = TestObjectHandler::getInstance()->getObject($testName);
+        }
+
+        return $testObjects;
+    }
+
+    /**
+     * Takes a single module name and resolves to an array of tests contained within specified module.
+     *
+     * @param string $moduleName
+     * @return array
+     * @throws \Exception
+     */
+    private function resolveModulePathTestNames($moduleName)
     {
         $testObjects = [];
-        $pathExtractor = new ModulePathExtractor();
-        $allTestObjects = TestObjectHandler::getInstance()->getAllObjects();
-        foreach ($allTestObjects as $testName => $testObject) {
-            /** @var TestObject $testObject */
-            $filename = $testObject->getFilename();
-            if ($pathExtractor->extractModuleName($filename) === $moduleName) {
-                $testObjects[$testName] = $testObject;
+        $xmlFiles = glob(
+            FilePathFormatter::format(TESTS_MODULE_PATH) .
+            $moduleName .
+            DIRECTORY_SEPARATOR .
+            'Test' .
+            DIRECTORY_SEPARATOR .
+            '*.xml'
+        );
+
+        foreach ($xmlFiles as $xmlFile) {
+            $testObjs = $this->resolveFilePathTestNames($xmlFile);
+
+            foreach ($testObjs as $testObj) {
+                $testObjects[$testObj->getName()] = $testObj;
             }
         }
+
         return $testObjects;
     }
 }

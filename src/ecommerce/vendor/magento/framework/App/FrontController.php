@@ -5,15 +5,14 @@
  */
 namespace Magento\Framework\App;
 
-use Magento\Framework\App\Action\AbstractAction;
-use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Request\InvalidRequestException;
-use Magento\Framework\App\Request\ValidatorInterface as RequestValidator;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\App\Request\ValidatorInterface as RequestValidator;
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Message\ManagerInterface as MessageManager;
+use Magento\Framework\App\Action\AbstractAction;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\Request\Http as HttpRequest;
 
 /**
  * Front controller responsible for dispatching application requests
@@ -53,32 +52,18 @@ class FrontController implements FrontControllerInterface
     private $validatedRequest = false;
 
     /**
-     * @var State
-     */
-    private $appState;
-
-    /**
-     * @var AreaList
-     */
-    private $areaList;
-
-    /**
      * @param RouterListInterface $routerList
      * @param ResponseInterface $response
      * @param RequestValidator|null $requestValidator
      * @param MessageManager|null $messageManager
      * @param LoggerInterface|null $logger
-     * @param State $appState
-     * @param AreaList $areaList
      */
     public function __construct(
         RouterListInterface $routerList,
         ResponseInterface $response,
         ?RequestValidator $requestValidator = null,
         ?MessageManager $messageManager = null,
-        ?LoggerInterface $logger = null,
-        ?State $appState = null,
-        ?AreaList $areaList = null
+        ?LoggerInterface $logger = null
     ) {
         $this->_routerList = $routerList;
         $this->response = $response;
@@ -88,10 +73,6 @@ class FrontController implements FrontControllerInterface
             ?? ObjectManager::getInstance()->get(MessageManager::class);
         $this->logger = $logger
             ?? ObjectManager::getInstance()->get(LoggerInterface::class);
-        $this->appState = $appState
-            ?? ObjectManager::getInstance()->get(State::class);
-        $this->areaList = $areaList
-            ?? ObjectManager::getInstance()->get(AreaList::class);
     }
 
     /**
@@ -100,7 +81,6 @@ class FrontController implements FrontControllerInterface
      * @param RequestInterface|HttpRequest $request
      * @return ResponseInterface|ResultInterface
      * @throws \LogicException
-     * @throws LocalizedException
      */
     public function dispatch(RequestInterface $request)
     {
@@ -140,10 +120,9 @@ class FrontController implements FrontControllerInterface
      *
      * @param HttpRequest $request
      * @param ActionInterface $actionInstance
-     * @return ResponseInterface|ResultInterface
-     * @throws LocalizedException
-     *
      * @throws NotFoundException
+     *
+     * @return ResponseInterface|ResultInterface
      */
     private function processRequest(
         HttpRequest $request,
@@ -168,9 +147,6 @@ class FrontController implements FrontControllerInterface
                     ["exception" => $exception]
                 );
                 $result = $exception->getReplaceResult();
-                $area = $this->areaList->getArea($this->appState->getAreaCode());
-                $area->load(Area::PART_DESIGN);
-                $area->load(Area::PART_TRANSLATE);
                 if ($messages = $exception->getMessages()) {
                     foreach ($messages as $message) {
                         $this->messages->addErrorMessage($message);

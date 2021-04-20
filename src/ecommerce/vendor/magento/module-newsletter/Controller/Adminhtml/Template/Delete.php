@@ -4,15 +4,9 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Newsletter\Controller\Adminhtml\Template;
 
-use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Newsletter\Controller\Adminhtml\Template;
-
-class Delete extends Template implements HttpGetActionInterface, HttpPostActionInterface
+class Delete extends \Magento\Newsletter\Controller\Adminhtml\Template
 {
     /**
      * Delete newsletter Template
@@ -32,7 +26,7 @@ class Delete extends Template implements HttpGetActionInterface, HttpPostActionI
                 $this->messageManager->addSuccess(__('The newsletter template has been deleted.'));
                 $this->_getSession()->setFormData(false);
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
+                $this->messageManager->addError($e->getMessage());
             } catch (\Exception $e) {
                 $this->messageManager->addException($e, __('We can\'t delete this template right now.'));
             }

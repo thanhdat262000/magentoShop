@@ -3,34 +3,21 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 /**
  * Test class for \Magento\Framework\Session\Config
  */
-
 namespace Magento\Framework\Session\Test\Unit;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\Session\Config;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use Magento\Framework\Validator\ValidatorInterface;
-use Magento\Framework\ValidatorFactory;
-use Magento\Store\Model\ScopeInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use \Magento\Framework\Session\Config;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ConfigTest extends TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ObjectManager
+     * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
     protected $helper;
 
@@ -40,37 +27,37 @@ class ConfigTest extends TestCase
     protected $config;
 
     /**
-     * @var ScopeConfigInterface|MockObject
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $configMock;
 
     /**
-     * @var ValidatorFactory|MockObject
+     * @var \Magento\Framework\ValidatorFactory | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $validatorFactoryMock;
 
     /**
-     * @var ValidatorInterface|MockObject
+     * @var \Magento\Framework\Validator\ValidatorInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $validatorMock;
 
     /**
-     * @var Http|MockObject
+     * @var \Magento\Framework\App\Request\Http | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $requestMock;
 
     /**
-     * @var Filesystem|MockObject
+     * @var \Magento\Framework\Filesystem | \PHPUnit_Framework_MockObject_MockObject
      */
     protected $filesystem;
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->helper = new ObjectManager($this);
+        $this->helper = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
 
-        $this->validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $this->validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $this->validatorMock->expects($this->any())
             ->method('isValid')
             ->willReturn(true);
@@ -122,15 +109,14 @@ class ConfigTest extends TestCase
             ['use_trans_sid', 'getUseTransSid', true],
             ['hash_function', 'getHashFunction', 'md5'],
             ['hash_bits_per_character', 'getHashBitsPerCharacter', 5],
-            ['url_rewriter_tags', 'getUrlRewriterTags', 'a=href'],
-            ['cookie_samesite', 'getCookieSameSite', 'Lax']
+            ['url_rewriter_tags', 'getUrlRewriterTags', 'a=href']
         ];
     }
 
     public function testGetOptions()
     {
         $this->getModel($this->validatorMock);
-        $appStateProperty = new \ReflectionProperty(Config::class, 'options');
+        $appStateProperty = new \ReflectionProperty(\Magento\Framework\Session\Config::class, 'options');
         $appStateProperty->setAccessible(true);
         $original = $appStateProperty->getValue($this->config);
         $valueForTest = ['test' => 'test2'];
@@ -165,17 +151,12 @@ class ConfigTest extends TestCase
 
     public function testSettingInvalidCookieLifetime()
     {
-        $returnMap =
-            [
-                ['foobar_bogus', false],
-                ['Lax', true]
-            ];
-        $validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $validatorMock->expects($this->any())
             ->method('isValid')
-            ->willReturnMap($returnMap);
+            ->willReturn(false);
         $this->getModel($validatorMock);
         $preVal = $this->config->getCookieLifetime();
         $this->config->setCookieLifetime('foobar_bogus');
@@ -184,17 +165,12 @@ class ConfigTest extends TestCase
 
     public function testSettingInvalidCookieLifetime2()
     {
-        $returnMap =
-            [
-                [-1, false],
-                ['Lax', true]
-            ];
-        $validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $validatorMock->expects($this->any())
             ->method('isValid')
-            ->willReturnMap($returnMap);
+            ->willReturn(false);
         $this->getModel($validatorMock);
         $preVal = $this->config->getCookieLifetime();
         $this->config->setCookieLifetime(-1);
@@ -239,17 +215,12 @@ class ConfigTest extends TestCase
 
     public function testSettingInvalidCookieDomain()
     {
-        $returnMap =
-            [
-                [24, false],
-                ['Lax', true]
-            ];
-        $validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $validatorMock->expects($this->any())
             ->method('isValid')
-            ->willReturnMap($returnMap);
+            ->willReturn(false);
         $this->getModel($validatorMock);
         $preVal = $this->config->getCookieDomain();
         $this->config->setCookieDomain(24);
@@ -258,17 +229,12 @@ class ConfigTest extends TestCase
 
     public function testSettingInvalidCookieDomain2()
     {
-        $returnMap =
-            [
-                ['D:\\WINDOWS\\System32\\drivers\\etc\\hosts', false],
-                ['Lax', true]
-            ];
-        $validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $validatorMock->expects($this->any())
             ->method('isValid')
-            ->willReturnMap($returnMap);
+            ->willReturn(false);
         $this->getModel($validatorMock);
         $preVal = $this->config->getCookieDomain();
         $this->config->setCookieDomain('D:\\WINDOWS\\System32\\drivers\\etc\\hosts');
@@ -352,33 +318,25 @@ class ConfigTest extends TestCase
      */
     public function testConstructor($isValidSame, $isValid, $expected)
     {
-        $validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $validatorMock = $this->getMockBuilder(\Magento\Framework\Validator\ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-
+            ->getMock();
         if ($isValidSame) {
-            $returnMap =
-                [
-                    [7200, $isValid],
-                    ['/', $isValid],
-                    ['init.host', $isValid],
-                    ['Lax', true]
-                ];
             $validatorMock->expects($this->any())
                 ->method('isValid')
-                ->willReturnMap($returnMap);
+                ->willReturn($isValid);
         } else {
-            $returnMap =
-                [
-                    [3600, true],
-                    [7200, false],
-                    ['/', true],
-                    ['init.host', true],
-                    ['Lax', true]
-                ];
-            $validatorMock->expects($this->any())
-                ->method('isValid')
-                ->willReturnMap($returnMap);
+            for ($x = 0; $x<6; $x++) {
+                if ($x % 2 == 0) {
+                    $validatorMock->expects($this->at($x))
+                        ->method('isValid')
+                        ->willReturn(false);
+                } else {
+                    $validatorMock->expects($this->at($x))
+                        ->method('isValid')
+                        ->willReturn(true);
+                }
+            }
         }
 
         $this->getModel($validatorMock);
@@ -402,8 +360,7 @@ class ConfigTest extends TestCase
                     'session.cookie_domain' => 'init.host',
                     'session.cookie_httponly' => false,
                     'session.cookie_secure' => false,
-                    'session.save_handler' => 'files',
-                    'session.cookie_samesite' => 'Lax'
+                    'session.save_handler' => 'files'
                 ],
             ],
             'all invalid' => [
@@ -413,8 +370,7 @@ class ConfigTest extends TestCase
                     'session.cache_limiter' => 'private_no_expire',
                     'session.cookie_httponly' => false,
                     'session.cookie_secure' => false,
-                    'session.save_handler' => 'files',
-                    'session.cookie_samesite' => 'Lax'
+                    'session.save_handler' => 'files'
                 ],
             ],
             'invalid_valid' => [
@@ -427,8 +383,7 @@ class ConfigTest extends TestCase
                     'session.cookie_domain' => 'init.host',
                     'session.cookie_httponly' => false,
                     'session.cookie_secure' => false,
-                    'session.save_handler' => 'files',
-                    'session.cookie_samesite' => 'Lax'
+                    'session.save_handler' => 'files'
                 ],
             ],
         ];
@@ -443,19 +398,19 @@ class ConfigTest extends TestCase
     protected function getModel($validator)
     {
         $this->requestMock = $this->createPartialMock(
-            Http::class,
+            \Magento\Framework\App\Request\Http::class,
             ['getBasePath', 'isSecure', 'getHttpHost']
         );
-        $this->requestMock->expects($this->atLeastOnce())->method('getBasePath')->willReturn('/');
+        $this->requestMock->expects($this->atLeastOnce())->method('getBasePath')->will($this->returnValue('/'));
         $this->requestMock->expects(
             $this->atLeastOnce()
         )->method(
             'getHttpHost'
-        )->willReturn(
-            'init.host'
+        )->will(
+            $this->returnValue('init.host')
         );
 
-        $this->validatorFactoryMock = $this->getMockBuilder(ValidatorFactory::class)
+        $this->validatorFactoryMock = $this->getMockBuilder(\Magento\Framework\ValidatorFactory::class)
             ->setMethods(['setInstanceName', 'create'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -466,21 +421,21 @@ class ConfigTest extends TestCase
             ->method('create')
             ->willReturn($validator);
 
-        $this->configMock = $this->getMockForAbstractClass(ScopeConfigInterface::class);
+        $this->configMock = $this->createMock(\Magento\Framework\App\Config\ScopeConfigInterface::class);
         $getValueReturnMap = [
             ['test_web/test_cookie/test_cookie_lifetime', 'store', null, 7200],
             ['web/cookie/cookie_path', 'store', null, ''],
         ];
         $this->configMock->method('getValue')
-            ->willReturnMap($getValueReturnMap);
+            ->will($this->returnValueMap($getValueReturnMap));
 
-        $filesystemMock = $this->createMock(Filesystem::class);
-        $dirMock = $this->getMockForAbstractClass(WriteInterface::class);
+        $filesystemMock = $this->createMock(\Magento\Framework\Filesystem::class);
+        $dirMock = $this->getMockForAbstractClass(\Magento\Framework\Filesystem\Directory\WriteInterface::class);
         $filesystemMock->expects($this->any())
             ->method('getDirectoryWrite')
-            ->willReturn($dirMock);
+            ->will($this->returnValue($dirMock));
 
-        $deploymentConfigMock = $this->createMock(DeploymentConfig::class);
+        $deploymentConfigMock = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
         $deploymentConfigMock
             ->method('get')
             ->willReturnCallback(function ($configPath) {
@@ -495,11 +450,11 @@ class ConfigTest extends TestCase
             });
 
         $this->config = $this->helper->getObject(
-            Config::class,
+            \Magento\Framework\Session\Config::class,
             [
                 'scopeConfig' => $this->configMock,
                 'validatorFactory' => $this->validatorFactoryMock,
-                'scopeType' => ScopeInterface::SCOPE_STORE,
+                'scopeType' => \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                 'cacheLimiter' => 'files',
                 'lifetimePath' => 'test_web/test_cookie/test_cookie_lifetime',
                 'request' => $this->requestMock,

@@ -209,7 +209,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid
         } elseif ($this->getRequest()->getParam('website')) {
             $storeIds = $this->_storeManager->getWebsite($this->getRequest()->getParam('website'))->getStoreIds();
         } elseif ($this->getRequest()->getParam('group')) {
-            $storeIds = $this->_storeManager->getGroup(
+            $storeIds = $storeIds = $this->_storeManager->getGroup(
                 $this->getRequest()->getParam('group')
             )->getStoreIds();
         }

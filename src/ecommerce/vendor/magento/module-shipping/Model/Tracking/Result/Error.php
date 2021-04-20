@@ -5,18 +5,9 @@
  */
 namespace Magento\Shipping\Model\Tracking\Result;
 
-use Magento\Framework\Phrase;
-
-/**
- * Class to get data from error shipping tracking result
- */
-class Error extends AbstractResult
+class Error extends \Magento\Shipping\Model\Tracking\Result\AbstractResult
 {
-    public const STATUS_TYPE = 1;
-
     /**
-     * Gets all data of shipping tracking result
-     *
      * @return array
      */
     public function getAllData()
@@ -25,9 +16,7 @@ class Error extends AbstractResult
     }
 
     /**
-     * Gets error message
-     *
-     * @return Phrase
+     * @return \Magento\Framework\Phrase
      */
     public function getErrorMessage()
     {

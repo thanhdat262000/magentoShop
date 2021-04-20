@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Backend\App\Router implements \Magento\Framew
     public function match(\Magento\Framework\App\RequestInterface $request)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'match');
-        return $pluginInfo ? $this->___callPlugins('match', func_get_args(), $pluginInfo) : parent::match($request);
+        if (!$pluginInfo) {
+            return parent::match($request);
+        } else {
+            return $this->___callPlugins('match', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,6 +33,10 @@ class Interceptor extends \Magento\Backend\App\Router implements \Magento\Framew
     public function getActionClassName($module, $actionPath)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActionClassName');
-        return $pluginInfo ? $this->___callPlugins('getActionClassName', func_get_args(), $pluginInfo) : parent::getActionClassName($module, $actionPath);
+        if (!$pluginInfo) {
+            return parent::getActionClassName($module, $actionPath);
+        } else {
+            return $this->___callPlugins('getActionClassName', func_get_args(), $pluginInfo);
+        }
     }
 }

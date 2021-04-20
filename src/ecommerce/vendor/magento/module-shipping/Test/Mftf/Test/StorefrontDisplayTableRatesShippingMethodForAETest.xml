@@ -24,11 +24,9 @@
                 <requiredEntity createDataKey="createCategory"/>
             </createData>
             <createData entity="Simple_US_Customer_ArmedForcesEurope" stepKey="createCustomer"/>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <!-- Customer Log Out -->
-            <actionGroup ref="StorefrontCustomerLogoutActionGroup" stepKey="customerLogout"/>
             <deleteData createDataKey="createProduct" stepKey="deleteProduct"/>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
@@ -41,7 +39,7 @@
                 <argument name="status" value="0"/>
             </actionGroup>
             <actionGroup ref="AdminSaveConfigActionGroup" stepKey="saveSystemConfig"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
         <!--Admin Configuration: enable Table Rates and import CSV file with the rates-->
         <actionGroup ref="AdminOpenShippingMethodsConfigPageActionGroup" stepKey="openShippingMethodConfigPage"/>
@@ -56,7 +54,7 @@
             <argument name="Customer" value="$$createCustomer$$"/>
         </actionGroup>
         <!--Add the created product to the shopping cart-->
-        <actionGroup ref="AddSimpleProductToCartActionGroup" stepKey="addProductToCart">
+        <actionGroup ref="AddSimpleProductToCart" stepKey="addProductToCart">
             <argument name="product" value="$$createProduct$$"/>
         </actionGroup>
         <!--Proceed to Checkout from the mini cart-->
@@ -69,7 +67,8 @@
             <argument name="shippingMethodName" value="Best Way"/>
         </actionGroup>
         <!--Proceed to Review and Payments section-->
-        <actionGroup ref="StorefrontCheckoutClickNextOnShippingStepActionGroup" stepKey="clickToSaveShippingInfo"/>
+        <click selector="{{CheckoutShippingSection.next}}" stepKey="clickToSaveShippingInfo"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskAfterClickNext"/>
         <waitForPageLoad stepKey="waitForReviewAndPaymentsPageIsLoaded"/>
         <!--Place order and assert the message of success-->
         <actionGroup ref="ClickPlaceOrderActionGroup" stepKey="placeOrderProductSuccessful"/>

@@ -9,7 +9,6 @@ namespace Vertex\Tax\Model;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\Data\AddressInterface as QuoteAddressInterface;
 
 /**
@@ -48,78 +47,50 @@ class AddressDeterminer
     }
 
     /**
-     * Determine whether to use the provided address or the customer's default billing
+     * Determine the address to use for Tax Calculation
      *
-     * @param AddressInterface|QuoteAddressInterface|null $address
+     * @param AddressInterface|QuoteAddressInterface $address
      * @param int|null $customerId
-     * @return AddressInterface|QuoteAddressInterface|null
+     * @param bool $virtual Whether or not the cart or order is virtual
+     * @return AddressInterface|null
      */
-    public function determineAdministrativeDestination($address = null, ?int $customerId = null)
+    public function determineAddress($address = null, $customerId = null, $virtual = false)
     {
         if ($address !== null && !($address instanceof AddressInterface || $address instanceof QuoteAddressInterface)) {
             throw new \InvalidArgumentException(
                 '$address must be a Customer or Quote Address.  Is: '
-                // gettype() used for debug output and not for checking types
-                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 . (is_object($address) ? get_class($address) : gettype($address))
             );
         }
 
-        if (!$this->isIncompleteAddress($address)) {
+        if (!$customerId || !$this->isIncompleteAddress($address)) {
             return $address;
         }
 
-        if (!$customerId) {
-            // The address is incomplete and there's nothing to fall back to
-            return null;
+        // Default to billing address for virtual orders unless there is not one
+        if ($virtual) {
+            $billing = $this->getDefaultBilling($customerId);
+            return $billing !== null ? $billing : $this->getDefaultShipping($customerId);
         }
 
-        return $this->getDefaultBilling($customerId);
-    }
-
-    /**
-     * Determine whether to use the provided address or the customer's default shipping
-     *
-     * @param AddressInterface|QuoteAddressInterface|null $address
-     * @param int|null $customerId
-     * @return AddressInterface|QuoteAddressInterface|null
-     */
-    public function determineDestination($address = null, ?int $customerId = null)
-    {
-        if ($address !== null && !($address instanceof AddressInterface || $address instanceof QuoteAddressInterface)) {
-            throw new \InvalidArgumentException(
-                '$address must be a Customer or Quote Address.  Is: '
-                // gettype() used for debug output and not for checking types
-                // phpcs:ignore Magento2.Functions.DiscouragedFunction
-                . (is_object($address) ? get_class($address) : gettype($address))
-            );
-        }
-
-        if (!$this->isIncompleteAddress($address)) {
-            return $address;
-        }
-
-        if (!$customerId) {
-            // The address is incomplete and there's nothing to fall back to
-            return null;
-        }
-
-        return $this->getDefaultShipping($customerId);
+        // Default to shipping address for physical orders unless there is not one
+        $shipping = $this->getDefaultShipping($customerId);
+        return $shipping !== null ? $shipping : $this->getDefaultBilling($customerId);
     }
 
     /**
      * Retrieve the default billing address for a customer
+     *
+     * @param int $customerId
+     * @return AddressInterface|null
      */
-    private function getDefaultBilling(int $customerId): ?AddressInterface
+    private function getDefaultBilling($customerId)
     {
         try {
             $customer = $this->customerRepository->getById($customerId);
             $addressId = $customer->getDefaultBilling();
 
             return $this->addressRepository->getById($addressId);
-        } catch (NoSuchEntityException $e) {
-            /* No-op */
-            return null;
         } catch (\Exception $e) {
             $this->logger->warning($e);
             return null;
@@ -128,17 +99,17 @@ class AddressDeterminer
 
     /**
      * Retrieve the default shipping address for a customer
+     *
+     * @param int $customerId
+     * @return AddressInterface|null
      */
-    private function getDefaultShipping(int $customerId): ?AddressInterface
+    private function getDefaultShipping($customerId)
     {
         try {
             $customer = $this->customerRepository->getById($customerId);
             $addressId = $customer->getDefaultShipping();
 
             return $this->addressRepository->getById($addressId);
-        } catch (NoSuchEntityException $e) {
-            /* No-op */
-            return null;
         } catch (\Exception $e) {
             $this->logger->warning($e);
             return null;
@@ -152,12 +123,8 @@ class AddressDeterminer
      */
     private function isIncompleteAddress($address): bool
     {
-        if ($address instanceof AddressInterface) {
-            return $this->incompleteAddressDeterminer->isIncompleteAddress($address);
-        }
-        if ($address instanceof QuoteAddressInterface) {
-            return $this->incompleteAddressDeterminer->isIncompleteQuoteAddress($address);
-        }
-        return $address === null || $address->getCountryId() === null;
+        return $address instanceof AddressInterface
+            ? $this->incompleteAddressDeterminer->isIncompleteAddress($address)
+            : $address === null || $address->getCountryId() === null;
     }
 }

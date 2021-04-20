@@ -12,7 +12,6 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\GraphQl\Model\Query\ContextInterface;
-use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactoryInterface;
 
 /**
@@ -35,7 +34,7 @@ class Orders implements ResolverInterface
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function resolve(
         Field $field,
@@ -52,7 +51,7 @@ class Orders implements ResolverInterface
         $items = [];
         $orders = $this->collectionFactory->create($context->getUserId());
 
-        /** @var Order $order */
+        /** @var \Magento\Sales\Model\Order $order */
         foreach ($orders as $order) {
             $items[] = [
                 'id' => $order->getId(),

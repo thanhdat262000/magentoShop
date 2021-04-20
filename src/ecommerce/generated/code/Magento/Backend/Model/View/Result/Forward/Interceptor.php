@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function forward($action)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'forward');
-        return $pluginInfo ? $this->___callPlugins('forward', func_get_args(), $pluginInfo) : parent::forward($action);
+        if (!$pluginInfo) {
+            return parent::forward($action);
+        } else {
+            return $this->___callPlugins('forward', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setModule($module)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setModule');
-        return $pluginInfo ? $this->___callPlugins('setModule', func_get_args(), $pluginInfo) : parent::setModule($module);
+        if (!$pluginInfo) {
+            return parent::setModule($module);
+        } else {
+            return $this->___callPlugins('setModule', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setController($controller)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setController');
-        return $pluginInfo ? $this->___callPlugins('setController', func_get_args(), $pluginInfo) : parent::setController($controller);
+        if (!$pluginInfo) {
+            return parent::setController($controller);
+        } else {
+            return $this->___callPlugins('setController', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setParams(array $params)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setParams');
-        return $pluginInfo ? $this->___callPlugins('setParams', func_get_args(), $pluginInfo) : parent::setParams($params);
+        if (!$pluginInfo) {
+            return parent::setParams($params);
+        } else {
+            return $this->___callPlugins('setParams', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setHttpResponseCode($httpCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHttpResponseCode');
-        return $pluginInfo ? $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo) : parent::setHttpResponseCode($httpCode);
+        if (!$pluginInfo) {
+            return parent::setHttpResponseCode($httpCode);
+        } else {
+            return $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setHeader($name, $value, $replace = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeader');
-        return $pluginInfo ? $this->___callPlugins('setHeader', func_get_args(), $pluginInfo) : parent::setHeader($name, $value, $replace);
+        if (!$pluginInfo) {
+            return parent::setHeader($name, $value, $replace);
+        } else {
+            return $this->___callPlugins('setHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function setStatusHeader($httpCode, $version = null, $phrase = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatusHeader');
-        return $pluginInfo ? $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo) : parent::setStatusHeader($httpCode, $version, $phrase);
+        if (!$pluginInfo) {
+            return parent::setStatusHeader($httpCode, $version, $phrase);
+        } else {
+            return $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,6 +111,10 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Forward implements 
     public function renderResult(\Magento\Framework\App\ResponseInterface $response)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderResult');
-        return $pluginInfo ? $this->___callPlugins('renderResult', func_get_args(), $pluginInfo) : parent::renderResult($response);
+        if (!$pluginInfo) {
+            return parent::renderResult($response);
+        } else {
+            return $this->___callPlugins('renderResult', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\Store\Model\StoreSwitcher;
 
 use Magento\Authorization\Model\UserContextInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\DeploymentConfig as DeploymentConfig;
 use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\Url\Helper\Data as UrlHelper;
@@ -16,10 +17,6 @@ use Magento\Store\Model\StoreSwitcher\HashGenerator\HashData;
 
 /**
  * Generate one time token and build redirect url
- *
- * @deplacated No longer used
- * @see RedirectDataGenerator
- * @see RedirectDataValidator
  */
 class HashGenerator
 {

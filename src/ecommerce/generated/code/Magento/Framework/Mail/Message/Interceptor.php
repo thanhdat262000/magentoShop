@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setMessageType($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setMessageType');
-        return $pluginInfo ? $this->___callPlugins('setMessageType', func_get_args(), $pluginInfo) : parent::setMessageType($type);
+        if (!$pluginInfo) {
+            return parent::setMessageType($type);
+        } else {
+            return $this->___callPlugins('setMessageType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setBody($body)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBody');
-        return $pluginInfo ? $this->___callPlugins('setBody', func_get_args(), $pluginInfo) : parent::setBody($body);
+        if (!$pluginInfo) {
+            return parent::setBody($body);
+        } else {
+            return $this->___callPlugins('setBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setSubject($subject)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSubject');
-        return $pluginInfo ? $this->___callPlugins('setSubject', func_get_args(), $pluginInfo) : parent::setSubject($subject);
+        if (!$pluginInfo) {
+            return parent::setSubject($subject);
+        } else {
+            return $this->___callPlugins('setSubject', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function getSubject()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSubject');
-        return $pluginInfo ? $this->___callPlugins('getSubject', func_get_args(), $pluginInfo) : parent::getSubject();
+        if (!$pluginInfo) {
+            return parent::getSubject();
+        } else {
+            return $this->___callPlugins('getSubject', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function getBody()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBody');
-        return $pluginInfo ? $this->___callPlugins('getBody', func_get_args(), $pluginInfo) : parent::getBody();
+        if (!$pluginInfo) {
+            return parent::getBody();
+        } else {
+            return $this->___callPlugins('getBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setFrom($fromAddress)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFrom');
-        return $pluginInfo ? $this->___callPlugins('setFrom', func_get_args(), $pluginInfo) : parent::setFrom($fromAddress);
+        if (!$pluginInfo) {
+            return parent::setFrom($fromAddress);
+        } else {
+            return $this->___callPlugins('setFrom', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setFromAddress($fromAddress, $fromName = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFromAddress');
-        return $pluginInfo ? $this->___callPlugins('setFromAddress', func_get_args(), $pluginInfo) : parent::setFromAddress($fromAddress, $fromName);
+        if (!$pluginInfo) {
+            return parent::setFromAddress($fromAddress, $fromName);
+        } else {
+            return $this->___callPlugins('setFromAddress', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function addTo($toAddress)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addTo');
-        return $pluginInfo ? $this->___callPlugins('addTo', func_get_args(), $pluginInfo) : parent::addTo($toAddress);
+        if (!$pluginInfo) {
+            return parent::addTo($toAddress);
+        } else {
+            return $this->___callPlugins('addTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function addCc($ccAddress)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addCc');
-        return $pluginInfo ? $this->___callPlugins('addCc', func_get_args(), $pluginInfo) : parent::addCc($ccAddress);
+        if (!$pluginInfo) {
+            return parent::addCc($ccAddress);
+        } else {
+            return $this->___callPlugins('addCc', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function addBcc($bccAddress)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addBcc');
-        return $pluginInfo ? $this->___callPlugins('addBcc', func_get_args(), $pluginInfo) : parent::addBcc($bccAddress);
+        if (!$pluginInfo) {
+            return parent::addBcc($bccAddress);
+        } else {
+            return $this->___callPlugins('addBcc', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setReplyTo($replyToAddress)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setReplyTo');
-        return $pluginInfo ? $this->___callPlugins('setReplyTo', func_get_args(), $pluginInfo) : parent::setReplyTo($replyToAddress);
+        if (!$pluginInfo) {
+            return parent::setReplyTo($replyToAddress);
+        } else {
+            return $this->___callPlugins('setReplyTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function getRawMessage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRawMessage');
-        return $pluginInfo ? $this->___callPlugins('getRawMessage', func_get_args(), $pluginInfo) : parent::getRawMessage();
+        if (!$pluginInfo) {
+            return parent::getRawMessage();
+        } else {
+            return $this->___callPlugins('getRawMessage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setBodyHtml($html)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBodyHtml');
-        return $pluginInfo ? $this->___callPlugins('setBodyHtml', func_get_args(), $pluginInfo) : parent::setBodyHtml($html);
+        if (!$pluginInfo) {
+            return parent::setBodyHtml($html);
+        } else {
+            return $this->___callPlugins('setBodyHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,6 +189,10 @@ class Interceptor extends \Magento\Framework\Mail\Message implements \Magento\Fr
     public function setBodyText($text)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBodyText');
-        return $pluginInfo ? $this->___callPlugins('setBodyText', func_get_args(), $pluginInfo) : parent::setBodyText($text);
+        if (!$pluginInfo) {
+            return parent::setBodyText($text);
+        } else {
+            return $this->___callPlugins('setBodyText', func_get_args(), $pluginInfo);
+        }
     }
 }

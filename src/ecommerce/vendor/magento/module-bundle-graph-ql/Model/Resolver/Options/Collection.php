@@ -5,12 +5,11 @@
  */
 declare(strict_types=1);
 
+
 namespace Magento\BundleGraphQl\Model\Resolver\Options;
 
 use Magento\Bundle\Model\OptionFactory;
 use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -18,11 +17,6 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Collection
 {
-    /**
-     * Option type name
-     */
-    private const OPTION_TYPE = 'bundle';
-
     /**
      * @var OptionFactory
      */
@@ -48,26 +42,19 @@ class Collection
      */
     private $optionMap = [];
 
-    /** @var Uid */
-    private $uidEncoder;
-
     /**
      * @param OptionFactory $bundleOptionFactory
      * @param JoinProcessorInterface $extensionAttributesJoinProcessor
      * @param StoreManagerInterface $storeManager
-     * @param Uid|null $uidEncoder
      */
     public function __construct(
         OptionFactory $bundleOptionFactory,
         JoinProcessorInterface $extensionAttributesJoinProcessor,
-        StoreManagerInterface $storeManager,
-        Uid $uidEncoder = null
+        StoreManagerInterface $storeManager
     ) {
         $this->bundleOptionFactory = $bundleOptionFactory;
         $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
         $this->storeManager = $storeManager;
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
     }
 
     /**
@@ -91,7 +78,11 @@ class Collection
     public function getOptionsByParentId(int $parentId) : array
     {
         $options = $this->fetch();
-        return $options[$parentId] ?? [];
+        if (!isset($options[$parentId])) {
+            return [];
+        }
+
+        return $options[$parentId];
     }
 
     /**
@@ -114,7 +105,7 @@ class Collection
         $linkField = $optionsCollection->getConnection()->getAutoIncrementField($productTable);
         $optionsCollection->getSelect()->join(
             ['cpe' => $productTable],
-            'cpe.' . $linkField . ' = main_table.parent_id',
+            'cpe.'.$linkField.' = main_table.parent_id',
             []
         )->where(
             "cpe.entity_id IN (?)",
@@ -124,7 +115,7 @@ class Collection
 
         $this->extensionAttributesJoinProcessor->process($optionsCollection);
         if (empty($optionsCollection->getData())) {
-            return [];
+            return null;
         }
 
         /** @var \Magento\Bundle\Model\Option $option */
@@ -137,8 +128,6 @@ class Collection
                 = $option->getTitle() === null ? $option->getDefaultTitle() : $option->getTitle();
             $this->optionMap[$option->getParentId()][$option->getId()]['sku']
                 = $this->skuMap[$option->getParentId()]['sku'];
-            $this->optionMap[$option->getParentId()][$option->getId()]['uid']
-                = $this->uidEncoder->encode(self::OPTION_TYPE . '/' . $option->getOptionId());
         }
 
         return $this->optionMap;

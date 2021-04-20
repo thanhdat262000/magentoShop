@@ -6,12 +6,7 @@
  */
 namespace Magento\Widget\Controller\Adminhtml\Widget\Instance;
 
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\DataObject;
-use Magento\Framework\Phrase;
-use Magento\Widget\Controller\Adminhtml\Widget\Instance;
-
-class Validate extends Instance implements HttpPostActionInterface
+class Validate extends \Magento\Widget\Controller\Adminhtml\Widget\Instance
 {
     /**
      * Validate action
@@ -20,12 +15,12 @@ class Validate extends Instance implements HttpPostActionInterface
      */
     public function execute()
     {
-        $response = new DataObject();
+        $response = new \Magento\Framework\DataObject();
         $response->setError(false);
         $widgetInstance = $this->_initWidgetInstance();
         $result = $widgetInstance->validate();
-        if ($result !== true && (is_string($result) || $result instanceof Phrase)) {
-            $this->messageManager->addErrorMessage((string) $result);
+        if ($result !== true && is_string($result)) {
+            $this->messageManager->addError($result);
             $this->_view->getLayout()->initMessages();
             $response->setError(true);
             $response->setHtmlMessage($this->_view->getLayout()->getMessagesBlock()->getGroupedHtml());

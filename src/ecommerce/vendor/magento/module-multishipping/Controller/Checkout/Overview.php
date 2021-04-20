@@ -4,19 +4,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Multishipping\Controller\Checkout;
 
-use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Multishipping\Controller\Checkout;
 use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Psr\Log\LoggerInterface;
 
-class Overview extends Checkout implements HttpPostActionInterface, HttpGetActionInterface
+class Overview extends \Magento\Multishipping\Controller\Checkout
 {
     /**
      * Multishipping checkout place order page
@@ -47,7 +42,7 @@ class Overview extends Checkout implements HttpPostActionInterface, HttpGetActio
             $this->_view->loadLayout();
             $this->_view->renderLayout();
         } catch (LocalizedException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addError($e->getMessage());
             $this->_redirect('*/*/billing');
         } catch (\Exception $e) {
             $this->_objectManager->get(LoggerInterface::class)->critical($e);

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryLowQuantityNotification\Plugin\Catalog\Model\ResourceModel\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\GetBySku;
 use Magento\InventoryLowQuantityNotification\Model\ResourceModel\SourceItemConfiguration\SaveMultiple;
@@ -18,6 +19,11 @@ use Psr\Log\LoggerInterface;
  */
 class CreateSourceItemConfigurationPlugin
 {
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $config;
+
     /**
      * @var LoggerInterface
      */
@@ -34,15 +40,18 @@ class CreateSourceItemConfigurationPlugin
     private $saveMultiple;
 
     /**
+     * @param ScopeConfigInterface $config
      * @param GetBySku $getBySku
      * @param SaveMultiple $saveMultiple
      * @param LoggerInterface $logger
      */
     public function __construct(
+        ScopeConfigInterface $config,
         GetBySku $getBySku,
         SaveMultiple $saveMultiple,
         LoggerInterface $logger
     ) {
+        $this->config = $config;
         $this->logger = $logger;
         $this->getBySku = $getBySku;
         $this->saveMultiple = $saveMultiple;
@@ -59,12 +68,16 @@ class CreateSourceItemConfigurationPlugin
      */
     public function afterSave(Product $subject, Product $result, AbstractModel $product): Product
     {
+        if (!$this->config->getValue('cataloginventory/options/synchronize_with_catalog')) {
+            return $result;
+        }
+
         $origSku = (string)$product->getOrigData('sku');
         if (!$origSku || $origSku === $product->getSku()) {
             return $result;
         }
         $sourceItemsConfigurations = $this->getBySku->execute($origSku);
-        foreach ($sourceItemsConfigurations as $sourceItemConfiguration) {
+        foreach ($sourceItemsConfigurations as $key => $sourceItemConfiguration) {
             $sourceItemConfiguration->setSku($product->getSku());
         }
         if ($sourceItemsConfigurations) {

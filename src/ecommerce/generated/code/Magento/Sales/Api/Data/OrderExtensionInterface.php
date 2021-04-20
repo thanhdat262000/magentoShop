@@ -40,39 +40,6 @@ interface OrderExtensionInterface extends \Magento\Framework\Api\ExtensionAttrib
     public function setGiftMessage(\Magento\GiftMessage\Api\Data\MessageInterface $giftMessage);
 
     /**
-     * @return string|null
-     */
-    public function getPickupLocationCode();
-
-    /**
-     * @param string $pickupLocationCode
-     * @return $this
-     */
-    public function setPickupLocationCode($pickupLocationCode);
-
-    /**
-     * @return int|null
-     */
-    public function getNotificationSent();
-
-    /**
-     * @param int $notificationSent
-     * @return $this
-     */
-    public function setNotificationSent($notificationSent);
-
-    /**
-     * @return int|null
-     */
-    public function getSendNotification();
-
-    /**
-     * @param int $sendNotification
-     * @return $this
-     */
-    public function setSendNotification($sendNotification);
-
-    /**
      * @return \Magento\Tax\Api\Data\OrderTaxDetailsAppliedTaxInterface[]|null
      */
     public function getAppliedTaxes();

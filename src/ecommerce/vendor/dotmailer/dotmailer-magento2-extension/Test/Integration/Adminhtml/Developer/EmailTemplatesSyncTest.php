@@ -22,7 +22,7 @@ class EmailTemplatesSyncTest extends \Magento\TestFramework\TestCase\AbstractBac
      */
     public $url = 'backend/dotdigitalgroup_email/run/templatesync';
 
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
         $this->resource = 'Dotdigitalgroup_Email::config';

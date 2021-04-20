@@ -52,17 +52,23 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
      */
     public function isCandidate(Tokens $tokens)
     {
-        return $tokens->hasAlternativeSyntax();
+        return $tokens->isAnyTokenKindsFound(
+            [
+                T_ENDIF,
+                T_ENDWHILE,
+                T_ENDFOREACH,
+                T_ENDFOR,
+            ]
+        );
     }
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before BracesFixer, ElseifFixer, NoSuperfluousElseifFixer, NoUselessElseFixer.
      */
     public function getPriority()
     {
-        return 26;
+        // Should run before BracesFixer and ElseifFixer
+        return 1;
     }
 
     /**
@@ -101,47 +107,42 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
      */
     private function fixOpenCloseControls($index, Token $token, Tokens $tokens)
     {
-        if ($token->isGivenKind([T_IF, T_FOREACH, T_WHILE, T_FOR, T_SWITCH, T_DECLARE])) {
+        if ($token->isGivenKind([T_IF, T_FOREACH, T_WHILE, T_FOR])) {
             $openIndex = $tokens->getNextTokenOfKind($index, ['(']);
             $closeIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $openIndex);
-            $afterParenthesisIndex = $tokens->getNextMeaningfulToken($closeIndex);
+            $afterParenthesisIndex = $tokens->getNextNonWhitespace($closeIndex);
             $afterParenthesis = $tokens[$afterParenthesisIndex];
 
             if (!$afterParenthesis->equals(':')) {
                 return;
             }
-
             $items = [];
-
             if (!$tokens[$afterParenthesisIndex - 1]->isWhitespace()) {
                 $items[] = new Token([T_WHITESPACE, ' ']);
             }
-
             $items[] = new Token('{');
 
             if (!$tokens[$afterParenthesisIndex + 1]->isWhitespace()) {
                 $items[] = new Token([T_WHITESPACE, ' ']);
             }
-
             $tokens->clearAt($afterParenthesisIndex);
             $tokens->insertAt($afterParenthesisIndex, $items);
         }
 
-        if (!$token->isGivenKind([T_ENDIF, T_ENDFOREACH, T_ENDWHILE, T_ENDFOR, T_ENDSWITCH, T_ENDDECLARE])) {
+        if (!$token->isGivenKind([T_ENDIF, T_ENDFOREACH, T_ENDWHILE, T_ENDFOR])) {
             return;
         }
 
         $nextTokenIndex = $tokens->getNextMeaningfulToken($index);
         $nextToken = $tokens[$nextTokenIndex];
         $tokens[$index] = new Token('}');
-
         if ($nextToken->equals(';')) {
             $tokens->clearAt($nextTokenIndex);
         }
     }
 
     /**
-     * Handle the else: cases.
+     * Handle the else:.
      *
      * @param int    $index  the index of the token being processed
      * @param Token  $token  the token being processed
@@ -155,7 +156,6 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
 
         $tokenAfterElseIndex = $tokens->getNextMeaningfulToken($index);
         $tokenAfterElse = $tokens[$tokenAfterElseIndex];
-
         if (!$tokenAfterElse->equals(':')) {
             return;
         }
@@ -175,11 +175,9 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
         if (!$token->isGivenKind(T_ELSEIF)) {
             return;
         }
-
         $parenthesisEndIndex = $this->findParenthesisEnd($tokens, $index);
         $tokenAfterParenthesisIndex = $tokens->getNextMeaningfulToken($parenthesisEndIndex);
         $tokenAfterParenthesis = $tokens[$tokenAfterParenthesisIndex];
-
         if (!$tokenAfterParenthesis->equals(':')) {
             return;
         }
@@ -188,7 +186,7 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
     }
 
     /**
-     * Add opening and closing braces to the else: and elseif: cases.
+     * Add opening and closing braces to the else: and elseif: .
      *
      * @param Tokens $tokens     the tokens collection
      * @param Token  $token      the current token
@@ -202,11 +200,9 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
             new Token([T_WHITESPACE, ' ']),
             $token,
         ];
-
         if (!$tokens[$index + 1]->isWhitespace()) {
             $items[] = new Token([T_WHITESPACE, ' ']);
         }
-
         $tokens->clearAt($index);
         $tokens->insertAt(
             $index,
@@ -217,7 +213,6 @@ final class NoAlternativeSyntaxFixer extends AbstractFixer
         $colonIndex += \count($items);
 
         $items = [new Token('{')];
-
         if (!$tokens[$colonIndex + 1]->isWhitespace()) {
             $items[] = new Token([T_WHITESPACE, ' ']);
         }

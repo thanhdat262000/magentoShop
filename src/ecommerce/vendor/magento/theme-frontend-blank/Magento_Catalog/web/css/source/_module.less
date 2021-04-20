@@ -117,12 +117,13 @@
     .product-image-photo {
         bottom: 0;
         display: block;
+        height: auto;
         left: 0;
         margin: auto;
+        max-width: 100%;
         position: absolute;
         right: 0;
         top: 0;
-        width: auto;
     }
 
     //
@@ -456,26 +457,11 @@
         .action {
             &.delete {
                 &:extend(.abs-remove-button-for-blocks all);
+                line-height: unset;
                 position: absolute;
                 right: 0;
                 top: -1px;
-            }
-        }
-
-        .block-wishlist {
-            .action {
-                &.delete {
-                    line-height: unset;
-                    width: auto;
-                }
-            }
-        }
-
-        .block-compare {
-            .action {
-                &.delete {
-                    right: initial;
-                }
+                width: auto;
             }
         }
 
@@ -558,7 +544,8 @@
 
     .compare,
     .product-addto-links .action.tocompare,
-    .product-item-actions .actions-secondary > .action.tocompare {
+    .product-item-actions .actions-secondary > .action.tocompare,
+    [class*='block-compare'] {
         display: none;
     }
 }
@@ -828,7 +815,6 @@
                 &:extend(.abs-remove-button-for-blocks all);
                 left: -6px;
                 position: absolute;
-                right: 0;
                 top: 0;
             }
 

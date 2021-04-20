@@ -7,7 +7,6 @@ namespace Magento\Framework\DB;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\DB\Sql\Expression;
 
 /**
  * Class for SQL SELECT generation and results.
@@ -93,12 +92,6 @@ class Select extends \Zend_Db_Select
      * $select->where('id = :id');
      * </code>
      *
-     * You may also construct IN statements:
-     *
-     * <code>
-     * $select->where('entity_id IN (?)', ['1', '2', '3']);
-     * </code>
-     *
      * Note that it is more correct to use named bindings in your
      * queries for values other than strings. When you use named
      * bindings, don't forget to pass the values when actually
@@ -109,19 +102,19 @@ class Select extends \Zend_Db_Select
      * </code>
      *
      * @param string $cond The WHERE condition.
-     * @param array|null|int|string|float|Expression|Select|\DateTimeInterface $value The value to quote.
-     * @param int|string|null $type OPTIONAL SQL datatype of the given value e.g. Zend_Db::FLOAT_TYPE or "INT"
+     * @param string $value OPTIONAL A single value to quote into the condition.
+     * @param string|int|null $type OPTIONAL The type of the given value
      * @return \Magento\Framework\DB\Select
      */
     public function where($cond, $value = null, $type = null)
     {
         if ($value === null && $type === null) {
             $value = '';
-        } elseif ((string)$type === self::TYPE_CONDITION) {
+        } elseif ($type == self::TYPE_CONDITION) {
             $type = null;
         }
         if (is_array($value)) {
-            $cond = $this->getConnection()->quoteInto($cond, $value, $type);
+            $cond = $this->getConnection()->quoteInto($cond, $value);
             $value = null;
         }
         return parent::where($cond, $value, $type);

@@ -8,14 +8,12 @@ declare(strict_types=1);
 
 namespace Vertex\Tax\Model\Api;
 
-use Magento\Setup\Exception;
 use Magento\Store\Model\ScopeInterface;
 use RuntimeException;
 use Vertex\Data\ConfigurationInterface;
 use Vertex\Data\ConfigurationInterfaceFactory;
 use Vertex\Data\LoginInterface;
 use Vertex\Data\LoginInterfaceFactory;
-use Vertex\Exception\ConfigurationException;
 use Vertex\Tax\Model\Config as ModuleConfig;
 
 /**
@@ -150,7 +148,6 @@ class ConfigBuilder
      * Retrieve the Tax Area Lookup WSDL URL
      *
      * @return string
-     * @throws ConfigurationException
      */
     private function getTaxAreaLookupWsdl(): string
     {
@@ -158,11 +155,6 @@ class ConfigBuilder
         if ($url === null) {
             throw new RuntimeException('Vertex Address WSDL Not Set');
         }
-
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new ConfigurationException('Vertex Address WSDL Not Valid');
-        }
-
         return $this->ensureWsdlQuery($url);
     }
 
@@ -170,7 +162,6 @@ class ConfigBuilder
      * Retrieve the Tax Calculation WSDL URL
      *
      * @return string
-     * @throws ConfigurationException
      */
     private function getTaxCalculationWsdl(): string
     {
@@ -178,11 +169,6 @@ class ConfigBuilder
         if ($url === null) {
             throw new RuntimeException('Vertex Address WSDL Not Set');
         }
-
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new ConfigurationException('Vertex Address WSDL Not Valid');
-        }
-
         return $this->ensureWsdlQuery($url);
     }
 }

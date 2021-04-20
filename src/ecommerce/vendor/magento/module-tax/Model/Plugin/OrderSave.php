@@ -50,14 +50,11 @@ class OrderSave
     }
 
     /**
-     * Save order tax
-     *
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return $this
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * phpcs:disable Generic.Metrics.NestingLevel.TooHigh
      */
     protected function saveOrderTax(\Magento\Sales\Api\Data\OrderInterface $order)
     {
@@ -179,9 +176,7 @@ class OrderSave
                                     } elseif (isset($quoteItemId['associated_item_id'])) {
                                         //This item is associated with a product item
                                         $item = $order->getItemByQuoteItemId($quoteItemId['associated_item_id']);
-                                        if ($item !== null && $item->getId()) {
-                                            $associatedItemId = $item->getId();
-                                        }
+                                        $associatedItemId = $item->getId();
                                     }
 
                                     $data = [

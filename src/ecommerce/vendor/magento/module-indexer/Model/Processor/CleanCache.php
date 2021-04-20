@@ -5,11 +5,8 @@
  */
 namespace Magento\Indexer\Model\Processor;
 
-use Magento\Framework\App\CacheInterface;
+use \Magento\Framework\App\CacheInterface;
 
-/**
- * Clear cache after reindex
- */
 class CleanCache
 {
     /**
@@ -49,7 +46,9 @@ class CleanCache
     public function afterUpdateMview(\Magento\Indexer\Model\Processor $subject)
     {
         $this->eventManager->dispatch('clean_cache_after_reindex', ['object' => $this->context]);
-        $this->cleanCache();
+        if (!empty($this->context->getIdentities())) {
+            $this->getCache()->clean($this->context->getIdentities());
+        }
     }
 
     /**
@@ -62,7 +61,9 @@ class CleanCache
     public function afterReindexAllInvalid(\Magento\Indexer\Model\Processor $subject)
     {
         $this->eventManager->dispatch('clean_cache_by_tags', ['object' => $this->context]);
-        $this->cleanCache();
+        if (!empty($this->context->getIdentities())) {
+            $this->getCache()->clean($this->context->getIdentities());
+        }
     }
 
     /**
@@ -77,19 +78,5 @@ class CleanCache
             $this->cache = \Magento\Framework\App\ObjectManager::getInstance()->get(CacheInterface::class);
         }
         return $this->cache;
-    }
-
-    /**
-     * Clean cache.
-     *
-     * @return void
-     */
-    private function cleanCache(): void
-    {
-        $identities = $this->context->getIdentities();
-        if (!empty($identities)) {
-            $this->getCache()->clean($identities);
-            $this->context->flush();
-        }
     }
 }

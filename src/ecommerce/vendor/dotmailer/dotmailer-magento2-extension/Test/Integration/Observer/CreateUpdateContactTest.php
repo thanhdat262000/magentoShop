@@ -50,7 +50,7 @@ class CreateUpdateContactTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    public function setup() :void
+    public function setup()
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
         $this->customerFactory = $this->objectManager->create(\Magento\Customer\Model\CustomerFactory::class);

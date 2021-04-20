@@ -3,24 +3,22 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\ConfigurableProduct\Test\Unit\Controller\Adminhtml\Product\Initialization\Helper\Plugin;
 
+use Magento\ConfigurableProduct\Controller\Adminhtml\Product\Initialization\Helper\Plugin\UpdateConfigurations;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
+use Magento\Framework\App\RequestInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\ConfigurableProduct\Model\Product\VariationHandler;
 use Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper as ProductInitializationHelper;
 use Magento\Catalog\Model\Product;
-use Magento\ConfigurableProduct\Controller\Adminhtml\Product\Initialization\Helper\Plugin\UpdateConfigurations;
-use Magento\ConfigurableProduct\Model\Product\VariationHandler;
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
+ * Class UpdateConfigurationsTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @package Magento\ConfigurableProduct\Test\Unit\Controller\Adminhtml\Product\Initialization\Helper\Plugin
  */
-class UpdateConfigurationsTest extends TestCase
+class UpdateConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UpdateConfigurations
@@ -33,26 +31,26 @@ class UpdateConfigurationsTest extends TestCase
     private $objectManagerHelper;
 
     /**
-     * @var RequestInterface|MockObject
+     * @var RequestInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $requestMock;
 
     /**
-     * @var ProductRepositoryInterface|MockObject
+     * @var ProductRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productRepositoryMock;
 
     /**
-     * @var VariationHandler|MockObject
+     * @var VariationHandler|\PHPUnit_Framework_MockObject_MockObject
      */
     private $variationHandlerMock;
 
     /**
-     * @var ProductInitializationHelper|MockObject
+     * @var ProductInitializationHelper|\PHPUnit_Framework_MockObject_MockObject
      */
     private $subjectMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->requestMock = $this->getMockBuilder(RequestInterface::class)
             ->getMockForAbstractClass();
@@ -119,22 +117,6 @@ class UpdateConfigurationsTest extends TestCase
                 'price' => '3.33',
                 'weight' => '5.55',
             ],
-            [
-                'newProduct' => false,
-                'id' => 'product5',
-                'status' => 'simple5_status',
-                'sku' => 'simple5_sku',
-                'name' => 'simple5_name',
-                'price' => '3.33',
-                'configurable_attribute' => 'simple5_configurable_attribute',
-                'weight' => '',
-                'media_gallery' => 'simple5_media_gallery',
-                'swatch_image' => 'simple5_swatch_image',
-                'small_image' => 'simple5_small_image',
-                'thumbnail' => 'simple5_thumbnail',
-                'image' => 'simple5_image',
-                'was_changed' => true,
-            ],
         ];
     }
 
@@ -160,26 +142,12 @@ class UpdateConfigurationsTest extends TestCase
             ],
             'product3' => [
                 'quantity_and_stock_status' => ['qty' => '3']
-            ],
-            'product5' => [
-                'status' => 'simple5_status',
-                'sku' => 'simple5_sku',
-                'name' => 'simple5_name',
-                'price' => '3.33',
-                'configurable_attribute' => 'simple5_configurable_attribute',
-                'weight' => '',
-                'media_gallery' => 'simple5_media_gallery',
-                'swatch_image' => 'simple5_swatch_image',
-                'small_image' => 'simple5_small_image',
-                'thumbnail' => 'simple5_thumbnail',
-                'image' => 'simple5_image',
-            ],
+            ]
         ];
-        /** @var Product[]|MockObject[] $productMocks */
+        /** @var Product[]|\PHPUnit_Framework_MockObject_MockObject[] $productMocks */
         $productMocks = [
             'product2' => $this->getProductMock($configurations['product2'], true, true),
             'product3' => $this->getProductMock($configurations['product3'], false, true),
-            'product5' => $this->getProductMock($configurations['product5'], false, true),
         ];
 
         $this->requestMock->expects(static::any())
@@ -199,8 +167,7 @@ class UpdateConfigurationsTest extends TestCase
             ->willReturnMap(
                 [
                     ['product2', false, 0, false, $productMocks['product2']],
-                    ['product3', false, 0, false, $productMocks['product3']],
-                    ['product5', false, 0, false, $productMocks['product5']],
+                    ['product3', false, 0, false, $productMocks['product3']]
                 ]
             );
         $this->variationHandlerMock->expects(static::any())
@@ -208,8 +175,7 @@ class UpdateConfigurationsTest extends TestCase
             ->willReturnMap(
                 [
                     [$productMocks['product2'], $configurations['product2'], $configurations['product2']],
-                    [$productMocks['product3'], $configurations['product3'], $configurations['product3']],
-                    [$productMocks['product5'], $configurations['product5'], $configurations['product5']]
+                    [$productMocks['product3'], $configurations['product3'], $configurations['product3']]
                 ]
             );
 
@@ -222,7 +188,7 @@ class UpdateConfigurationsTest extends TestCase
      * @param array $expectedData
      * @param bool $hasDataChanges
      * @param bool $wasChanged
-     * @return Product|MockObject
+     * @return Product|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getProductMock(array $expectedData = null, $hasDataChanges = false, $wasChanged = false)
     {

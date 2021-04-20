@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+       xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
     <test name="ChatWidgetTest">
         <annotations>
-            <skip>
-                <issueId value="BUNDLE-2884"/>
-            </skip>
             <features value="Engagement Cloud module"/>
             <stories value="Chat widget is displayed on front end"/>
             <title value="Display chat widget"/>
@@ -16,7 +13,7 @@
 
         <before>
             <!-- Log in and set API credentials -->
-            <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
 
             <!-- Fill in API credentials and enable -->
             <actionGroup ref="SetDotmailerAccountData" stepKey="SetDotmailerAccountData"/>
@@ -31,7 +28,7 @@
                 <argument name="status" value="0"/>
             </actionGroup>
 
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
 
         <!-- Visit store and revel in appearance of chat widget -->
@@ -39,7 +36,6 @@
         <comment userInput="I am on the website home page, waiting for a widget to load" stepKey="storeFrontComment"/>
         <waitForPageLoad stepKey="waitForPageLoad6"/>
         <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
-        <wait time="10" stepKey="nowJustKeepWaiting"/>
-        <seeElement selector="#ddg-launcher-frame" stepKey="seeTheChatWidgetBubble"/>
+        <seeElement selector="#comapi-launcher-frame" stepKey="seeTheChatWidgetBubble"/>
     </test>
 </tests>

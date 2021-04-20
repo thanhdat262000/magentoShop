@@ -102,7 +102,7 @@ class Content extends \Magento\Backend\Block\Widget\Container
                 'type' => 'button'
             ],
             0,
-            100,
+            0,
             'header'
         );
     }

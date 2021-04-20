@@ -4,11 +4,11 @@ namespace Dotdigitalgroup\Chat\Block\Adminhtml\Config\Settings;
 
 use Dotdigitalgroup\Chat\Model\Config;
 use Dotdigitalgroup\Email\Helper\Data;
-use Dotdigitalgroup\Email\Helper\OauthValidator;
-use Magento\Backend\Block\Widget\Button;
 
 abstract class ButtonField extends \Magento\Config\Block\System\Config\Form\Field
 {
+    const COMAPI_BASE = 'https://portal.comapi.com/#/apiSpaces/';
+
     /**
      * @var Config
      */
@@ -20,29 +20,22 @@ abstract class ButtonField extends \Magento\Config\Block\System\Config\Form\Fiel
     private $helper;
 
     /**
-     * @var OauthValidator
-     */
-    private $oauthValidator;
-
-    /**
      * ButtonField constructor.
      * @param \Magento\Backend\Block\Template\Context $context
      * @param Config $config
      * @param Data $helper
-     * @param OauthValidator $oauthValidator
      * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         Config $config,
         Data $helper,
-        OauthValidator $oauthValidator,
         array $data = []
     ) {
         $this->helper = $helper;
         $this->config = $config;
-        $this->oauthValidator = $oauthValidator;
         parent::__construct($context, $data);
+        $this->config->setScopeAndWebsiteId($this->helper->getWebsiteForSelectedScopeInAdmin());
     }
 
     /**
@@ -70,10 +63,10 @@ abstract class ButtonField extends \Magento\Config\Block\System\Config\Form\Fiel
     public function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
         return $this->getLayout()
-            ->createBlock(Button::class)
+            ->createBlock(\Magento\Backend\Block\Widget\Button::class)
             ->setType('button')
             ->setLabel(__('Configure'))
-            ->setOnClick(sprintf("window.open('%s','_blank')", $this->getButtonUrl()))
+            ->setOnClick("window.location.href='" . $this->getButtonUrl() . "'")
             ->setData('class', $this->getCssClass())
             ->toHtml();
     }
@@ -87,14 +80,5 @@ abstract class ButtonField extends \Magento\Config\Block\System\Config\Form\Fiel
     {
         $element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
         return parent::render($element);
-    }
-
-    /**
-     * @param $url
-     * @return string
-     */
-    protected function getEcAuthorisedUrl($url)
-    {
-        return $this->oauthValidator->createAuthorisedEcUrl($url, 'false');
     }
 }

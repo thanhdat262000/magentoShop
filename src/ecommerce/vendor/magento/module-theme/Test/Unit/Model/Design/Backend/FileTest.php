@@ -3,100 +3,74 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Theme\Test\Unit\Model\Design\Backend;
 
-use Magento\Config\Model\Config\Backend\File\RequestData\RequestDataInterface;
-use Magento\Framework\App\Cache\TypeListInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\File\Mime;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\Filesystem\Io\File as IoFileSystem;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Registry;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-
 use Magento\Framework\UrlInterface;
-use Magento\MediaStorage\Helper\File\Storage\Database;
 use Magento\Theme\Model\Design\Backend\File;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class FileTest extends TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var WriteInterface|MockObject */
-    private $mediaDirectory;
+    /** @var \Magento\Framework\Filesystem\Directory\WriteInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $mediaDirectory;
 
-    /** @var UrlInterface|MockObject */
-    private $urlBuilder;
+    /** @var UrlInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $urlBuilder;
 
     /** @var File */
-    private $fileBackend;
-
-    /** @var IoFileSystem|\PHPUnit\Framework\MockObject\MockObject */
-    private $ioFileSystem;
+    protected $fileBackend;
 
     /**
-     * @var Mime|MockObject
+     * @var \Magento\Framework\File\Mime|\PHPUnit_Framework_MockObject_MockObject
      */
     private $mime;
 
     /**
-     * @var Database|MockObject
+     * @var \Magento\MediaStorage\Helper\File\Storage\Database|\PHPUnit_Framework_MockObject_MockObject
      */
     private $databaseHelper;
 
-    /**
-     * @inheritdoc
-     */
-    protected function setUp(): void
+    public function setUp()
     {
-        $context = $this->getMockObject(Context::class);
-        $registry = $this->getMockObject(Registry::class);
-        $config = $this->getMockObjectForAbstractClass(ScopeConfigInterface::class);
-        $cacheTypeList = $this->getMockObjectForAbstractClass(TypeListInterface::class);
+        $context = $this->getMockObject(\Magento\Framework\Model\Context::class);
+        $registry = $this->getMockObject(\Magento\Framework\Registry::class);
+        $config = $this->getMockObjectForAbstractClass(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+        $cacheTypeList = $this->getMockObjectForAbstractClass(\Magento\Framework\App\Cache\TypeListInterface::class);
         $uploaderFactory = $this->getMockObject(\Magento\MediaStorage\Model\File\UploaderFactory::class, ['create']);
         $requestData = $this->getMockObjectForAbstractClass(
-            RequestDataInterface::class
+            \Magento\Config\Model\Config\Backend\File\RequestData\RequestDataInterface::class
         );
-        $filesystem = $this->getMockBuilder(Filesystem::class)
+        $filesystem = $this->getMockBuilder(\Magento\Framework\Filesystem::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->mediaDirectory = $this->getMockBuilder(
-            WriteInterface::class
-        )
+        $this->mediaDirectory = $this->getMockBuilder(\Magento\Framework\Filesystem\Directory\WriteInterface::class)
             ->getMockForAbstractClass();
+
         $filesystem->expects($this->once())
             ->method('getDirectoryWrite')
             ->with(DirectoryList::MEDIA)
             ->willReturn($this->mediaDirectory);
-        $this->urlBuilder = $this->getMockBuilder(UrlInterface::class)
+        $this->urlBuilder = $this->getMockBuilder(\Magento\Framework\UrlInterface::class)
             ->getMockForAbstractClass();
-        $this->ioFileSystem = $this->getMockBuilder(IoFileSystem::class)
-            ->getMockForAbstractClass();
-        $this->mime = $this->getMockBuilder(Mime::class)
+
+        $this->mime = $this->getMockBuilder(\Magento\Framework\File\Mime::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->databaseHelper = $this->getMockBuilder(Database::class)
+        $this->databaseHelper = $this->getMockBuilder(\Magento\MediaStorage\Helper\File\Storage\Database::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $abstractResource = $this->getMockBuilder(AbstractResource::class)
+        $abstractResource = $this->getMockBuilder(\Magento\Framework\Model\ResourceModel\AbstractResource::class)
             ->getMockForAbstractClass();
 
-        $abstractDb = $this->getMockBuilder(AbstractDb::class)
+        $abstractDb = $this->getMockBuilder(\Magento\Framework\Data\Collection\AbstractDb::class)
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
+
         $this->fileBackend = new File(
             $context,
             $registry,
@@ -109,11 +83,10 @@ class FileTest extends TestCase
             $abstractResource,
             $abstractDb,
             [],
-            $this->databaseHelper,
-            $this->ioFileSystem
+            $this->databaseHelper
         );
 
-        $objectManager = new ObjectManager($this);
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
         $objectManager->setBackwardCompatibleProperty(
             $this->fileBackend,
             'mime',
@@ -121,22 +94,17 @@ class FileTest extends TestCase
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function tearDown(): void
+    public function tearDown()
     {
         unset($this->fileBackend);
     }
 
     /**
-     * Gets the mock object.
-     *
      * @param string $class
      * @param array $methods
-     * @return MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getMockObject(string $class, array $methods = []): \PHPUnit\Framework\MockObject\MockObject
+    protected function getMockObject($class, $methods = [])
     {
         $builder =  $this->getMockBuilder($class)
             ->disableOriginalConstructor();
@@ -147,20 +115,15 @@ class FileTest extends TestCase
     }
 
     /**
-     * Gets mock objects for abstract class.
-     *
      * @param string $class
-     * @return MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getMockObjectForAbstractClass(string $class): \PHPUnit\Framework\MockObject\MockObject
+    protected function getMockObjectForAbstractClass($class)
     {
         return  $this->getMockBuilder($class)
             ->getMockForAbstractClass();
     }
 
-    /**
-     * Test for afterLoad method.
-     */
     public function testAfterLoad()
     {
         $value = 'filename.jpg';
@@ -168,18 +131,16 @@ class FileTest extends TestCase
 
         $absoluteFilePath = '/absolute_path/' . $value;
 
-        $this->fileBackend->setData(
+        $this->fileBackend->setValue($value);
+        $this->fileBackend->setFieldConfig(
             [
-                'value' => $value,
-                'field_config' => [
-                    'upload_dir' => [
-                        'value' => 'value',
-                        'config' => 'system/filesystem/media',
-                    ],
-                    'base_url' => [
-                        'type' => 'media',
-                        'value' => 'design/file'
-                    ],
+                'upload_dir' => [
+                    'value' => 'value',
+                    'config' => 'system/filesystem/media',
+                ],
+                'base_url' => [
+                    'type' => 'media',
+                    'value' => 'design/file'
                 ],
             ]
         );
@@ -192,10 +153,11 @@ class FileTest extends TestCase
             ->method('getAbsolutePath')
             ->with('value/' . $value)
             ->willReturn($absoluteFilePath);
+
         $this->urlBuilder->expects($this->once())
             ->method('getBaseUrl')
             ->with(['_type' => UrlInterface::URL_TYPE_MEDIA])
-            ->willReturn('http://magento2.com/media/');
+            ->willReturn('http://magento2.com/pub/media/');
         $this->mediaDirectory->expects($this->once())
             ->method('getRelativePath')
             ->with('value')
@@ -204,15 +166,17 @@ class FileTest extends TestCase
             ->method('stat')
             ->with('value/' . $value)
             ->willReturn(['size' => 234234]);
+
         $this->mime->expects($this->once())
             ->method('getMimeType')
             ->with($absoluteFilePath)
             ->willReturn($mime);
+
         $this->fileBackend->afterLoad();
         $this->assertEquals(
             [
                 [
-                    'url' => 'http://magento2.com/media/design/file/' . $value,
+                    'url' => 'http://magento2.com/pub/media/design/file/' . $value,
                     'file' => $value,
                     'size' => 234234,
                     'exists' => true,
@@ -225,32 +189,29 @@ class FileTest extends TestCase
     }
 
     /**
-     * Test for beforeSave method.
-     *
      * @dataProvider beforeSaveDataProvider
      * @param string $fileName
-     * @throws LocalizedException
      */
-    public function testBeforeSave(string $fileName)
+    public function testBeforeSave($fileName)
     {
         $expectedFileName = basename($fileName);
         $expectedTmpMediaPath = 'tmp/design/file/' . $expectedFileName;
-        $this->fileBackend->setData(
+        $this->fileBackend->setScope('store');
+        $this->fileBackend->setScopeId(1);
+        $this->fileBackend->setValue(
             [
-                'scope' => 'store',
-                'scope_id' => 1,
-                'value' => [
-                    [
-                        'url' => 'http://magento2.com/media/tmp/image/' . $fileName,
-                        'file' => $fileName,
-                        'size' => 234234,
-                    ]
-                ],
-                'field_config' => [
-                    'upload_dir' => [
-                        'value' => 'value',
-                        'config' => 'system/filesystem/media',
-                    ],
+                [
+                    'url' => 'http://magento2.com/pub/media/tmp/image/' . $fileName,
+                    'file' => $fileName,
+                    'size' => 234234,
+                ]
+            ]
+        );
+        $this->fileBackend->setFieldConfig(
+            [
+                'upload_dir' => [
+                    'value' => 'value',
+                    'config' => 'system/filesystem/media',
                 ],
             ]
         );
@@ -273,22 +234,22 @@ class FileTest extends TestCase
     }
 
     /**
-     * Data provider for testBeforeSave.
-     *
      * @return array
      */
-    public function beforeSaveDataProvider(): array
+    public function beforeSaveDataProvider()
     {
         return [
             'Normal file name' => ['filename.jpg'],
-            'Vulnerable file name' => ['../../../../../../../../etc/pass'],
+            'Vulnerable file name' => ['../../../../../../../../etc/passwd'],
         ];
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @expectedExceptionMessage header_logo_src does not contain field 'file'
+     */
     public function testBeforeSaveWithoutFile()
     {
-        $this->expectException('Magento\Framework\Exception\LocalizedException');
-        $this->expectExceptionMessage('header_logo_src does not contain field \'file\'');
         $this->fileBackend->setData(
             [
                 'value' => [
@@ -302,27 +263,19 @@ class FileTest extends TestCase
         $this->fileBackend->beforeSave();
     }
 
-    /**
-     * Test for beforeSave method with existing file.
-     *
-     * @throws LocalizedException
-     */
     public function testBeforeSaveWithExistingFile()
     {
         $value = 'filename.jpg';
-        $this->fileBackend->setData(
+        $this->fileBackend->setValue(
             [
-                'value' => [
-                    [
-                        'url' => 'http://magento2.com/media/tmp/image/' . $value,
-                        'file' => $value,
-                        'size' => 234234,
-                        'exists' => true
-                    ]
-                ],
+                [
+                    'url' => 'http://magento2.com/pub/media/tmp/image/' . $value,
+                    'file' => $value,
+                    'size' => 234234,
+                    'exists' => true
+                ]
             ]
         );
-
         $this->fileBackend->beforeSave();
         $this->assertEquals(
             $value,
@@ -336,7 +289,6 @@ class FileTest extends TestCase
      * @param string $path
      * @param string $filename
      * @dataProvider getRelativeMediaPathDataProvider
-     * @throws \ReflectionException
      */
     public function testGetRelativeMediaPath(string $path, string $filename)
     {
@@ -358,7 +310,7 @@ class FileTest extends TestCase
     {
         return [
             'Normal path' => ['pub/media/', 'filename.jpg'],
-            'Complex path' => ['some_path/media/', 'filename.jpg'],
+            'Complex path' => ['somepath/pub/media/', 'filename.jpg'],
         ];
     }
 }

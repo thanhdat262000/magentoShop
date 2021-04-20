@@ -40,7 +40,6 @@ define(
                     quoteId: quote.getQuoteId()
                 });
                 payload = {
-                    confirmOrder: true,
                     cartId: quote.getQuoteId(),
                     email: quote.guestEmail,
                     paymentMethod: paymentData,
@@ -49,7 +48,6 @@ define(
             } else {
                 serviceUrl = urlBuilder.createUrl('/carts/mine/set-payment-information', {});
                 payload = {
-                    confirmOrder: true,
                     cartId: quote.getQuoteId(),
                     paymentMethod: paymentData,
                     billingAddress: quote.billingAddress()

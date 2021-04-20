@@ -8,7 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @deprecated
+ * Generates Cept (scenario-driven test) file:
+ *
+ * * `codecept generate:cept suite Login`
+ * * `codecept g:cept suite subdir/subdir/testnameCept.php`
+ * * `codecept g:cept suite LoginCept -c path/to/project`
+ *
  */
 class GenerateCept extends Command
 {
@@ -43,9 +48,8 @@ class GenerateCept extends Command
         $res = $this->createFile($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
-            return 1;
+            return;
         }
         $output->writeln("<info>Test was created in $full_path</info>");
-        return 0;
     }
 }

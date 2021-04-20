@@ -6,7 +6,7 @@
 namespace Magento\Store\Model\Data;
 
 /**
- * Allows to get and set store config values
+ * Class StoreConfig
  *
  * @codeCoverageIgnore
  */
@@ -188,7 +188,7 @@ class StoreConfig extends \Magento\Framework\Api\AbstractExtensibleObject implem
     }
 
     /**
-     * Set base URL
+     * set base URL
      *
      * @param string $baseUrl
      * @return $this
@@ -293,7 +293,7 @@ class StoreConfig extends \Magento\Framework\Api\AbstractExtensibleObject implem
     }
 
     /**
-     * Set secure base URL
+     * set secure base URL
      *
      * @param string $secureBaseUrl
      * @return $this
@@ -367,7 +367,7 @@ class StoreConfig extends \Magento\Framework\Api\AbstractExtensibleObject implem
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @return \Magento\Store\Api\Data\StoreConfigExtensionInterface|null
      */
@@ -377,7 +377,7 @@ class StoreConfig extends \Magento\Framework\Api\AbstractExtensibleObject implem
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * @param \Magento\Store\Api\Data\StoreConfigExtensionInterface $extensionAttributes
      * @return $this

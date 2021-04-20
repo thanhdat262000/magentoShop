@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Indexer\Config\DependencyInfoProvid
     public function getIndexerIdsToRunBefore(string $indexerId) : array
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIndexerIdsToRunBefore');
-        return $pluginInfo ? $this->___callPlugins('getIndexerIdsToRunBefore', func_get_args(), $pluginInfo) : parent::getIndexerIdsToRunBefore($indexerId);
+        if (!$pluginInfo) {
+            return parent::getIndexerIdsToRunBefore($indexerId);
+        } else {
+            return $this->___callPlugins('getIndexerIdsToRunBefore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,6 +33,10 @@ class Interceptor extends \Magento\Framework\Indexer\Config\DependencyInfoProvid
     public function getIndexerIdsToRunAfter(string $indexerId) : array
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIndexerIdsToRunAfter');
-        return $pluginInfo ? $this->___callPlugins('getIndexerIdsToRunAfter', func_get_args(), $pluginInfo) : parent::getIndexerIdsToRunAfter($indexerId);
+        if (!$pluginInfo) {
+            return parent::getIndexerIdsToRunAfter($indexerId);
+        } else {
+            return $this->___callPlugins('getIndexerIdsToRunAfter', func_get_args(), $pluginInfo);
+        }
     }
 }

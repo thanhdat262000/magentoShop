@@ -20,7 +20,11 @@ class Interceptor extends \Magento\CatalogUrlRewrite\Model\Storage\DbStorage imp
     public function deleteByData(array $data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'deleteByData');
-        return $pluginInfo ? $this->___callPlugins('deleteByData', func_get_args(), $pluginInfo) : parent::deleteByData($data);
+        if (!$pluginInfo) {
+            return parent::deleteByData($data);
+        } else {
+            return $this->___callPlugins('deleteByData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\CatalogUrlRewrite\Model\Storage\DbStorage imp
     public function findAllByData(array $data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'findAllByData');
-        return $pluginInfo ? $this->___callPlugins('findAllByData', func_get_args(), $pluginInfo) : parent::findAllByData($data);
+        if (!$pluginInfo) {
+            return parent::findAllByData($data);
+        } else {
+            return $this->___callPlugins('findAllByData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\CatalogUrlRewrite\Model\Storage\DbStorage imp
     public function findOneByData(array $data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'findOneByData');
-        return $pluginInfo ? $this->___callPlugins('findOneByData', func_get_args(), $pluginInfo) : parent::findOneByData($data);
+        if (!$pluginInfo) {
+            return parent::findOneByData($data);
+        } else {
+            return $this->___callPlugins('findOneByData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,6 +59,10 @@ class Interceptor extends \Magento\CatalogUrlRewrite\Model\Storage\DbStorage imp
     public function replace(array $urls)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'replace');
-        return $pluginInfo ? $this->___callPlugins('replace', func_get_args(), $pluginInfo) : parent::replace($urls);
+        if (!$pluginInfo) {
+            return parent::replace($urls);
+        } else {
+            return $this->___callPlugins('replace', func_get_args(), $pluginInfo);
+        }
     }
 }

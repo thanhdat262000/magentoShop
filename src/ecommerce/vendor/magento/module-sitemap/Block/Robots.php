@@ -11,9 +11,6 @@ use Magento\Framework\View\Element\Context;
 use Magento\Robots\Model\Config\Value;
 use Magento\Sitemap\Helper\Data as SitemapHelper;
 use Magento\Sitemap\Model\ResourceModel\Sitemap\CollectionFactory;
-use Magento\Sitemap\Model\Sitemap;
-use Magento\Sitemap\Model\SitemapConfigReader;
-use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\StoreResolver;
 
@@ -32,7 +29,6 @@ class Robots extends AbstractBlock implements IdentityInterface
 
     /**
      * @var SitemapHelper
-     * @deprecated
      */
     private $sitemapHelper;
 
@@ -42,18 +38,13 @@ class Robots extends AbstractBlock implements IdentityInterface
     private $storeManager;
 
     /**
-     * @var SitemapConfigReader
-     */
-    private $sitemapConfigReader;
-
-    /**
      * @param Context $context
      * @param StoreResolver $storeResolver
      * @param CollectionFactory $sitemapCollectionFactory
      * @param SitemapHelper $sitemapHelper
      * @param StoreManagerInterface $storeManager
      * @param array $data
-     * @param SitemapConfigReader|null $sitemapConfigReader
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
@@ -62,14 +53,11 @@ class Robots extends AbstractBlock implements IdentityInterface
         CollectionFactory $sitemapCollectionFactory,
         SitemapHelper $sitemapHelper,
         StoreManagerInterface $storeManager,
-        array $data = [],
-        ?SitemapConfigReader $sitemapConfigReader = null
+        array $data = []
     ) {
         $this->sitemapCollectionFactory = $sitemapCollectionFactory;
         $this->sitemapHelper = $sitemapHelper;
         $this->storeManager = $storeManager;
-        $this->sitemapConfigReader = $sitemapConfigReader
-            ?: ObjectManager::getInstance()->get(SitemapConfigReader::class);
 
         parent::__construct($context, $data);
     }
@@ -86,16 +74,22 @@ class Robots extends AbstractBlock implements IdentityInterface
      */
     protected function _toHtml()
     {
-        $website = $this->storeManager->getWebsite();
+        $defaultStore = $this->storeManager->getDefaultStoreView();
+
+        /** @var \Magento\Store\Model\Website $website */
+        $website = $this->storeManager->getWebsite($defaultStore->getWebsiteId());
 
         $storeIds = [];
         foreach ($website->getStoreIds() as $storeId) {
-            if ((bool) $this->sitemapConfigReader->getEnableSubmissionRobots($storeId)) {
-                $storeIds[] = (int) $storeId;
+            if ((bool)$this->sitemapHelper->getEnableSubmissionRobots($storeId)) {
+                $storeIds[] = (int)$storeId;
             }
         }
 
-        $links = $storeIds ? $this->getSitemapLinks($storeIds) : [];
+        $links = [];
+        if ($storeIds) {
+            $links = array_merge($links, $this->getSitemapLinks($storeIds));
+        }
 
         return $links ? implode(PHP_EOL, $links) . PHP_EOL : '';
     }
@@ -112,15 +106,18 @@ class Robots extends AbstractBlock implements IdentityInterface
      */
     protected function getSitemapLinks(array $storeIds)
     {
+        $sitemapLinks = [];
+
+        /** @var \Magento\Sitemap\Model\ResourceModel\Sitemap\Collection $collection */
         $collection = $this->sitemapCollectionFactory->create();
         $collection->addStoreFilter($storeIds);
 
-        $sitemapLinks = [];
-        /**
-         * @var Sitemap $sitemap
-         */
         foreach ($collection as $sitemap) {
-            $sitemapUrl = $sitemap->getSitemapUrl($sitemap->getSitemapPath(), $sitemap->getSitemapFilename());
+            /** @var \Magento\Sitemap\Model\Sitemap $sitemap */
+            $sitemapFilename = $sitemap->getSitemapFilename();
+            $sitemapPath = $sitemap->getSitemapPath();
+
+            $sitemapUrl = $sitemap->getSitemapUrl($sitemapPath, $sitemapFilename);
             $sitemapLinks[$sitemapUrl] = 'Sitemap: ' . $sitemapUrl;
         }
 

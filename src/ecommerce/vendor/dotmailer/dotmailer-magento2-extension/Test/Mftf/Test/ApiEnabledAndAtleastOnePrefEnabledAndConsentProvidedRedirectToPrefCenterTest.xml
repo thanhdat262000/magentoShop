@@ -8,7 +8,8 @@
             <stories value="If API enabled and one of the preferences enabled, plugin should redirect to dotmailer preference page and general subscription text should display the content text"/>
             <title value="You should be able to see dotmailer preferences page with consent text if api is enabled, consent provided and one of the preferences are enabled."/>
             <description value="You should be able to see dotmailer preferences page with consent text if api is enabled, consent provided and one of the preferences are enabled."/>
-            <severity value="AVERAGE"/>
+            <severity value="CRITICAL"/>
+            <group value="dotmailer-preference-page"/>
             <group value="dotmailer"/>
         </annotations>
         <before>
@@ -18,7 +19,7 @@
             <actionGroup ref="LoginToStorefrontActionGroup" stepKey="signUpNewUser">
                 <argument name="Customer" value="$$createSimpleUsCustomer$$"/>
             </actionGroup>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <actionGroup ref="SetDotmailerAccountData" stepKey="SetDotmailerAccountData"/>
             <actionGroup ref="SetCustomerConsentText" stepKey="setCustomerConsentText"/>
         </before>
@@ -26,7 +27,7 @@
             <actionGroup ref="ResetDotmailerAccountData" stepKey="resetAccountData"/>
             <actionGroup ref="ResetCustomerConsentText" stepKey="resetCustomerConsentText"/>
             <deleteData createDataKey="createSimpleUsCustomer" stepKey="deleteCustomer"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutAsAdmin"/>
+            <actionGroup ref="logout" stepKey="logoutAsAdmin"/>
         </after>
         <actionGroup ref="SetOnePreferenceTypeToShowYes" stepKey="setOnePreferenceTypeToShowYes"/>
         <amOnPage url="newsletter/manage/" stepKey="amOnCustomerNewsletterManagePage"/>

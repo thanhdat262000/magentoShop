@@ -6,19 +6,13 @@
 
 namespace Magento\Wishlist\Block;
 
-use Magento\Catalog\Api\Data\ProductTypeInterface;
-use Magento\Catalog\Api\ProductTypeListInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-
 /**
  * Wishlist js plugin initialization block
  *
  * @api
  * @since 100.1.0
  */
-class AddToWishlist extends Template
+class AddToWishlist extends \Magento\Framework\View\Element\Template
 {
     /**
      * Product types
@@ -28,25 +22,17 @@ class AddToWishlist extends Template
     private $productTypes;
 
     /**
-     * @var ProductTypeListInterface
-     */
-    private $productTypeList;
-
-    /**
-     * AddToWishlist constructor.
-     *
-     * @param Context $context
+     * @param \Magento\Framework\View\Element\Template\Context $context
      * @param array $data
-     * @param ProductTypeListInterface|null $productTypeList
      */
     public function __construct(
-        Context $context,
-        array $data = [],
-        ?ProductTypeListInterface $productTypeList = null
+        \Magento\Framework\View\Element\Template\Context $context,
+        array $data = []
     ) {
-        parent::__construct($context, $data);
-        $this->productTypes = [];
-        $this->productTypeList = $productTypeList ?: ObjectManager::getInstance()->get(ProductTypeListInterface::class);
+        parent::__construct(
+            $context,
+            $data
+        );
     }
 
     /**
@@ -63,16 +49,36 @@ class AddToWishlist extends Template
     /**
      * Returns an array of product types
      *
-     * @return array
+     * @return array|null
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getProductTypes(): array
+    private function getProductTypes()
     {
-        if (count($this->productTypes) === 0) {
-            /** @var ProductTypeInterface productTypes */
-            $this->productTypes = array_map(function ($productType) {
-                return $productType->getName();
-            }, $this->productTypeList->getProductTypes());
+        if ($this->productTypes === null) {
+            $this->productTypes = [];
+            $block = $this->getLayout()->getBlock('category.products.list');
+            if ($block) {
+                $productCollection = $block->getLoadedProductCollection();
+                $productTypes = [];
+                /** @var $product \Magento\Catalog\Model\Product */
+                foreach ($productCollection as $product) {
+                    $productTypes[] = $this->escapeHtml($product->getTypeId());
+                }
+                $this->productTypes = array_unique($productTypes);
+            }
         }
         return $this->productTypes;
+    }
+
+    /**
+     * {@inheritdoc}
+     * @since 100.1.0
+     */
+    protected function _toHtml()
+    {
+        if (!$this->getProductTypes()) {
+            return '';
+        }
+        return parent::_toHtml();
     }
 }

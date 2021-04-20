@@ -254,20 +254,4 @@ class Proxy implements \Magento\Framework\Session\Config\ConfigInterface, \Magen
     {
         return $this->_getSubject()->getUseCookies();
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCookieSameSite(string $cookieSameSite) : \Magento\Framework\Session\Config\ConfigInterface
-    {
-        return $this->_getSubject()->setCookieSameSite($cookieSameSite);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCookieSameSite() : string
-    {
-        return $this->_getSubject()->getCookieSameSite();
-    }
 }

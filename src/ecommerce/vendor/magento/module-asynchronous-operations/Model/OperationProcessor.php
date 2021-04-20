@@ -8,24 +8,25 @@ declare(strict_types=1);
 
 namespace Magento\AsynchronousOperations\Model;
 
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\AsynchronousOperations\Api\Data\OperationInterface;
-use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
 use Magento\Framework\Bulk\OperationManagementInterface;
-use Magento\Framework\Communication\ConfigInterface as CommunicationConfig;
+use Magento\AsynchronousOperations\Model\ConfigInterface as AsyncConfig;
+use Magento\Framework\MessageQueue\MessageValidator;
+use Magento\Framework\MessageQueue\MessageEncoder;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\MessageQueue\ConsumerConfigurationInterface;
+use Psr\Log\LoggerInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\TemporaryStateExceptionInterface;
 use Magento\Framework\DB\Adapter\ConnectionException;
 use Magento\Framework\DB\Adapter\DeadlockException;
 use Magento\Framework\DB\Adapter\LockWaitException;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\MessageQueue\ConsumerConfigurationInterface;
-use Magento\Framework\MessageQueue\MessageEncoder;
-use Magento\Framework\MessageQueue\MessageValidator;
-use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\ServiceOutputProcessor;
-use Psr\Log\LoggerInterface;
+use Magento\Framework\Communication\ConfigInterface as CommunicationConfig;
 
 /**
- * Proccess operation
+ * Class OperationProcessor
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -79,9 +80,9 @@ class OperationProcessor
      * @param ConsumerConfigurationInterface $configuration
      * @param Json $jsonHelper
      * @param OperationManagementInterface $operationManagement
+     * @param LoggerInterface $logger
      * @param \Magento\Framework\Webapi\ServiceOutputProcessor $serviceOutputProcessor
      * @param \Magento\Framework\Communication\ConfigInterface $communicationConfig
-     * @param LoggerInterface $logger
      */
     public function __construct(
         MessageValidator $messageValidator,
@@ -117,7 +118,6 @@ class OperationProcessor
         $status = OperationInterface::STATUS_TYPE_COMPLETE;
         $errorCode = null;
         $messages = [];
-        $entityParams = [];
         $topicName = $operation->getTopicName();
         $handlers = $this->configuration->getHandlers($topicName);
         try {
@@ -128,7 +128,7 @@ class OperationProcessor
             $this->logger->error($e->getMessage());
             $status = OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED;
             $errorCode = $e->getCode();
-            $messages[] = [$e->getMessage()];
+            $messages[] = $e->getMessage();
         }
 
         $outputData = null;
@@ -137,7 +137,7 @@ class OperationProcessor
                 $result = $this->executeHandler($callback, $entityParams);
                 $status = $result['status'];
                 $errorCode = $result['error_code'];
-                $messages[] = $result['messages'];
+                $messages = array_merge($messages, $result['messages']);
                 $outputData = $result['output_data'];
             }
         }
@@ -156,17 +156,16 @@ class OperationProcessor
                 );
                 $outputData = $this->jsonHelper->serialize($outputData);
             } catch (\Exception $e) {
-                $messages[] = [$e->getMessage()];
+                $messages[] = $e->getMessage();
             }
         }
 
         $serializedData = (isset($errorCode)) ? $operation->getSerializedData() : null;
         $this->operationManagement->changeOperationStatus(
-            $operation->getBulkUuid(),
             $operation->getId(),
             $status,
             $errorCode,
-            implode('; ', array_merge([], ...$messages)),
+            implode('; ', $messages),
             $serializedData,
             $outputData
         );
@@ -175,8 +174,8 @@ class OperationProcessor
     /**
      * Execute topic handler
      *
-     * @param callable $callback
-     * @param array $entityParams
+     * @param $callback
+     * @param $entityParams
      * @return array
      */
     private function executeHandler($callback, $entityParams)
@@ -188,9 +187,7 @@ class OperationProcessor
             'output_data' => null
         ];
         try {
-            // phpcs:disable Magento2.Functions.DiscouragedFunction
             $result['output_data'] = call_user_func_array($callback, $entityParams);
-            // phpcs:enable Magento2.Functions.DiscouragedFunction
             $result['messages'][] = sprintf('Service execution success %s::%s', get_class($callback[0]), $callback[1]);
         } catch (\Zend_Db_Adapter_Exception  $e) {
             $this->logger->critical($e->getMessage());
@@ -209,7 +206,9 @@ class OperationProcessor
             }
         } catch (NoSuchEntityException $e) {
             $this->logger->error($e->getMessage());
-            $result['status'] = OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED;
+            $result['status'] = ($e instanceof TemporaryStateExceptionInterface) ?
+                OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED :
+                OperationInterface::STATUS_TYPE_NOT_RETRIABLY_FAILED;
             $result['error_code'] = $e->getCode();
             $result['messages'][] = $e->getMessage();
         } catch (LocalizedException $e) {

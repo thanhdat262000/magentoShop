@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\CatalogGraphQl\Model\Resolver\Product;
 
-use GraphQL\Language\AST\NodeKind;
 use Magento\Framework\GraphQl\Query\FieldTranslator;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
@@ -44,9 +43,9 @@ class ProductFieldsSelector
                 continue;
             }
             foreach ($node->selectionSet->selections as $selectionNode) {
-                if ($selectionNode->kind === NodeKind::INLINE_FRAGMENT) {
+                if ($selectionNode->kind === 'InlineFragment') {
                     foreach ($selectionNode->selectionSet->selections as $inlineSelection) {
-                        if ($inlineSelection->kind === NodeKind::INLINE_FRAGMENT) {
+                        if ($inlineSelection->kind === 'InlineFragment') {
                             continue;
                         }
                         $fieldNames[] = $this->fieldTranslator->translate($inlineSelection->name->value);

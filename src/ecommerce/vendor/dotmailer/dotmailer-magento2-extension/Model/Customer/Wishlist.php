@@ -2,8 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Model\Customer;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
-
 /**
  * Transactional data for customer wishlist.
  */
@@ -42,18 +40,18 @@ class Wishlist
     public $updatedAt;
 
     /**
-     * @var DateTime
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
-    private $dateTime;
+    private $localeDate;
 
     /**
      * Wishlist constructor.
-     * @param DateTime $dateTime
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
      */
     public function __construct(
-        DateTime $dateTime
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
     ) {
-        $this->dateTime = $dateTime;
+        $this->localeDate = $localeDate;
     }
     /**
      * @param \Magento\Customer\Model\Customer $customer
@@ -129,7 +127,7 @@ class Wishlist
     {
         $properties = array_diff_key(
             get_object_vars($this),
-            array_flip(['dateTime'])
+            array_flip(['localeDate'])
         );
 
         //remove null/0/false values
@@ -147,7 +145,9 @@ class Wishlist
      */
     public function setUpdatedAt($date)
     {
-        $this->updatedAt = $this->dateTime->date(\Zend_Date::ISO_8601, $date);
+        $date = $this->localeDate->date($date)
+            ->format(\Zend_Date::ISO_8601);
+        $this->updatedAt = $date;
 
         return $this;
     }

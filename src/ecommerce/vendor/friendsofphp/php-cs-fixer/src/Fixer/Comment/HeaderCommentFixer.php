@@ -37,19 +37,15 @@ final class HeaderCommentFixer extends AbstractFixer implements ConfigurationDef
 
     /** @deprecated will be removed in 3.0 */
     const HEADER_LOCATION_AFTER_OPEN = 1;
-
     /** @deprecated will be removed in 3.0 */
     const HEADER_LOCATION_AFTER_DECLARE_STRICT = 2;
 
     /** @deprecated will be removed in 3.0 */
     const HEADER_LINE_SEPARATION_BOTH = 1;
-
     /** @deprecated will be removed in 3.0 */
     const HEADER_LINE_SEPARATION_TOP = 2;
-
     /** @deprecated will be removed in 3.0 */
     const HEADER_LINE_SEPARATION_BOTTOM = 3;
-
     /** @deprecated will be removed in 3.0 */
     const HEADER_LINE_SEPARATION_NONE = 4;
 
@@ -111,17 +107,17 @@ echo 1;
      */
     public function isCandidate(Tokens $tokens)
     {
-        return isset($tokens[0]) && $tokens[0]->isGivenKind(T_OPEN_TAG) && $tokens->isMonolithicPhp();
+        return $tokens[0]->isGivenKind(T_OPEN_TAG) && $tokens->isMonolithicPhp();
     }
 
     /**
      * {@inheritdoc}
-     *
-     * Must run after DeclareStrictTypesFixer, NoBlankLinesAfterPhpdocFixer.
      */
     public function getPriority()
     {
-        // When this fixer is configured with ["separate" => "bottom", "comment_type" => "PHPDoc"]
+        // should be run after the NoBlankLinesAfterPhpdocFixer.
+        //
+        // When this fixer is configured with ["separate" => "bottom", "commentType" => "PHPDoc"]
         // and the target file has no namespace or declare() construct,
         // the fixed header comment gets trimmed by NoBlankLinesAfterPhpdocFixer if we run before it.
         return -30;
@@ -132,57 +128,30 @@ echo 1;
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens)
     {
-        $location = $this->configuration['location'];
-        $locationIndexes = [];
+        // figure out where the comment should be placed
+        $headerNewIndex = $this->findHeaderCommentInsertionIndex($tokens);
 
-        foreach (['after_open', 'after_declare_strict'] as $possibleLocation) {
-            $locationIndex = $this->findHeaderCommentInsertionIndex($tokens, $possibleLocation);
+        // check if there is already a comment
+        $headerCurrentIndex = $this->findHeaderCommentCurrentIndex($tokens, $headerNewIndex - 1);
 
-            if (!isset($locationIndexes[$locationIndex]) || $possibleLocation === $location) {
-                $locationIndexes[$locationIndex] = $possibleLocation;
-
-                continue;
+        if (null === $headerCurrentIndex) {
+            if ('' === $this->configuration['header']) {
+                return; // header not found and none should be set, return
             }
+
+            $this->insertHeader($tokens, $headerNewIndex);
+        } elseif ($this->getHeaderAsComment() !== $tokens[$headerCurrentIndex]->getContent()) {
+            $tokens->clearTokenAndMergeSurroundingWhitespace($headerCurrentIndex);
+            if ('' === $this->configuration['header']) {
+                return; // header found and cleared, none should be set, return
+            }
+
+            $this->insertHeader($tokens, $headerNewIndex);
+        } else {
+            $headerNewIndex = $headerCurrentIndex;
         }
 
-        foreach (array_values($locationIndexes) as $possibleLocation) {
-            // figure out where the comment should be placed
-            $headerNewIndex = $this->findHeaderCommentInsertionIndex($tokens, $possibleLocation);
-
-            // check if there is already a comment
-            $headerCurrentIndex = $this->findHeaderCommentCurrentIndex($tokens, $headerNewIndex - 1);
-
-            if (null === $headerCurrentIndex) {
-                if ('' === $this->configuration['header'] || $possibleLocation !== $location) {
-                    continue;
-                }
-
-                $this->insertHeader($tokens, $headerNewIndex);
-
-                continue;
-            }
-
-            $sameComment = $this->getHeaderAsComment() === $tokens[$headerCurrentIndex]->getContent();
-            $expectedLocation = $possibleLocation === $location;
-
-            if (!$sameComment || !$expectedLocation) {
-                if ($expectedLocation ^ $sameComment) {
-                    $this->removeHeader($tokens, $headerCurrentIndex);
-                }
-
-                if ('' === $this->configuration['header']) {
-                    continue;
-                }
-
-                if ($possibleLocation === $location) {
-                    $this->insertHeader($tokens, $headerNewIndex);
-                }
-
-                continue;
-            }
-
-            $this->fixWhiteSpaceAroundHeader($tokens, $headerCurrentIndex);
-        }
+        $this->fixWhiteSpaceAroundHeader($tokens, $headerNewIndex);
     }
 
     /**
@@ -233,6 +202,7 @@ echo 1;
     private function getHeaderAsComment()
     {
         $lineEnding = $this->whitespacesConfig->getLineEnding();
+
         $comment = (self::HEADER_COMMENT === $this->configuration['comment_type'] ? '/*' : '/**').$lineEnding;
         $lines = explode("\n", str_replace("\r", '', $this->configuration['header']));
 
@@ -244,7 +214,8 @@ echo 1;
     }
 
     /**
-     * @param int $headerNewIndex
+     * @param Tokens $tokens
+     * @param int    $headerNewIndex
      *
      * @return null|int
      */
@@ -252,48 +223,26 @@ echo 1;
     {
         $index = $tokens->getNextNonWhitespace($headerNewIndex);
 
-        if (null === $index || !$tokens[$index]->isComment()) {
-            return null;
-        }
-
-        $next = $index + 1;
-
-        if (!isset($tokens[$next]) || \in_array($this->configuration['separate'], ['top', 'none'], true) || !$tokens[$index]->isGivenKind(T_DOC_COMMENT)) {
-            return $index;
-        }
-
-        if ($tokens[$next]->isWhitespace()) {
-            if (!Preg::match('/^\h*\R\h*$/D', $tokens[$next]->getContent())) {
-                return $index;
-            }
-
-            ++$next;
-        }
-
-        if (!isset($tokens[$next]) || !$tokens[$next]->isClassy() && !$tokens[$next]->isGivenKind(T_FUNCTION)) {
-            return $index;
-        }
-
-        return $this->getHeaderAsComment() === $tokens[$index]->getContent() ? $index : null;
+        return null === $index || !$tokens[$index]->isComment() ? null : $index;
     }
 
     /**
      * Find the index where the header comment must be inserted.
      *
-     * @param string $location
+     * @param Tokens $tokens
      *
      * @return int
      */
-    private function findHeaderCommentInsertionIndex(Tokens $tokens, $location)
+    private function findHeaderCommentInsertionIndex(Tokens $tokens)
     {
-        if ('after_open' === $location) {
+        if ('after_open' === $this->configuration['location']) {
             return 1;
         }
 
         $index = $tokens->getNextMeaningfulToken(0);
-
         if (null === $index) {
-            return 1; // file without meaningful tokens but an open tag, comment should always be placed directly after the open tag
+            // file without meaningful tokens but an open tag, comment should always be placed directly after the open tag
+            return 1;
         }
 
         if (!$tokens[$index]->isGivenKind(T_DECLARE)) {
@@ -301,37 +250,31 @@ echo 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($index);
-
         if (null === $next || !$tokens[$next]->equals('(')) {
             return 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($next);
-
         if (null === $next || !$tokens[$next]->equals([T_STRING, 'strict_types'], false)) {
             return 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($next);
-
         if (null === $next || !$tokens[$next]->equals('=')) {
             return 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($next);
-
         if (null === $next || !$tokens[$next]->isGivenKind(T_LNUMBER)) {
             return 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($next);
-
         if (null === $next || !$tokens[$next]->equals(')')) {
             return 1;
         }
 
         $next = $tokens->getNextMeaningfulToken($next);
-
         if (null === $next || !$tokens[$next]->equals(';')) { // don't insert after close tag
             return 1;
         }
@@ -340,41 +283,32 @@ echo 1;
     }
 
     /**
-     * @param int $headerIndex
+     * @param Tokens $tokens
+     * @param int    $headerIndex
      */
     private function fixWhiteSpaceAroundHeader(Tokens $tokens, $headerIndex)
     {
         $lineEnding = $this->whitespacesConfig->getLineEnding();
 
         // fix lines after header comment
-        if (
-            ('both' === $this->configuration['separate'] || 'bottom' === $this->configuration['separate'])
-            && null !== $tokens->getNextMeaningfulToken($headerIndex)
-        ) {
-            $expectedLineCount = 2;
-        } else {
-            $expectedLineCount = 1;
-        }
-
+        $expectedLineCount = 'both' === $this->configuration['separate'] || 'bottom' === $this->configuration['separate'] ? 2 : 1;
         if ($headerIndex === \count($tokens) - 1) {
             $tokens->insertAt($headerIndex + 1, new Token([T_WHITESPACE, str_repeat($lineEnding, $expectedLineCount)]));
         } else {
-            $lineBreakCount = $this->getLineBreakCount($tokens, $headerIndex, 1);
-
+            $afterCommentIndex = $tokens->getNextNonWhitespace($headerIndex);
+            $lineBreakCount = $this->getLineBreakCount($tokens, $headerIndex + 1, null === $afterCommentIndex ? \count($tokens) : $afterCommentIndex);
             if ($lineBreakCount < $expectedLineCount) {
                 $missing = str_repeat($lineEnding, $expectedLineCount - $lineBreakCount);
-
                 if ($tokens[$headerIndex + 1]->isWhitespace()) {
                     $tokens[$headerIndex + 1] = new Token([T_WHITESPACE, $missing.$tokens[$headerIndex + 1]->getContent()]);
                 } else {
                     $tokens->insertAt($headerIndex + 1, new Token([T_WHITESPACE, $missing]));
                 }
-            } elseif ($lineBreakCount > $expectedLineCount && $tokens[$headerIndex + 1]->isWhitespace()) {
-                $newLinesToRemove = $lineBreakCount - $expectedLineCount;
-                $tokens[$headerIndex + 1] = new Token([
-                    T_WHITESPACE,
-                    Preg::replace("/^\\R{{$newLinesToRemove}}/", '', $tokens[$headerIndex + 1]->getContent()),
-                ]);
+            } elseif ($lineBreakCount > 2) {
+                // remove extra line endings
+                if ($tokens[$headerIndex + 1]->isWhitespace()) {
+                    $tokens[$headerIndex + 1] = new Token([T_WHITESPACE, $lineEnding.$lineEnding]);
+                }
             }
         }
 
@@ -382,14 +316,12 @@ echo 1;
         $expectedLineCount = 'both' === $this->configuration['separate'] || 'top' === $this->configuration['separate'] ? 2 : 1;
         $prev = $tokens->getPrevNonWhitespace($headerIndex);
 
-        $regex = '/\h$/';
-
+        $regex = '/[\t ]$/';
         if ($tokens[$prev]->isGivenKind(T_OPEN_TAG) && Preg::match($regex, $tokens[$prev]->getContent())) {
             $tokens[$prev] = new Token([T_OPEN_TAG, Preg::replace($regex, $lineEnding, $tokens[$prev]->getContent())]);
         }
 
-        $lineBreakCount = $this->getLineBreakCount($tokens, $headerIndex, -1);
-
+        $lineBreakCount = $this->getLineBreakCount($tokens, $prev, $headerIndex);
         if ($lineBreakCount < $expectedLineCount) {
             // because of the way the insert index was determined for header comment there cannot be an empty token here
             $tokens->insertAt($headerIndex, new Token([T_WHITESPACE, str_repeat($lineEnding, $expectedLineCount - $lineBreakCount)]));
@@ -397,80 +329,28 @@ echo 1;
     }
 
     /**
-     * @param int $index
-     * @param int $direction
+     * @param Tokens $tokens
+     * @param int    $indexStart
+     * @param int    $indexEnd
      *
      * @return int
      */
-    private function getLineBreakCount(Tokens $tokens, $index, $direction)
+    private function getLineBreakCount(Tokens $tokens, $indexStart, $indexEnd)
     {
-        $whitespace = '';
-
-        for ($index += $direction; isset($tokens[$index]); $index += $direction) {
-            $token = $tokens[$index];
-
-            if ($token->isWhitespace()) {
-                $whitespace .= $token->getContent();
-
-                continue;
-            }
-
-            if (-1 === $direction && $token->isGivenKind(T_OPEN_TAG)) {
-                $whitespace .= $token->getContent();
-            }
-
-            if ('' !== $token->getContent()) {
-                break;
-            }
+        $lineCount = 0;
+        for ($i = $indexStart; $i < $indexEnd; ++$i) {
+            $lineCount += substr_count($tokens[$i]->getContent(), "\n");
         }
 
-        return substr_count($whitespace, "\n");
-    }
-
-    private function removeHeader(Tokens $tokens, $index)
-    {
-        $prevIndex = $index - 1;
-        $prevToken = $tokens[$prevIndex];
-        $newlineRemoved = false;
-
-        if ($prevToken->isWhitespace()) {
-            $content = $prevToken->getContent();
-
-            if (Preg::match('/\R/', $content)) {
-                $newlineRemoved = true;
-            }
-
-            $content = Preg::replace('/\R?\h*$/', '', $content);
-
-            if ('' === $content) {
-                $tokens->clearAt($prevIndex);
-            } else {
-                $tokens[$prevIndex] = new Token([T_WHITESPACE, $content]);
-            }
-        }
-
-        $nextIndex = $index + 1;
-        $nextToken = isset($tokens[$nextIndex]) ? $tokens[$nextIndex] : null;
-
-        if (!$newlineRemoved && null !== $nextToken && $nextToken->isWhitespace()) {
-            $content = Preg::replace('/^\R/', '', $nextToken->getContent());
-
-            if ('' === $content) {
-                $tokens->clearAt($nextIndex);
-            } else {
-                $tokens[$nextIndex] = new Token([T_WHITESPACE, $content]);
-            }
-        }
-
-        $tokens->clearTokenAndMergeSurroundingWhitespace($index);
+        return $lineCount;
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      */
     private function insertHeader(Tokens $tokens, $index)
     {
         $tokens->insertAt($index, new Token([self::HEADER_COMMENT === $this->configuration['comment_type'] ? T_COMMENT : T_DOC_COMMENT, $this->getHeaderAsComment()]));
-        $this->fixWhiteSpaceAroundHeader($tokens, $index);
     }
 }

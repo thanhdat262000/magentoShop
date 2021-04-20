@@ -18,15 +18,15 @@ interface ProductOptionExtensionInterface extends \Magento\Framework\Api\Extensi
     public function setCustomOptions($customOptions);
 
     /**
-     * @return \Magento\Bundle\Api\Data\BundleOptionInterface[]|null
+     * @return \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[]|null
      */
-    public function getBundleOptions();
+    public function getConfigurableItemOptions();
 
     /**
-     * @param \Magento\Bundle\Api\Data\BundleOptionInterface[] $bundleOptions
+     * @param \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[] $configurableItemOptions
      * @return $this
      */
-    public function setBundleOptions($bundleOptions);
+    public function setConfigurableItemOptions($configurableItemOptions);
 
     /**
      * @return \Magento\Downloadable\Api\Data\DownloadableOptionInterface|null
@@ -40,13 +40,13 @@ interface ProductOptionExtensionInterface extends \Magento\Framework\Api\Extensi
     public function setDownloadableOption(\Magento\Downloadable\Api\Data\DownloadableOptionInterface $downloadableOption);
 
     /**
-     * @return \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[]|null
+     * @return \Magento\Bundle\Api\Data\BundleOptionInterface[]|null
      */
-    public function getConfigurableItemOptions();
+    public function getBundleOptions();
 
     /**
-     * @param \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[] $configurableItemOptions
+     * @param \Magento\Bundle\Api\Data\BundleOptionInterface[] $bundleOptions
      * @return $this
      */
-    public function setConfigurableItemOptions($configurableItemOptions);
+    public function setBundleOptions($bundleOptions);
 }

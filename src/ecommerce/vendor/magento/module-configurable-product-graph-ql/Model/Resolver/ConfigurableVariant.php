@@ -97,8 +97,8 @@ class ConfigurableVariant implements ResolverInterface
         $this->variantCollection->addEavAttributes($fields);
         $this->optionCollection->addProductId((int)$value[$linkField]);
 
-        $result = function () use ($value, $linkField, $context) {
-            $children = $this->variantCollection->getChildProductsByParentId((int)$value[$linkField], $context);
+        $result = function () use ($value, $linkField) {
+            $children = $this->variantCollection->getChildProductsByParentId((int)$value[$linkField]);
             $options = $this->optionCollection->getAttributesByProductId((int)$value[$linkField]);
             $variants = [];
             /** @var Product $child */

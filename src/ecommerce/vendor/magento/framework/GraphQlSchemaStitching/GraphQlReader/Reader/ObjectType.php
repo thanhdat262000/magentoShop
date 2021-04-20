@@ -19,8 +19,6 @@ use Magento\Framework\GraphQlSchemaStitching\GraphQlReader\MetaReader\Deprecated
  */
 class ObjectType implements TypeMetaReaderInterface
 {
-    public const GRAPHQL_TYPE = 'graphql_type';
-
     /**
      * @var FieldMetaReader
      */
@@ -71,7 +69,7 @@ class ObjectType implements TypeMetaReaderInterface
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function read(\GraphQL\Type\Definition\Type $typeMeta) : array
     {
@@ -79,7 +77,7 @@ class ObjectType implements TypeMetaReaderInterface
             $typeName = $typeMeta->name;
             $result = [
                 'name' => $typeName,
-                'type' => self::GRAPHQL_TYPE,
+                'type' => 'graphql_type',
                 'fields' => [], // Populated later
             ];
 

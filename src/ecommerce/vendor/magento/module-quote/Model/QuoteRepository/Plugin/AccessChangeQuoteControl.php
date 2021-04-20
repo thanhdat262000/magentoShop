@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Quote\Model\QuoteRepository\Plugin;
 
@@ -33,17 +32,16 @@ class AccessChangeQuoteControl
     /**
      * Checks if change quote's customer id is allowed for current user.
      *
-     * A StateException is thrown if Guest's or Customer's customer_id not match user_id or unknown user type
-     *
      * @param CartRepositoryInterface $subject
      * @param CartInterface $quote
+     * @throws StateException if Guest has customer_id or Customer's customer_id not much with user_id
+     * or unknown user's type
      * @return void
-     * @throws StateException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSave(CartRepositoryInterface $subject, CartInterface $quote): void
+    public function beforeSave(CartRepositoryInterface $subject, CartInterface $quote)
     {
-        if (!$this->changeQuoteControl->isAllowed($quote)) {
+        if (! $this->changeQuoteControl->isAllowed($quote)) {
             throw new StateException(__("Invalid state change requested"));
         }
     }

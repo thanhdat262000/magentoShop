@@ -22,7 +22,7 @@ class FirstOrderTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    public function setUp() :void
+    public function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->orderIncrementId = '100000001';

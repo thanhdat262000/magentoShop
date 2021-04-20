@@ -8,9 +8,6 @@ namespace Magento\Indexer\Controller\Adminhtml\Indexer;
 
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 
-/**
- * Controller endpoint for mass action: set index mode as 'Update by Schedule'
- */
 class MassChangelog extends \Magento\Indexer\Controller\Adminhtml\Indexer implements HttpPostActionInterface
 {
     /**
@@ -22,7 +19,7 @@ class MassChangelog extends \Magento\Indexer\Controller\Adminhtml\Indexer implem
     {
         $indexerIds = $this->getRequest()->getParam('indexer_ids');
         if (!is_array($indexerIds)) {
-            $this->messageManager->addErrorMessage(__('Please select indexers.'));
+            $this->messageManager->addError(__('Please select indexers.'));
         } else {
             try {
                 foreach ($indexerIds as $indexerId) {
@@ -36,7 +33,7 @@ class MassChangelog extends \Magento\Indexer\Controller\Adminhtml\Indexer implem
                     __('%1 indexer(s) are in "Update by Schedule" mode.', count($indexerIds))
                 );
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
+                $this->messageManager->addError($e->getMessage());
             } catch (\Exception $e) {
                 $this->messageManager->addException(
                     $e,

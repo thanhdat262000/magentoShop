@@ -5,17 +5,11 @@
  */
 namespace Magento\Swatches\Block\LayeredNavigation;
 
-use Magento\Catalog\Model\Layer\Filter\AbstractFilter;
-use Magento\Catalog\Model\Layer\Filter\Item as FilterItem;
-use Magento\Catalog\Model\ResourceModel\Layer\Filter\AttributeFactory;
 use Magento\Eav\Model\Entity\Attribute;
-use Magento\Eav\Model\Entity\Attribute\Option;
-use Magento\Framework\App\ObjectManager;
+use Magento\Catalog\Model\ResourceModel\Layer\Filter\AttributeFactory;
 use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-use Magento\Swatches\Helper\Data;
-use Magento\Swatches\Helper\Media;
-use Magento\Theme\Block\Html\Pager;
+use Magento\Eav\Model\Entity\Attribute\Option;
+use Magento\Catalog\Model\Layer\Filter\Item as FilterItem;
 
 /**
  * Class RenderLayered Render Swatches at Layered Navigation
@@ -43,7 +37,7 @@ class RenderLayered extends Template
     protected $eavAttribute;
 
     /**
-     * @var AbstractFilter
+     * @var \Magento\Catalog\Model\Layer\Filter\AbstractFilter
      */
     protected $filter;
 
@@ -53,52 +47,41 @@ class RenderLayered extends Template
     protected $layerAttribute;
 
     /**
-     * @var Data
+     * @var \Magento\Swatches\Helper\Data
      */
     protected $swatchHelper;
 
     /**
-     * @var Media
+     * @var \Magento\Swatches\Helper\Media
      */
     protected $mediaHelper;
 
     /**
-     * @var Pager
-     */
-    private $htmlPagerBlock;
-
-    /**
-     * @param Context $context
+     * @param Template\Context $context
      * @param Attribute $eavAttribute
      * @param AttributeFactory $layerAttribute
-     * @param Data $swatchHelper
-     * @param Media $mediaHelper
+     * @param \Magento\Swatches\Helper\Data $swatchHelper
+     * @param \Magento\Swatches\Helper\Media $mediaHelper
      * @param array $data
-     * @param Pager|null $htmlPagerBlock
      */
     public function __construct(
-        Context $context,
+        \Magento\Framework\View\Element\Template\Context $context,
         Attribute $eavAttribute,
         AttributeFactory $layerAttribute,
-        Data $swatchHelper,
-        Media $mediaHelper,
-        array $data = [],
-        ?Pager $htmlPagerBlock = null
+        \Magento\Swatches\Helper\Data $swatchHelper,
+        \Magento\Swatches\Helper\Media $mediaHelper,
+        array $data = []
     ) {
         $this->eavAttribute = $eavAttribute;
         $this->layerAttribute = $layerAttribute;
         $this->swatchHelper = $swatchHelper;
         $this->mediaHelper = $mediaHelper;
-        $this->htmlPagerBlock = $htmlPagerBlock ?? ObjectManager::getInstance()->get(Pager::class);
 
         parent::__construct($context, $data);
     }
 
     /**
-     * Set filter and attribute objects
-     *
      * @param \Magento\Catalog\Model\Layer\Filter\AbstractFilter $filter
-     *
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -111,8 +94,6 @@ class RenderLayered extends Template
     }
 
     /**
-     * Get attribute swatch data
-     *
      * @return array
      */
     public function getSwatchData()
@@ -133,46 +114,30 @@ class RenderLayered extends Template
         $attributeOptionIds = array_keys($attributeOptions);
         $swatches = $this->swatchHelper->getSwatchesByOptionsId($attributeOptionIds);
 
-        return [
+        $data = [
             'attribute_id' => $this->eavAttribute->getId(),
             'attribute_code' => $this->eavAttribute->getAttributeCode(),
             'attribute_label' => $this->eavAttribute->getStoreLabel(),
             'options' => $attributeOptions,
             'swatches' => $swatches,
         ];
+
+        return $data;
     }
 
     /**
-     * Build filter option url
-     *
      * @param string $attributeCode
      * @param int $optionId
-     *
      * @return string
      */
     public function buildUrl($attributeCode, $optionId)
     {
-        $query = [
-            $attributeCode => $optionId,
-            // exclude current page from urls
-            $this->htmlPagerBlock->getPageVarName() => null
-        ];
-
-        return $this->_urlBuilder->getUrl(
-            '*/*/*',
-            [
-                '_current' => true,
-                '_use_rewrite' => true,
-                '_query' => $query
-            ]
-        );
+        $query = [$attributeCode => $optionId];
+        return $this->_urlBuilder->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => $query]);
     }
 
     /**
-     * Get view data for option with no results
-     *
      * @param Option $swatchOption
-     *
      * @return array
      */
     protected function getUnusedOption(Option $swatchOption)
@@ -185,11 +150,8 @@ class RenderLayered extends Template
     }
 
     /**
-     * Get option data if visible
-     *
      * @param FilterItem[] $filterItems
      * @param Option $swatchOption
-     *
      * @return array
      */
     protected function getFilterOption(array $filterItems, Option $swatchOption)
@@ -204,11 +166,8 @@ class RenderLayered extends Template
     }
 
     /**
-     * Get view data for option
-     *
      * @param FilterItem $filterItem
      * @param Option $swatchOption
-     *
      * @return array
      */
     protected function getOptionViewData(FilterItem $filterItem, Option $swatchOption)
@@ -228,20 +187,15 @@ class RenderLayered extends Template
     }
 
     /**
-     * Check if option should be visible
-     *
      * @param FilterItem $filterItem
-     *
      * @return bool
      */
     protected function isOptionVisible(FilterItem $filterItem)
     {
-        return !($this->isOptionDisabled($filterItem) && $this->isShowEmptyResults());
+        return $this->isOptionDisabled($filterItem) && $this->isShowEmptyResults() ? false : true;
     }
 
     /**
-     * Check if attribute values should be visible with no results
-     *
      * @return bool
      */
     protected function isShowEmptyResults()
@@ -250,10 +204,7 @@ class RenderLayered extends Template
     }
 
     /**
-     * Check if option should be disabled
-     *
      * @param FilterItem $filterItem
-     *
      * @return bool
      */
     protected function isOptionDisabled(FilterItem $filterItem)
@@ -262,11 +213,8 @@ class RenderLayered extends Template
     }
 
     /**
-     * Retrieve filter item by id
-     *
      * @param FilterItem[] $filterItems
      * @param integer $id
-     *
      * @return bool|FilterItem
      */
     protected function getFilterItemById(array $filterItems, $id)
@@ -280,15 +228,14 @@ class RenderLayered extends Template
     }
 
     /**
-     * Get swatch image path
-     *
      * @param string $type
      * @param string $filename
-     *
      * @return string
      */
     public function getSwatchPath($type, $filename)
     {
-        return $this->mediaHelper->getSwatchAttributeImage($type, $filename);
+        $imagePath = $this->mediaHelper->getSwatchAttributeImage($type, $filename);
+
+        return $imagePath;
     }
 }

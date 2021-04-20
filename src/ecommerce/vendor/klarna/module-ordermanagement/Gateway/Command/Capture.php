@@ -25,10 +25,6 @@ use Magento\Framework\App\RequestInterface;
 
 class Capture extends AbstractCommand
 {
-    /**
-     * @var RequestInterface
-     */
-    private $request;
 
     /**
      * @param KlarnaOrderRepository $kOrderRepository
@@ -64,6 +60,8 @@ class Capture extends AbstractCommand
     }
 
     /**
+     * Capture command
+     *
      * @param array $commandSubject
      *
      * @return null|Command\ResultInterface
@@ -77,7 +75,7 @@ class Capture extends AbstractCommand
         $requestData =  $this->request->getPost();
         /** @var \Magento\Payment\Model\InfoInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
-        $amount = (float) $commandSubject['amount'];
+        $amount = $commandSubject['amount'];
 
         $klarnaOrder = $this->getKlarnaOrder($payment->getOrder());
 

@@ -7,13 +7,12 @@ declare(strict_types=1);
 
 namespace Magento\SalesRule\Plugin;
 
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\QuoteManagement;
-use Magento\SalesRule\Model\Coupon\Quote\UpdateCouponUsages;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Service\OrderService;
+use Magento\SalesRule\Model\Coupon\UpdateCouponUsages;
 
 /**
- * Increments number of coupon usages before placing order
+ * Increments number of coupon usages after placing order.
  */
 class CouponUsagesIncrement
 {
@@ -25,28 +24,24 @@ class CouponUsagesIncrement
     /**
      * @param UpdateCouponUsages $updateCouponUsages
      */
-    public function __construct(UpdateCouponUsages $updateCouponUsages)
-    {
+    public function __construct(
+        UpdateCouponUsages $updateCouponUsages
+    ) {
         $this->updateCouponUsages = $updateCouponUsages;
     }
 
     /**
-     * Increments number of coupon usages before placing order
+     * Increments number of coupon usages after placing order.
      *
-     * @param QuoteManagement $subject
-     * @param Quote $quote
-     * @param array $orderData
-     * @return void
+     * @param OrderService $subject
+     * @param OrderInterface $result
+     * @return OrderInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws NoSuchEntityException
      */
-    public function beforeSubmit(QuoteManagement $subject, Quote $quote, $orderData = [])
+    public function afterPlace(OrderService $subject, OrderInterface $result): OrderInterface
     {
-        /* if coupon code has been canceled then need to notify the customer */
-        if (!$quote->getCouponCode() && $quote->dataHasChangedFor('coupon_code')) {
-            throw new NoSuchEntityException(__("The coupon code isn't valid. Verify the code and try again."));
-        }
+        $this->updateCouponUsages->execute($result, true);
 
-        $this->updateCouponUsages->execute($quote, true);
+        return $result;
     }
 }

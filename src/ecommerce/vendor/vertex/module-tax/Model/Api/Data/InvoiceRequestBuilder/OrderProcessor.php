@@ -84,6 +84,8 @@ class OrderProcessor
      */
     public function process(OrderInterface $order)
     {
+        $address = $order->getIsVirtual() ? $order->getBillingAddress() : $this->getShippingFromOrder($order);
+
         $scopeCode = $order->getStoreId();
 
         $seller = $this->sellerBuilder
@@ -91,7 +93,12 @@ class OrderProcessor
             ->setScopeCode($scopeCode)
             ->build();
 
-        $customer = $this->customerBuilder->buildFromOrder($order);
+        $customer = $this->customerBuilder->buildFromOrderAddress(
+            $address,
+            $order->getCustomerId(),
+            $order->getCustomerGroupId(),
+            $scopeCode
+        );
 
         $invoiceMapper = $this->mapperFactory->getForClass(RequestInterface::class, $scopeCode);
 
@@ -108,16 +115,32 @@ class OrderProcessor
         $configLocationCode = $this->config->getLocationCode($scopeCode);
 
         if ($configLocationCode) {
-            $locationCode = $this->stringUtilities->substr(
-                $configLocationCode,
-                0,
-                $invoiceMapper->getLocationCodeMaxLength()
-            );
+            $locationCode = $this->stringUtilities->substr($configLocationCode, 0, $invoiceMapper->getLocationCodeMaxLength());
             $request->setLocationCode($locationCode);
         }
 
         $request = $this->processorPool->process($request, $order);
 
         return $request;
+    }
+
+    /**
+     * Retrieve the shipping address from an Order
+     *
+     * @param OrderInterface $order
+     * @return OrderAddressInterface|null
+     */
+    private function getShippingFromOrder(OrderInterface $order)
+    {
+        if ($order instanceof Order && $order->getShippingAddress()) {
+            return $order->getShippingAddress();
+        }
+
+        return $order->getExtensionAttributes() !== null
+        && $order->getExtensionAttributes()->getShippingAssignments()
+        && $order->getExtensionAttributes()->getShippingAssignments()[0]
+        && $order->getExtensionAttributes()->getShippingAssignments()[0]->getShipping()
+            ? $order->getExtensionAttributes()->getShippingAssignments()[0]->getShipping()->getAddress()
+            : null;
     }
 }

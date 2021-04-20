@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function create(array $integrationData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'create');
-        return $pluginInfo ? $this->___callPlugins('create', func_get_args(), $pluginInfo) : parent::create($integrationData);
+        if (!$pluginInfo) {
+            return parent::create($integrationData);
+        } else {
+            return $this->___callPlugins('create', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function update(array $integrationData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'update');
-        return $pluginInfo ? $this->___callPlugins('update', func_get_args(), $pluginInfo) : parent::update($integrationData);
+        if (!$pluginInfo) {
+            return parent::update($integrationData);
+        } else {
+            return $this->___callPlugins('update', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function delete($integrationId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete($integrationId);
+        if (!$pluginInfo) {
+            return parent::delete($integrationId);
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function get($integrationId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'get');
-        return $pluginInfo ? $this->___callPlugins('get', func_get_args(), $pluginInfo) : parent::get($integrationId);
+        if (!$pluginInfo) {
+            return parent::get($integrationId);
+        } else {
+            return $this->___callPlugins('get', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function findByName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'findByName');
-        return $pluginInfo ? $this->___callPlugins('findByName', func_get_args(), $pluginInfo) : parent::findByName($name);
+        if (!$pluginInfo) {
+            return parent::findByName($name);
+        } else {
+            return $this->___callPlugins('findByName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function findByConsumerId($consumerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'findByConsumerId');
-        return $pluginInfo ? $this->___callPlugins('findByConsumerId', func_get_args(), $pluginInfo) : parent::findByConsumerId($consumerId);
+        if (!$pluginInfo) {
+            return parent::findByConsumerId($consumerId);
+        } else {
+            return $this->___callPlugins('findByConsumerId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function findActiveIntegrationByConsumerId($consumerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'findActiveIntegrationByConsumerId');
-        return $pluginInfo ? $this->___callPlugins('findActiveIntegrationByConsumerId', func_get_args(), $pluginInfo) : parent::findActiveIntegrationByConsumerId($consumerId);
+        if (!$pluginInfo) {
+            return parent::findActiveIntegrationByConsumerId($consumerId);
+        } else {
+            return $this->___callPlugins('findActiveIntegrationByConsumerId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,6 +111,10 @@ class Interceptor extends \Magento\Integration\Model\IntegrationService implemen
     public function getSelectedResources($integrationId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSelectedResources');
-        return $pluginInfo ? $this->___callPlugins('getSelectedResources', func_get_args(), $pluginInfo) : parent::getSelectedResources($integrationId);
+        if (!$pluginInfo) {
+            return parent::getSelectedResources($integrationId);
+        } else {
+            return $this->___callPlugins('getSelectedResources', func_get_args(), $pluginInfo);
+        }
     }
 }

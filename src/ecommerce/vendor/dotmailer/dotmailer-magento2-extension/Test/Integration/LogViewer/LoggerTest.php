@@ -27,7 +27,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    public function setup() :void
+    public function setup()
     {
         $objectManager = ObjectManager::getInstance();
         $this->testHandler = new TestHandler;

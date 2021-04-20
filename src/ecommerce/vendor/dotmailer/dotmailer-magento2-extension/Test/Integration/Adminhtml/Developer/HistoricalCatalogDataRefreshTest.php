@@ -30,7 +30,7 @@ class HistoricalCatalogDataRefreshTest extends \Magento\TestFramework\TestCase\A
     /**
      * @return void
      */
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
 

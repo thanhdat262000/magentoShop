@@ -3,83 +3,67 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Framework\Model\Test\Unit\ResourceModel;
 
 use Magento\Framework\DataObject;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 
-/**
- * Test for \Magento\Framework\Model\ResourceModel\AbstractResource.
- */
-class AbstractResourceTest extends TestCase
+class AbstractResourceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AbstractResourceStub
      */
-    private $model;
+    private $abstractResource;
 
     /**
-     * @var Json|MockObject
+     * @var Json|\PHPUnit_Framework_MockObject_MockObject
      */
     private $serializerMock;
 
     /**
-     * @var LoggerInterface|MockObject
+     * @var \Psr\Log\LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $loggerMock;
 
-    /**
-     * @inheritdoc
-     */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = new ObjectManager($this);
         $this->serializerMock = $this->createMock(Json::class);
-        $this->loggerMock = $this->getMockForAbstractClass(LoggerInterface::class);
-        $this->model = $objectManager->getObject(AbstractResourceStub::class);
-        $objectManager->setBackwardCompatibleProperty($this->model, 'serializer', $this->serializerMock);
-        $objectManager->setBackwardCompatibleProperty($this->model, '_logger', $this->loggerMock);
+        $this->loggerMock = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $this->abstractResource = $objectManager->getObject(AbstractResourceStub::class);
+        $objectManager->setBackwardCompatibleProperty($this->abstractResource, 'serializer', $this->serializerMock);
+        $objectManager->setBackwardCompatibleProperty($this->abstractResource, '_logger', $this->loggerMock);
     }
 
     /**
-     * Test fields serialize
-     *
      * @param array $arguments
-     * @param string|null $expected
+     * @param string $expected
      * @param array|string|int $serializeCalledWith
      * @param int $numSerializeCalled
-     * @return void
      * @dataProvider serializeFieldsDataProvider
      */
     public function testSerializeFields(
         array $arguments,
-        ?string $expected,
+        $expected,
         $serializeCalledWith,
-        int $numSerializeCalled = 1
-    ): void {
+        $numSerializeCalled = 1
+    ) {
         /** @var DataObject $dataObject */
-        [$dataObject, $field, $defaultValue, $unsetEmpty] = $arguments;
+        list($dataObject, $field, $defaultValue, $unsetEmpty) = $arguments;
         $this->serializerMock->expects($this->exactly($numSerializeCalled))
             ->method('serialize')
             ->with($serializeCalledWith)
             ->willReturn($expected);
-        $this->model->_serializeField($dataObject, $field, $defaultValue, $unsetEmpty);
+        $this->abstractResource->_serializeField($dataObject, $field, $defaultValue, $unsetEmpty);
         $this->assertEquals($expected, $dataObject->getData($field));
     }
 
     /**
-     * DataProvider for testSerializeFields()
-     *
      * @return array
      */
-    public function serializeFieldsDataProvider(): array
+    public function serializeFieldsDataProvider()
     {
         $array = ['a', 'b', 'c'];
         $string = 'i am string';
@@ -91,66 +75,60 @@ class AbstractResourceTest extends TestCase
                 'string' => $string,
                 'integer' => $integer,
                 'empty' => $empty,
-                'empty_with_default' => '',
+                'empty_with_default' => ''
             ]
         );
-
         return [
             [
                 [$dataObject, 'array', null, false],
                 '["a","b","c"]',
-                $array,
+                $array
             ],
             [
                 [$dataObject, 'string', null, false],
                 '"i am string"',
-                $string,
+                $string
             ],
             [
                 [$dataObject, 'integer', null, false],
                 '969',
-                $integer,
+                $integer
             ],
             [
                 [$dataObject, 'empty', null, true],
                 null,
                 $empty,
-                0,
+                0
             ],
             [
                 [$dataObject, 'empty_with_default', 'default', false],
                 '"default"',
-                'default',
-            ],
+                'default'
+            ]
         ];
     }
 
     /**
-     * Test fields unserialize
-     *
      * @param array $arguments
      * @param array|string|int|boolean $expected
-     * @return void
      * @dataProvider unserializeFieldsDataProvider
      */
-    public function testUnserializeFields(array $arguments, $expected): void
+    public function testUnserializeFields(array $arguments, $expected)
     {
         /** @var DataObject $dataObject */
-        [$dataObject, $field, $defaultValue] = $arguments;
+        list($dataObject, $field, $defaultValue) = $arguments;
         $this->serializerMock->expects($this->once())
             ->method('unserialize')
             ->with($dataObject->getData($field))
             ->willReturn($expected);
-        $this->model->_unserializeField($dataObject, $field, $defaultValue);
+        $this->abstractResource->_unserializeField($dataObject, $field, $defaultValue);
         $this->assertEquals($expected, $dataObject->getData($field));
     }
 
     /**
-     * DataProvider for testUnserializeFields()
-     *
      * @return array
      */
-    public function unserializeFieldsDataProvider(): array
+    public function unserializeFieldsDataProvider()
     {
         $dataObject = new DataObject(
             [
@@ -159,60 +137,54 @@ class AbstractResourceTest extends TestCase
                 'integer' => '969',
                 'empty_with_default' => '""',
                 'not_serialized_string' => 'i am string',
-                'serialized_boolean_false' => 'false',
+                'serialized_boolean_false' => 'false'
             ]
         );
-
         return [
             [
                 [$dataObject, 'array', null],
-                ['a', 'b', 'c'],
+                ['a', 'b', 'c']
             ],
             [
                 [$dataObject, 'string', null],
-                'i am string',
+                'i am string'
             ],
             [
                 [$dataObject, 'integer', null],
-                969,
+                969
             ],
             [
                 [$dataObject, 'empty_with_default', 'default', false],
-                'default',
+                'default'
             ],
             [
                 [$dataObject, 'not_serialized_string', null],
-                'i am string',
+                'i am string'
             ],
             [
                 [$dataObject, 'serialized_boolean_false', null],
                 false,
-            ],
+            ]
         ];
     }
-
-    /**
-     * Commit zero level
-     *
-     * @return void
-     */
-    public function testCommitZeroLevel(): void
+    
+    public function testCommitZeroLevel()
     {
-        /** @var AdapterInterface|MockObject $connection */
-        $connection = $this->getMockForAbstractClass(AdapterInterface::class);
-        /** @var DataObject|MockObject $closureExpectation */
+        /** @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->createMock(AdapterInterface::class);
+        /** @var DataObject|\PHPUnit_Framework_MockObject_MockObject $closureExpectation */
         $closureExpectation = $this->getMockBuilder(DataObject::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->model->setConnection($connection);
-        $this->model->addCommitCallback(
+        $this->abstractResource->setConnection($connection);
+        $this->abstractResource->addCommitCallback(
             function () use ($closureExpectation) {
                 $closureExpectation->setData(1);
             }
         );
 
-        $this->model->addCommitCallback(
+        $this->abstractResource->addCommitCallback(
             function () use ($closureExpectation) {
                 $closureExpectation->getData();
             }
@@ -229,21 +201,16 @@ class AbstractResourceTest extends TestCase
         $closureExpectation->expects($this->once())
             ->method('getData');
 
-        $this->model->commit();
+        $this->abstractResource->commit();
     }
 
-    /**
-     * Commit zero level callback with exception
-     *
-     * @return void
-     */
-    public function testCommitZeroLevelCallbackException(): void
+    public function testCommitZeroLevelCallbackException()
     {
-        /** @var AdapterInterface|MockObject $connection */
-        $connection = $this->getMockForAbstractClass(AdapterInterface::class);
+        /** @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->createMock(AdapterInterface::class);
 
-        $this->model->setConnection($connection);
-        $this->model->addCommitCallback(
+        $this->abstractResource->setConnection($connection);
+        $this->abstractResource->addCommitCallback(
             function () {
                 throw new \Exception();
             }
@@ -257,25 +224,20 @@ class AbstractResourceTest extends TestCase
         $this->loggerMock->expects($this->once())
             ->method('critical');
 
-        $this->model->commit();
+        $this->abstractResource->commit();
     }
 
-    /**
-     * Commit of transactions that have not been completed
-     *
-     * @return void
-     */
-    public function testCommitNotCompletedTransaction(): void
+    public function testCommitNotCompletedTransaction()
     {
-        /** @var AdapterInterface|MockObject $connection */
-        $connection = $this->getMockForAbstractClass(AdapterInterface::class);
-        /** @var DataObject|MockObject $closureExpectation */
+        /** @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->createMock(AdapterInterface::class);
+        /** @var DataObject|\PHPUnit_Framework_MockObject_MockObject $closureExpectation */
         $closureExpectation = $this->getMockBuilder(DataObject::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->model->setConnection($connection);
-        $this->model->addCommitCallback(
+        $this->abstractResource->setConnection($connection);
+        $this->abstractResource->addCommitCallback(
             function () use ($closureExpectation) {
                 $closureExpectation->setData(1);
             }
@@ -291,47 +253,6 @@ class AbstractResourceTest extends TestCase
             ->method('setData')
             ->with(1);
 
-        $this->model->commit();
-    }
-
-    /**
-     * Test commit case when first callback throws an exception but other callbacks will be called
-     *
-     * @return void
-     */
-    public function testCommitFewCallbacksWithException(): void
-    {
-        /** @var AdapterInterface|MockObject $connection */
-        $connection = $this->createMock(AdapterInterface::class);
-
-        /** @var DataObject|MockObject $closureExpectation */
-        $closureExpectation = $this->getMockBuilder(DataObject::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->model->setConnection($connection);
-        $this->model->addCommitCallback(
-            function () {
-                throw new \Exception();
-            }
-        );
-
-        $this->model->addCommitCallback(
-            function () use ($closureExpectation) {
-                $closureExpectation->getData();
-            }
-        );
-
-        $connection->expects($this->once())
-            ->method('commit');
-        $connection->expects($this->once())
-            ->method('getTransactionLevel')
-            ->willReturn(0);
-        $this->loggerMock->expects($this->once())
-            ->method('critical');
-        $closureExpectation->expects($this->once())
-            ->method('getData');
-
-        $this->model->commit();
+        $this->abstractResource->commit();
     }
 }

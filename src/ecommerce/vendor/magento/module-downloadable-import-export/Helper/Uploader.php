@@ -6,7 +6,6 @@
 namespace Magento\DownloadableImportExport\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem\Driver\File;
 
 /**
  * Uploader helper for downloadable products
@@ -83,11 +82,6 @@ class Uploader extends \Magento\Framework\App\Helper\AbstractHelper
         $dirConfig = DirectoryList::getDefaultConfig();
         $dirAddon = $dirConfig[DirectoryList::MEDIA][DirectoryList::PATH];
 
-        // make media folder a primary folder for media in external storages
-        if (!is_a($this->mediaDirectory->getDriver(), File::class)) {
-            $dirAddon = DirectoryList::MEDIA;
-        }
-
         if (!empty($parameters[\Magento\ImportExport\Model\Import::FIELD_NAME_IMG_FILE_DIR])) {
             $tmpPath = $parameters[\Magento\ImportExport\Model\Import::FIELD_NAME_IMG_FILE_DIR];
         } else {
@@ -119,9 +113,7 @@ class Uploader extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function isFileExist(string $fileName): bool
     {
-        $fileName = '/' . ltrim($fileName, '/');
-
-        return $this->mediaDirectory->isExist($this->fileUploader->getDestDir() . $fileName);
+        return $this->mediaDirectory->isExist($this->fileUploader->getDestDir().$fileName);
     }
 
     /**

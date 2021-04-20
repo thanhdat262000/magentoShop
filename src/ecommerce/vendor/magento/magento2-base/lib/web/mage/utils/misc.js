@@ -6,8 +6,8 @@
 define([
     'underscore',
     'jquery',
-    'mage/utils/objects'
-], function (_, $, utils) {
+    'FormData'
+], function (_, $) {
     'use strict';
 
     var defaultAttributes,
@@ -120,7 +120,7 @@ define([
          */
         submit: function (options, attrs) {
             var form        = document.createElement('form'),
-                data        = utils.serialize(options.data),
+                data        = this.serialize(options.data),
                 attributes  = _.extend({}, defaultAttributes, attrs || {});
 
             if (!attributes.action) {
@@ -205,11 +205,11 @@ define([
 
             if (type === 'default') {
                 formData = new FormData();
-                _.each(utils.serialize(data), function (val, name) {
+                _.each(this.serialize(data), function (val, name) {
                     formData.append(name, val);
                 });
             } else if (type === 'simple') {
-                formData = utils.serialize(data);
+                formData = this.serialize(data);
             }
 
             return formData;
@@ -240,16 +240,6 @@ define([
             }, this);
 
             return data;
-        },
-
-        /**
-         * Replaces special characters with their corresponding HTML entities.
-         *
-         * @param {String} string - Text to escape.
-         * @returns {String} Escaped text.
-         */
-        escape: function (string) {
-            return string ? $('<p/>').text(string).html().replace(/"/g, '&quot;') : string;
         },
 
         /**

@@ -37,13 +37,6 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- *
- * @deprecated As of February 2021, this Legacy Amazon Pay plugin has been
- * deprecated, in favor of a newer Amazon Pay version available through GitHub
- * and Magento Marketplace. Please download the new plugin for automatic
- * updates and to continue providing your customers with a seamless checkout
- * experience. Please see https://pay.amazon.com/help/E32AAQBC2FY42HS for details
- * and installation instructions.
  */
 class AddressManagement implements AddressManagementInterface
 {
@@ -142,9 +135,6 @@ class AddressManagement implements AddressManagementInterface
 
             if (isset($data['OrderReferenceDetails']['Destination']['PhysicalDestination'])) {
                 $shippingAddress = $data['OrderReferenceDetails']['Destination']['PhysicalDestination'];
-                if (!isset($shippingAddress['Phone']) || empty($shippingAddress['Phone'])) {
-                    $shippingAddress['Phone'] = '000-000-0000';
-                }
 
                 return $this->convertToMagentoAddress($shippingAddress, true);
             }
@@ -286,6 +276,7 @@ class AddressManagement implements AddressManagementInterface
     {
         $orderStatus = $data['OrderReferenceDetails']['OrderReferenceStatus'] ?? false;
 
-        return $orderStatus && $orderStatus['State'] == AmazonOrderStatus::STATE_SUSPENDED;
+        return ($orderStatus && $orderStatus['State'] == AmazonOrderStatus::STATE_SUSPENDED
+            && $orderStatus['ReasonCode'] == AmazonAuthorizationStatus::REASON_INVALID_PAYMENT_METHOD);
     }
 }

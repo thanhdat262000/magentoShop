@@ -20,6 +20,10 @@ class Interceptor extends \Magento\PageCache\Observer\FlushFormKey implements \M
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'execute');
-        return $pluginInfo ? $this->___callPlugins('execute', func_get_args(), $pluginInfo) : parent::execute($observer);
+        if (!$pluginInfo) {
+            return parent::execute($observer);
+        } else {
+            return $this->___callPlugins('execute', func_get_args(), $pluginInfo);
+        }
     }
 }

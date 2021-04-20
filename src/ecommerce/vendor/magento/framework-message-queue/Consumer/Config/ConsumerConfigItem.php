@@ -44,21 +44,6 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     private $maxMessages;
 
     /**
-     * @var int|null
-     */
-    private $maxIdleTime;
-
-    /**
-     * @var int|null
-     */
-    private $sleep;
-
-    /**
-     * @var boolean|null
-     */
-    private $onlySpawnWhenMessageAvailable;
-
-    /**
      * Initialize dependencies.
      *
      * @param HandlerIteratorFactory $handlerIteratorFactory
@@ -69,7 +54,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -77,7 +62,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConnection()
     {
@@ -85,7 +70,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getQueue()
     {
@@ -93,7 +78,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConsumerInstance()
     {
@@ -101,7 +86,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getHandlers()
     {
@@ -109,7 +94,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMaxMessages()
     {
@@ -117,33 +102,7 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getMaxIdleTime()
-    {
-        return $this->maxIdleTime;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSleep()
-    {
-        return $this->sleep;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOnlySpawnWhenMessageAvailable()
-    {
-        return $this->onlySpawnWhenMessageAvailable;
-    }
-
-    /**
-     * Populate current instance properties with data
-     *
-     * @param array $data consumer configuration data
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {
@@ -153,8 +112,5 @@ class ConsumerConfigItem implements ConsumerConfigItemInterface
         $this->consumerInstance = $data['consumerInstance'];
         $this->maxMessages = $data['maxMessages'];
         $this->handlers->setData($data['handlers']);
-        $this->maxIdleTime = $data['maxIdleTime'];
-        $this->sleep = $data['sleep'];
-        $this->onlySpawnWhenMessageAvailable = $data['onlySpawnWhenMessageAvailable'];
     }
 }

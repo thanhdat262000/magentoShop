@@ -29,6 +29,14 @@ final class TypeAlternationTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
+    public function getCustomTokens()
+    {
+        return [CT::T_TYPE_ALTERNATION];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredPhpVersionId()
     {
         return 70100;
@@ -74,13 +82,5 @@ final class TypeAlternationTransformer extends AbstractTransformer
 
             break;
         } while (true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDeprecatedCustomTokens()
-    {
-        return [CT::T_TYPE_ALTERNATION];
     }
 }

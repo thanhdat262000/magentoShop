@@ -42,7 +42,6 @@ class SynonymAnalyzer implements SynonymAnalyzerInterface
      *   3 => [ 0 => "british", 1 => "english" ],
      *   4 => [ 0 => "queen", 1 => "monarch" ]
      * ]
-     *
      * @param string $phrase
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -137,10 +136,7 @@ class SynonymAnalyzer implements SynonymAnalyzerInterface
     {
         $patterns = [];
         for ($lastItem = count($words); $lastItem > 0; $lastItem--) {
-            $safeRegexWords = array_map(function ($word) {
-                return preg_quote($word, '/');
-            }, $words);
-            $phrase = implode("\s+", \array_slice($safeRegexWords, 0, $lastItem));
+            $phrase = implode("\s+", \array_slice($words, 0, $lastItem));
             $patterns[] = '^' . $phrase . ',';
             $patterns[] = ',' . $phrase . ',';
             $patterns[] = ',' . $phrase . '$';

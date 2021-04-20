@@ -5,23 +5,16 @@
  */
 namespace Magento\Indexer\Model;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Indexer\ConfigInterface;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerInterfaceFactory;
-use Magento\Framework\Mview\ProcessorInterface;
-use Magento\Indexer\Model\Processor\MakeSharedIndexValid;
+use Magento\Framework\Indexer\StateInterface;
 
 /**
  * Indexer processor
  */
 class Processor
 {
-    /**
-     * @var array
-     */
-    private $sharedIndexesComplete = [];
-
     /**
      * @var ConfigInterface
      */
@@ -38,34 +31,26 @@ class Processor
     protected $indexersFactory;
 
     /**
-     * @var ProcessorInterface
+     * @var \Magento\Framework\Mview\ProcessorInterface
      */
     protected $mviewProcessor;
-
-    /**
-     * @var MakeSharedIndexValid
-     */
-    protected $makeSharedValid;
 
     /**
      * @param ConfigInterface $config
      * @param IndexerInterfaceFactory $indexerFactory
      * @param Indexer\CollectionFactory $indexersFactory
-     * @param ProcessorInterface $mviewProcessor
-     * @param MakeSharedIndexValid|null $makeSharedValid
+     * @param \Magento\Framework\Mview\ProcessorInterface $mviewProcessor
      */
     public function __construct(
         ConfigInterface $config,
         IndexerInterfaceFactory $indexerFactory,
         Indexer\CollectionFactory $indexersFactory,
-        ProcessorInterface $mviewProcessor,
-        MakeSharedIndexValid $makeSharedValid = null
+        \Magento\Framework\Mview\ProcessorInterface $mviewProcessor
     ) {
         $this->config = $config;
         $this->indexerFactory = $indexerFactory;
         $this->indexersFactory = $indexersFactory;
         $this->mviewProcessor = $mviewProcessor;
-        $this->makeSharedValid = $makeSharedValid ?: ObjectManager::getInstance()->get(MakeSharedIndexValid::class);
     }
 
     /**
@@ -75,21 +60,26 @@ class Processor
      */
     public function reindexAllInvalid()
     {
+        $sharedIndexesComplete = [];
         foreach (array_keys($this->config->getIndexers()) as $indexerId) {
             /** @var Indexer $indexer */
             $indexer = $this->indexerFactory->create();
             $indexer->load($indexerId);
             $indexerConfig = $this->config->getIndexer($indexerId);
-
             if ($indexer->isInvalid()) {
                 // Skip indexers having shared index that was already complete
-                $sharedIndex = $indexerConfig['shared_index'] ?? null;
-                if (!in_array($sharedIndex, $this->sharedIndexesComplete)) {
+                if (!in_array($indexerConfig['shared_index'], $sharedIndexesComplete)) {
                     $indexer->reindexAll();
-
-                    if (!empty($sharedIndex) && $this->makeSharedValid->execute($sharedIndex)) {
-                        $this->sharedIndexesComplete[] = $sharedIndex;
-                    }
+                } else {
+                    /** @var \Magento\Indexer\Model\Indexer\State $state */
+                    $state = $indexer->getState();
+                    $state->setStatus(StateInterface::STATUS_WORKING);
+                    $state->save();
+                    $state->setStatus(StateInterface::STATUS_VALID);
+                    $state->save();
+                }
+                if ($indexerConfig['shared_index']) {
+                    $sharedIndexesComplete[] = $indexerConfig['shared_index'];
                 }
             }
         }

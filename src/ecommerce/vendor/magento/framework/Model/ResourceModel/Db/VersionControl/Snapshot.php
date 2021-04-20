@@ -72,18 +72,4 @@ class Snapshot
 
         return false;
     }
-
-    /**
-     * Clear snapshot data
-     *
-     * @param \Magento\Framework\DataObject|null $entity
-     */
-    public function clear(\Magento\Framework\DataObject $entity = null)
-    {
-        if ($entity !== null) {
-            $this->snapshotData[get_class($entity)] = [];
-        } else {
-            $this->snapshotData = [];
-        }
-    }
 }

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStoreId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreId');
-        return $pluginInfo ? $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo) : parent::getStoreId();
+        if (!$pluginInfo) {
+            return parent::getStoreId();
+        } else {
+            return $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUrlModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUrlModel');
-        return $pluginInfo ? $this->___callPlugins('getUrlModel', func_get_args(), $pluginInfo) : parent::getUrlModel();
+        if (!$pluginInfo) {
+            return parent::getUrlModel();
+        } else {
+            return $this->___callPlugins('getUrlModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function validate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validate');
-        return $pluginInfo ? $this->___callPlugins('validate', func_get_args(), $pluginInfo) : parent::validate();
+        if (!$pluginInfo) {
+            return parent::validate();
+        } else {
+            return $this->___callPlugins('validate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPrice');
-        return $pluginInfo ? $this->___callPlugins('getPrice', func_get_args(), $pluginInfo) : parent::getPrice();
+        if (!$pluginInfo) {
+            return parent::getPrice();
+        } else {
+            return $this->___callPlugins('getPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getVisibility()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVisibility');
-        return $pluginInfo ? $this->___callPlugins('getVisibility', func_get_args(), $pluginInfo) : parent::getVisibility();
+        if (!$pluginInfo) {
+            return parent::getVisibility();
+        } else {
+            return $this->___callPlugins('getVisibility', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getAttributeSetId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeSetId');
-        return $pluginInfo ? $this->___callPlugins('getAttributeSetId', func_get_args(), $pluginInfo) : parent::getAttributeSetId();
+        if (!$pluginInfo) {
+            return parent::getAttributeSetId();
+        } else {
+            return $this->___callPlugins('getAttributeSetId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCreatedAt()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCreatedAt');
-        return $pluginInfo ? $this->___callPlugins('getCreatedAt', func_get_args(), $pluginInfo) : parent::getCreatedAt();
+        if (!$pluginInfo) {
+            return parent::getCreatedAt();
+        } else {
+            return $this->___callPlugins('getCreatedAt', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUpdatedAt()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUpdatedAt');
-        return $pluginInfo ? $this->___callPlugins('getUpdatedAt', func_get_args(), $pluginInfo) : parent::getUpdatedAt();
+        if (!$pluginInfo) {
+            return parent::getUpdatedAt();
+        } else {
+            return $this->___callPlugins('getUpdatedAt', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setPriceCalculation($calculate = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPriceCalculation');
-        return $pluginInfo ? $this->___callPlugins('setPriceCalculation', func_get_args(), $pluginInfo) : parent::setPriceCalculation($calculate);
+        if (!$pluginInfo) {
+            return parent::setPriceCalculation($calculate);
+        } else {
+            return $this->___callPlugins('setPriceCalculation', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getTypeId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTypeId');
-        return $pluginInfo ? $this->___callPlugins('getTypeId', func_get_args(), $pluginInfo) : parent::getTypeId();
+        if (!$pluginInfo) {
+            return parent::getTypeId();
+        } else {
+            return $this->___callPlugins('getTypeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStatus()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStatus');
-        return $pluginInfo ? $this->___callPlugins('getStatus', func_get_args(), $pluginInfo) : parent::getStatus();
+        if (!$pluginInfo) {
+            return parent::getStatus();
+        } else {
+            return $this->___callPlugins('getStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getTypeInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTypeInstance');
-        return $pluginInfo ? $this->___callPlugins('getTypeInstance', func_get_args(), $pluginInfo) : parent::getTypeInstance();
+        if (!$pluginInfo) {
+            return parent::getTypeInstance();
+        } else {
+            return $this->___callPlugins('getTypeInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setTypeInstance($instance)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTypeInstance');
-        return $pluginInfo ? $this->___callPlugins('setTypeInstance', func_get_args(), $pluginInfo) : parent::setTypeInstance($instance);
+        if (!$pluginInfo) {
+            return parent::setTypeInstance($instance);
+        } else {
+            return $this->___callPlugins('setTypeInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getLinkInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLinkInstance');
-        return $pluginInfo ? $this->___callPlugins('getLinkInstance', func_get_args(), $pluginInfo) : parent::getLinkInstance();
+        if (!$pluginInfo) {
+            return parent::getLinkInstance();
+        } else {
+            return $this->___callPlugins('getLinkInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getIdBySku($sku)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdBySku');
-        return $pluginInfo ? $this->___callPlugins('getIdBySku', func_get_args(), $pluginInfo) : parent::getIdBySku($sku);
+        if (!$pluginInfo) {
+            return parent::getIdBySku($sku);
+        } else {
+            return $this->___callPlugins('getIdBySku', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCategoryId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCategoryId');
-        return $pluginInfo ? $this->___callPlugins('getCategoryId', func_get_args(), $pluginInfo) : parent::getCategoryId();
+        if (!$pluginInfo) {
+            return parent::getCategoryId();
+        } else {
+            return $this->___callPlugins('getCategoryId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCategory()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCategory');
-        return $pluginInfo ? $this->___callPlugins('getCategory', func_get_args(), $pluginInfo) : parent::getCategory();
+        if (!$pluginInfo) {
+            return parent::getCategory();
+        } else {
+            return $this->___callPlugins('getCategory', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCategoryIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCategoryIds');
-        return $pluginInfo ? $this->___callPlugins('getCategoryIds', func_get_args(), $pluginInfo) : parent::getCategoryIds();
+        if (!$pluginInfo) {
+            return parent::getCategoryIds();
+        } else {
+            return $this->___callPlugins('getCategoryIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCategoryCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCategoryCollection');
-        return $pluginInfo ? $this->___callPlugins('getCategoryCollection', func_get_args(), $pluginInfo) : parent::getCategoryCollection();
+        if (!$pluginInfo) {
+            return parent::getCategoryCollection();
+        } else {
+            return $this->___callPlugins('getCategoryCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getWebsiteIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWebsiteIds');
-        return $pluginInfo ? $this->___callPlugins('getWebsiteIds', func_get_args(), $pluginInfo) : parent::getWebsiteIds();
+        if (!$pluginInfo) {
+            return parent::getWebsiteIds();
+        } else {
+            return $this->___callPlugins('getWebsiteIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStoreIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreIds');
-        return $pluginInfo ? $this->___callPlugins('getStoreIds', func_get_args(), $pluginInfo) : parent::getStoreIds();
+        if (!$pluginInfo) {
+            return parent::getStoreIds();
+        } else {
+            return $this->___callPlugins('getStoreIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getAttributes($groupId = null, $skipSuper = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributes');
-        return $pluginInfo ? $this->___callPlugins('getAttributes', func_get_args(), $pluginInfo) : parent::getAttributes($groupId, $skipSuper);
+        if (!$pluginInfo) {
+            return parent::getAttributes($groupId, $skipSuper);
+        } else {
+            return $this->___callPlugins('getAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function beforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeSave');
-        return $pluginInfo ? $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo) : parent::beforeSave();
+        if (!$pluginInfo) {
+            return parent::beforeSave();
+        } else {
+            return $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function canAffectOptions($value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canAffectOptions');
-        return $pluginInfo ? $this->___callPlugins('canAffectOptions', func_get_args(), $pluginInfo) : parent::canAffectOptions($value);
+        if (!$pluginInfo) {
+            return parent::canAffectOptions($value);
+        } else {
+            return $this->___callPlugins('canAffectOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,16 +345,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function afterSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterSave');
-        return $pluginInfo ? $this->___callPlugins('afterSave', func_get_args(), $pluginInfo) : parent::afterSave();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheTags()
-    {
-        $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheTags');
-        return $pluginInfo ? $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo) : parent::getCacheTags();
+        if (!$pluginInfo) {
+            return parent::afterSave();
+        } else {
+            return $this->___callPlugins('afterSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +358,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setQty($qty)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setQty');
-        return $pluginInfo ? $this->___callPlugins('setQty', func_get_args(), $pluginInfo) : parent::setQty($qty);
+        if (!$pluginInfo) {
+            return parent::setQty($qty);
+        } else {
+            return $this->___callPlugins('setQty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +371,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getQty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getQty');
-        return $pluginInfo ? $this->___callPlugins('getQty', func_get_args(), $pluginInfo) : parent::getQty();
+        if (!$pluginInfo) {
+            return parent::getQty();
+        } else {
+            return $this->___callPlugins('getQty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +384,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function priceReindexCallback()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'priceReindexCallback');
-        return $pluginInfo ? $this->___callPlugins('priceReindexCallback', func_get_args(), $pluginInfo) : parent::priceReindexCallback();
+        if (!$pluginInfo) {
+            return parent::priceReindexCallback();
+        } else {
+            return $this->___callPlugins('priceReindexCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +397,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function eavReindexCallback()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'eavReindexCallback');
-        return $pluginInfo ? $this->___callPlugins('eavReindexCallback', func_get_args(), $pluginInfo) : parent::eavReindexCallback();
+        if (!$pluginInfo) {
+            return parent::eavReindexCallback();
+        } else {
+            return $this->___callPlugins('eavReindexCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +410,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isDataChanged()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDataChanged');
-        return $pluginInfo ? $this->___callPlugins('isDataChanged', func_get_args(), $pluginInfo) : parent::isDataChanged();
+        if (!$pluginInfo) {
+            return parent::isDataChanged();
+        } else {
+            return $this->___callPlugins('isDataChanged', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +423,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function reindex()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'reindex');
-        return $pluginInfo ? $this->___callPlugins('reindex', func_get_args(), $pluginInfo) : parent::reindex();
+        if (!$pluginInfo) {
+            return parent::reindex();
+        } else {
+            return $this->___callPlugins('reindex', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +436,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function beforeDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeDelete');
-        return $pluginInfo ? $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo) : parent::beforeDelete();
+        if (!$pluginInfo) {
+            return parent::beforeDelete();
+        } else {
+            return $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +449,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function afterDeleteCommit()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDeleteCommit');
-        return $pluginInfo ? $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo) : parent::afterDeleteCommit();
+        if (!$pluginInfo) {
+            return parent::afterDeleteCommit();
+        } else {
+            return $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +462,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function cleanCache()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'cleanCache');
-        return $pluginInfo ? $this->___callPlugins('cleanCache', func_get_args(), $pluginInfo) : parent::cleanCache();
+        if (!$pluginInfo) {
+            return parent::cleanCache();
+        } else {
+            return $this->___callPlugins('cleanCache', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +475,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getPriceModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPriceModel');
-        return $pluginInfo ? $this->___callPlugins('getPriceModel', func_get_args(), $pluginInfo) : parent::getPriceModel();
+        if (!$pluginInfo) {
+            return parent::getPriceModel();
+        } else {
+            return $this->___callPlugins('getPriceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +488,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getPriceInfo()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPriceInfo');
-        return $pluginInfo ? $this->___callPlugins('getPriceInfo', func_get_args(), $pluginInfo) : parent::getPriceInfo();
+        if (!$pluginInfo) {
+            return parent::getPriceInfo();
+        } else {
+            return $this->___callPlugins('getPriceInfo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +501,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getTierPrices()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTierPrices');
-        return $pluginInfo ? $this->___callPlugins('getTierPrices', func_get_args(), $pluginInfo) : parent::getTierPrices();
+        if (!$pluginInfo) {
+            return parent::getTierPrices();
+        } else {
+            return $this->___callPlugins('getTierPrices', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +514,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setTierPrices(?array $tierPrices = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTierPrices');
-        return $pluginInfo ? $this->___callPlugins('setTierPrices', func_get_args(), $pluginInfo) : parent::setTierPrices($tierPrices);
+        if (!$pluginInfo) {
+            return parent::setTierPrices($tierPrices);
+        } else {
+            return $this->___callPlugins('setTierPrices', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +527,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getTierPrice($qty = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTierPrice');
-        return $pluginInfo ? $this->___callPlugins('getTierPrice', func_get_args(), $pluginInfo) : parent::getTierPrice($qty);
+        if (!$pluginInfo) {
+            return parent::getTierPrice($qty);
+        } else {
+            return $this->___callPlugins('getTierPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +540,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getFormattedPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFormattedPrice');
-        return $pluginInfo ? $this->___callPlugins('getFormattedPrice', func_get_args(), $pluginInfo) : parent::getFormattedPrice();
+        if (!$pluginInfo) {
+            return parent::getFormattedPrice();
+        } else {
+            return $this->___callPlugins('getFormattedPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +553,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getFormatedPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFormatedPrice');
-        return $pluginInfo ? $this->___callPlugins('getFormatedPrice', func_get_args(), $pluginInfo) : parent::getFormatedPrice();
+        if (!$pluginInfo) {
+            return parent::getFormatedPrice();
+        } else {
+            return $this->___callPlugins('getFormatedPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +566,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setFinalPrice($price)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFinalPrice');
-        return $pluginInfo ? $this->___callPlugins('setFinalPrice', func_get_args(), $pluginInfo) : parent::setFinalPrice($price);
+        if (!$pluginInfo) {
+            return parent::setFinalPrice($price);
+        } else {
+            return $this->___callPlugins('setFinalPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +579,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getFinalPrice($qty = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFinalPrice');
-        return $pluginInfo ? $this->___callPlugins('getFinalPrice', func_get_args(), $pluginInfo) : parent::getFinalPrice($qty);
+        if (!$pluginInfo) {
+            return parent::getFinalPrice($qty);
+        } else {
+            return $this->___callPlugins('getFinalPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +592,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCalculatedFinalPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCalculatedFinalPrice');
-        return $pluginInfo ? $this->___callPlugins('getCalculatedFinalPrice', func_get_args(), $pluginInfo) : parent::getCalculatedFinalPrice();
+        if (!$pluginInfo) {
+            return parent::getCalculatedFinalPrice();
+        } else {
+            return $this->___callPlugins('getCalculatedFinalPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +605,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMinimalPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMinimalPrice');
-        return $pluginInfo ? $this->___callPlugins('getMinimalPrice', func_get_args(), $pluginInfo) : parent::getMinimalPrice();
+        if (!$pluginInfo) {
+            return parent::getMinimalPrice();
+        } else {
+            return $this->___callPlugins('getMinimalPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +618,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getSpecialPrice()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSpecialPrice');
-        return $pluginInfo ? $this->___callPlugins('getSpecialPrice', func_get_args(), $pluginInfo) : parent::getSpecialPrice();
+        if (!$pluginInfo) {
+            return parent::getSpecialPrice();
+        } else {
+            return $this->___callPlugins('getSpecialPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +631,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getSpecialFromDate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSpecialFromDate');
-        return $pluginInfo ? $this->___callPlugins('getSpecialFromDate', func_get_args(), $pluginInfo) : parent::getSpecialFromDate();
+        if (!$pluginInfo) {
+            return parent::getSpecialFromDate();
+        } else {
+            return $this->___callPlugins('getSpecialFromDate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +644,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getSpecialToDate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSpecialToDate');
-        return $pluginInfo ? $this->___callPlugins('getSpecialToDate', func_get_args(), $pluginInfo) : parent::getSpecialToDate();
+        if (!$pluginInfo) {
+            return parent::getSpecialToDate();
+        } else {
+            return $this->___callPlugins('getSpecialToDate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +657,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getRelatedProducts()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRelatedProducts');
-        return $pluginInfo ? $this->___callPlugins('getRelatedProducts', func_get_args(), $pluginInfo) : parent::getRelatedProducts();
+        if (!$pluginInfo) {
+            return parent::getRelatedProducts();
+        } else {
+            return $this->___callPlugins('getRelatedProducts', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,7 +670,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getRelatedProductIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRelatedProductIds');
-        return $pluginInfo ? $this->___callPlugins('getRelatedProductIds', func_get_args(), $pluginInfo) : parent::getRelatedProductIds();
+        if (!$pluginInfo) {
+            return parent::getRelatedProductIds();
+        } else {
+            return $this->___callPlugins('getRelatedProductIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -488,7 +683,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getRelatedProductCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRelatedProductCollection');
-        return $pluginInfo ? $this->___callPlugins('getRelatedProductCollection', func_get_args(), $pluginInfo) : parent::getRelatedProductCollection();
+        if (!$pluginInfo) {
+            return parent::getRelatedProductCollection();
+        } else {
+            return $this->___callPlugins('getRelatedProductCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -497,7 +696,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getRelatedLinkCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRelatedLinkCollection');
-        return $pluginInfo ? $this->___callPlugins('getRelatedLinkCollection', func_get_args(), $pluginInfo) : parent::getRelatedLinkCollection();
+        if (!$pluginInfo) {
+            return parent::getRelatedLinkCollection();
+        } else {
+            return $this->___callPlugins('getRelatedLinkCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -506,7 +709,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUpSellProducts()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUpSellProducts');
-        return $pluginInfo ? $this->___callPlugins('getUpSellProducts', func_get_args(), $pluginInfo) : parent::getUpSellProducts();
+        if (!$pluginInfo) {
+            return parent::getUpSellProducts();
+        } else {
+            return $this->___callPlugins('getUpSellProducts', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -515,7 +722,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUpSellProductIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUpSellProductIds');
-        return $pluginInfo ? $this->___callPlugins('getUpSellProductIds', func_get_args(), $pluginInfo) : parent::getUpSellProductIds();
+        if (!$pluginInfo) {
+            return parent::getUpSellProductIds();
+        } else {
+            return $this->___callPlugins('getUpSellProductIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -524,7 +735,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUpSellProductCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUpSellProductCollection');
-        return $pluginInfo ? $this->___callPlugins('getUpSellProductCollection', func_get_args(), $pluginInfo) : parent::getUpSellProductCollection();
+        if (!$pluginInfo) {
+            return parent::getUpSellProductCollection();
+        } else {
+            return $this->___callPlugins('getUpSellProductCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -533,7 +748,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUpSellLinkCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUpSellLinkCollection');
-        return $pluginInfo ? $this->___callPlugins('getUpSellLinkCollection', func_get_args(), $pluginInfo) : parent::getUpSellLinkCollection();
+        if (!$pluginInfo) {
+            return parent::getUpSellLinkCollection();
+        } else {
+            return $this->___callPlugins('getUpSellLinkCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -542,7 +761,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCrossSellProducts()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCrossSellProducts');
-        return $pluginInfo ? $this->___callPlugins('getCrossSellProducts', func_get_args(), $pluginInfo) : parent::getCrossSellProducts();
+        if (!$pluginInfo) {
+            return parent::getCrossSellProducts();
+        } else {
+            return $this->___callPlugins('getCrossSellProducts', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -551,7 +774,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCrossSellProductIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCrossSellProductIds');
-        return $pluginInfo ? $this->___callPlugins('getCrossSellProductIds', func_get_args(), $pluginInfo) : parent::getCrossSellProductIds();
+        if (!$pluginInfo) {
+            return parent::getCrossSellProductIds();
+        } else {
+            return $this->___callPlugins('getCrossSellProductIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -560,7 +787,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCrossSellProductCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCrossSellProductCollection');
-        return $pluginInfo ? $this->___callPlugins('getCrossSellProductCollection', func_get_args(), $pluginInfo) : parent::getCrossSellProductCollection();
+        if (!$pluginInfo) {
+            return parent::getCrossSellProductCollection();
+        } else {
+            return $this->___callPlugins('getCrossSellProductCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -569,7 +800,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCrossSellLinkCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCrossSellLinkCollection');
-        return $pluginInfo ? $this->___callPlugins('getCrossSellLinkCollection', func_get_args(), $pluginInfo) : parent::getCrossSellLinkCollection();
+        if (!$pluginInfo) {
+            return parent::getCrossSellLinkCollection();
+        } else {
+            return $this->___callPlugins('getCrossSellLinkCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -578,7 +813,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getProductLinks()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getProductLinks');
-        return $pluginInfo ? $this->___callPlugins('getProductLinks', func_get_args(), $pluginInfo) : parent::getProductLinks();
+        if (!$pluginInfo) {
+            return parent::getProductLinks();
+        } else {
+            return $this->___callPlugins('getProductLinks', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -587,7 +826,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setProductLinks(?array $links = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setProductLinks');
-        return $pluginInfo ? $this->___callPlugins('setProductLinks', func_get_args(), $pluginInfo) : parent::setProductLinks($links);
+        if (!$pluginInfo) {
+            return parent::setProductLinks($links);
+        } else {
+            return $this->___callPlugins('setProductLinks', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -596,7 +839,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMediaAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMediaAttributes');
-        return $pluginInfo ? $this->___callPlugins('getMediaAttributes', func_get_args(), $pluginInfo) : parent::getMediaAttributes();
+        if (!$pluginInfo) {
+            return parent::getMediaAttributes();
+        } else {
+            return $this->___callPlugins('getMediaAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -605,7 +852,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMediaAttributeValues()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMediaAttributeValues');
-        return $pluginInfo ? $this->___callPlugins('getMediaAttributeValues', func_get_args(), $pluginInfo) : parent::getMediaAttributeValues();
+        if (!$pluginInfo) {
+            return parent::getMediaAttributeValues();
+        } else {
+            return $this->___callPlugins('getMediaAttributeValues', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -614,7 +865,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMediaGalleryImages()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMediaGalleryImages');
-        return $pluginInfo ? $this->___callPlugins('getMediaGalleryImages', func_get_args(), $pluginInfo) : parent::getMediaGalleryImages();
+        if (!$pluginInfo) {
+            return parent::getMediaGalleryImages();
+        } else {
+            return $this->___callPlugins('getMediaGalleryImages', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -623,7 +878,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function hasGalleryAttribute()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasGalleryAttribute');
-        return $pluginInfo ? $this->___callPlugins('hasGalleryAttribute', func_get_args(), $pluginInfo) : parent::hasGalleryAttribute();
+        if (!$pluginInfo) {
+            return parent::hasGalleryAttribute();
+        } else {
+            return $this->___callPlugins('hasGalleryAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -632,7 +891,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function addImageToMediaGallery($file, $mediaAttribute = null, $move = false, $exclude = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addImageToMediaGallery');
-        return $pluginInfo ? $this->___callPlugins('addImageToMediaGallery', func_get_args(), $pluginInfo) : parent::addImageToMediaGallery($file, $mediaAttribute, $move, $exclude);
+        if (!$pluginInfo) {
+            return parent::addImageToMediaGallery($file, $mediaAttribute, $move, $exclude);
+        } else {
+            return $this->___callPlugins('addImageToMediaGallery', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -641,7 +904,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMediaConfig()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMediaConfig');
-        return $pluginInfo ? $this->___callPlugins('getMediaConfig', func_get_args(), $pluginInfo) : parent::getMediaConfig();
+        if (!$pluginInfo) {
+            return parent::getMediaConfig();
+        } else {
+            return $this->___callPlugins('getMediaConfig', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -650,7 +917,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getVisibleInCatalogStatuses()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVisibleInCatalogStatuses');
-        return $pluginInfo ? $this->___callPlugins('getVisibleInCatalogStatuses', func_get_args(), $pluginInfo) : parent::getVisibleInCatalogStatuses();
+        if (!$pluginInfo) {
+            return parent::getVisibleInCatalogStatuses();
+        } else {
+            return $this->___callPlugins('getVisibleInCatalogStatuses', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -659,7 +930,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getVisibleStatuses()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVisibleStatuses');
-        return $pluginInfo ? $this->___callPlugins('getVisibleStatuses', func_get_args(), $pluginInfo) : parent::getVisibleStatuses();
+        if (!$pluginInfo) {
+            return parent::getVisibleStatuses();
+        } else {
+            return $this->___callPlugins('getVisibleStatuses', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -668,7 +943,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isVisibleInCatalog()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isVisibleInCatalog');
-        return $pluginInfo ? $this->___callPlugins('isVisibleInCatalog', func_get_args(), $pluginInfo) : parent::isVisibleInCatalog();
+        if (!$pluginInfo) {
+            return parent::isVisibleInCatalog();
+        } else {
+            return $this->___callPlugins('isVisibleInCatalog', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -677,7 +956,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getVisibleInSiteVisibilities()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVisibleInSiteVisibilities');
-        return $pluginInfo ? $this->___callPlugins('getVisibleInSiteVisibilities', func_get_args(), $pluginInfo) : parent::getVisibleInSiteVisibilities();
+        if (!$pluginInfo) {
+            return parent::getVisibleInSiteVisibilities();
+        } else {
+            return $this->___callPlugins('getVisibleInSiteVisibilities', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -686,7 +969,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isVisibleInSiteVisibility()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isVisibleInSiteVisibility');
-        return $pluginInfo ? $this->___callPlugins('isVisibleInSiteVisibility', func_get_args(), $pluginInfo) : parent::isVisibleInSiteVisibility();
+        if (!$pluginInfo) {
+            return parent::isVisibleInSiteVisibility();
+        } else {
+            return $this->___callPlugins('isVisibleInSiteVisibility', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -695,7 +982,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isDuplicable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDuplicable');
-        return $pluginInfo ? $this->___callPlugins('isDuplicable', func_get_args(), $pluginInfo) : parent::isDuplicable();
+        if (!$pluginInfo) {
+            return parent::isDuplicable();
+        } else {
+            return $this->___callPlugins('isDuplicable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -704,7 +995,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setIsDuplicable($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsDuplicable');
-        return $pluginInfo ? $this->___callPlugins('setIsDuplicable', func_get_args(), $pluginInfo) : parent::setIsDuplicable($value);
+        if (!$pluginInfo) {
+            return parent::setIsDuplicable($value);
+        } else {
+            return $this->___callPlugins('setIsDuplicable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -713,7 +1008,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isSalable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSalable');
-        return $pluginInfo ? $this->___callPlugins('isSalable', func_get_args(), $pluginInfo) : parent::isSalable();
+        if (!$pluginInfo) {
+            return parent::isSalable();
+        } else {
+            return $this->___callPlugins('isSalable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -722,7 +1021,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isAvailable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAvailable');
-        return $pluginInfo ? $this->___callPlugins('isAvailable', func_get_args(), $pluginInfo) : parent::isAvailable();
+        if (!$pluginInfo) {
+            return parent::isAvailable();
+        } else {
+            return $this->___callPlugins('isAvailable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -731,7 +1034,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getIsSalable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsSalable');
-        return $pluginInfo ? $this->___callPlugins('getIsSalable', func_get_args(), $pluginInfo) : parent::getIsSalable();
+        if (!$pluginInfo) {
+            return parent::getIsSalable();
+        } else {
+            return $this->___callPlugins('getIsSalable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -740,7 +1047,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isVirtual()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isVirtual');
-        return $pluginInfo ? $this->___callPlugins('isVirtual', func_get_args(), $pluginInfo) : parent::isVirtual();
+        if (!$pluginInfo) {
+            return parent::isVirtual();
+        } else {
+            return $this->___callPlugins('isVirtual', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -749,7 +1060,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isSaleable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSaleable');
-        return $pluginInfo ? $this->___callPlugins('isSaleable', func_get_args(), $pluginInfo) : parent::isSaleable();
+        if (!$pluginInfo) {
+            return parent::isSaleable();
+        } else {
+            return $this->___callPlugins('isSaleable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -758,7 +1073,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isInStock()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isInStock');
-        return $pluginInfo ? $this->___callPlugins('isInStock', func_get_args(), $pluginInfo) : parent::isInStock();
+        if (!$pluginInfo) {
+            return parent::isInStock();
+        } else {
+            return $this->___callPlugins('isInStock', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -767,7 +1086,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getAttributeText($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeText');
-        return $pluginInfo ? $this->___callPlugins('getAttributeText', func_get_args(), $pluginInfo) : parent::getAttributeText($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getAttributeText($attributeCode);
+        } else {
+            return $this->___callPlugins('getAttributeText', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -776,7 +1099,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCustomDesignDate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomDesignDate');
-        return $pluginInfo ? $this->___callPlugins('getCustomDesignDate', func_get_args(), $pluginInfo) : parent::getCustomDesignDate();
+        if (!$pluginInfo) {
+            return parent::getCustomDesignDate();
+        } else {
+            return $this->___callPlugins('getCustomDesignDate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -785,7 +1112,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getProductUrl($useSid = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getProductUrl');
-        return $pluginInfo ? $this->___callPlugins('getProductUrl', func_get_args(), $pluginInfo) : parent::getProductUrl($useSid);
+        if (!$pluginInfo) {
+            return parent::getProductUrl($useSid);
+        } else {
+            return $this->___callPlugins('getProductUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -794,7 +1125,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getUrlInStore($params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUrlInStore');
-        return $pluginInfo ? $this->___callPlugins('getUrlInStore', func_get_args(), $pluginInfo) : parent::getUrlInStore($params);
+        if (!$pluginInfo) {
+            return parent::getUrlInStore($params);
+        } else {
+            return $this->___callPlugins('getUrlInStore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -803,7 +1138,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function formatUrlKey($str)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'formatUrlKey');
-        return $pluginInfo ? $this->___callPlugins('formatUrlKey', func_get_args(), $pluginInfo) : parent::formatUrlKey($str);
+        if (!$pluginInfo) {
+            return parent::formatUrlKey($str);
+        } else {
+            return $this->___callPlugins('formatUrlKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -812,7 +1151,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function addAttributeUpdate($code, $value, $store)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addAttributeUpdate');
-        return $pluginInfo ? $this->___callPlugins('addAttributeUpdate', func_get_args(), $pluginInfo) : parent::addAttributeUpdate($code, $value, $store);
+        if (!$pluginInfo) {
+            return parent::addAttributeUpdate($code, $value, $store);
+        } else {
+            return $this->___callPlugins('addAttributeUpdate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -821,7 +1164,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function toArray(array $arrAttributes = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($arrAttributes);
+        if (!$pluginInfo) {
+            return parent::toArray($arrAttributes);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -830,7 +1177,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function fromArray(array $data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'fromArray');
-        return $pluginInfo ? $this->___callPlugins('fromArray', func_get_args(), $pluginInfo) : parent::fromArray($data);
+        if (!$pluginInfo) {
+            return parent::fromArray($data);
+        } else {
+            return $this->___callPlugins('fromArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -839,7 +1190,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getRequestPath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequestPath');
-        return $pluginInfo ? $this->___callPlugins('getRequestPath', func_get_args(), $pluginInfo) : parent::getRequestPath();
+        if (!$pluginInfo) {
+            return parent::getRequestPath();
+        } else {
+            return $this->___callPlugins('getRequestPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -848,7 +1203,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getGiftMessageAvailable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getGiftMessageAvailable');
-        return $pluginInfo ? $this->___callPlugins('getGiftMessageAvailable', func_get_args(), $pluginInfo) : parent::getGiftMessageAvailable();
+        if (!$pluginInfo) {
+            return parent::getGiftMessageAvailable();
+        } else {
+            return $this->___callPlugins('getGiftMessageAvailable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -857,7 +1216,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isComposite()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isComposite');
-        return $pluginInfo ? $this->___callPlugins('isComposite', func_get_args(), $pluginInfo) : parent::isComposite();
+        if (!$pluginInfo) {
+            return parent::isComposite();
+        } else {
+            return $this->___callPlugins('isComposite', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -866,7 +1229,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function canConfigure()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canConfigure');
-        return $pluginInfo ? $this->___callPlugins('canConfigure', func_get_args(), $pluginInfo) : parent::canConfigure();
+        if (!$pluginInfo) {
+            return parent::canConfigure();
+        } else {
+            return $this->___callPlugins('canConfigure', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -875,7 +1242,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getSku()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSku');
-        return $pluginInfo ? $this->___callPlugins('getSku', func_get_args(), $pluginInfo) : parent::getSku();
+        if (!$pluginInfo) {
+            return parent::getSku();
+        } else {
+            return $this->___callPlugins('getSku', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -884,7 +1255,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getWeight()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWeight');
-        return $pluginInfo ? $this->___callPlugins('getWeight', func_get_args(), $pluginInfo) : parent::getWeight();
+        if (!$pluginInfo) {
+            return parent::getWeight();
+        } else {
+            return $this->___callPlugins('getWeight', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -893,7 +1268,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getOptionInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOptionInstance');
-        return $pluginInfo ? $this->___callPlugins('getOptionInstance', func_get_args(), $pluginInfo) : parent::getOptionInstance();
+        if (!$pluginInfo) {
+            return parent::getOptionInstance();
+        } else {
+            return $this->___callPlugins('getOptionInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -902,7 +1281,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function addOption(\Magento\Catalog\Model\Product\Option $option)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addOption');
-        return $pluginInfo ? $this->___callPlugins('addOption', func_get_args(), $pluginInfo) : parent::addOption($option);
+        if (!$pluginInfo) {
+            return parent::addOption($option);
+        } else {
+            return $this->___callPlugins('addOption', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -911,7 +1294,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getOptionById($optionId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOptionById');
-        return $pluginInfo ? $this->___callPlugins('getOptionById', func_get_args(), $pluginInfo) : parent::getOptionById($optionId);
+        if (!$pluginInfo) {
+            return parent::getOptionById($optionId);
+        } else {
+            return $this->___callPlugins('getOptionById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -920,7 +1307,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getProductOptionsCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getProductOptionsCollection');
-        return $pluginInfo ? $this->___callPlugins('getProductOptionsCollection', func_get_args(), $pluginInfo) : parent::getProductOptionsCollection();
+        if (!$pluginInfo) {
+            return parent::getProductOptionsCollection();
+        } else {
+            return $this->___callPlugins('getProductOptionsCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -929,7 +1320,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOptions');
-        return $pluginInfo ? $this->___callPlugins('getOptions', func_get_args(), $pluginInfo) : parent::getOptions();
+        if (!$pluginInfo) {
+            return parent::getOptions();
+        } else {
+            return $this->___callPlugins('getOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -938,7 +1333,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setOptions(?array $options = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOptions');
-        return $pluginInfo ? $this->___callPlugins('setOptions', func_get_args(), $pluginInfo) : parent::setOptions($options);
+        if (!$pluginInfo) {
+            return parent::setOptions($options);
+        } else {
+            return $this->___callPlugins('setOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -947,7 +1346,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getIsVirtual()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsVirtual');
-        return $pluginInfo ? $this->___callPlugins('getIsVirtual', func_get_args(), $pluginInfo) : parent::getIsVirtual();
+        if (!$pluginInfo) {
+            return parent::getIsVirtual();
+        } else {
+            return $this->___callPlugins('getIsVirtual', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -956,7 +1359,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function addCustomOption($code, $value, $product = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addCustomOption');
-        return $pluginInfo ? $this->___callPlugins('addCustomOption', func_get_args(), $pluginInfo) : parent::addCustomOption($code, $value, $product);
+        if (!$pluginInfo) {
+            return parent::addCustomOption($code, $value, $product);
+        } else {
+            return $this->___callPlugins('addCustomOption', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -965,7 +1372,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setCustomOptions(array $options)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomOptions');
-        return $pluginInfo ? $this->___callPlugins('setCustomOptions', func_get_args(), $pluginInfo) : parent::setCustomOptions($options);
+        if (!$pluginInfo) {
+            return parent::setCustomOptions($options);
+        } else {
+            return $this->___callPlugins('setCustomOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -974,7 +1385,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCustomOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomOptions');
-        return $pluginInfo ? $this->___callPlugins('getCustomOptions', func_get_args(), $pluginInfo) : parent::getCustomOptions();
+        if (!$pluginInfo) {
+            return parent::getCustomOptions();
+        } else {
+            return $this->___callPlugins('getCustomOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -983,7 +1398,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCustomOption($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomOption');
-        return $pluginInfo ? $this->___callPlugins('getCustomOption', func_get_args(), $pluginInfo) : parent::getCustomOption($code);
+        if (!$pluginInfo) {
+            return parent::getCustomOption($code);
+        } else {
+            return $this->___callPlugins('getCustomOption', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -992,7 +1411,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function hasCustomOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasCustomOptions');
-        return $pluginInfo ? $this->___callPlugins('hasCustomOptions', func_get_args(), $pluginInfo) : parent::hasCustomOptions();
+        if (!$pluginInfo) {
+            return parent::hasCustomOptions();
+        } else {
+            return $this->___callPlugins('hasCustomOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1001,7 +1424,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function canBeShowInCategory($categoryId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canBeShowInCategory');
-        return $pluginInfo ? $this->___callPlugins('canBeShowInCategory', func_get_args(), $pluginInfo) : parent::canBeShowInCategory($categoryId);
+        if (!$pluginInfo) {
+            return parent::canBeShowInCategory($categoryId);
+        } else {
+            return $this->___callPlugins('canBeShowInCategory', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1010,7 +1437,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getAvailableInCategories()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAvailableInCategories');
-        return $pluginInfo ? $this->___callPlugins('getAvailableInCategories', func_get_args(), $pluginInfo) : parent::getAvailableInCategories();
+        if (!$pluginInfo) {
+            return parent::getAvailableInCategories();
+        } else {
+            return $this->___callPlugins('getAvailableInCategories', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1019,7 +1450,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getDefaultAttributeSetId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultAttributeSetId');
-        return $pluginInfo ? $this->___callPlugins('getDefaultAttributeSetId', func_get_args(), $pluginInfo) : parent::getDefaultAttributeSetId();
+        if (!$pluginInfo) {
+            return parent::getDefaultAttributeSetId();
+        } else {
+            return $this->___callPlugins('getDefaultAttributeSetId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1028,7 +1463,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function reset()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'reset');
-        return $pluginInfo ? $this->___callPlugins('reset', func_get_args(), $pluginInfo) : parent::reset();
+        if (!$pluginInfo) {
+            return parent::reset();
+        } else {
+            return $this->___callPlugins('reset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1037,7 +1476,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCacheIdTags()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheIdTags');
-        return $pluginInfo ? $this->___callPlugins('getCacheIdTags', func_get_args(), $pluginInfo) : parent::getCacheIdTags();
+        if (!$pluginInfo) {
+            return parent::getCacheIdTags();
+        } else {
+            return $this->___callPlugins('getCacheIdTags', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1046,7 +1489,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isProductsHasSku(array $productIds)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isProductsHasSku');
-        return $pluginInfo ? $this->___callPlugins('isProductsHasSku', func_get_args(), $pluginInfo) : parent::isProductsHasSku($productIds);
+        if (!$pluginInfo) {
+            return parent::isProductsHasSku($productIds);
+        } else {
+            return $this->___callPlugins('isProductsHasSku', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1055,7 +1502,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function processBuyRequest(\Magento\Framework\DataObject $buyRequest)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'processBuyRequest');
-        return $pluginInfo ? $this->___callPlugins('processBuyRequest', func_get_args(), $pluginInfo) : parent::processBuyRequest($buyRequest);
+        if (!$pluginInfo) {
+            return parent::processBuyRequest($buyRequest);
+        } else {
+            return $this->___callPlugins('processBuyRequest', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1064,7 +1515,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getPreconfiguredValues()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPreconfiguredValues');
-        return $pluginInfo ? $this->___callPlugins('getPreconfiguredValues', func_get_args(), $pluginInfo) : parent::getPreconfiguredValues();
+        if (!$pluginInfo) {
+            return parent::getPreconfiguredValues();
+        } else {
+            return $this->___callPlugins('getPreconfiguredValues', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1073,7 +1528,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function prepareCustomOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'prepareCustomOptions');
-        return $pluginInfo ? $this->___callPlugins('prepareCustomOptions', func_get_args(), $pluginInfo) : parent::prepareCustomOptions();
+        if (!$pluginInfo) {
+            return parent::prepareCustomOptions();
+        } else {
+            return $this->___callPlugins('prepareCustomOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1082,7 +1541,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getProductEntitiesInfo($columns = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getProductEntitiesInfo');
-        return $pluginInfo ? $this->___callPlugins('getProductEntitiesInfo', func_get_args(), $pluginInfo) : parent::getProductEntitiesInfo($columns);
+        if (!$pluginInfo) {
+            return parent::getProductEntitiesInfo($columns);
+        } else {
+            return $this->___callPlugins('getProductEntitiesInfo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1091,7 +1554,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isDisabled()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDisabled');
-        return $pluginInfo ? $this->___callPlugins('isDisabled', func_get_args(), $pluginInfo) : parent::isDisabled();
+        if (!$pluginInfo) {
+            return parent::isDisabled();
+        } else {
+            return $this->___callPlugins('isDisabled', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1100,7 +1567,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getImage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getImage');
-        return $pluginInfo ? $this->___callPlugins('getImage', func_get_args(), $pluginInfo) : parent::getImage();
+        if (!$pluginInfo) {
+            return parent::getImage();
+        } else {
+            return $this->___callPlugins('getImage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1109,7 +1580,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getIdentities()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdentities');
-        return $pluginInfo ? $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo) : parent::getIdentities();
+        if (!$pluginInfo) {
+            return parent::getIdentities();
+        } else {
+            return $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1118,7 +1593,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function reloadPriceInfo()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'reloadPriceInfo');
-        return $pluginInfo ? $this->___callPlugins('reloadPriceInfo', func_get_args(), $pluginInfo) : parent::reloadPriceInfo();
+        if (!$pluginInfo) {
+            return parent::reloadPriceInfo();
+        } else {
+            return $this->___callPlugins('reloadPriceInfo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1127,7 +1606,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function __toArray()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__toArray');
-        return $pluginInfo ? $this->___callPlugins('__toArray', func_get_args(), $pluginInfo) : parent::__toArray();
+        if (!$pluginInfo) {
+            return parent::__toArray();
+        } else {
+            return $this->___callPlugins('__toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1136,7 +1619,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function toFlatArray()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toFlatArray');
-        return $pluginInfo ? $this->___callPlugins('toFlatArray', func_get_args(), $pluginInfo) : parent::toFlatArray();
+        if (!$pluginInfo) {
+            return parent::toFlatArray();
+        } else {
+            return $this->___callPlugins('toFlatArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1145,7 +1632,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setSku($sku)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSku');
-        return $pluginInfo ? $this->___callPlugins('setSku', func_get_args(), $pluginInfo) : parent::setSku($sku);
+        if (!$pluginInfo) {
+            return parent::setSku($sku);
+        } else {
+            return $this->___callPlugins('setSku', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1154,7 +1645,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1163,7 +1658,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setStoreId($storeId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStoreId');
-        return $pluginInfo ? $this->___callPlugins('setStoreId', func_get_args(), $pluginInfo) : parent::setStoreId($storeId);
+        if (!$pluginInfo) {
+            return parent::setStoreId($storeId);
+        } else {
+            return $this->___callPlugins('setStoreId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1172,7 +1671,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setAttributeSetId($attributeSetId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeSetId');
-        return $pluginInfo ? $this->___callPlugins('setAttributeSetId', func_get_args(), $pluginInfo) : parent::setAttributeSetId($attributeSetId);
+        if (!$pluginInfo) {
+            return parent::setAttributeSetId($attributeSetId);
+        } else {
+            return $this->___callPlugins('setAttributeSetId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1181,7 +1684,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setPrice($price)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPrice');
-        return $pluginInfo ? $this->___callPlugins('setPrice', func_get_args(), $pluginInfo) : parent::setPrice($price);
+        if (!$pluginInfo) {
+            return parent::setPrice($price);
+        } else {
+            return $this->___callPlugins('setPrice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1190,7 +1697,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setStatus($status)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatus');
-        return $pluginInfo ? $this->___callPlugins('setStatus', func_get_args(), $pluginInfo) : parent::setStatus($status);
+        if (!$pluginInfo) {
+            return parent::setStatus($status);
+        } else {
+            return $this->___callPlugins('setStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1199,7 +1710,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setVisibility($visibility)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setVisibility');
-        return $pluginInfo ? $this->___callPlugins('setVisibility', func_get_args(), $pluginInfo) : parent::setVisibility($visibility);
+        if (!$pluginInfo) {
+            return parent::setVisibility($visibility);
+        } else {
+            return $this->___callPlugins('setVisibility', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1208,7 +1723,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setCreatedAt($createdAt)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCreatedAt');
-        return $pluginInfo ? $this->___callPlugins('setCreatedAt', func_get_args(), $pluginInfo) : parent::setCreatedAt($createdAt);
+        if (!$pluginInfo) {
+            return parent::setCreatedAt($createdAt);
+        } else {
+            return $this->___callPlugins('setCreatedAt', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1217,7 +1736,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setUpdatedAt($updatedAt)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setUpdatedAt');
-        return $pluginInfo ? $this->___callPlugins('setUpdatedAt', func_get_args(), $pluginInfo) : parent::setUpdatedAt($updatedAt);
+        if (!$pluginInfo) {
+            return parent::setUpdatedAt($updatedAt);
+        } else {
+            return $this->___callPlugins('setUpdatedAt', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1226,7 +1749,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setWeight($weight)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setWeight');
-        return $pluginInfo ? $this->___callPlugins('setWeight', func_get_args(), $pluginInfo) : parent::setWeight($weight);
+        if (!$pluginInfo) {
+            return parent::setWeight($weight);
+        } else {
+            return $this->___callPlugins('setWeight', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1235,7 +1762,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setTypeId($typeId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTypeId');
-        return $pluginInfo ? $this->___callPlugins('setTypeId', func_get_args(), $pluginInfo) : parent::setTypeId($typeId);
+        if (!$pluginInfo) {
+            return parent::setTypeId($typeId);
+        } else {
+            return $this->___callPlugins('setTypeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1244,7 +1775,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getExtensionAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo) : parent::getExtensionAttributes();
+        if (!$pluginInfo) {
+            return parent::getExtensionAttributes();
+        } else {
+            return $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1253,7 +1788,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setExtensionAttributes(\Magento\Catalog\Api\Data\ProductExtensionInterface $extensionAttributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo) : parent::setExtensionAttributes($extensionAttributes);
+        if (!$pluginInfo) {
+            return parent::setExtensionAttributes($extensionAttributes);
+        } else {
+            return $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1262,7 +1801,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getMediaGalleryEntries()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMediaGalleryEntries');
-        return $pluginInfo ? $this->___callPlugins('getMediaGalleryEntries', func_get_args(), $pluginInfo) : parent::getMediaGalleryEntries();
+        if (!$pluginInfo) {
+            return parent::getMediaGalleryEntries();
+        } else {
+            return $this->___callPlugins('getMediaGalleryEntries', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1271,7 +1814,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setMediaGalleryEntries(?array $mediaGalleryEntries = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setMediaGalleryEntries');
-        return $pluginInfo ? $this->___callPlugins('setMediaGalleryEntries', func_get_args(), $pluginInfo) : parent::setMediaGalleryEntries($mediaGalleryEntries);
+        if (!$pluginInfo) {
+            return parent::setMediaGalleryEntries($mediaGalleryEntries);
+        } else {
+            return $this->___callPlugins('setMediaGalleryEntries', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1280,7 +1827,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1289,7 +1840,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setId($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setId');
-        return $pluginInfo ? $this->___callPlugins('setId', func_get_args(), $pluginInfo) : parent::setId($value);
+        if (!$pluginInfo) {
+            return parent::setId($value);
+        } else {
+            return $this->___callPlugins('setId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1298,7 +1853,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setAssociatedProductIds(array $productIds)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAssociatedProductIds');
-        return $pluginInfo ? $this->___callPlugins('setAssociatedProductIds', func_get_args(), $pluginInfo) : parent::setAssociatedProductIds($productIds);
+        if (!$pluginInfo) {
+            return parent::setAssociatedProductIds($productIds);
+        } else {
+            return $this->___callPlugins('setAssociatedProductIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1307,7 +1866,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getQuantityAndStockStatus()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getQuantityAndStockStatus');
-        return $pluginInfo ? $this->___callPlugins('getQuantityAndStockStatus', func_get_args(), $pluginInfo) : parent::getQuantityAndStockStatus();
+        if (!$pluginInfo) {
+            return parent::getQuantityAndStockStatus();
+        } else {
+            return $this->___callPlugins('getQuantityAndStockStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1316,7 +1879,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setQuantityAndStockStatus($quantityAndStockStatusData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setQuantityAndStockStatus');
-        return $pluginInfo ? $this->___callPlugins('setQuantityAndStockStatus', func_get_args(), $pluginInfo) : parent::setQuantityAndStockStatus($quantityAndStockStatusData);
+        if (!$pluginInfo) {
+            return parent::setQuantityAndStockStatus($quantityAndStockStatusData);
+        } else {
+            return $this->___callPlugins('setQuantityAndStockStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1325,7 +1892,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStockData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStockData');
-        return $pluginInfo ? $this->___callPlugins('getStockData', func_get_args(), $pluginInfo) : parent::getStockData();
+        if (!$pluginInfo) {
+            return parent::getStockData();
+        } else {
+            return $this->___callPlugins('getStockData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1334,7 +1905,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setStockData($stockData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStockData');
-        return $pluginInfo ? $this->___callPlugins('setStockData', func_get_args(), $pluginInfo) : parent::setStockData($stockData);
+        if (!$pluginInfo) {
+            return parent::setStockData($stockData);
+        } else {
+            return $this->___callPlugins('setStockData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1343,7 +1918,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function lockAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'lockAttribute');
-        return $pluginInfo ? $this->___callPlugins('lockAttribute', func_get_args(), $pluginInfo) : parent::lockAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::lockAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('lockAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1352,7 +1931,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function unlockAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unlockAttribute');
-        return $pluginInfo ? $this->___callPlugins('unlockAttribute', func_get_args(), $pluginInfo) : parent::unlockAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::unlockAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('unlockAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1361,7 +1944,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function unlockAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unlockAttributes');
-        return $pluginInfo ? $this->___callPlugins('unlockAttributes', func_get_args(), $pluginInfo) : parent::unlockAttributes();
+        if (!$pluginInfo) {
+            return parent::unlockAttributes();
+        } else {
+            return $this->___callPlugins('unlockAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1370,7 +1957,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getLockedAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLockedAttributes');
-        return $pluginInfo ? $this->___callPlugins('getLockedAttributes', func_get_args(), $pluginInfo) : parent::getLockedAttributes();
+        if (!$pluginInfo) {
+            return parent::getLockedAttributes();
+        } else {
+            return $this->___callPlugins('getLockedAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1379,7 +1970,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function hasLockedAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasLockedAttributes');
-        return $pluginInfo ? $this->___callPlugins('hasLockedAttributes', func_get_args(), $pluginInfo) : parent::hasLockedAttributes();
+        if (!$pluginInfo) {
+            return parent::hasLockedAttributes();
+        } else {
+            return $this->___callPlugins('hasLockedAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1388,7 +1983,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isLockedAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isLockedAttribute');
-        return $pluginInfo ? $this->___callPlugins('isLockedAttribute', func_get_args(), $pluginInfo) : parent::isLockedAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::isLockedAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('isLockedAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1397,7 +1996,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setData($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($key, $value);
+        if (!$pluginInfo) {
+            return parent::setData($key, $value);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1406,7 +2009,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function unsetData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetData');
-        return $pluginInfo ? $this->___callPlugins('unsetData', func_get_args(), $pluginInfo) : parent::unsetData($key);
+        if (!$pluginInfo) {
+            return parent::unsetData($key);
+        } else {
+            return $this->___callPlugins('unsetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1415,7 +2022,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getResourceCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceCollection');
-        return $pluginInfo ? $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo) : parent::getResourceCollection();
+        if (!$pluginInfo) {
+            return parent::getResourceCollection();
+        } else {
+            return $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1424,7 +2035,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function loadByAttribute($attribute, $value, $additionalAttributes = '*')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadByAttribute');
-        return $pluginInfo ? $this->___callPlugins('loadByAttribute', func_get_args(), $pluginInfo) : parent::loadByAttribute($attribute, $value, $additionalAttributes);
+        if (!$pluginInfo) {
+            return parent::loadByAttribute($attribute, $value, $additionalAttributes);
+        } else {
+            return $this->___callPlugins('loadByAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1433,7 +2048,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStore()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStore');
-        return $pluginInfo ? $this->___callPlugins('getStore', func_get_args(), $pluginInfo) : parent::getStore();
+        if (!$pluginInfo) {
+            return parent::getStore();
+        } else {
+            return $this->___callPlugins('getStore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1442,7 +2061,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getWebsiteStoreIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWebsiteStoreIds');
-        return $pluginInfo ? $this->___callPlugins('getWebsiteStoreIds', func_get_args(), $pluginInfo) : parent::getWebsiteStoreIds();
+        if (!$pluginInfo) {
+            return parent::getWebsiteStoreIds();
+        } else {
+            return $this->___callPlugins('getWebsiteStoreIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1451,7 +2074,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setAttributeDefaultValue($attributeCode, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeDefaultValue');
-        return $pluginInfo ? $this->___callPlugins('setAttributeDefaultValue', func_get_args(), $pluginInfo) : parent::setAttributeDefaultValue($attributeCode, $value);
+        if (!$pluginInfo) {
+            return parent::setAttributeDefaultValue($attributeCode, $value);
+        } else {
+            return $this->___callPlugins('setAttributeDefaultValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1460,7 +2087,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getAttributeDefaultValue($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeDefaultValue');
-        return $pluginInfo ? $this->___callPlugins('getAttributeDefaultValue', func_get_args(), $pluginInfo) : parent::getAttributeDefaultValue($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getAttributeDefaultValue($attributeCode);
+        } else {
+            return $this->___callPlugins('getAttributeDefaultValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1469,7 +2100,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setExistsStoreValueFlag($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setExistsStoreValueFlag');
-        return $pluginInfo ? $this->___callPlugins('setExistsStoreValueFlag', func_get_args(), $pluginInfo) : parent::setExistsStoreValueFlag($attributeCode);
+        if (!$pluginInfo) {
+            return parent::setExistsStoreValueFlag($attributeCode);
+        } else {
+            return $this->___callPlugins('setExistsStoreValueFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1478,7 +2113,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getExistsStoreValueFlag($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getExistsStoreValueFlag');
-        return $pluginInfo ? $this->___callPlugins('getExistsStoreValueFlag', func_get_args(), $pluginInfo) : parent::getExistsStoreValueFlag($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getExistsStoreValueFlag($attributeCode);
+        } else {
+            return $this->___callPlugins('getExistsStoreValueFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1487,7 +2126,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isDeleteable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDeleteable');
-        return $pluginInfo ? $this->___callPlugins('isDeleteable', func_get_args(), $pluginInfo) : parent::isDeleteable();
+        if (!$pluginInfo) {
+            return parent::isDeleteable();
+        } else {
+            return $this->___callPlugins('isDeleteable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1496,7 +2139,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setIsDeleteable($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsDeleteable');
-        return $pluginInfo ? $this->___callPlugins('setIsDeleteable', func_get_args(), $pluginInfo) : parent::setIsDeleteable($value);
+        if (!$pluginInfo) {
+            return parent::setIsDeleteable($value);
+        } else {
+            return $this->___callPlugins('setIsDeleteable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1505,7 +2152,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isReadonly()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isReadonly');
-        return $pluginInfo ? $this->___callPlugins('isReadonly', func_get_args(), $pluginInfo) : parent::isReadonly();
+        if (!$pluginInfo) {
+            return parent::isReadonly();
+        } else {
+            return $this->___callPlugins('isReadonly', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1514,7 +2165,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setIsReadonly($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsReadonly');
-        return $pluginInfo ? $this->___callPlugins('setIsReadonly', func_get_args(), $pluginInfo) : parent::setIsReadonly($value);
+        if (!$pluginInfo) {
+            return parent::setIsReadonly($value);
+        } else {
+            return $this->___callPlugins('setIsReadonly', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1523,7 +2178,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCustomAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo) : parent::getCustomAttributes();
+        if (!$pluginInfo) {
+            return parent::getCustomAttributes();
+        } else {
+            return $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1532,7 +2191,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCustomAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo) : parent::getCustomAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getCustomAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1541,7 +2204,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setCustomAttributes(array $attributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo) : parent::setCustomAttributes($attributes);
+        if (!$pluginInfo) {
+            return parent::setCustomAttributes($attributes);
+        } else {
+            return $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1550,7 +2217,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setCustomAttribute($attributeCode, $attributeValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo) : parent::setCustomAttribute($attributeCode, $attributeValue);
+        if (!$pluginInfo) {
+            return parent::setCustomAttribute($attributeCode, $attributeValue);
+        } else {
+            return $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1559,7 +2230,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getData($key = '', $index = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $index);
+        if (!$pluginInfo) {
+            return parent::getData($key, $index);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1568,7 +2243,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setIdFieldName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo) : parent::setIdFieldName($name);
+        if (!$pluginInfo) {
+            return parent::setIdFieldName($name);
+        } else {
+            return $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1577,7 +2256,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getIdFieldName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo) : parent::getIdFieldName();
+        if (!$pluginInfo) {
+            return parent::getIdFieldName();
+        } else {
+            return $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1586,7 +2269,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isDeleted($isDeleted = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDeleted');
-        return $pluginInfo ? $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo) : parent::isDeleted($isDeleted);
+        if (!$pluginInfo) {
+            return parent::isDeleted($isDeleted);
+        } else {
+            return $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1595,7 +2282,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function hasDataChanges()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo) : parent::hasDataChanges();
+        if (!$pluginInfo) {
+            return parent::hasDataChanges();
+        } else {
+            return $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1604,7 +2295,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setDataChanges($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo) : parent::setDataChanges($value);
+        if (!$pluginInfo) {
+            return parent::setDataChanges($value);
+        } else {
+            return $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1613,7 +2308,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getOrigData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOrigData');
-        return $pluginInfo ? $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo) : parent::getOrigData($key);
+        if (!$pluginInfo) {
+            return parent::getOrigData($key);
+        } else {
+            return $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1622,7 +2321,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setOrigData($key = null, $data = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOrigData');
-        return $pluginInfo ? $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo) : parent::setOrigData($key, $data);
+        if (!$pluginInfo) {
+            return parent::setOrigData($key, $data);
+        } else {
+            return $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1631,7 +2334,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function dataHasChangedFor($field)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'dataHasChangedFor');
-        return $pluginInfo ? $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo) : parent::dataHasChangedFor($field);
+        if (!$pluginInfo) {
+            return parent::dataHasChangedFor($field);
+        } else {
+            return $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1640,7 +2347,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getResourceName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceName');
-        return $pluginInfo ? $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo) : parent::getResourceName();
+        if (!$pluginInfo) {
+            return parent::getResourceName();
+        } else {
+            return $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1649,7 +2360,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCollection');
-        return $pluginInfo ? $this->___callPlugins('getCollection', func_get_args(), $pluginInfo) : parent::getCollection();
+        if (!$pluginInfo) {
+            return parent::getCollection();
+        } else {
+            return $this->___callPlugins('getCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1658,7 +2373,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function load($modelId, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'load');
-        return $pluginInfo ? $this->___callPlugins('load', func_get_args(), $pluginInfo) : parent::load($modelId, $field);
+        if (!$pluginInfo) {
+            return parent::load($modelId, $field);
+        } else {
+            return $this->___callPlugins('load', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1667,7 +2386,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function beforeLoad($identifier, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeLoad');
-        return $pluginInfo ? $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo) : parent::beforeLoad($identifier, $field);
+        if (!$pluginInfo) {
+            return parent::beforeLoad($identifier, $field);
+        } else {
+            return $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1676,7 +2399,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function afterLoad()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterLoad');
-        return $pluginInfo ? $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo) : parent::afterLoad();
+        if (!$pluginInfo) {
+            return parent::afterLoad();
+        } else {
+            return $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1685,7 +2412,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isSaveAllowed()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSaveAllowed');
-        return $pluginInfo ? $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo) : parent::isSaveAllowed();
+        if (!$pluginInfo) {
+            return parent::isSaveAllowed();
+        } else {
+            return $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1694,7 +2425,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setHasDataChanges($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo) : parent::setHasDataChanges($flag);
+        if (!$pluginInfo) {
+            return parent::setHasDataChanges($flag);
+        } else {
+            return $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1703,7 +2438,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function save()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save();
+        if (!$pluginInfo) {
+            return parent::save();
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1712,7 +2451,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function afterCommitCallback()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterCommitCallback');
-        return $pluginInfo ? $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo) : parent::afterCommitCallback();
+        if (!$pluginInfo) {
+            return parent::afterCommitCallback();
+        } else {
+            return $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1721,7 +2464,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isObjectNew($flag = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isObjectNew');
-        return $pluginInfo ? $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo) : parent::isObjectNew($flag);
+        if (!$pluginInfo) {
+            return parent::isObjectNew($flag);
+        } else {
+            return $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1730,7 +2477,24 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function validateBeforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validateBeforeSave');
-        return $pluginInfo ? $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo) : parent::validateBeforeSave();
+        if (!$pluginInfo) {
+            return parent::validateBeforeSave();
+        } else {
+            return $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheTags()
+    {
+        $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheTags');
+        if (!$pluginInfo) {
+            return parent::getCacheTags();
+        } else {
+            return $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1739,7 +2503,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function cleanModelCache()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'cleanModelCache');
-        return $pluginInfo ? $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo) : parent::cleanModelCache();
+        if (!$pluginInfo) {
+            return parent::cleanModelCache();
+        } else {
+            return $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1748,7 +2516,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function delete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete();
+        if (!$pluginInfo) {
+            return parent::delete();
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1757,7 +2529,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function afterDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDelete');
-        return $pluginInfo ? $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo) : parent::afterDelete();
+        if (!$pluginInfo) {
+            return parent::afterDelete();
+        } else {
+            return $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1766,7 +2542,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getResource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResource');
-        return $pluginInfo ? $this->___callPlugins('getResource', func_get_args(), $pluginInfo) : parent::getResource();
+        if (!$pluginInfo) {
+            return parent::getResource();
+        } else {
+            return $this->___callPlugins('getResource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1775,7 +2555,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getEntityId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityId');
-        return $pluginInfo ? $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo) : parent::getEntityId();
+        if (!$pluginInfo) {
+            return parent::getEntityId();
+        } else {
+            return $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1784,7 +2568,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setEntityId($entityId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityId');
-        return $pluginInfo ? $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo) : parent::setEntityId($entityId);
+        if (!$pluginInfo) {
+            return parent::setEntityId($entityId);
+        } else {
+            return $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1793,7 +2581,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function clearInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearInstance');
-        return $pluginInfo ? $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo) : parent::clearInstance();
+        if (!$pluginInfo) {
+            return parent::clearInstance();
+        } else {
+            return $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1802,7 +2594,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getStoredData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoredData');
-        return $pluginInfo ? $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo) : parent::getStoredData();
+        if (!$pluginInfo) {
+            return parent::getStoredData();
+        } else {
+            return $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1811,7 +2607,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getEventPrefix()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEventPrefix');
-        return $pluginInfo ? $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo) : parent::getEventPrefix();
+        if (!$pluginInfo) {
+            return parent::getEventPrefix();
+        } else {
+            return $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1820,7 +2620,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function addData(array $arr)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addData');
-        return $pluginInfo ? $this->___callPlugins('addData', func_get_args(), $pluginInfo) : parent::addData($arr);
+        if (!$pluginInfo) {
+            return parent::addData($arr);
+        } else {
+            return $this->___callPlugins('addData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1829,7 +2633,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getDataByPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByPath');
-        return $pluginInfo ? $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo) : parent::getDataByPath($path);
+        if (!$pluginInfo) {
+            return parent::getDataByPath($path);
+        } else {
+            return $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1838,7 +2646,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getDataByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByKey');
-        return $pluginInfo ? $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo) : parent::getDataByKey($key);
+        if (!$pluginInfo) {
+            return parent::getDataByKey($key);
+        } else {
+            return $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1847,7 +2659,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function setDataUsingMethod($key, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo) : parent::setDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::setDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1856,7 +2672,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function getDataUsingMethod($key, $args = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo) : parent::getDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::getDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1865,7 +2685,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function hasData($key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasData');
-        return $pluginInfo ? $this->___callPlugins('hasData', func_get_args(), $pluginInfo) : parent::hasData($key);
+        if (!$pluginInfo) {
+            return parent::hasData($key);
+        } else {
+            return $this->___callPlugins('hasData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1874,7 +2698,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function convertToArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToArray');
-        return $pluginInfo ? $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo) : parent::convertToArray($keys);
+        if (!$pluginInfo) {
+            return parent::convertToArray($keys);
+        } else {
+            return $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1883,7 +2711,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1892,7 +2724,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function convertToXml(array $arrAttributes = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToXml');
-        return $pluginInfo ? $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo) : parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1901,7 +2737,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function toJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toJson');
-        return $pluginInfo ? $this->___callPlugins('toJson', func_get_args(), $pluginInfo) : parent::toJson($keys);
+        if (!$pluginInfo) {
+            return parent::toJson($keys);
+        } else {
+            return $this->___callPlugins('toJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1910,7 +2750,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function convertToJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToJson');
-        return $pluginInfo ? $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo) : parent::convertToJson($keys);
+        if (!$pluginInfo) {
+            return parent::convertToJson($keys);
+        } else {
+            return $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1919,7 +2763,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function toString($format = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString($format);
+        if (!$pluginInfo) {
+            return parent::toString($format);
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1928,7 +2776,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1937,7 +2789,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function isEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmpty');
-        return $pluginInfo ? $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo) : parent::isEmpty();
+        if (!$pluginInfo) {
+            return parent::isEmpty();
+        } else {
+            return $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1946,7 +2802,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serialize');
-        return $pluginInfo ? $this->___callPlugins('serialize', func_get_args(), $pluginInfo) : parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        if (!$pluginInfo) {
+            return parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        } else {
+            return $this->___callPlugins('serialize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1955,7 +2815,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function debug($data = null, &$objects = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debug');
-        return $pluginInfo ? $this->___callPlugins('debug', func_get_args(), $pluginInfo) : parent::debug($data, $objects);
+        if (!$pluginInfo) {
+            return parent::debug($data, $objects);
+        } else {
+            return $this->___callPlugins('debug', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1964,7 +2828,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function offsetSet($offset, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetSet');
-        return $pluginInfo ? $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo) : parent::offsetSet($offset, $value);
+        if (!$pluginInfo) {
+            return parent::offsetSet($offset, $value);
+        } else {
+            return $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1973,7 +2841,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function offsetExists($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetExists');
-        return $pluginInfo ? $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo) : parent::offsetExists($offset);
+        if (!$pluginInfo) {
+            return parent::offsetExists($offset);
+        } else {
+            return $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1982,7 +2854,11 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function offsetUnset($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetUnset');
-        return $pluginInfo ? $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo) : parent::offsetUnset($offset);
+        if (!$pluginInfo) {
+            return parent::offsetUnset($offset);
+        } else {
+            return $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1991,6 +2867,10 @@ class Interceptor extends \Magento\Catalog\Model\Product implements \Magento\Fra
     public function offsetGet($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetGet');
-        return $pluginInfo ? $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo) : parent::offsetGet($offset);
+        if (!$pluginInfo) {
+            return parent::offsetGet($offset);
+        } else {
+            return $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -3,12 +3,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Framework\Stdlib\Cookie;
 
 /**
- * Cookie Attributes
+ * Class CookieMetadata
  * @api
  * @since 100.0.2
  */
@@ -17,17 +15,11 @@ class CookieMetadata
     /**#@+
      * Constant for metadata value key.
      */
-    public const KEY_DOMAIN = 'domain';
-    public const KEY_PATH = 'path';
-    public const KEY_SECURE = 'secure';
-    public const KEY_HTTP_ONLY = 'http_only';
-    public const KEY_DURATION = 'duration';
-    public const KEY_SAME_SITE = 'samesite';
-    private const SAME_SITE_ALLOWED_VALUES = [
-        'strict' => 'Strict',
-        'lax' => 'Lax',
-        'none' => 'None',
-    ];
+    const KEY_DOMAIN = 'domain';
+    const KEY_PATH = 'path';
+    const KEY_SECURE = 'secure';
+    const KEY_HTTP_ONLY = 'http_only';
+    const KEY_DURATION = 'duration';
     /**#@-*/
 
     /**#@-*/
@@ -42,9 +34,6 @@ class CookieMetadata
             $metadata = [];
         }
         $this->metadata = $metadata;
-        if (isset($metadata[self::KEY_SAME_SITE])) {
-            $this->setSameSite($metadata[self::KEY_SAME_SITE]);
-        }
     }
 
     /**
@@ -54,7 +43,7 @@ class CookieMetadata
      *
      * @return array
      */
-    public function __toArray() //phpcs:ignore PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames
+    public function __toArray()
     {
         return $this->metadata;
     }
@@ -146,37 +135,5 @@ class CookieMetadata
     public function getSecure()
     {
         return $this->get(self::KEY_SECURE);
-    }
-
-    /**
-     * Setter for Cookie SameSite attribute
-     *
-     * @param  string $sameSite
-     * @return $this
-     */
-    public function setSameSite(string $sameSite): CookieMetadata
-    {
-        if (!array_key_exists(strtolower($sameSite), self::SAME_SITE_ALLOWED_VALUES)) {
-            throw new \InvalidArgumentException(
-                'Invalid argument provided for SameSite directive expected one of: Strict, Lax or None'
-            );
-        }
-        if (!$this->getSecure() && strtolower($sameSite) === 'none') {
-            throw new \InvalidArgumentException(
-                'Cookie must be secure in order to use the SameSite None directive.'
-            );
-        }
-        $sameSite = self::SAME_SITE_ALLOWED_VALUES[strtolower($sameSite)];
-        return $this->set(self::KEY_SAME_SITE, $sameSite);
-    }
-
-    /**
-     * Get Same Site Flag
-     *
-     * @return string|null
-     */
-    public function getSameSite(): ?string
-    {
-        return $this->get(self::KEY_SAME_SITE);
     }
 }

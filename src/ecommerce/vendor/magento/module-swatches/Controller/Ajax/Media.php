@@ -6,19 +6,13 @@
  */
 namespace Magento\Swatches\Controller\Ajax;
 
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\ProductFactory;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\PageCache\Model\Config;
-use Magento\Swatches\Helper\Data;
 
 /**
- * Provide product media data.
+ * Class Media
  */
-class Media extends Action implements HttpGetActionInterface
+class Media extends \Magento\Framework\App\Action\Action implements \Magento\Framework\App\Action\HttpGetActionInterface
 {
     /**
      * @var \Magento\Catalog\Model\Product Factory
@@ -43,9 +37,9 @@ class Media extends Action implements HttpGetActionInterface
      */
     public function __construct(
         Context $context,
-        ProductFactory $productModelFactory,
-        Data $swatchHelper,
-        Config $config
+        \Magento\Catalog\Model\ProductFactory $productModelFactory,
+        \Magento\Swatches\Helper\Data $swatchHelper,
+        \Magento\PageCache\Model\Config $config
     ) {
         $this->productModelFactory = $productModelFactory;
         $this->swatchHelper = $swatchHelper;
@@ -71,18 +65,16 @@ class Media extends Action implements HttpGetActionInterface
         $response = $this->getResponse();
 
         if ($productId = (int)$this->getRequest()->getParam('product_id')) {
-            /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
             $product = $this->productModelFactory->create()->load($productId);
-            $productMedia = [];
-            if ($product->getId() && $product->getStatus() == Status::STATUS_ENABLED) {
-                $productMedia = $this->swatchHelper->getProductMediaGallery($product);
-            }
+            $productMedia = $this->swatchHelper->getProductMediaGallery(
+                $product
+            );
             $resultJson->setHeader('X-Magento-Tags', implode(',', $product->getIdentities()));
 
             $response->setPublicHeaders($this->config->getTtl());
         }
-        $resultJson->setData($productMedia);
 
+        $resultJson->setData($productMedia);
         return $resultJson;
     }
 }

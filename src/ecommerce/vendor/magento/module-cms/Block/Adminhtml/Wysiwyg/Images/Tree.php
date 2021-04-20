@@ -58,7 +58,6 @@ class Tree extends \Magento\Backend\Block\Template
      * Json tree builder
      *
      * @return string
-     * @throws \Magento\Framework\Exception\ValidatorException
      */
     public function getTreeJson()
     {
@@ -76,8 +75,8 @@ class Tree extends \Magento\Backend\Block\Template
                 'path' => substr($item->getFilename(), strlen($storageRoot)),
                 'cls' => 'folder',
             ];
-            $nestedDirectories = $this->getMediaDirectory()->readRecursively($item->getFilename());
-            $hasNestedDirectories = count($nestedDirectories) > 0;
+
+            $hasNestedDirectories = count(glob($item->getFilename() . '/*', GLOB_ONLYDIR)) > 0;
 
             // if no nested directories inside dir, add 'leaf' state so that jstree hides dropdown arrow next to dir
             if (!$hasNestedDirectories) {

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setCustomerData($customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerData');
-        return $pluginInfo ? $this->___callPlugins('setCustomerData', func_get_args(), $pluginInfo) : parent::setCustomerData($customer);
+        if (!$pluginInfo) {
+            return parent::setCustomerData($customer);
+        } else {
+            return $this->___callPlugins('setCustomerData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function hasQuote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasQuote');
-        return $pluginInfo ? $this->___callPlugins('hasQuote', func_get_args(), $pluginInfo) : parent::hasQuote();
+        if (!$pluginInfo) {
+            return parent::hasQuote();
+        } else {
+            return $this->___callPlugins('hasQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setLoadInactive($load = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setLoadInactive');
-        return $pluginInfo ? $this->___callPlugins('setLoadInactive', func_get_args(), $pluginInfo) : parent::setLoadInactive($load);
+        if (!$pluginInfo) {
+            return parent::setLoadInactive($load);
+        } else {
+            return $this->___callPlugins('setLoadInactive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getQuote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getQuote');
-        return $pluginInfo ? $this->___callPlugins('getQuote', func_get_args(), $pluginInfo) : parent::getQuote();
+        if (!$pluginInfo) {
+            return parent::getQuote();
+        } else {
+            return $this->___callPlugins('getQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setQuoteId($quoteId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setQuoteId');
-        return $pluginInfo ? $this->___callPlugins('setQuoteId', func_get_args(), $pluginInfo) : parent::setQuoteId($quoteId);
+        if (!$pluginInfo) {
+            return parent::setQuoteId($quoteId);
+        } else {
+            return $this->___callPlugins('setQuoteId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getQuoteId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getQuoteId');
-        return $pluginInfo ? $this->___callPlugins('getQuoteId', func_get_args(), $pluginInfo) : parent::getQuoteId();
+        if (!$pluginInfo) {
+            return parent::getQuoteId();
+        } else {
+            return $this->___callPlugins('getQuoteId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function loadCustomerQuote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadCustomerQuote');
-        return $pluginInfo ? $this->___callPlugins('loadCustomerQuote', func_get_args(), $pluginInfo) : parent::loadCustomerQuote();
+        if (!$pluginInfo) {
+            return parent::loadCustomerQuote();
+        } else {
+            return $this->___callPlugins('loadCustomerQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setStepData($step, $data, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStepData');
-        return $pluginInfo ? $this->___callPlugins('setStepData', func_get_args(), $pluginInfo) : parent::setStepData($step, $data, $value);
+        if (!$pluginInfo) {
+            return parent::setStepData($step, $data, $value);
+        } else {
+            return $this->___callPlugins('setStepData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getStepData($step = null, $data = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStepData');
-        return $pluginInfo ? $this->___callPlugins('getStepData', func_get_args(), $pluginInfo) : parent::getStepData($step, $data);
+        if (!$pluginInfo) {
+            return parent::getStepData($step, $data);
+        } else {
+            return $this->___callPlugins('getStepData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function clearQuote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearQuote');
-        return $pluginInfo ? $this->___callPlugins('clearQuote', func_get_args(), $pluginInfo) : parent::clearQuote();
+        if (!$pluginInfo) {
+            return parent::clearQuote();
+        } else {
+            return $this->___callPlugins('clearQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function clearStorage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearStorage');
-        return $pluginInfo ? $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo) : parent::clearStorage();
+        if (!$pluginInfo) {
+            return parent::clearStorage();
+        } else {
+            return $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function clearHelperData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearHelperData');
-        return $pluginInfo ? $this->___callPlugins('clearHelperData', func_get_args(), $pluginInfo) : parent::clearHelperData();
+        if (!$pluginInfo) {
+            return parent::clearHelperData();
+        } else {
+            return $this->___callPlugins('clearHelperData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function resetCheckout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetCheckout');
-        return $pluginInfo ? $this->___callPlugins('resetCheckout', func_get_args(), $pluginInfo) : parent::resetCheckout();
+        if (!$pluginInfo) {
+            return parent::resetCheckout();
+        } else {
+            return $this->___callPlugins('resetCheckout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function replaceQuote($quote)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'replaceQuote');
-        return $pluginInfo ? $this->___callPlugins('replaceQuote', func_get_args(), $pluginInfo) : parent::replaceQuote($quote);
+        if (!$pluginInfo) {
+            return parent::replaceQuote($quote);
+        } else {
+            return $this->___callPlugins('replaceQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getLastRealOrder()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLastRealOrder');
-        return $pluginInfo ? $this->___callPlugins('getLastRealOrder', func_get_args(), $pluginInfo) : parent::getLastRealOrder();
+        if (!$pluginInfo) {
+            return parent::getLastRealOrder();
+        } else {
+            return $this->___callPlugins('getLastRealOrder', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function restoreQuote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'restoreQuote');
-        return $pluginInfo ? $this->___callPlugins('restoreQuote', func_get_args(), $pluginInfo) : parent::restoreQuote();
+        if (!$pluginInfo) {
+            return parent::restoreQuote();
+        } else {
+            return $this->___callPlugins('restoreQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function writeClose()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'writeClose');
-        return $pluginInfo ? $this->___callPlugins('writeClose', func_get_args(), $pluginInfo) : parent::writeClose();
+        if (!$pluginInfo) {
+            return parent::writeClose();
+        } else {
+            return $this->___callPlugins('writeClose', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function start()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'start');
-        return $pluginInfo ? $this->___callPlugins('start', func_get_args(), $pluginInfo) : parent::start();
+        if (!$pluginInfo) {
+            return parent::start();
+        } else {
+            return $this->___callPlugins('start', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function isSessionExists()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSessionExists');
-        return $pluginInfo ? $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo) : parent::isSessionExists();
+        if (!$pluginInfo) {
+            return parent::isSessionExists();
+        } else {
+            return $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getData($key = '', $clear = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $clear);
+        if (!$pluginInfo) {
+            return parent::getData($key, $clear);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getSessionId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionId');
-        return $pluginInfo ? $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo) : parent::getSessionId();
+        if (!$pluginInfo) {
+            return parent::getSessionId();
+        } else {
+            return $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function destroy(?array $options = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'destroy');
-        return $pluginInfo ? $this->___callPlugins('destroy', func_get_args(), $pluginInfo) : parent::destroy($options);
+        if (!$pluginInfo) {
+            return parent::destroy($options);
+        } else {
+            return $this->___callPlugins('destroy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getCookieDomain()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieDomain');
-        return $pluginInfo ? $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo) : parent::getCookieDomain();
+        if (!$pluginInfo) {
+            return parent::getCookieDomain();
+        } else {
+            return $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getCookiePath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookiePath');
-        return $pluginInfo ? $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo) : parent::getCookiePath();
+        if (!$pluginInfo) {
+            return parent::getCookiePath();
+        } else {
+            return $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getCookieLifetime()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieLifetime');
-        return $pluginInfo ? $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo) : parent::getCookieLifetime();
+        if (!$pluginInfo) {
+            return parent::getCookieLifetime();
+        } else {
+            return $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function setSessionId($sessionId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSessionId');
-        return $pluginInfo ? $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo) : parent::setSessionId($sessionId);
+        if (!$pluginInfo) {
+            return parent::setSessionId($sessionId);
+        } else {
+            return $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function getSessionIdForHost($urlHost)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionIdForHost');
-        return $pluginInfo ? $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo) : parent::getSessionIdForHost($urlHost);
+        if (!$pluginInfo) {
+            return parent::getSessionIdForHost($urlHost);
+        } else {
+            return $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function isValidForHost($host)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForHost');
-        return $pluginInfo ? $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo) : parent::isValidForHost($host);
+        if (!$pluginInfo) {
+            return parent::isValidForHost($host);
+        } else {
+            return $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function isValidForPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForPath');
-        return $pluginInfo ? $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo) : parent::isValidForPath($path);
+        if (!$pluginInfo) {
+            return parent::isValidForPath($path);
+        } else {
+            return $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function regenerateId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'regenerateId');
-        return $pluginInfo ? $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo) : parent::regenerateId();
+        if (!$pluginInfo) {
+            return parent::regenerateId();
+        } else {
+            return $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,6 +449,10 @@ class Interceptor extends \Magento\Checkout\Model\Session implements \Magento\Fr
     public function expireSessionCookie()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'expireSessionCookie');
-        return $pluginInfo ? $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo) : parent::expireSessionCookie();
+        if (!$pluginInfo) {
+            return parent::expireSessionCookie();
+        } else {
+            return $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo);
+        }
     }
 }

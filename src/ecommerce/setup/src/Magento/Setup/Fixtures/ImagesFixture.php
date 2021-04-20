@@ -8,7 +8,6 @@ namespace Magento\Setup\Fixtures;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\ValidatorException;
-use Magento\MediaStorage\Service\ImageResize;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -107,10 +106,6 @@ class ImagesFixture extends Fixture
      * @var array
      */
     private $tableCache = [];
-    /**
-     * @var ImageResize
-     */
-    private $imageResize;
 
     /**
      * @param FixtureModel $fixtureModel
@@ -122,7 +117,6 @@ class ImagesFixture extends Fixture
      * @param \Magento\Framework\DB\Sql\ColumnValueExpressionFactory $expressionFactory
      * @param \Magento\Setup\Model\BatchInsertFactory $batchInsertFactory
      * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
-     * @param ImageResize $imageResize
      */
     public function __construct(
         FixtureModel $fixtureModel,
@@ -133,8 +127,7 @@ class ImagesFixture extends Fixture
         \Magento\Eav\Model\AttributeRepository $attributeRepository,
         \Magento\Framework\DB\Sql\ColumnValueExpressionFactory $expressionFactory,
         \Magento\Setup\Model\BatchInsertFactory $batchInsertFactory,
-        \Magento\Framework\EntityManager\MetadataPool $metadataPool,
-        ImageResize $imageResize
+        \Magento\Framework\EntityManager\MetadataPool $metadataPool
     ) {
         parent::__construct($fixtureModel);
 
@@ -146,7 +139,6 @@ class ImagesFixture extends Fixture
         $this->expressionFactory = $expressionFactory;
         $this->batchInsertFactory = $batchInsertFactory;
         $this->metadataPool = $metadataPool;
-        $this->imageResize = $imageResize;
     }
 
     /**
@@ -155,10 +147,9 @@ class ImagesFixture extends Fixture
      */
     public function execute()
     {
-        if (!$this->checkIfImagesExists() && $this->getImagesToGenerate()) {
+        if (!$this->checkIfImagesExists()) {
             $this->createImageEntities();
             $this->assignImagesToProducts();
-            iterator_to_array($this->imageResize->resizeFromThemes(), false);
         }
     }
 

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Directory\Model\AllowedCountries implements \
     public function getAllowedCountries($scope = 'website', $scopeCode = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAllowedCountries');
-        return $pluginInfo ? $this->___callPlugins('getAllowedCountries', func_get_args(), $pluginInfo) : parent::getAllowedCountries($scope, $scopeCode);
+        if (!$pluginInfo) {
+            return parent::getAllowedCountries($scope, $scopeCode);
+        } else {
+            return $this->___callPlugins('getAllowedCountries', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Directory\Model\AllowedCountries implements \
     public function makeCountriesUnique(array $allowedCountries)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'makeCountriesUnique');
-        return $pluginInfo ? $this->___callPlugins('makeCountriesUnique', func_get_args(), $pluginInfo) : parent::makeCountriesUnique($allowedCountries);
+        if (!$pluginInfo) {
+            return parent::makeCountriesUnique($allowedCountries);
+        } else {
+            return $this->___callPlugins('makeCountriesUnique', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,6 +46,10 @@ class Interceptor extends \Magento\Directory\Model\AllowedCountries implements \
     public function getCountriesFromConfig($scope, $scopeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCountriesFromConfig');
-        return $pluginInfo ? $this->___callPlugins('getCountriesFromConfig', func_get_args(), $pluginInfo) : parent::getCountriesFromConfig($scope, $scopeCode);
+        if (!$pluginInfo) {
+            return parent::getCountriesFromConfig($scope, $scopeCode);
+        } else {
+            return $this->___callPlugins('getCountriesFromConfig', func_get_args(), $pluginInfo);
+        }
     }
 }

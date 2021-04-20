@@ -4,10 +4,9 @@
  */
 
 define([
-    'jquery',
     'uiRegistry',
     'Magento_Checkout/js/checkout-data'
-], function ($, registry, checkoutData) {
+], function (registry, checkoutData) {
     'use strict';
 
     return function (Component) {
@@ -19,7 +18,6 @@ define([
              * @returns {Object}
              */
             initialize: function () {
-                let self = this;
                 this._super();
 
                 registry.get(
@@ -30,11 +28,6 @@ define([
                         this.addressValidator = validator;
                     }.bind(this)
                 );
-
-                this.isAddressDetailsVisible.subscribe(function (isVisible) {
-                    self.addressDetailsVisibilityChanged(isVisible);
-                });
-
                 return this;
             },
 
@@ -42,8 +35,6 @@ define([
              * @returns {self}
              */
             updateAddress: function () {
-                this.registerAddressInvalidationTrigger();
-
                 var billingData = checkoutData.getBillingAddressFromData();
 
                 if (!this.validationConfig.isAddressValidationEnabled ||
@@ -60,38 +51,6 @@ define([
                         return this.updateAddress();
                     }
                 }.bind(this));
-            },
-
-            /**
-             * When called, register a single (mind the "one") address invalidation trigger,
-             * that sets the "this.addressValidator.isAddressValid = false" for any further billing address field change.
-             */
-            registerAddressInvalidationTrigger: function () {
-                let that = this;
-                $('fieldset')
-                    .find('[data-form="billing-new-address"]')
-                    .one(
-                        'keyup change paste',
-                        'input[name^="street"]' +
-                        ', input[name="postcode"]' +
-                        ', input[name="city"]' +
-                        ', input[name="country_id"]' +
-                        ', select[name="region_id"]',
-                        function () {
-                            that.addressValidator.isAddressValid = false;
-                        });
-            },
-
-            /**
-             * If the address details are visible, then remove the validation address warning message
-             *
-             * @param isVisible
-             */
-            addressDetailsVisibilityChanged: function (isVisible) {
-                let message = this.addressValidator.message;
-                if (isVisible && message.hasMessage() && message.message.type === 1) {
-                    message.clear();
-                }
             }
         });
     };

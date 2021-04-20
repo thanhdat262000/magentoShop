@@ -31,7 +31,7 @@ php >=5.4.11
      */
     protected $infoCommand;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->application = $this->createMock(\Magento\Composer\MagentoComposerApplication::class);
 

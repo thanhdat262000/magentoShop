@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Framework\App\PageCache\Identifier implements
     public function getValue()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValue');
-        return $pluginInfo ? $this->___callPlugins('getValue', func_get_args(), $pluginInfo) : parent::getValue();
+        if (!$pluginInfo) {
+            return parent::getValue();
+        } else {
+            return $this->___callPlugins('getValue', func_get_args(), $pluginInfo);
+        }
     }
 }

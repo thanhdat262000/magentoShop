@@ -3,54 +3,37 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Catalog\Test\Unit\Model\Indexer\Product\Flat\Plugin;
 
-use Magento\Catalog\Model\Indexer\Product\Flat\Plugin\StoreGroup;
-use Magento\Catalog\Model\Indexer\Product\Flat\Processor;
-use Magento\Store\Model\Group as StoreGroupModel;
-use Magento\Store\Model\ResourceModel\Group;
-use Magento\Store\Model\Store;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-
-class StoreGroupTest extends TestCase
+class StoreGroupTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Processor|MockObject
+     * @var \Magento\Catalog\Model\Indexer\Product\Flat\Processor|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $processorMock;
+    protected $processorMock;
 
     /**
-     * @var Store|MockObject
+     * @var \Magento\Store\Model\Store|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $storeGroupMock;
+    protected $storeGroupMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $subjectMock;
+    protected $subjectMock;
 
-    /**
-     * @var StoreGroup
-     */
-    private $storeGroupPlugin;
-
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->processorMock = $this->createPartialMock(
-            Processor::class,
+            \Magento\Catalog\Model\Indexer\Product\Flat\Processor::class,
             ['markIndexerAsInvalid']
         );
 
-        $this->subjectMock = $this->createMock(Group::class);
+        $this->subjectMock = $this->createMock(\Magento\Store\Model\ResourceModel\Group::class);
         $this->storeGroupMock = $this->createPartialMock(
-            StoreGroupModel::class,
-            ['getId', 'dataHasChangedFor']
+            \Magento\Store\Model\Group::class,
+            ['getId', '__wakeup', 'dataHasChangedFor']
         );
-
-        $this->storeGroupPlugin = new StoreGroup($this->processorMock);
     }
 
     /**
@@ -58,16 +41,14 @@ class StoreGroupTest extends TestCase
      * @param int|null $storeId
      * @dataProvider storeGroupDataProvider
      */
-    public function testAfterSave(string $matcherMethod, ?int $storeId): void
+    public function testBeforeSave($matcherMethod, $storeId)
     {
         $this->processorMock->expects($this->{$matcherMethod}())->method('markIndexerAsInvalid');
 
-        $this->storeGroupMock->expects($this->once())->method('getId')->willReturn($storeId);
+        $this->storeGroupMock->expects($this->once())->method('getId')->will($this->returnValue($storeId));
 
-        $this->assertSame(
-            $this->subjectMock,
-            $this->storeGroupPlugin->afterSave($this->subjectMock, $this->subjectMock, $this->storeGroupMock)
-        );
+        $model = new \Magento\Catalog\Model\Indexer\Product\Flat\Plugin\StoreGroup($this->processorMock);
+        $model->beforeSave($this->subjectMock, $this->storeGroupMock);
     }
 
     /**
@@ -75,25 +56,30 @@ class StoreGroupTest extends TestCase
      * @param bool $websiteChanged
      * @dataProvider storeGroupWebsiteDataProvider
      */
-    public function testAfterSaveChangedWebsite(string $matcherMethod, bool $websiteChanged): void
+    public function testChangedWebsiteBeforeSave($matcherMethod, $websiteChanged)
     {
         $this->processorMock->expects($this->{$matcherMethod}())->method('markIndexerAsInvalid');
 
-        $this->storeGroupMock->expects($this->once())->method('getId')->willReturn(1);
+        $this->storeGroupMock->expects($this->once())->method('getId')->will($this->returnValue(1));
 
-        $this->storeGroupMock->expects($this->once())->method('dataHasChangedFor')
-            ->with('root_category_id')->willReturn($websiteChanged);
-
-        $this->assertSame(
-            $this->subjectMock,
-            $this->storeGroupPlugin->afterSave($this->subjectMock, $this->subjectMock, $this->storeGroupMock)
+        $this->storeGroupMock->expects(
+            $this->once()
+        )->method(
+            'dataHasChangedFor'
+        )->with(
+            'root_category_id'
+        )->will(
+            $this->returnValue($websiteChanged)
         );
+
+        $model = new \Magento\Catalog\Model\Indexer\Product\Flat\Plugin\StoreGroup($this->processorMock);
+        $model->beforeSave($this->subjectMock, $this->storeGroupMock);
     }
 
     /**
      * @return array
      */
-    public function storeGroupWebsiteDataProvider(): array
+    public function storeGroupWebsiteDataProvider()
     {
         return [['once', true], ['never', false]];
     }
@@ -101,7 +87,7 @@ class StoreGroupTest extends TestCase
     /**
      * @return array
      */
-    public function storeGroupDataProvider(): array
+    public function storeGroupDataProvider()
     {
         return [['once', null], ['never', 1]];
     }

@@ -139,9 +139,9 @@ class CheckExpirePersistentQuoteObserver implements ObserverInterface
             !$this->_persistentSession->isPersistent() &&
             !$this->_customerSession->isLoggedIn() &&
             $this->_checkoutSession->getQuoteId() &&
-            // persistent session does not expire on onepage checkout page
             !$this->isRequestFromCheckoutPage($this->request) &&
-            $this->getQuote()->getIsPersistent()
+            // persistent session does not expire on onepage checkout page
+            $this->isNeedToExpireSession()
         ) {
             $this->_eventManager->dispatch('persistent_session_expired');
             $this->quoteManager->expire();
@@ -166,6 +166,18 @@ class CheckExpirePersistentQuoteObserver implements ObserverInterface
             return (bool)$this->getQuote()->getIsPersistent();
         }
         return false;
+    }
+
+    /**
+     * Condition checker
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function isNeedToExpireSession(): bool
+    {
+        return $this->getQuote()->getIsPersistent() || $this->getQuote()->getCustomerIsGuest();
     }
 
     /**

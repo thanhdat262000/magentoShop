@@ -3,41 +3,20 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Config\Test\Unit\Console\Command;
 
-use Magento\Config\Console\Command\ConfigShow\ValueProcessor;
 use Magento\Config\Console\Command\ConfigShowCommand;
-use Magento\Config\Console\Command\EmulatedAdminhtmlAreaProcessor;
-use Magento\Framework\App\Config\ConfigPathResolver;
 use Magento\Framework\App\Config\ConfigSourceInterface;
-use Magento\Framework\App\Scope\ValidatorInterface;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Config\Model\Config\PathValidatorFactory;
-use Magento\Config\Model\Config\PathValidator;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Magento\Framework\App\Scope\ValidatorInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use Magento\Framework\App\Config\ConfigPathResolver;
+use Magento\Config\Console\Command\ConfigShow\ValueProcessor;
 
-/**
- * Test for \Magento\Config\Console\Command\ConfigShowCommand.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
-class ConfigShowCommandTest extends TestCase
+class ConfigShowCommandTest extends \PHPUnit\Framework\TestCase
 {
-    private const CONFIG_PATH = 'some/config/path';
-    private const SCOPE = 'some/config/path';
-    private const SCOPE_CODE = 'someScopeCode';
-
-    /**
-     * @var ConfigShowCommand
-     */
-    private $model;
-
     /**
      * @var ValidatorInterface|MockObject
      */
@@ -59,22 +38,12 @@ class ConfigShowCommandTest extends TestCase
     private $pathResolverMock;
 
     /**
-     * @var EmulatedAdminhtmlAreaProcessor|MockObject
+     * @var ConfigShowCommand
      */
-    private $emulatedAreProcessorMock;
+    private $command;
 
-    /**
-     * @var PathValidator|MockObject
-     */
-    private $pathValidatorMock;
-
-    /**
-     * @inheritdoc
-     */
-    protected function setUp(): void
+    protected function setUp()
     {
-        $objectManager = new ObjectManager($this);
-
         $this->valueProcessorMock = $this->getMockBuilder(ValueProcessor::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -85,49 +54,29 @@ class ConfigShowCommandTest extends TestCase
             ->getMockForAbstractClass();
         $this->configSourceMock = $this->getMockBuilder(ConfigSourceInterface::class)
             ->getMockForAbstractClass();
-        $this->pathValidatorMock = $this->getMockBuilder(PathValidator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $pathValidatorFactoryMock = $this->getMockBuilder(PathValidatorFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $pathValidatorFactoryMock->expects($this->atMost(1))
-            ->method('create')
-            ->willReturn($this->pathValidatorMock);
 
-        $this->emulatedAreProcessorMock = $this->getMockBuilder(EmulatedAdminhtmlAreaProcessor::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->model = $objectManager->getObject(
-            ConfigShowCommand::class,
-            [
-                'scopeValidator' => $this->scopeValidatorMock,
-                'configSource' => $this->configSourceMock,
-                'pathResolver' => $this->pathResolverMock,
-                'valueProcessor' => $this->valueProcessorMock,
-                'pathValidatorFactory' => $pathValidatorFactoryMock,
-                'emulatedAreaProcessor' => $this->emulatedAreProcessorMock,
-            ]
+        $this->command = new ConfigShowCommand(
+            $this->scopeValidatorMock,
+            $this->configSourceMock,
+            $this->pathResolverMock,
+            $this->valueProcessorMock
         );
     }
 
-    /**
-     * Test get config value
-     *
-     * @return void
-     */
-    public function testExecute(): void
+    public function testExecute()
     {
+        $configPath = 'some/config/path';
         $resolvedConfigPath = 'someScope/someScopeCode/some/config/path';
+        $scope = 'someScope';
+        $scopeCode = 'someScopeCode';
 
         $this->scopeValidatorMock->expects($this->once())
             ->method('isValid')
-            ->with(self::SCOPE, self::SCOPE_CODE)
+            ->with($scope, $scopeCode)
             ->willReturn(true);
         $this->pathResolverMock->expects($this->once())
             ->method('resolve')
-            ->with(self::CONFIG_PATH, self::SCOPE, self::SCOPE_CODE)
+            ->with($configPath, $scope, $scopeCode)
             ->willReturn($resolvedConfigPath);
         $this->configSourceMock->expects($this->once())
             ->method('get')
@@ -135,92 +84,55 @@ class ConfigShowCommandTest extends TestCase
             ->willReturn('someValue');
         $this->valueProcessorMock->expects($this->once())
             ->method('process')
-            ->with(self::SCOPE, self::SCOPE_CODE, 'someValue', self::CONFIG_PATH)
+            ->with($scope, $scopeCode, 'someValue', $configPath)
             ->willReturn('someProcessedValue');
-        $this->emulatedAreProcessorMock->expects($this->once())
-            ->method('process')
-            ->willReturnCallback(function ($function) {
-                return $function();
-            });
 
-        $tester = $this->getConfigShowCommandTester(
-            self::CONFIG_PATH,
-            self::SCOPE,
-            self::SCOPE_CODE
-        );
+        $tester = $this->getConfigShowCommandTester($configPath, $scope, $scopeCode);
 
         $this->assertEquals(
             Cli::RETURN_SUCCESS,
             $tester->getStatusCode()
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             'someProcessedValue',
             $tester->getDisplay()
         );
     }
 
-    /**
-     * Test not valid scope or scope code
-     *
-     * @return void
-     */
-    public function testNotValidScopeOrScopeCode(): void
+    public function testNotValidScopeOrScopeCode()
     {
+        $configPath = 'some/config/path';
+        $scope = 'someScope';
+        $scopeCode = 'someScopeCode';
+
         $this->scopeValidatorMock->expects($this->once())
             ->method('isValid')
-            ->with(self::SCOPE, self::SCOPE_CODE)
+            ->with($scope, $scopeCode)
             ->willThrowException(new LocalizedException(__('error message')));
-        $this->emulatedAreProcessorMock->expects($this->once())
-            ->method('process')
-            ->willReturnCallback(function ($function) {
-                return $function();
-            });
 
-        $tester = $this->getConfigShowCommandTester(
-            self::CONFIG_PATH,
-            self::SCOPE,
-            self::SCOPE_CODE
-        );
+        $tester = $this->getConfigShowCommandTester($configPath, $scope, $scopeCode);
 
         $this->assertEquals(
             Cli::RETURN_FAILURE,
             $tester->getStatusCode()
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             __('error message')->render(),
             $tester->getDisplay()
         );
     }
 
-    /**
-     * Test get config value for not existed path.
-     *
-     * @return void
-     */
-    public function testConfigPathNotExist(): void
+    public function testConfigPathNotExist()
     {
-        $exception = new LocalizedException(
-            __('The  "%1" path doesn\'t exist. Verify and try again.', self::CONFIG_PATH)
-        );
-
-        $this->pathValidatorMock->expects($this->once())
-            ->method('validate')
-            ->with(self::CONFIG_PATH)
-            ->willThrowException($exception);
-        $this->emulatedAreProcessorMock->expects($this->once())
-            ->method('process')
-            ->willReturnCallback(function ($function) {
-                return $function();
-            });
-
-        $tester = $this->getConfigShowCommandTester(self::CONFIG_PATH);
+        $configPath = 'some/path';
+        $tester = $this->getConfigShowCommandTester($configPath);
 
         $this->assertEquals(
             Cli::RETURN_FAILURE,
             $tester->getStatusCode()
         );
-        $this->assertStringContainsString(
-            __('The  "%1" path doesn\'t exist. Verify and try again.', self::CONFIG_PATH)->render(),
+        $this->assertContains(
+            __('Configuration for path: "%1" doesn\'t exist', $configPath)->render(),
             $tester->getDisplay()
         );
     }
@@ -244,7 +156,7 @@ class ConfigShowCommandTest extends TestCase
             $arguments['--' . ConfigShowCommand::INPUT_OPTION_SCOPE_CODE] = $scopeCode;
         }
 
-        $tester = new CommandTester($this->model);
+        $tester = new CommandTester($this->command);
         $tester->execute($arguments);
 
         return $tester;

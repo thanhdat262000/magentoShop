@@ -18,82 +18,83 @@ define([
         defaults: {
             skipValidation: false,
             imports: {
-                countryOptions: '${ $.parentName }.country_id:indexedOptions',
                 update: '${ $.parentName }.country_id:value'
             }
         },
 
         /**
-         * {@inheritdoc}
-         */
-        initialize: function () {
-            var option;
-
-            this._super();
-
-            option = _.find(this.countryOptions, function (row) {
-                return row['is_default'] === true;
-            });
-            this.hideRegion(option);
-
-            return this;
-        },
-
-        /**
-         * Method called every time country selector's value gets changed.
-         * Updates all validations and requirements for certain country.
-         * @param {String} value - Selected country ID.
+         * @param {String} value
          */
         update: function (value) {
-            var isRegionRequired,
+            var country = registry.get(this.parentName + '.' + 'country_id'),
+                options = country.indexedOptions,
+                isRegionRequired,
                 option;
 
             if (!value) {
                 return;
             }
+            option = options[value];
 
-            option = _.isObject(this.countryOptions) && this.countryOptions[value];
-
-            if (!option) {
+            if (typeof option === 'undefined') {
                 return;
             }
-
-            this.hideRegion(option);
 
             defaultPostCodeResolver.setUseDefaultPostCode(!option['is_zipcode_optional']);
 
-            isRegionRequired = !this.skipValidation && !!option['is_region_required'];
+            if (this.skipValidation) {
+                this.validation['required-entry'] = false;
+                this.required(false);
+            } else {
+                if (option && !option['is_region_required']) {
+                    this.error(false);
+                    this.validation = _.omit(this.validation, 'required-entry');
+                    registry.get(this.customName, function (input) {
+                        input.validation['required-entry'] = false;
+                        input.required(false);
+                    });
+                } else {
+                    this.validation['required-entry'] = true;
+                }
 
-            if (!isRegionRequired) {
-                this.error(false);
+                if (option && !this.options().length) {
+                    registry.get(this.customName, function (input) {
+                        isRegionRequired = !!option['is_region_required'];
+                        input.validation['required-entry'] = isRegionRequired;
+                        input.validation['validate-not-number-first'] = true;
+                        input.required(isRegionRequired);
+                    });
+                }
+
+                this.required(!!option['is_region_required']);
             }
-
-            this.required(isRegionRequired);
-            this.validation['required-entry'] = isRegionRequired;
-
-            registry.get(this.customName, function (input) {
-                input.required(isRegionRequired);
-                input.validation['required-entry'] = isRegionRequired;
-                input.validation['validate-not-number-first'] = !this.options().length;
-            }.bind(this));
         },
 
         /**
-         * Hide select and corresponding text input field if region must not be shown for selected country.
+         * Filters 'initialOptions' property by 'field' and 'value' passed,
+         * calls 'setOptions' passing the result to it
          *
-         * @private
-         * @param {Object}option
+         * @param {*} value
+         * @param {String} field
          */
-        hideRegion: function (option) {
-            if (!option || option['is_region_visible'] !== false) {
-                return;
-            }
+        filter: function (value, field) {
+            var superFn = this._super;
 
-            this.setVisible(false);
+            registry.get(this.parentName + '.' + 'country_id', function (country) {
+                var option = country.indexedOptions[value];
 
-            if (this.customEntry) {
-                this.toggleInput(false);
-            }
+                superFn.call(this, value, field);
+
+                if (option && option['is_region_visible'] === false) {
+                    // hide select and corresponding text input field if region must not be shown for selected country
+                    this.setVisible(false);
+
+                    if (this.customEntry) {// eslint-disable-line max-depth
+                        this.toggleInput(false);
+                    }
+                }
+            }.bind(this));
         }
     });
 });
+

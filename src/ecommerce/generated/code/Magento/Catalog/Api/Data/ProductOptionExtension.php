@@ -25,20 +25,20 @@ class ProductOptionExtension extends \Magento\Framework\Api\AbstractSimpleObject
     }
 
     /**
-     * @return \Magento\Bundle\Api\Data\BundleOptionInterface[]|null
+     * @return \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[]|null
      */
-    public function getBundleOptions()
+    public function getConfigurableItemOptions()
     {
-        return $this->_get('bundle_options');
+        return $this->_get('configurable_item_options');
     }
 
     /**
-     * @param \Magento\Bundle\Api\Data\BundleOptionInterface[] $bundleOptions
+     * @param \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[] $configurableItemOptions
      * @return $this
      */
-    public function setBundleOptions($bundleOptions)
+    public function setConfigurableItemOptions($configurableItemOptions)
     {
-        $this->setData('bundle_options', $bundleOptions);
+        $this->setData('configurable_item_options', $configurableItemOptions);
         return $this;
     }
 
@@ -61,20 +61,20 @@ class ProductOptionExtension extends \Magento\Framework\Api\AbstractSimpleObject
     }
 
     /**
-     * @return \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[]|null
+     * @return \Magento\Bundle\Api\Data\BundleOptionInterface[]|null
      */
-    public function getConfigurableItemOptions()
+    public function getBundleOptions()
     {
-        return $this->_get('configurable_item_options');
+        return $this->_get('bundle_options');
     }
 
     /**
-     * @param \Magento\ConfigurableProduct\Api\Data\ConfigurableItemOptionValueInterface[] $configurableItemOptions
+     * @param \Magento\Bundle\Api\Data\BundleOptionInterface[] $bundleOptions
      * @return $this
      */
-    public function setConfigurableItemOptions($configurableItemOptions)
+    public function setBundleOptions($bundleOptions)
     {
-        $this->setData('configurable_item_options', $configurableItemOptions);
+        $this->setData('bundle_options', $bundleOptions);
         return $this;
     }
 }

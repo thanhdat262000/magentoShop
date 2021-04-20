@@ -3,8 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\SampleData\Test\Unit\Console\Command;
 
 use Composer\Console\Application;
@@ -14,72 +12,57 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\ReadInterface;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
 use Magento\SampleData\Model\Dependency;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\ArrayInputFactory;
 
 /**
- * Common class for tests
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 abstract class AbstractSampleDataCommandTest extends TestCase
 {
-    /*
-     * Expected arguments for `composer config` to set missing field "version"
-     */
-    private const STUB_EXPECTED_COMPOSER_CONFIG = [
-        'command' => 'config',
-        'setting-key' => 'version',
-        'setting-value' => ['0.0.1'],
-        '--quiet' => 1
-    ];
-
     /**
-     * @var ReadInterface|MockObject
+     * @var ReadInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $directoryReadMock;
 
     /**
-     * @var WriteInterface|MockObject
+     * @var WriteInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $directoryWriteMock;
 
     /**
-     * @var Filesystem|MockObject
+     * @var Filesystem|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $filesystemMock;
 
     /**
-     * @var Dependency|MockObject
+     * @var Dependency|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $sampleDataDependencyMock;
 
     /**
-     * @var ArrayInputFactory|MockObject
+     * @var ArrayInputFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $arrayInputFactoryMock;
 
     /**
-     * @var Application|MockObject
+     * @var Application|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $applicationMock;
 
     /**
-     * @var ApplicationFactory|MockObject
+     * @var ApplicationFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $applicationFactoryMock;
 
     /**
-     * @var int
+     * @return void
      */
-    private $appRunResult;
-
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->directoryReadMock = $this->getMockForAbstractClass(ReadInterface::class);
-        $this->directoryWriteMock = $this->getMockForAbstractClass(WriteInterface::class);
+        $this->directoryReadMock = $this->createMock(ReadInterface::class);
+        $this->directoryWriteMock = $this->createMock(WriteInterface::class);
         $this->filesystemMock = $this->createMock(Filesystem::class);
         $this->sampleDataDependencyMock = $this->createMock(Dependency::class);
         $this->arrayInputFactoryMock = $this->createMock(ArrayInputFactory::class);
@@ -88,84 +71,47 @@ abstract class AbstractSampleDataCommandTest extends TestCase
     }
 
     /**
-     * @param array $sampleDataPackages Array in form [package_name => version_constraint]
-     * @param string $pathToComposerJson Fake path to composer.json
-     * @param int $appRunResult Composer exit code
-     * @param array $composerJsonContent Content of the composer.json
+     * @param array $sampleDataPackages     Array in form [package_name => version_constraint]
+     * @param string $pathToComposerJson    Fake path to composer.json
+     * @param int $appRunResult             Composer exit code
      * @param array $additionalComposerArgs Additional arguments that composer expects
      */
     protected function setupMocks(
         $sampleDataPackages,
         $pathToComposerJson,
         $appRunResult,
-        $composerJsonContent = [],
         $additionalComposerArgs = []
     ) {
-        $this->appRunResult = $appRunResult;
-        $this->directoryReadMock->expects($this->any())
-            ->method('getAbsolutePath')
-            ->willReturn($pathToComposerJson);
-        $this->directoryReadMock->expects($this->any())
-            ->method('readFile')
-            ->with('composer.json')
-            ->willReturn(json_encode($composerJsonContent));
-        $this->filesystemMock->expects($this->any())
-            ->method('getDirectoryRead')
-            ->with(DirectoryList::ROOT)
-            ->willReturn($this->directoryReadMock);
-        $this->sampleDataDependencyMock->expects($this->any())
-            ->method('getSampleDataPackages')
-            ->willReturn($sampleDataPackages);
+        $this->directoryReadMock->expects($this->any())->method('getAbsolutePath')->willReturn($pathToComposerJson);
+        $this->directoryReadMock->expects($this->any())->method('readFile')->with('composer.json')->willReturn(
+            '{"version": "0.0.1"}'
+        );
+        $this->filesystemMock->expects($this->any())->method('getDirectoryRead')->with(DirectoryList::ROOT)->willReturn(
+            $this->directoryReadMock
+        );
+        $this->sampleDataDependencyMock->expects($this->any())->method('getSampleDataPackages')->willReturn(
+            $sampleDataPackages
+        );
         $this->arrayInputFactoryMock->expects($this->never())->method('create');
 
-        if (!array_key_exists('version', $composerJsonContent)) {
-            $this->applicationMock->expects($this->any())
-                ->method('run')
-                ->withConsecutive(
-                    [
-                        'input' => new ArrayInput(
-                            self::STUB_EXPECTED_COMPOSER_CONFIG
+        $this->applicationMock->expects($this->any())
+            ->method('run')
+            ->with(
+                new ArrayInput(
+                    array_merge(
+                        $this->expectedComposerArguments(
+                            $sampleDataPackages,
+                            $pathToComposerJson
                         ),
-                        'output' => $this->anything()
-                    ],
-                    [
-                        'input' => new ArrayInput(
-                            array_merge(
-                                $this->expectedComposerArgumentsSampleDataCommands(
-                                    $sampleDataPackages,
-                                    $pathToComposerJson
-                                ),
-                                $additionalComposerArgs
-                            )
-                        ),
-                        'output' => $this->anything()
-                    ]
-                )->willReturnOnConsecutiveCalls(
-                    $this->returnValue(0),
-                    $this->returnValue($appRunResult)
-                );
-        } else {
-            $this->applicationMock->expects($this->any())
-                ->method('run')
-                ->with(
-                    new ArrayInput(
-                        array_merge(
-                            $this->expectedComposerArgumentsSampleDataCommands(
-                                $sampleDataPackages,
-                                $pathToComposerJson
-                            ),
-                            $additionalComposerArgs
-                        )
-                    ),
-                    $this->anything()
-                )
-                ->willReturn($appRunResult);
-        }
+                        $additionalComposerArgs
+                    )
+                ),
+                $this->anything()
+            )
+            ->willReturn($appRunResult);
 
         if (($appRunResult !== 0) && !empty($sampleDataPackages)) {
-            $this->applicationMock->expects($this->any())
-                ->method('resetComposer')
-                ->willReturnSelf();
+            $this->applicationMock->expects($this->once())->method('resetComposer')->willReturnSelf();
         }
 
         $this->applicationFactoryMock->expects($this->any())
@@ -174,14 +120,14 @@ abstract class AbstractSampleDataCommandTest extends TestCase
     }
 
     /**
-     * Expected arguments for composer based on sample data command
+     * Expected arguments for composer based on sample data packages and composer.json path
      *
      * @param array $sampleDataPackages
      * @param string $pathToComposerJson
      * @return array
      */
-    abstract protected function expectedComposerArgumentsSampleDataCommands(
+    abstract protected function expectedComposerArguments(
         array $sampleDataPackages,
         string $pathToComposerJson
-    ): array;
+    ) : array;
 }

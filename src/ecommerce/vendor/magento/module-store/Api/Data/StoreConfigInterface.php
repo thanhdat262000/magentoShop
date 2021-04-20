@@ -6,7 +6,7 @@
 namespace Magento\Store\Api\Data;
 
 /**
- * Interface for store config
+ * StoreConfig interface
  *
  * @api
  * @since 100.0.2
@@ -141,7 +141,7 @@ interface StoreConfigInterface extends \Magento\Framework\Api\ExtensibleDataInte
     public function getBaseUrl();
 
     /**
-     * Set base URL
+     * set base URL
      *
      * @param string $baseUrl
      * @return $this
@@ -201,7 +201,7 @@ interface StoreConfigInterface extends \Magento\Framework\Api\ExtensibleDataInte
     public function getSecureBaseUrl();
 
     /**
-     * Set secure base URL
+     * set secure base URL
      *
      * @param string $secureBaseUrl
      * @return $this

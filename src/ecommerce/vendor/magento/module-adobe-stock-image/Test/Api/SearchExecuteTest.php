@@ -17,26 +17,14 @@ use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
- * Test searching for Adobe Stock Images
+ * Class SearchExecuteTest
+ * @package Magento\AdobeStockImage\Test\Api
  */
 class SearchExecuteTest extends WebapiAbstract
 {
     private const RESOURCE_PATH = '/V1/adobestock/search';
     private const SERVICE_NAME = 'adobeStockImageApiGetImageListV1';
 
-    /**
-     * @inheridoc
-     */
-    protected function setUp(): void
-    {
-        $this->markTestSkipped("The test requires adobe stock credentials and cannot be currently executed on CICD");
-    }
-
-    /**
-     * Test search WEB API method.
-     *
-     * @return void
-     */
     public function testSearchExecute(): void
     {
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
@@ -58,6 +46,7 @@ class SearchExecuteTest extends WebapiAbstract
         /** @var SortOrderBuilder $sortOrderBuilder */
         $sortOrderBuilder = Bootstrap::getObjectManager()->create(SortOrderBuilder::class);
 
+        /** @var SortOrder $sortOrder */
         $sortOrder = $sortOrderBuilder->setField('id')
             ->setDirection(SortOrder::SORT_DESC)
             ->create();

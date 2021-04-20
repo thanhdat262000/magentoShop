@@ -10,8 +10,8 @@ namespace Magento\AdobeStockAdminUi\Block\Adminhtml\System\Config;
 
 use Magento\AdobeImsApi\Api\ConfigInterface;
 use Magento\AdobeStockClientApi\Api\ClientInterface;
-use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
 /**
@@ -19,8 +19,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
  */
 class TestConnection extends Field
 {
-    private const TEST_CONNECTION_PATH = 'adobe_stock/system_config/testconnection';
-
     /**
      * @inheritdoc
      */
@@ -106,7 +104,7 @@ class TestConnection extends Field
     public function getAjaxUrl(): string
     {
         return $this->_urlBuilder->getUrl(
-            self::TEST_CONNECTION_PATH,
+            'adobe_stock/system_config/testconnection',
             [
                 'form_key' => $this->getFormKey(),
             ]

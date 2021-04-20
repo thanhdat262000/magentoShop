@@ -70,18 +70,9 @@ class CacheContext implements \Magento\Framework\DataObject\IdentityInterface
         $identities = [];
         foreach ($this->entities as $cacheTag => $ids) {
             foreach ($ids as $id) {
-                $identities[$cacheTag . '_' . $id] = true;
+                $identities[] = $cacheTag . '_' . $id;
             }
         }
-        return array_merge(array_keys($identities), array_unique($this->tags));
-    }
-
-    /**
-     * Clear context data
-     */
-    public function flush(): void
-    {
-        $this->tags = [];
-        $this->entities = [];
+        return array_merge($identities, array_unique($this->tags));
     }
 }

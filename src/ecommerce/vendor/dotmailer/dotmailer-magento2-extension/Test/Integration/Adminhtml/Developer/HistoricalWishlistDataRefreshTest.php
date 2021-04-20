@@ -24,7 +24,7 @@ class HistoricalWishlistDataRefreshTest extends \Magento\TestFramework\TestCase\
      */
     protected $resource = 'Dotdigitalgroup_Email::config';
 
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
 

@@ -72,7 +72,7 @@ class Price implements LayerBuilderInterface
             );
         }
 
-        return [self::PRICE_BUCKET => $result];
+        return [$result];
     }
 
     /**

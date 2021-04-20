@@ -7,17 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\CatalogSearch\Model\Layer\Filter;
 
-use Magento\Catalog\Model\Layer;
 use Magento\Catalog\Model\Layer\Filter\AbstractFilter;
-use Magento\Catalog\Model\Layer\Filter\Item\DataBuilder;
-use Magento\Catalog\Model\Layer\Filter\ItemFactory;
-use Magento\Catalog\Model\ResourceModel\Layer\Filter\Decimal as ResourceDecimal;
-use Magento\Catalog\Model\ResourceModel\Layer\Filter\DecimalFactory;
-use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection as ProductCollection;
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Phrase;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Layer decimal filter
@@ -25,31 +15,31 @@ use Magento\Store\Model\StoreManagerInterface;
 class Decimal extends AbstractFilter
 {
     /**
-     * @var PriceCurrencyInterface
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
      */
     private $priceCurrency;
 
     /**
-     * @var ResourceDecimal
+     * @var \Magento\Catalog\Model\ResourceModel\Layer\Filter\Decimal
      */
     private $resource;
 
     /**
-     * @param ItemFactory $filterItemFactory
-     * @param StoreManagerInterface $storeManager
-     * @param Layer $layer
-     * @param DataBuilder $itemDataBuilder
-     * @param DecimalFactory $filterDecimalFactory
-     * @param PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Catalog\Model\Layer $layer
+     * @param \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder
+     * @param \Magento\Catalog\Model\ResourceModel\Layer\Filter\DecimalFactory $filterDecimalFactory
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param array $data
      */
     public function __construct(
-        ItemFactory $filterItemFactory,
-        StoreManagerInterface $storeManager,
-        Layer $layer,
-        DataBuilder $itemDataBuilder,
-        DecimalFactory $filterDecimalFactory,
-        PriceCurrencyInterface $priceCurrency,
+        \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Catalog\Model\Layer $layer,
+        \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
+        \Magento\Catalog\Model\ResourceModel\Layer\Filter\DecimalFactory $filterDecimalFactory,
+        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         array $data = []
     ) {
         parent::__construct(
@@ -66,10 +56,11 @@ class Decimal extends AbstractFilter
     /**
      * Apply price range filter
      *
-     * @param RequestInterface $request
+     * @param \Magento\Framework\App\RequestInterface $request
      * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function apply(RequestInterface $request)
+    public function apply(\Magento\Framework\App\RequestInterface $request)
     {
         /**
          * Filter must be string: $fromPrice-$toPrice
@@ -80,8 +71,6 @@ class Decimal extends AbstractFilter
         }
 
         list($from, $to) = explode('-', $filter);
-        $from = (float)$from;
-        $to = (float)$to;
 
         $this->getLayer()
             ->getProductCollection()
@@ -101,12 +90,14 @@ class Decimal extends AbstractFilter
      * Get data array for building attribute filter items
      *
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function _getItemsData()
     {
         $attribute = $this->getAttributeModel();
 
-        /** @var ProductCollection $productCollection */
+        /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
         $productCollection = $this->getLayer()->getProductCollection();
         $productSize = $productCollection->getSize();
         $facets = $productCollection->getFacetedData($attribute->getAttributeCode());
@@ -132,7 +123,7 @@ class Decimal extends AbstractFilter
                 'value' => $value,
                 'count' => $count,
                 'from' => $from,
-                'to' => $to,
+                'to' => $to
             ];
         }
 
@@ -144,7 +135,7 @@ class Decimal extends AbstractFilter
      *
      * @param float|string $fromPrice
      * @param float|string $toPrice
-     * @return Phrase
+     * @return \Magento\Framework\Phrase
      */
     protected function renderRangeLabel($fromPrice, $toPrice)
     {
@@ -155,7 +146,6 @@ class Decimal extends AbstractFilter
             if ($fromPrice != $toPrice) {
                 $toPrice -= .01;
             }
-
             return __('%1 - %2', $formattedFromPrice, $this->priceCurrency->format($toPrice));
         }
     }

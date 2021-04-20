@@ -52,7 +52,6 @@ define([
 
             listens: {
                 '${ $.provider }:params.filters': 'onFilter',
-                '${ $.provider }:params.search': 'onSearch',
                 selected: 'onSelectedChange',
                 rows: 'onRowsChange'
             },
@@ -236,7 +235,7 @@ define([
         * @returns {Multiselect} Chainable.
         */
         togglePage: function () {
-            return this.isPageSelected() && !this.excluded().length ? this.deselectPage() : this.selectPage();
+            return this.isPageSelected() ? this.deselectPage() : this.selectPage();
         },
 
         /**
@@ -497,13 +496,6 @@ define([
             if (!this.preserveSelectionsOnFilter) {
                 this.deselectAll();
             }
-        },
-
-        /**
-         * Is invoked when search is applied or removed
-         */
-        onSearch: function () {
-            this.onFilter();
         }
     });
 });

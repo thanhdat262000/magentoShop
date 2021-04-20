@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function beforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeSave');
-        return $pluginInfo ? $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo) : parent::beforeSave();
+        if (!$pluginInfo) {
+            return parent::beforeSave();
+        } else {
+            return $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function afterSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterSave');
-        return $pluginInfo ? $this->___callPlugins('afterSave', func_get_args(), $pluginInfo) : parent::afterSave();
+        if (!$pluginInfo) {
+            return parent::afterSave();
+        } else {
+            return $this->___callPlugins('afterSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isEnabledInFlat()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEnabledInFlat');
-        return $pluginInfo ? $this->___callPlugins('isEnabledInFlat', func_get_args(), $pluginInfo) : parent::isEnabledInFlat();
+        if (!$pluginInfo) {
+            return parent::isEnabledInFlat();
+        } else {
+            return $this->___callPlugins('isEnabledInFlat', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function beforeDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeDelete');
-        return $pluginInfo ? $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo) : parent::beforeDelete();
+        if (!$pluginInfo) {
+            return parent::beforeDelete();
+        } else {
+            return $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function afterDeleteCommit()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDeleteCommit');
-        return $pluginInfo ? $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo) : parent::afterDeleteCommit();
+        if (!$pluginInfo) {
+            return parent::afterDeleteCommit();
+        } else {
+            return $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsGlobal()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsGlobal');
-        return $pluginInfo ? $this->___callPlugins('getIsGlobal', func_get_args(), $pluginInfo) : parent::getIsGlobal();
+        if (!$pluginInfo) {
+            return parent::getIsGlobal();
+        } else {
+            return $this->___callPlugins('getIsGlobal', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isScopeGlobal()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isScopeGlobal');
-        return $pluginInfo ? $this->___callPlugins('isScopeGlobal', func_get_args(), $pluginInfo) : parent::isScopeGlobal();
+        if (!$pluginInfo) {
+            return parent::isScopeGlobal();
+        } else {
+            return $this->___callPlugins('isScopeGlobal', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isScopeWebsite()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isScopeWebsite');
-        return $pluginInfo ? $this->___callPlugins('isScopeWebsite', func_get_args(), $pluginInfo) : parent::isScopeWebsite();
+        if (!$pluginInfo) {
+            return parent::isScopeWebsite();
+        } else {
+            return $this->___callPlugins('isScopeWebsite', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isScopeStore()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isScopeStore');
-        return $pluginInfo ? $this->___callPlugins('isScopeStore', func_get_args(), $pluginInfo) : parent::isScopeStore();
+        if (!$pluginInfo) {
+            return parent::isScopeStore();
+        } else {
+            return $this->___callPlugins('isScopeStore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getStoreId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreId');
-        return $pluginInfo ? $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo) : parent::getStoreId();
+        if (!$pluginInfo) {
+            return parent::getStoreId();
+        } else {
+            return $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getApplyTo()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getApplyTo');
-        return $pluginInfo ? $this->___callPlugins('getApplyTo', func_get_args(), $pluginInfo) : parent::getApplyTo();
+        if (!$pluginInfo) {
+            return parent::getApplyTo();
+        } else {
+            return $this->___callPlugins('getApplyTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getSourceModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSourceModel');
-        return $pluginInfo ? $this->___callPlugins('getSourceModel', func_get_args(), $pluginInfo) : parent::getSourceModel();
+        if (!$pluginInfo) {
+            return parent::getSourceModel();
+        } else {
+            return $this->___callPlugins('getSourceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isAllowedForRuleCondition()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAllowedForRuleCondition');
-        return $pluginInfo ? $this->___callPlugins('isAllowedForRuleCondition', func_get_args(), $pluginInfo) : parent::isAllowedForRuleCondition();
+        if (!$pluginInfo) {
+            return parent::isAllowedForRuleCondition();
+        } else {
+            return $this->___callPlugins('isAllowedForRuleCondition', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function _getDefaultSourceModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '_getDefaultSourceModel');
-        return $pluginInfo ? $this->___callPlugins('_getDefaultSourceModel', func_get_args(), $pluginInfo) : parent::_getDefaultSourceModel();
+        if (!$pluginInfo) {
+            return parent::_getDefaultSourceModel();
+        } else {
+            return $this->___callPlugins('_getDefaultSourceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isIndexable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isIndexable');
-        return $pluginInfo ? $this->___callPlugins('isIndexable', func_get_args(), $pluginInfo) : parent::isIndexable();
+        if (!$pluginInfo) {
+            return parent::isIndexable();
+        } else {
+            return $this->___callPlugins('isIndexable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIndexType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIndexType');
-        return $pluginInfo ? $this->___callPlugins('getIndexType', func_get_args(), $pluginInfo) : parent::getIndexType();
+        if (!$pluginInfo) {
+            return parent::getIndexType();
+        } else {
+            return $this->___callPlugins('getIndexType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsWysiwygEnabled()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsWysiwygEnabled');
-        return $pluginInfo ? $this->___callPlugins('getIsWysiwygEnabled', func_get_args(), $pluginInfo) : parent::getIsWysiwygEnabled();
+        if (!$pluginInfo) {
+            return parent::getIsWysiwygEnabled();
+        } else {
+            return $this->___callPlugins('getIsWysiwygEnabled', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsHtmlAllowedOnFront()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsHtmlAllowedOnFront');
-        return $pluginInfo ? $this->___callPlugins('getIsHtmlAllowedOnFront', func_get_args(), $pluginInfo) : parent::getIsHtmlAllowedOnFront();
+        if (!$pluginInfo) {
+            return parent::getIsHtmlAllowedOnFront();
+        } else {
+            return $this->___callPlugins('getIsHtmlAllowedOnFront', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getUsedForSortBy()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUsedForSortBy');
-        return $pluginInfo ? $this->___callPlugins('getUsedForSortBy', func_get_args(), $pluginInfo) : parent::getUsedForSortBy();
+        if (!$pluginInfo) {
+            return parent::getUsedForSortBy();
+        } else {
+            return $this->___callPlugins('getUsedForSortBy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsFilterable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsFilterable');
-        return $pluginInfo ? $this->___callPlugins('getIsFilterable', func_get_args(), $pluginInfo) : parent::getIsFilterable();
+        if (!$pluginInfo) {
+            return parent::getIsFilterable();
+        } else {
+            return $this->___callPlugins('getIsFilterable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsFilterableInSearch()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsFilterableInSearch');
-        return $pluginInfo ? $this->___callPlugins('getIsFilterableInSearch', func_get_args(), $pluginInfo) : parent::getIsFilterableInSearch();
+        if (!$pluginInfo) {
+            return parent::getIsFilterableInSearch();
+        } else {
+            return $this->___callPlugins('getIsFilterableInSearch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsUsedInGrid()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsUsedInGrid');
-        return $pluginInfo ? $this->___callPlugins('getIsUsedInGrid', func_get_args(), $pluginInfo) : parent::getIsUsedInGrid();
+        if (!$pluginInfo) {
+            return parent::getIsUsedInGrid();
+        } else {
+            return $this->___callPlugins('getIsUsedInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsVisibleInGrid()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsVisibleInGrid');
-        return $pluginInfo ? $this->___callPlugins('getIsVisibleInGrid', func_get_args(), $pluginInfo) : parent::getIsVisibleInGrid();
+        if (!$pluginInfo) {
+            return parent::getIsVisibleInGrid();
+        } else {
+            return $this->___callPlugins('getIsVisibleInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsFilterableInGrid()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsFilterableInGrid');
-        return $pluginInfo ? $this->___callPlugins('getIsFilterableInGrid', func_get_args(), $pluginInfo) : parent::getIsFilterableInGrid();
+        if (!$pluginInfo) {
+            return parent::getIsFilterableInGrid();
+        } else {
+            return $this->___callPlugins('getIsFilterableInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getPosition()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPosition');
-        return $pluginInfo ? $this->___callPlugins('getPosition', func_get_args(), $pluginInfo) : parent::getPosition();
+        if (!$pluginInfo) {
+            return parent::getPosition();
+        } else {
+            return $this->___callPlugins('getPosition', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsSearchable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsSearchable');
-        return $pluginInfo ? $this->___callPlugins('getIsSearchable', func_get_args(), $pluginInfo) : parent::getIsSearchable();
+        if (!$pluginInfo) {
+            return parent::getIsSearchable();
+        } else {
+            return $this->___callPlugins('getIsSearchable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsVisibleInAdvancedSearch()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsVisibleInAdvancedSearch');
-        return $pluginInfo ? $this->___callPlugins('getIsVisibleInAdvancedSearch', func_get_args(), $pluginInfo) : parent::getIsVisibleInAdvancedSearch();
+        if (!$pluginInfo) {
+            return parent::getIsVisibleInAdvancedSearch();
+        } else {
+            return $this->___callPlugins('getIsVisibleInAdvancedSearch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsComparable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsComparable');
-        return $pluginInfo ? $this->___callPlugins('getIsComparable', func_get_args(), $pluginInfo) : parent::getIsComparable();
+        if (!$pluginInfo) {
+            return parent::getIsComparable();
+        } else {
+            return $this->___callPlugins('getIsComparable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsUsedForPromoRules()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsUsedForPromoRules');
-        return $pluginInfo ? $this->___callPlugins('getIsUsedForPromoRules', func_get_args(), $pluginInfo) : parent::getIsUsedForPromoRules();
+        if (!$pluginInfo) {
+            return parent::getIsUsedForPromoRules();
+        } else {
+            return $this->___callPlugins('getIsUsedForPromoRules', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsVisibleOnFront()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsVisibleOnFront');
-        return $pluginInfo ? $this->___callPlugins('getIsVisibleOnFront', func_get_args(), $pluginInfo) : parent::getIsVisibleOnFront();
+        if (!$pluginInfo) {
+            return parent::getIsVisibleOnFront();
+        } else {
+            return $this->___callPlugins('getIsVisibleOnFront', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getUsedInProductListing()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUsedInProductListing');
-        return $pluginInfo ? $this->___callPlugins('getUsedInProductListing', func_get_args(), $pluginInfo) : parent::getUsedInProductListing();
+        if (!$pluginInfo) {
+            return parent::getUsedInProductListing();
+        } else {
+            return $this->___callPlugins('getUsedInProductListing', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsVisible()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsVisible');
-        return $pluginInfo ? $this->___callPlugins('getIsVisible', func_get_args(), $pluginInfo) : parent::getIsVisible();
+        if (!$pluginInfo) {
+            return parent::getIsVisible();
+        } else {
+            return $this->___callPlugins('getIsVisible', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getScope()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getScope');
-        return $pluginInfo ? $this->___callPlugins('getScope', func_get_args(), $pluginInfo) : parent::getScope();
+        if (!$pluginInfo) {
+            return parent::getScope();
+        } else {
+            return $this->___callPlugins('getScope', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsWysiwygEnabled($isWysiwygEnabled)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsWysiwygEnabled');
-        return $pluginInfo ? $this->___callPlugins('setIsWysiwygEnabled', func_get_args(), $pluginInfo) : parent::setIsWysiwygEnabled($isWysiwygEnabled);
+        if (!$pluginInfo) {
+            return parent::setIsWysiwygEnabled($isWysiwygEnabled);
+        } else {
+            return $this->___callPlugins('setIsWysiwygEnabled', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsHtmlAllowedOnFront($isHtmlAllowedOnFront)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsHtmlAllowedOnFront');
-        return $pluginInfo ? $this->___callPlugins('setIsHtmlAllowedOnFront', func_get_args(), $pluginInfo) : parent::setIsHtmlAllowedOnFront($isHtmlAllowedOnFront);
+        if (!$pluginInfo) {
+            return parent::setIsHtmlAllowedOnFront($isHtmlAllowedOnFront);
+        } else {
+            return $this->___callPlugins('setIsHtmlAllowedOnFront', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setUsedForSortBy($usedForSortBy)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setUsedForSortBy');
-        return $pluginInfo ? $this->___callPlugins('setUsedForSortBy', func_get_args(), $pluginInfo) : parent::setUsedForSortBy($usedForSortBy);
+        if (!$pluginInfo) {
+            return parent::setUsedForSortBy($usedForSortBy);
+        } else {
+            return $this->___callPlugins('setUsedForSortBy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsFilterable($isFilterable)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsFilterable');
-        return $pluginInfo ? $this->___callPlugins('setIsFilterable', func_get_args(), $pluginInfo) : parent::setIsFilterable($isFilterable);
+        if (!$pluginInfo) {
+            return parent::setIsFilterable($isFilterable);
+        } else {
+            return $this->___callPlugins('setIsFilterable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsFilterableInSearch($isFilterableInSearch)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsFilterableInSearch');
-        return $pluginInfo ? $this->___callPlugins('setIsFilterableInSearch', func_get_args(), $pluginInfo) : parent::setIsFilterableInSearch($isFilterableInSearch);
+        if (!$pluginInfo) {
+            return parent::setIsFilterableInSearch($isFilterableInSearch);
+        } else {
+            return $this->___callPlugins('setIsFilterableInSearch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setPosition($position)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPosition');
-        return $pluginInfo ? $this->___callPlugins('setPosition', func_get_args(), $pluginInfo) : parent::setPosition($position);
+        if (!$pluginInfo) {
+            return parent::setPosition($position);
+        } else {
+            return $this->___callPlugins('setPosition', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setApplyTo($applyTo)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setApplyTo');
-        return $pluginInfo ? $this->___callPlugins('setApplyTo', func_get_args(), $pluginInfo) : parent::setApplyTo($applyTo);
+        if (!$pluginInfo) {
+            return parent::setApplyTo($applyTo);
+        } else {
+            return $this->___callPlugins('setApplyTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +540,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsSearchable($isSearchable)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsSearchable');
-        return $pluginInfo ? $this->___callPlugins('setIsSearchable', func_get_args(), $pluginInfo) : parent::setIsSearchable($isSearchable);
+        if (!$pluginInfo) {
+            return parent::setIsSearchable($isSearchable);
+        } else {
+            return $this->___callPlugins('setIsSearchable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +553,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsVisibleInAdvancedSearch($isVisibleInAdvancedSearch)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsVisibleInAdvancedSearch');
-        return $pluginInfo ? $this->___callPlugins('setIsVisibleInAdvancedSearch', func_get_args(), $pluginInfo) : parent::setIsVisibleInAdvancedSearch($isVisibleInAdvancedSearch);
+        if (!$pluginInfo) {
+            return parent::setIsVisibleInAdvancedSearch($isVisibleInAdvancedSearch);
+        } else {
+            return $this->___callPlugins('setIsVisibleInAdvancedSearch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +566,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsComparable($isComparable)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsComparable');
-        return $pluginInfo ? $this->___callPlugins('setIsComparable', func_get_args(), $pluginInfo) : parent::setIsComparable($isComparable);
+        if (!$pluginInfo) {
+            return parent::setIsComparable($isComparable);
+        } else {
+            return $this->___callPlugins('setIsComparable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +579,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsUsedForPromoRules($isUsedForPromoRules)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsUsedForPromoRules');
-        return $pluginInfo ? $this->___callPlugins('setIsUsedForPromoRules', func_get_args(), $pluginInfo) : parent::setIsUsedForPromoRules($isUsedForPromoRules);
+        if (!$pluginInfo) {
+            return parent::setIsUsedForPromoRules($isUsedForPromoRules);
+        } else {
+            return $this->___callPlugins('setIsUsedForPromoRules', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +592,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsVisibleOnFront($isVisibleOnFront)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsVisibleOnFront');
-        return $pluginInfo ? $this->___callPlugins('setIsVisibleOnFront', func_get_args(), $pluginInfo) : parent::setIsVisibleOnFront($isVisibleOnFront);
+        if (!$pluginInfo) {
+            return parent::setIsVisibleOnFront($isVisibleOnFront);
+        } else {
+            return $this->___callPlugins('setIsVisibleOnFront', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +605,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setUsedInProductListing($usedInProductListing)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setUsedInProductListing');
-        return $pluginInfo ? $this->___callPlugins('setUsedInProductListing', func_get_args(), $pluginInfo) : parent::setUsedInProductListing($usedInProductListing);
+        if (!$pluginInfo) {
+            return parent::setUsedInProductListing($usedInProductListing);
+        } else {
+            return $this->___callPlugins('setUsedInProductListing', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +618,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsVisible($isVisible)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsVisible');
-        return $pluginInfo ? $this->___callPlugins('setIsVisible', func_get_args(), $pluginInfo) : parent::setIsVisible($isVisible);
+        if (!$pluginInfo) {
+            return parent::setIsVisible($isVisible);
+        } else {
+            return $this->___callPlugins('setIsVisible', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +631,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setScope($scope)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setScope');
-        return $pluginInfo ? $this->___callPlugins('setScope', func_get_args(), $pluginInfo) : parent::setScope($scope);
+        if (!$pluginInfo) {
+            return parent::setScope($scope);
+        } else {
+            return $this->___callPlugins('setScope', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +644,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function afterDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDelete');
-        return $pluginInfo ? $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo) : parent::afterDelete();
+        if (!$pluginInfo) {
+            return parent::afterDelete();
+        } else {
+            return $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +657,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsUsedInGrid($isUsedInGrid)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsUsedInGrid');
-        return $pluginInfo ? $this->___callPlugins('setIsUsedInGrid', func_get_args(), $pluginInfo) : parent::setIsUsedInGrid($isUsedInGrid);
+        if (!$pluginInfo) {
+            return parent::setIsUsedInGrid($isUsedInGrid);
+        } else {
+            return $this->___callPlugins('setIsUsedInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +670,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsVisibleInGrid($isVisibleInGrid)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsVisibleInGrid');
-        return $pluginInfo ? $this->___callPlugins('setIsVisibleInGrid', func_get_args(), $pluginInfo) : parent::setIsVisibleInGrid($isVisibleInGrid);
+        if (!$pluginInfo) {
+            return parent::setIsVisibleInGrid($isVisibleInGrid);
+        } else {
+            return $this->___callPlugins('setIsVisibleInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,7 +683,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsFilterableInGrid($isFilterableInGrid)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsFilterableInGrid');
-        return $pluginInfo ? $this->___callPlugins('setIsFilterableInGrid', func_get_args(), $pluginInfo) : parent::setIsFilterableInGrid($isFilterableInGrid);
+        if (!$pluginInfo) {
+            return parent::setIsFilterableInGrid($isFilterableInGrid);
+        } else {
+            return $this->___callPlugins('setIsFilterableInGrid', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -488,7 +696,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function deleteEntity()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'deleteEntity');
-        return $pluginInfo ? $this->___callPlugins('deleteEntity', func_get_args(), $pluginInfo) : parent::deleteEntity();
+        if (!$pluginInfo) {
+            return parent::deleteEntity();
+        } else {
+            return $this->___callPlugins('deleteEntity', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -497,7 +709,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function loadEntityAttributeIdBySet()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadEntityAttributeIdBySet');
-        return $pluginInfo ? $this->___callPlugins('loadEntityAttributeIdBySet', func_get_args(), $pluginInfo) : parent::loadEntityAttributeIdBySet();
+        if (!$pluginInfo) {
+            return parent::loadEntityAttributeIdBySet();
+        } else {
+            return $this->___callPlugins('loadEntityAttributeIdBySet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -506,7 +722,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getBackendTypeByInput($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackendTypeByInput');
-        return $pluginInfo ? $this->___callPlugins('getBackendTypeByInput', func_get_args(), $pluginInfo) : parent::getBackendTypeByInput($type);
+        if (!$pluginInfo) {
+            return parent::getBackendTypeByInput($type);
+        } else {
+            return $this->___callPlugins('getBackendTypeByInput', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -515,7 +735,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDefaultValueByInput($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultValueByInput');
-        return $pluginInfo ? $this->___callPlugins('getDefaultValueByInput', func_get_args(), $pluginInfo) : parent::getDefaultValueByInput($type);
+        if (!$pluginInfo) {
+            return parent::getDefaultValueByInput($type);
+        } else {
+            return $this->___callPlugins('getDefaultValueByInput', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -524,7 +748,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAttributeCodesByFrontendType($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeCodesByFrontendType');
-        return $pluginInfo ? $this->___callPlugins('getAttributeCodesByFrontendType', func_get_args(), $pluginInfo) : parent::getAttributeCodesByFrontendType($type);
+        if (!$pluginInfo) {
+            return parent::getAttributeCodesByFrontendType($type);
+        } else {
+            return $this->___callPlugins('getAttributeCodesByFrontendType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -533,7 +761,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getStoreLabels()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreLabels');
-        return $pluginInfo ? $this->___callPlugins('getStoreLabels', func_get_args(), $pluginInfo) : parent::getStoreLabels();
+        if (!$pluginInfo) {
+            return parent::getStoreLabels();
+        } else {
+            return $this->___callPlugins('getStoreLabels', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -542,7 +774,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getStoreLabel($storeId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreLabel');
-        return $pluginInfo ? $this->___callPlugins('getStoreLabel', func_get_args(), $pluginInfo) : parent::getStoreLabel($storeId);
+        if (!$pluginInfo) {
+            return parent::getStoreLabel($storeId);
+        } else {
+            return $this->___callPlugins('getStoreLabel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -551,7 +787,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getSortWeight($setId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSortWeight');
-        return $pluginInfo ? $this->___callPlugins('getSortWeight', func_get_args(), $pluginInfo) : parent::getSortWeight($setId);
+        if (!$pluginInfo) {
+            return parent::getSortWeight($setId);
+        } else {
+            return $this->___callPlugins('getSortWeight', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -560,7 +800,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIdentities()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdentities');
-        return $pluginInfo ? $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo) : parent::getIdentities();
+        if (!$pluginInfo) {
+            return parent::getIdentities();
+        } else {
+            return $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -569,7 +813,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function loadByCode($entityType, $code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadByCode');
-        return $pluginInfo ? $this->___callPlugins('loadByCode', func_get_args(), $pluginInfo) : parent::loadByCode($entityType, $code);
+        if (!$pluginInfo) {
+            return parent::loadByCode($entityType, $code);
+        } else {
+            return $this->___callPlugins('loadByCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -578,7 +826,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -587,7 +839,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setAttributeId($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeId');
-        return $pluginInfo ? $this->___callPlugins('setAttributeId', func_get_args(), $pluginInfo) : parent::setAttributeId($data);
+        if (!$pluginInfo) {
+            return parent::setAttributeId($data);
+        } else {
+            return $this->___callPlugins('setAttributeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -596,7 +852,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAttributeId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeId');
-        return $pluginInfo ? $this->___callPlugins('getAttributeId', func_get_args(), $pluginInfo) : parent::getAttributeId();
+        if (!$pluginInfo) {
+            return parent::getAttributeId();
+        } else {
+            return $this->___callPlugins('getAttributeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -605,7 +865,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setAttributeCode($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeCode');
-        return $pluginInfo ? $this->___callPlugins('setAttributeCode', func_get_args(), $pluginInfo) : parent::setAttributeCode($data);
+        if (!$pluginInfo) {
+            return parent::setAttributeCode($data);
+        } else {
+            return $this->___callPlugins('setAttributeCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -614,7 +878,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAttributeCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeCode');
-        return $pluginInfo ? $this->___callPlugins('getAttributeCode', func_get_args(), $pluginInfo) : parent::getAttributeCode();
+        if (!$pluginInfo) {
+            return parent::getAttributeCode();
+        } else {
+            return $this->___callPlugins('getAttributeCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -623,7 +891,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setAttributeModel($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeModel');
-        return $pluginInfo ? $this->___callPlugins('setAttributeModel', func_get_args(), $pluginInfo) : parent::setAttributeModel($data);
+        if (!$pluginInfo) {
+            return parent::setAttributeModel($data);
+        } else {
+            return $this->___callPlugins('setAttributeModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -632,7 +904,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAttributeModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeModel');
-        return $pluginInfo ? $this->___callPlugins('getAttributeModel', func_get_args(), $pluginInfo) : parent::getAttributeModel();
+        if (!$pluginInfo) {
+            return parent::getAttributeModel();
+        } else {
+            return $this->___callPlugins('getAttributeModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -641,7 +917,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setBackendType($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBackendType');
-        return $pluginInfo ? $this->___callPlugins('setBackendType', func_get_args(), $pluginInfo) : parent::setBackendType($data);
+        if (!$pluginInfo) {
+            return parent::setBackendType($data);
+        } else {
+            return $this->___callPlugins('setBackendType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -650,7 +930,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getBackendType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackendType');
-        return $pluginInfo ? $this->___callPlugins('getBackendType', func_get_args(), $pluginInfo) : parent::getBackendType();
+        if (!$pluginInfo) {
+            return parent::getBackendType();
+        } else {
+            return $this->___callPlugins('getBackendType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -659,7 +943,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setBackendModel($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBackendModel');
-        return $pluginInfo ? $this->___callPlugins('setBackendModel', func_get_args(), $pluginInfo) : parent::setBackendModel($data);
+        if (!$pluginInfo) {
+            return parent::setBackendModel($data);
+        } else {
+            return $this->___callPlugins('setBackendModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -668,7 +956,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getBackendModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackendModel');
-        return $pluginInfo ? $this->___callPlugins('getBackendModel', func_get_args(), $pluginInfo) : parent::getBackendModel();
+        if (!$pluginInfo) {
+            return parent::getBackendModel();
+        } else {
+            return $this->___callPlugins('getBackendModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -677,7 +969,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setBackendTable($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBackendTable');
-        return $pluginInfo ? $this->___callPlugins('setBackendTable', func_get_args(), $pluginInfo) : parent::setBackendTable($data);
+        if (!$pluginInfo) {
+            return parent::setBackendTable($data);
+        } else {
+            return $this->___callPlugins('setBackendTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -686,7 +982,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDefaultValue()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultValue');
-        return $pluginInfo ? $this->___callPlugins('getDefaultValue', func_get_args(), $pluginInfo) : parent::getDefaultValue();
+        if (!$pluginInfo) {
+            return parent::getDefaultValue();
+        } else {
+            return $this->___callPlugins('getDefaultValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -695,7 +995,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setDefaultValue($defaultValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDefaultValue');
-        return $pluginInfo ? $this->___callPlugins('setDefaultValue', func_get_args(), $pluginInfo) : parent::setDefaultValue($defaultValue);
+        if (!$pluginInfo) {
+            return parent::setDefaultValue($defaultValue);
+        } else {
+            return $this->___callPlugins('setDefaultValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -704,7 +1008,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAttributeSetId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributeSetId');
-        return $pluginInfo ? $this->___callPlugins('getAttributeSetId', func_get_args(), $pluginInfo) : parent::getAttributeSetId();
+        if (!$pluginInfo) {
+            return parent::getAttributeSetId();
+        } else {
+            return $this->___callPlugins('getAttributeSetId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -713,7 +1021,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setAttributeSetId($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttributeSetId');
-        return $pluginInfo ? $this->___callPlugins('setAttributeSetId', func_get_args(), $pluginInfo) : parent::setAttributeSetId($id);
+        if (!$pluginInfo) {
+            return parent::setAttributeSetId($id);
+        } else {
+            return $this->___callPlugins('setAttributeSetId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -722,7 +1034,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEntityTypeId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityTypeId');
-        return $pluginInfo ? $this->___callPlugins('getEntityTypeId', func_get_args(), $pluginInfo) : parent::getEntityTypeId();
+        if (!$pluginInfo) {
+            return parent::getEntityTypeId();
+        } else {
+            return $this->___callPlugins('getEntityTypeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -731,7 +1047,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setEntityTypeId($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityTypeId');
-        return $pluginInfo ? $this->___callPlugins('setEntityTypeId', func_get_args(), $pluginInfo) : parent::setEntityTypeId($id);
+        if (!$pluginInfo) {
+            return parent::setEntityTypeId($id);
+        } else {
+            return $this->___callPlugins('setEntityTypeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -740,7 +1060,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setEntityType($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityType');
-        return $pluginInfo ? $this->___callPlugins('setEntityType', func_get_args(), $pluginInfo) : parent::setEntityType($type);
+        if (!$pluginInfo) {
+            return parent::setEntityType($type);
+        } else {
+            return $this->___callPlugins('setEntityType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -749,7 +1073,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getAlias($entity = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAlias');
-        return $pluginInfo ? $this->___callPlugins('getAlias', func_get_args(), $pluginInfo) : parent::getAlias($entity);
+        if (!$pluginInfo) {
+            return parent::getAlias($entity);
+        } else {
+            return $this->___callPlugins('getAlias', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -758,7 +1086,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -767,7 +1099,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEntityType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityType');
-        return $pluginInfo ? $this->___callPlugins('getEntityType', func_get_args(), $pluginInfo) : parent::getEntityType();
+        if (!$pluginInfo) {
+            return parent::getEntityType();
+        } else {
+            return $this->___callPlugins('getEntityType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -776,7 +1112,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setEntity($entity)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntity');
-        return $pluginInfo ? $this->___callPlugins('setEntity', func_get_args(), $pluginInfo) : parent::setEntity($entity);
+        if (!$pluginInfo) {
+            return parent::setEntity($entity);
+        } else {
+            return $this->___callPlugins('setEntity', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -785,7 +1125,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEntity()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntity');
-        return $pluginInfo ? $this->___callPlugins('getEntity', func_get_args(), $pluginInfo) : parent::getEntity();
+        if (!$pluginInfo) {
+            return parent::getEntity();
+        } else {
+            return $this->___callPlugins('getEntity', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -794,7 +1138,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEntityIdField()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityIdField');
-        return $pluginInfo ? $this->___callPlugins('getEntityIdField', func_get_args(), $pluginInfo) : parent::getEntityIdField();
+        if (!$pluginInfo) {
+            return parent::getEntityIdField();
+        } else {
+            return $this->___callPlugins('getEntityIdField', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -803,7 +1151,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getBackend()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackend');
-        return $pluginInfo ? $this->___callPlugins('getBackend', func_get_args(), $pluginInfo) : parent::getBackend();
+        if (!$pluginInfo) {
+            return parent::getBackend();
+        } else {
+            return $this->___callPlugins('getBackend', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -812,7 +1164,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFrontend()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontend');
-        return $pluginInfo ? $this->___callPlugins('getFrontend', func_get_args(), $pluginInfo) : parent::getFrontend();
+        if (!$pluginInfo) {
+            return parent::getFrontend();
+        } else {
+            return $this->___callPlugins('getFrontend', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -821,7 +1177,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getSource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSource');
-        return $pluginInfo ? $this->___callPlugins('getSource', func_get_args(), $pluginInfo) : parent::getSource();
+        if (!$pluginInfo) {
+            return parent::getSource();
+        } else {
+            return $this->___callPlugins('getSource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -830,7 +1190,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function usesSource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'usesSource');
-        return $pluginInfo ? $this->___callPlugins('usesSource', func_get_args(), $pluginInfo) : parent::usesSource();
+        if (!$pluginInfo) {
+            return parent::usesSource();
+        } else {
+            return $this->___callPlugins('usesSource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -839,7 +1203,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isValueEmpty($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValueEmpty');
-        return $pluginInfo ? $this->___callPlugins('isValueEmpty', func_get_args(), $pluginInfo) : parent::isValueEmpty($value);
+        if (!$pluginInfo) {
+            return parent::isValueEmpty($value);
+        } else {
+            return $this->___callPlugins('isValueEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -848,7 +1216,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isAllowedEmptyTextValue($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAllowedEmptyTextValue');
-        return $pluginInfo ? $this->___callPlugins('isAllowedEmptyTextValue', func_get_args(), $pluginInfo) : parent::isAllowedEmptyTextValue($value);
+        if (!$pluginInfo) {
+            return parent::isAllowedEmptyTextValue($value);
+        } else {
+            return $this->___callPlugins('isAllowedEmptyTextValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -857,7 +1229,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isInSet($setId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isInSet');
-        return $pluginInfo ? $this->___callPlugins('isInSet', func_get_args(), $pluginInfo) : parent::isInSet($setId);
+        if (!$pluginInfo) {
+            return parent::isInSet($setId);
+        } else {
+            return $this->___callPlugins('isInSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -866,7 +1242,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isInGroup($setId, $groupId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isInGroup');
-        return $pluginInfo ? $this->___callPlugins('isInGroup', func_get_args(), $pluginInfo) : parent::isInGroup($setId, $groupId);
+        if (!$pluginInfo) {
+            return parent::isInGroup($setId, $groupId);
+        } else {
+            return $this->___callPlugins('isInGroup', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -875,7 +1255,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIdByCode($entityType, $code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdByCode');
-        return $pluginInfo ? $this->___callPlugins('getIdByCode', func_get_args(), $pluginInfo) : parent::getIdByCode($entityType, $code);
+        if (!$pluginInfo) {
+            return parent::getIdByCode($entityType, $code);
+        } else {
+            return $this->___callPlugins('getIdByCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -884,7 +1268,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isStatic()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isStatic');
-        return $pluginInfo ? $this->___callPlugins('isStatic', func_get_args(), $pluginInfo) : parent::isStatic();
+        if (!$pluginInfo) {
+            return parent::isStatic();
+        } else {
+            return $this->___callPlugins('isStatic', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -893,7 +1281,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getBackendTable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackendTable');
-        return $pluginInfo ? $this->___callPlugins('getBackendTable', func_get_args(), $pluginInfo) : parent::getBackendTable();
+        if (!$pluginInfo) {
+            return parent::getBackendTable();
+        } else {
+            return $this->___callPlugins('getBackendTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -902,7 +1294,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFlatColumns()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFlatColumns');
-        return $pluginInfo ? $this->___callPlugins('getFlatColumns', func_get_args(), $pluginInfo) : parent::getFlatColumns();
+        if (!$pluginInfo) {
+            return parent::getFlatColumns();
+        } else {
+            return $this->___callPlugins('getFlatColumns', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -911,7 +1307,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function _getFlatColumnsDdlDefinition()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '_getFlatColumnsDdlDefinition');
-        return $pluginInfo ? $this->___callPlugins('_getFlatColumnsDdlDefinition', func_get_args(), $pluginInfo) : parent::_getFlatColumnsDdlDefinition();
+        if (!$pluginInfo) {
+            return parent::_getFlatColumnsDdlDefinition();
+        } else {
+            return $this->___callPlugins('_getFlatColumnsDdlDefinition', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -920,7 +1320,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFlatIndexes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFlatIndexes');
-        return $pluginInfo ? $this->___callPlugins('getFlatIndexes', func_get_args(), $pluginInfo) : parent::getFlatIndexes();
+        if (!$pluginInfo) {
+            return parent::getFlatIndexes();
+        } else {
+            return $this->___callPlugins('getFlatIndexes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -929,7 +1333,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFlatUpdateSelect($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFlatUpdateSelect');
-        return $pluginInfo ? $this->___callPlugins('getFlatUpdateSelect', func_get_args(), $pluginInfo) : parent::getFlatUpdateSelect($store);
+        if (!$pluginInfo) {
+            return parent::getFlatUpdateSelect($store);
+        } else {
+            return $this->___callPlugins('getFlatUpdateSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -938,7 +1346,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsUnique()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsUnique');
-        return $pluginInfo ? $this->___callPlugins('getIsUnique', func_get_args(), $pluginInfo) : parent::getIsUnique();
+        if (!$pluginInfo) {
+            return parent::getIsUnique();
+        } else {
+            return $this->___callPlugins('getIsUnique', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -947,7 +1359,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsUnique($isUnique)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsUnique');
-        return $pluginInfo ? $this->___callPlugins('setIsUnique', func_get_args(), $pluginInfo) : parent::setIsUnique($isUnique);
+        if (!$pluginInfo) {
+            return parent::setIsUnique($isUnique);
+        } else {
+            return $this->___callPlugins('setIsUnique', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -956,7 +1372,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFrontendClass()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendClass');
-        return $pluginInfo ? $this->___callPlugins('getFrontendClass', func_get_args(), $pluginInfo) : parent::getFrontendClass();
+        if (!$pluginInfo) {
+            return parent::getFrontendClass();
+        } else {
+            return $this->___callPlugins('getFrontendClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -965,7 +1385,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setFrontendClass($frontendClass)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFrontendClass');
-        return $pluginInfo ? $this->___callPlugins('setFrontendClass', func_get_args(), $pluginInfo) : parent::setFrontendClass($frontendClass);
+        if (!$pluginInfo) {
+            return parent::setFrontendClass($frontendClass);
+        } else {
+            return $this->___callPlugins('setFrontendClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -974,7 +1398,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFrontendInput()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendInput');
-        return $pluginInfo ? $this->___callPlugins('getFrontendInput', func_get_args(), $pluginInfo) : parent::getFrontendInput();
+        if (!$pluginInfo) {
+            return parent::getFrontendInput();
+        } else {
+            return $this->___callPlugins('getFrontendInput', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -983,7 +1411,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setFrontendInput($frontendInput)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFrontendInput');
-        return $pluginInfo ? $this->___callPlugins('setFrontendInput', func_get_args(), $pluginInfo) : parent::setFrontendInput($frontendInput);
+        if (!$pluginInfo) {
+            return parent::setFrontendInput($frontendInput);
+        } else {
+            return $this->___callPlugins('setFrontendInput', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -992,7 +1424,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsRequired()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsRequired');
-        return $pluginInfo ? $this->___callPlugins('getIsRequired', func_get_args(), $pluginInfo) : parent::getIsRequired();
+        if (!$pluginInfo) {
+            return parent::getIsRequired();
+        } else {
+            return $this->___callPlugins('getIsRequired', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1001,7 +1437,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsRequired($isRequired)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsRequired');
-        return $pluginInfo ? $this->___callPlugins('setIsRequired', func_get_args(), $pluginInfo) : parent::setIsRequired($isRequired);
+        if (!$pluginInfo) {
+            return parent::setIsRequired($isRequired);
+        } else {
+            return $this->___callPlugins('setIsRequired', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1010,7 +1450,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOptions');
-        return $pluginInfo ? $this->___callPlugins('getOptions', func_get_args(), $pluginInfo) : parent::getOptions();
+        if (!$pluginInfo) {
+            return parent::getOptions();
+        } else {
+            return $this->___callPlugins('getOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1019,7 +1463,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setOptions(?array $options = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOptions');
-        return $pluginInfo ? $this->___callPlugins('setOptions', func_get_args(), $pluginInfo) : parent::setOptions($options);
+        if (!$pluginInfo) {
+            return parent::setOptions($options);
+        } else {
+            return $this->___callPlugins('setOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1028,7 +1476,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIsUserDefined()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsUserDefined');
-        return $pluginInfo ? $this->___callPlugins('getIsUserDefined', func_get_args(), $pluginInfo) : parent::getIsUserDefined();
+        if (!$pluginInfo) {
+            return parent::getIsUserDefined();
+        } else {
+            return $this->___callPlugins('getIsUserDefined', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1037,7 +1489,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIsUserDefined($isUserDefined)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsUserDefined');
-        return $pluginInfo ? $this->___callPlugins('setIsUserDefined', func_get_args(), $pluginInfo) : parent::setIsUserDefined($isUserDefined);
+        if (!$pluginInfo) {
+            return parent::setIsUserDefined($isUserDefined);
+        } else {
+            return $this->___callPlugins('setIsUserDefined', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1046,7 +1502,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDefaultFrontendLabel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultFrontendLabel');
-        return $pluginInfo ? $this->___callPlugins('getDefaultFrontendLabel', func_get_args(), $pluginInfo) : parent::getDefaultFrontendLabel();
+        if (!$pluginInfo) {
+            return parent::getDefaultFrontendLabel();
+        } else {
+            return $this->___callPlugins('getDefaultFrontendLabel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1055,7 +1515,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setDefaultFrontendLabel($defaultFrontendLabel)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDefaultFrontendLabel');
-        return $pluginInfo ? $this->___callPlugins('setDefaultFrontendLabel', func_get_args(), $pluginInfo) : parent::setDefaultFrontendLabel($defaultFrontendLabel);
+        if (!$pluginInfo) {
+            return parent::setDefaultFrontendLabel($defaultFrontendLabel);
+        } else {
+            return $this->___callPlugins('setDefaultFrontendLabel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1064,7 +1528,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getFrontendLabels()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendLabels');
-        return $pluginInfo ? $this->___callPlugins('getFrontendLabels', func_get_args(), $pluginInfo) : parent::getFrontendLabels();
+        if (!$pluginInfo) {
+            return parent::getFrontendLabels();
+        } else {
+            return $this->___callPlugins('getFrontendLabels', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1073,7 +1541,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setFrontendLabels(?array $frontendLabels = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFrontendLabels');
-        return $pluginInfo ? $this->___callPlugins('setFrontendLabels', func_get_args(), $pluginInfo) : parent::setFrontendLabels($frontendLabels);
+        if (!$pluginInfo) {
+            return parent::setFrontendLabels($frontendLabels);
+        } else {
+            return $this->___callPlugins('setFrontendLabels', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1082,7 +1554,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getNote()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getNote');
-        return $pluginInfo ? $this->___callPlugins('getNote', func_get_args(), $pluginInfo) : parent::getNote();
+        if (!$pluginInfo) {
+            return parent::getNote();
+        } else {
+            return $this->___callPlugins('getNote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1091,7 +1567,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setNote($note)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setNote');
-        return $pluginInfo ? $this->___callPlugins('setNote', func_get_args(), $pluginInfo) : parent::setNote($note);
+        if (!$pluginInfo) {
+            return parent::setNote($note);
+        } else {
+            return $this->___callPlugins('setNote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1100,7 +1580,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setSourceModel($sourceModel)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSourceModel');
-        return $pluginInfo ? $this->___callPlugins('setSourceModel', func_get_args(), $pluginInfo) : parent::setSourceModel($sourceModel);
+        if (!$pluginInfo) {
+            return parent::setSourceModel($sourceModel);
+        } else {
+            return $this->___callPlugins('setSourceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1109,7 +1593,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getValidationRules()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValidationRules');
-        return $pluginInfo ? $this->___callPlugins('getValidationRules', func_get_args(), $pluginInfo) : parent::getValidationRules();
+        if (!$pluginInfo) {
+            return parent::getValidationRules();
+        } else {
+            return $this->___callPlugins('getValidationRules', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1118,7 +1606,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setValidationRules(?array $validationRules = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setValidationRules');
-        return $pluginInfo ? $this->___callPlugins('setValidationRules', func_get_args(), $pluginInfo) : parent::setValidationRules($validationRules);
+        if (!$pluginInfo) {
+            return parent::setValidationRules($validationRules);
+        } else {
+            return $this->___callPlugins('setValidationRules', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1127,7 +1619,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getExtensionAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo) : parent::getExtensionAttributes();
+        if (!$pluginInfo) {
+            return parent::getExtensionAttributes();
+        } else {
+            return $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1136,7 +1632,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setExtensionAttributes(\Magento\Eav\Api\Data\AttributeExtensionInterface $extensionAttributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo) : parent::setExtensionAttributes($extensionAttributes);
+        if (!$pluginInfo) {
+            return parent::setExtensionAttributes($extensionAttributes);
+        } else {
+            return $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1145,7 +1645,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getCustomAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo) : parent::getCustomAttributes();
+        if (!$pluginInfo) {
+            return parent::getCustomAttributes();
+        } else {
+            return $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1154,7 +1658,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getCustomAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo) : parent::getCustomAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getCustomAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1163,7 +1671,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setCustomAttributes(array $attributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo) : parent::setCustomAttributes($attributes);
+        if (!$pluginInfo) {
+            return parent::setCustomAttributes($attributes);
+        } else {
+            return $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1172,7 +1684,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setCustomAttribute($attributeCode, $attributeValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo) : parent::setCustomAttribute($attributeCode, $attributeValue);
+        if (!$pluginInfo) {
+            return parent::setCustomAttribute($attributeCode, $attributeValue);
+        } else {
+            return $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1181,7 +1697,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setData($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($key, $value);
+        if (!$pluginInfo) {
+            return parent::setData($key, $value);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1190,7 +1710,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function unsetData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetData');
-        return $pluginInfo ? $this->___callPlugins('unsetData', func_get_args(), $pluginInfo) : parent::unsetData($key);
+        if (!$pluginInfo) {
+            return parent::unsetData($key);
+        } else {
+            return $this->___callPlugins('unsetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1199,7 +1723,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getData($key = '', $index = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $index);
+        if (!$pluginInfo) {
+            return parent::getData($key, $index);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1208,7 +1736,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setId($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setId');
-        return $pluginInfo ? $this->___callPlugins('setId', func_get_args(), $pluginInfo) : parent::setId($value);
+        if (!$pluginInfo) {
+            return parent::setId($value);
+        } else {
+            return $this->___callPlugins('setId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1217,7 +1749,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setIdFieldName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo) : parent::setIdFieldName($name);
+        if (!$pluginInfo) {
+            return parent::setIdFieldName($name);
+        } else {
+            return $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1226,7 +1762,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getIdFieldName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo) : parent::getIdFieldName();
+        if (!$pluginInfo) {
+            return parent::getIdFieldName();
+        } else {
+            return $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1235,7 +1775,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1244,7 +1788,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isDeleted($isDeleted = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDeleted');
-        return $pluginInfo ? $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo) : parent::isDeleted($isDeleted);
+        if (!$pluginInfo) {
+            return parent::isDeleted($isDeleted);
+        } else {
+            return $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1253,7 +1801,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function hasDataChanges()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo) : parent::hasDataChanges();
+        if (!$pluginInfo) {
+            return parent::hasDataChanges();
+        } else {
+            return $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1262,7 +1814,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setDataChanges($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo) : parent::setDataChanges($value);
+        if (!$pluginInfo) {
+            return parent::setDataChanges($value);
+        } else {
+            return $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1271,7 +1827,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getOrigData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOrigData');
-        return $pluginInfo ? $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo) : parent::getOrigData($key);
+        if (!$pluginInfo) {
+            return parent::getOrigData($key);
+        } else {
+            return $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1280,7 +1840,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setOrigData($key = null, $data = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOrigData');
-        return $pluginInfo ? $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo) : parent::setOrigData($key, $data);
+        if (!$pluginInfo) {
+            return parent::setOrigData($key, $data);
+        } else {
+            return $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1289,7 +1853,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function dataHasChangedFor($field)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'dataHasChangedFor');
-        return $pluginInfo ? $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo) : parent::dataHasChangedFor($field);
+        if (!$pluginInfo) {
+            return parent::dataHasChangedFor($field);
+        } else {
+            return $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1298,7 +1866,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getResourceName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceName');
-        return $pluginInfo ? $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo) : parent::getResourceName();
+        if (!$pluginInfo) {
+            return parent::getResourceName();
+        } else {
+            return $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1307,7 +1879,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getResourceCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceCollection');
-        return $pluginInfo ? $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo) : parent::getResourceCollection();
+        if (!$pluginInfo) {
+            return parent::getResourceCollection();
+        } else {
+            return $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1316,7 +1892,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCollection');
-        return $pluginInfo ? $this->___callPlugins('getCollection', func_get_args(), $pluginInfo) : parent::getCollection();
+        if (!$pluginInfo) {
+            return parent::getCollection();
+        } else {
+            return $this->___callPlugins('getCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1325,7 +1905,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function load($modelId, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'load');
-        return $pluginInfo ? $this->___callPlugins('load', func_get_args(), $pluginInfo) : parent::load($modelId, $field);
+        if (!$pluginInfo) {
+            return parent::load($modelId, $field);
+        } else {
+            return $this->___callPlugins('load', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1334,7 +1918,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function beforeLoad($identifier, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeLoad');
-        return $pluginInfo ? $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo) : parent::beforeLoad($identifier, $field);
+        if (!$pluginInfo) {
+            return parent::beforeLoad($identifier, $field);
+        } else {
+            return $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1343,7 +1931,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function afterLoad()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterLoad');
-        return $pluginInfo ? $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo) : parent::afterLoad();
+        if (!$pluginInfo) {
+            return parent::afterLoad();
+        } else {
+            return $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1352,7 +1944,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isSaveAllowed()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSaveAllowed');
-        return $pluginInfo ? $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo) : parent::isSaveAllowed();
+        if (!$pluginInfo) {
+            return parent::isSaveAllowed();
+        } else {
+            return $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1361,7 +1957,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setHasDataChanges($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo) : parent::setHasDataChanges($flag);
+        if (!$pluginInfo) {
+            return parent::setHasDataChanges($flag);
+        } else {
+            return $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1370,7 +1970,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function save()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save();
+        if (!$pluginInfo) {
+            return parent::save();
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1379,7 +1983,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function afterCommitCallback()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterCommitCallback');
-        return $pluginInfo ? $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo) : parent::afterCommitCallback();
+        if (!$pluginInfo) {
+            return parent::afterCommitCallback();
+        } else {
+            return $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1388,7 +1996,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isObjectNew($flag = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isObjectNew');
-        return $pluginInfo ? $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo) : parent::isObjectNew($flag);
+        if (!$pluginInfo) {
+            return parent::isObjectNew($flag);
+        } else {
+            return $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1397,7 +2009,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function validateBeforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validateBeforeSave');
-        return $pluginInfo ? $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo) : parent::validateBeforeSave();
+        if (!$pluginInfo) {
+            return parent::validateBeforeSave();
+        } else {
+            return $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1406,7 +2022,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getCacheTags()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheTags');
-        return $pluginInfo ? $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo) : parent::getCacheTags();
+        if (!$pluginInfo) {
+            return parent::getCacheTags();
+        } else {
+            return $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1415,7 +2035,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function cleanModelCache()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'cleanModelCache');
-        return $pluginInfo ? $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo) : parent::cleanModelCache();
+        if (!$pluginInfo) {
+            return parent::cleanModelCache();
+        } else {
+            return $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1424,7 +2048,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function delete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete();
+        if (!$pluginInfo) {
+            return parent::delete();
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1433,7 +2061,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getResource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResource');
-        return $pluginInfo ? $this->___callPlugins('getResource', func_get_args(), $pluginInfo) : parent::getResource();
+        if (!$pluginInfo) {
+            return parent::getResource();
+        } else {
+            return $this->___callPlugins('getResource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1442,7 +2074,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEntityId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityId');
-        return $pluginInfo ? $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo) : parent::getEntityId();
+        if (!$pluginInfo) {
+            return parent::getEntityId();
+        } else {
+            return $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1451,7 +2087,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setEntityId($entityId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityId');
-        return $pluginInfo ? $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo) : parent::setEntityId($entityId);
+        if (!$pluginInfo) {
+            return parent::setEntityId($entityId);
+        } else {
+            return $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1460,7 +2100,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function clearInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearInstance');
-        return $pluginInfo ? $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo) : parent::clearInstance();
+        if (!$pluginInfo) {
+            return parent::clearInstance();
+        } else {
+            return $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1469,7 +2113,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getStoredData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoredData');
-        return $pluginInfo ? $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo) : parent::getStoredData();
+        if (!$pluginInfo) {
+            return parent::getStoredData();
+        } else {
+            return $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1478,7 +2126,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getEventPrefix()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEventPrefix');
-        return $pluginInfo ? $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo) : parent::getEventPrefix();
+        if (!$pluginInfo) {
+            return parent::getEventPrefix();
+        } else {
+            return $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1487,7 +2139,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function addData(array $arr)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addData');
-        return $pluginInfo ? $this->___callPlugins('addData', func_get_args(), $pluginInfo) : parent::addData($arr);
+        if (!$pluginInfo) {
+            return parent::addData($arr);
+        } else {
+            return $this->___callPlugins('addData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1496,7 +2152,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDataByPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByPath');
-        return $pluginInfo ? $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo) : parent::getDataByPath($path);
+        if (!$pluginInfo) {
+            return parent::getDataByPath($path);
+        } else {
+            return $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1505,7 +2165,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDataByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByKey');
-        return $pluginInfo ? $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo) : parent::getDataByKey($key);
+        if (!$pluginInfo) {
+            return parent::getDataByKey($key);
+        } else {
+            return $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1514,7 +2178,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function setDataUsingMethod($key, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo) : parent::setDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::setDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1523,7 +2191,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function getDataUsingMethod($key, $args = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo) : parent::getDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::getDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1532,7 +2204,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function hasData($key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasData');
-        return $pluginInfo ? $this->___callPlugins('hasData', func_get_args(), $pluginInfo) : parent::hasData($key);
+        if (!$pluginInfo) {
+            return parent::hasData($key);
+        } else {
+            return $this->___callPlugins('hasData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1541,7 +2217,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function toArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($keys);
+        if (!$pluginInfo) {
+            return parent::toArray($keys);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1550,7 +2230,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function convertToArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToArray');
-        return $pluginInfo ? $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo) : parent::convertToArray($keys);
+        if (!$pluginInfo) {
+            return parent::convertToArray($keys);
+        } else {
+            return $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1559,7 +2243,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1568,7 +2256,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function convertToXml(array $arrAttributes = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToXml');
-        return $pluginInfo ? $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo) : parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1577,7 +2269,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function toJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toJson');
-        return $pluginInfo ? $this->___callPlugins('toJson', func_get_args(), $pluginInfo) : parent::toJson($keys);
+        if (!$pluginInfo) {
+            return parent::toJson($keys);
+        } else {
+            return $this->___callPlugins('toJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1586,7 +2282,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function convertToJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToJson');
-        return $pluginInfo ? $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo) : parent::convertToJson($keys);
+        if (!$pluginInfo) {
+            return parent::convertToJson($keys);
+        } else {
+            return $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1595,7 +2295,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function toString($format = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString($format);
+        if (!$pluginInfo) {
+            return parent::toString($format);
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1604,7 +2308,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1613,7 +2321,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function isEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmpty');
-        return $pluginInfo ? $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo) : parent::isEmpty();
+        if (!$pluginInfo) {
+            return parent::isEmpty();
+        } else {
+            return $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1622,7 +2334,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serialize');
-        return $pluginInfo ? $this->___callPlugins('serialize', func_get_args(), $pluginInfo) : parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        if (!$pluginInfo) {
+            return parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        } else {
+            return $this->___callPlugins('serialize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1631,7 +2347,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function debug($data = null, &$objects = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debug');
-        return $pluginInfo ? $this->___callPlugins('debug', func_get_args(), $pluginInfo) : parent::debug($data, $objects);
+        if (!$pluginInfo) {
+            return parent::debug($data, $objects);
+        } else {
+            return $this->___callPlugins('debug', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1640,7 +2360,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function offsetSet($offset, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetSet');
-        return $pluginInfo ? $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo) : parent::offsetSet($offset, $value);
+        if (!$pluginInfo) {
+            return parent::offsetSet($offset, $value);
+        } else {
+            return $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1649,7 +2373,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function offsetExists($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetExists');
-        return $pluginInfo ? $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo) : parent::offsetExists($offset);
+        if (!$pluginInfo) {
+            return parent::offsetExists($offset);
+        } else {
+            return $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1658,7 +2386,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function offsetUnset($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetUnset');
-        return $pluginInfo ? $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo) : parent::offsetUnset($offset);
+        if (!$pluginInfo) {
+            return parent::offsetUnset($offset);
+        } else {
+            return $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1667,6 +2399,10 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Eav\Attribute imp
     public function offsetGet($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetGet');
-        return $pluginInfo ? $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo) : parent::offsetGet($offset);
+        if (!$pluginInfo) {
+            return parent::offsetGet($offset);
+        } else {
+            return $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo);
+        }
     }
 }

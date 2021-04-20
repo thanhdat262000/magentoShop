@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Framework\Session\SessionStartChecker impleme
     public function check() : bool
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'check');
-        return $pluginInfo ? $this->___callPlugins('check', func_get_args(), $pluginInfo) : parent::check();
+        if (!$pluginInfo) {
+            return parent::check();
+        } else {
+            return $this->___callPlugins('check', func_get_args(), $pluginInfo);
+        }
     }
 }

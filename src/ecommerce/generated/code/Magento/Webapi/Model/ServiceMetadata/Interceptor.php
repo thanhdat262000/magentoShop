@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Webapi\Model\ServiceMetadata implements \Mage
     public function getServicesConfig()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getServicesConfig');
-        return $pluginInfo ? $this->___callPlugins('getServicesConfig', func_get_args(), $pluginInfo) : parent::getServicesConfig();
+        if (!$pluginInfo) {
+            return parent::getServicesConfig();
+        } else {
+            return $this->___callPlugins('getServicesConfig', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Webapi\Model\ServiceMetadata implements \Mage
     public function getServiceMetadata($serviceName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getServiceMetadata');
-        return $pluginInfo ? $this->___callPlugins('getServiceMetadata', func_get_args(), $pluginInfo) : parent::getServiceMetadata($serviceName);
+        if (!$pluginInfo) {
+            return parent::getServiceMetadata($serviceName);
+        } else {
+            return $this->___callPlugins('getServiceMetadata', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Webapi\Model\ServiceMetadata implements \Mage
     public function getServiceName($interfaceName, $version, $preserveVersion = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getServiceName');
-        return $pluginInfo ? $this->___callPlugins('getServiceName', func_get_args(), $pluginInfo) : parent::getServiceName($interfaceName, $version, $preserveVersion);
+        if (!$pluginInfo) {
+            return parent::getServiceName($interfaceName, $version, $preserveVersion);
+        } else {
+            return $this->___callPlugins('getServiceName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Webapi\Model\ServiceMetadata implements \Mage
     public function getRouteMetadata($serviceName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRouteMetadata');
-        return $pluginInfo ? $this->___callPlugins('getRouteMetadata', func_get_args(), $pluginInfo) : parent::getRouteMetadata($serviceName);
+        if (!$pluginInfo) {
+            return parent::getRouteMetadata($serviceName);
+        } else {
+            return $this->___callPlugins('getRouteMetadata', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,6 +72,10 @@ class Interceptor extends \Magento\Webapi\Model\ServiceMetadata implements \Mage
     public function getRoutesConfig()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRoutesConfig');
-        return $pluginInfo ? $this->___callPlugins('getRoutesConfig', func_get_args(), $pluginInfo) : parent::getRoutesConfig();
+        if (!$pluginInfo) {
+            return parent::getRoutesConfig();
+        } else {
+            return $this->___callPlugins('getRoutesConfig', func_get_args(), $pluginInfo);
+        }
     }
 }

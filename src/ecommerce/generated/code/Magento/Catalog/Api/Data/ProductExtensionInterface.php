@@ -40,15 +40,26 @@ interface ProductExtensionInterface extends \Magento\Framework\Api\ExtensionAttr
     public function setStockItem(\Magento\CatalogInventory\Api\Data\StockItemInterface $stockItem);
 
     /**
-     * @return \Magento\Bundle\Api\Data\OptionInterface[]|null
+     * @return \Magento\ConfigurableProduct\Api\Data\OptionInterface[]|null
      */
-    public function getBundleProductOptions();
+    public function getConfigurableProductOptions();
 
     /**
-     * @param \Magento\Bundle\Api\Data\OptionInterface[] $bundleProductOptions
+     * @param \Magento\ConfigurableProduct\Api\Data\OptionInterface[] $configurableProductOptions
      * @return $this
      */
-    public function setBundleProductOptions($bundleProductOptions);
+    public function setConfigurableProductOptions($configurableProductOptions);
+
+    /**
+     * @return int[]|null
+     */
+    public function getConfigurableProductLinks();
+
+    /**
+     * @param int[] $configurableProductLinks
+     * @return $this
+     */
+    public function setConfigurableProductLinks($configurableProductLinks);
 
     /**
      * @return \Magento\Downloadable\Api\Data\LinkInterface[]|null
@@ -73,35 +84,13 @@ interface ProductExtensionInterface extends \Magento\Framework\Api\ExtensionAttr
     public function setDownloadableProductSamples($downloadableProductSamples);
 
     /**
-     * @return \Magento\ConfigurableProduct\Api\Data\OptionInterface[]|null
+     * @return \Magento\Bundle\Api\Data\OptionInterface[]|null
      */
-    public function getConfigurableProductOptions();
+    public function getBundleProductOptions();
 
     /**
-     * @param \Magento\ConfigurableProduct\Api\Data\OptionInterface[] $configurableProductOptions
+     * @param \Magento\Bundle\Api\Data\OptionInterface[] $bundleProductOptions
      * @return $this
      */
-    public function setConfigurableProductOptions($configurableProductOptions);
-
-    /**
-     * @return int[]|null
-     */
-    public function getConfigurableProductLinks();
-
-    /**
-     * @param int[] $configurableProductLinks
-     * @return $this
-     */
-    public function setConfigurableProductLinks($configurableProductLinks);
-
-    /**
-     * @return \Vertex\Tax\Api\Data\CommodityCodeInterface|null
-     */
-    public function getVertexCommodityCode();
-
-    /**
-     * @param \Vertex\Tax\Api\Data\CommodityCodeInterface $vertexCommodityCode
-     * @return $this
-     */
-    public function setVertexCommodityCode(\Vertex\Tax\Api\Data\CommodityCodeInterface $vertexCommodityCode);
+    public function setBundleProductOptions($bundleProductOptions);
 }

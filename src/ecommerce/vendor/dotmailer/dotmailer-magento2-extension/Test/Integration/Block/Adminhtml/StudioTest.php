@@ -62,7 +62,7 @@ class StudioTest extends \PHPUnit\Framework\TestCase
      */
     private $userMock;
 
-    public function setUp() :void
+    public function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->mockClientFactory();
@@ -122,7 +122,7 @@ class StudioTest extends \PHPUnit\Framework\TestCase
 
         $url = $this->studio->getAction();
         $this->assertStringStartsWith($this->config->getLoginUserUrl(), $url);
-        $this->assertStringNotContainsString(Config::API_CONNECTOR_OAUTH_URL_LOG_USER, parse_url($url, PHP_URL_QUERY));
+        $this->assertNotContains(Config::API_CONNECTOR_OAUTH_URL_LOG_USER, parse_url($url, PHP_URL_QUERY));
     }
 
     /**
@@ -148,7 +148,7 @@ class StudioTest extends \PHPUnit\Framework\TestCase
             ->willReturn('hangleSalesOrderCancel');
 
         $url = $this->studio->getAction();
-        $this->assertStringContainsString(
+        $this->assertContains(
             sprintf('%s=%s', Config::API_CONNECTOR_OAUTH_URL_LOG_USER, $token),
             parse_url($url, PHP_URL_QUERY)
         );

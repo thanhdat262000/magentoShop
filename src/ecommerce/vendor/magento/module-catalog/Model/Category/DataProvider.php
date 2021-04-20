@@ -12,7 +12,6 @@ use Magento\Catalog\Api\Data\EavAttributeInterface;
 use Magento\Catalog\Model\Attribute\ScopeOverriddenValue;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Category\Attribute\Backend\Image as ImageBackendModel;
-use Magento\Catalog\Model\Category\Attribute\Backend\LayoutUpdate;
 use Magento\Catalog\Model\CategoryFactory;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute as EavAttribute;
@@ -21,12 +20,8 @@ use Magento\Eav\Model\Config;
 use Magento\Eav\Model\Entity\Attribute\Source\SpecificSourceInterface;
 use Magento\Eav\Model\Entity\Type;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\AuthorizationInterface;
-use Magento\Framework\Config\DataInterfaceFactory;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Registry;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\Framework\Stdlib\ArrayUtils;
 use Magento\Store\Model\Store;
@@ -34,7 +29,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Ui\Component\Form\Field;
 use Magento\Ui\DataProvider\EavValidationRules;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
-use Magento\Ui\DataProvider\ModifierPoolDataProvider;
+use Magento\Framework\AuthorizationInterface;
 
 /**
  * Category form data provider.
@@ -42,10 +37,9 @@ use Magento\Ui\DataProvider\ModifierPoolDataProvider;
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @since 101.0.0
  */
-class DataProvider extends ModifierPoolDataProvider
+class DataProvider extends \Magento\Ui\DataProvider\ModifierPoolDataProvider
 {
     /**
      * @var string
@@ -113,28 +107,19 @@ class DataProvider extends ModifierPoolDataProvider
     ];
 
     /**
-     * Elements with currency symbol
-     *
-     * @var array
-     */
-    private $elementsWithCurrencySymbol = [
-        'filter_price_range',
-    ];
-
-    /**
      * @var EavValidationRules
      * @since 101.0.0
      */
     protected $eavValidationRules;
 
     /**
-     * @var Registry
+     * @var \Magento\Framework\Registry
      * @since 101.0.0
      */
     protected $registry;
 
     /**
-     * @var RequestInterface
+     * @var \Magento\Framework\App\RequestInterface
      * @since 101.0.0
      */
     protected $request;
@@ -155,11 +140,6 @@ class DataProvider extends ModifierPoolDataProvider
     private $categoryFactory;
 
     /**
-     * @var DataInterfaceFactory
-     */
-    private $uiConfigFactory;
-
-    /**
      * @var ScopeOverriddenValue
      */
     private $scopeOverriddenValue;
@@ -175,7 +155,7 @@ class DataProvider extends ModifierPoolDataProvider
     private $arrayUtils;
 
     /**
-     * @var FileInfo
+     * @var Filesystem
      */
     private $fileInfo;
 
@@ -185,31 +165,22 @@ class DataProvider extends ModifierPoolDataProvider
     private $auth;
 
     /**
-     * @var Image
-     */
-    private $categoryImage;
-
-    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param EavValidationRules $eavValidationRules
      * @param CategoryCollectionFactory $categoryCollectionFactory
      * @param StoreManagerInterface $storeManager
-     * @param Registry $registry
+     * @param \Magento\Framework\Registry $registry
      * @param Config $eavConfig
-     * @param RequestInterface $request
+     * @param \Magento\Framework\App\RequestInterface $request
      * @param CategoryFactory $categoryFactory
      * @param array $meta
      * @param array $data
      * @param PoolInterface|null $pool
      * @param AuthorizationInterface|null $auth
      * @param ArrayUtils|null $arrayUtils
-     * @param ScopeOverriddenValue|null $scopeOverriddenValue
-     * @param ArrayManager|null $arrayManager
-     * @param FileInfo|null $fileInfo
-     * @param Image|null $categoryImage
-     * @param DataInterfaceFactory|null $uiConfigFactory
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -219,20 +190,15 @@ class DataProvider extends ModifierPoolDataProvider
         EavValidationRules $eavValidationRules,
         CategoryCollectionFactory $categoryCollectionFactory,
         StoreManagerInterface $storeManager,
-        Registry $registry,
+        \Magento\Framework\Registry $registry,
         Config $eavConfig,
-        RequestInterface $request,
+        \Magento\Framework\App\RequestInterface $request,
         CategoryFactory $categoryFactory,
         array $meta = [],
         array $data = [],
         PoolInterface $pool = null,
         ?AuthorizationInterface $auth = null,
-        ?ArrayUtils $arrayUtils = null,
-        ScopeOverriddenValue $scopeOverriddenValue = null,
-        ArrayManager $arrayManager = null,
-        FileInfo $fileInfo = null,
-        ?Image $categoryImage = null,
-        ?DataInterfaceFactory $uiConfigFactory = null
+        ?ArrayUtils $arrayUtils = null
     ) {
         $this->eavValidationRules = $eavValidationRules;
         $this->collection = $categoryCollectionFactory->create();
@@ -244,15 +210,6 @@ class DataProvider extends ModifierPoolDataProvider
         $this->categoryFactory = $categoryFactory;
         $this->auth = $auth ?? ObjectManager::getInstance()->get(AuthorizationInterface::class);
         $this->arrayUtils = $arrayUtils ?? ObjectManager::getInstance()->get(ArrayUtils::class);
-        $this->scopeOverriddenValue = $scopeOverriddenValue ?:
-            ObjectManager::getInstance()->get(ScopeOverriddenValue::class);
-        $this->arrayManager = $arrayManager ?: ObjectManager::getInstance()->get(ArrayManager::class);
-        $this->fileInfo = $fileInfo ?: ObjectManager::getInstance()->get(FileInfo::class);
-        $this->categoryImage = $categoryImage ?? ObjectManager::getInstance()->get(Image::class);
-        $this->uiConfigFactory = $uiConfigFactory ?? ObjectManager::getInstance()->create(
-            DataInterfaceFactory::class,
-            ['instanceName' => \Magento\Ui\Config\Data::class]
-        );
 
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data, $pool);
     }
@@ -290,7 +247,7 @@ class DataProvider extends ModifierPoolDataProvider
             $canDisplayUseDefault = $attribute->getScope() != EavAttributeInterface::SCOPE_GLOBAL_TEXT
                 && $category->getId()
                 && $category->getStoreId();
-            $attributePath = $this->arrayManager->findPath($attributeCode, $meta);
+            $attributePath = $this->getArrayManager()->findPath($attributeCode, $meta);
 
             if (!$attributePath
                 || !$canDisplayUseDefault
@@ -299,14 +256,14 @@ class DataProvider extends ModifierPoolDataProvider
                 continue;
             }
 
-            $meta = $this->arrayManager->merge(
+            $meta = $this->getArrayManager()->merge(
                 [$attributePath, 'arguments/data/config'],
                 $meta,
                 [
                     'service' => [
                         'template' => 'ui/form/element/helper/service',
                     ],
-                    'disabled' => !$this->scopeOverriddenValue->containsValue(
+                    'disabled' => !$this->getScopeOverriddenValue()->containsValue(
                         CategoryInterface::class,
                         $category,
                         $attributeCode,
@@ -397,7 +354,7 @@ class DataProvider extends ModifierPoolDataProvider
      *
      * @param Type $entityType
      * @return array
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @since 101.0.0
@@ -450,21 +407,10 @@ class DataProvider extends ModifierPoolDataProvider
             if ($category) {
                 $attributeIsLocked = $category->isLockedAttribute($code);
                 $meta[$code]['disabled'] = $attributeIsLocked;
-                $hasUseConfigField = (bool)array_search('use_config.' . $code, $fields, true);
+                $hasUseConfigField = (bool) array_search('use_config.' . $code, $fields, true);
                 if ($hasUseConfigField && $meta[$code]['disabled']) {
                     $meta['use_config.' . $code]['disabled'] = true;
                 }
-            }
-
-            if (in_array($code, $this->elementsWithCurrencySymbol, false)) {
-                $requestScope = $this->request->getParam(
-                    $this->requestScopeFieldName,
-                    Store::DEFAULT_STORE_ID
-                );
-
-                $meta[$code]['addbefore'] = $this->storeManager->getStore($requestScope)
-                    ->getBaseCurrency()
-                    ->getCurrencySymbol();
             }
         }
 
@@ -505,7 +451,7 @@ class DataProvider extends ModifierPoolDataProvider
     /**
      * Add use default settings
      *
-     * @param Category $category
+     * @param \Magento\Catalog\Model\Category $category
      * @param array $categoryData
      * @return array
      * @deprecated 102.0.0
@@ -593,7 +539,7 @@ class DataProvider extends ModifierPoolDataProvider
     /**
      * Converts category image data to acceptable for rendering format
      *
-     * @param Category $category
+     * @param \Magento\Catalog\Model\Category $category
      * @param array $categoryData
      * @return array
      */
@@ -603,7 +549,7 @@ class DataProvider extends ModifierPoolDataProvider
             if ($attributeCode === 'custom_layout_update_file') {
                 if (!empty($categoryData['custom_layout_update'])) {
                     $categoryData['custom_layout_update_file']
-                        = LayoutUpdate::VALUE_USE_UPDATE_XML;
+                        = \Magento\Catalog\Model\Category\Attribute\Backend\LayoutUpdate::VALUE_USE_UPDATE_XML;
                 }
             }
             if (!isset($categoryData[$attributeCode])) {
@@ -614,17 +560,22 @@ class DataProvider extends ModifierPoolDataProvider
                 unset($categoryData[$attributeCode]);
 
                 $fileName = $category->getData($attributeCode);
+                $fileInfo = $this->getFileInfo();
 
-                if ($this->fileInfo->isExist($fileName)) {
-                    $stat = $this->fileInfo->getStat($fileName);
-                    $mime = $this->fileInfo->getMimeType($fileName);
+                if ($fileInfo->isExist($fileName)) {
+                    $stat = $fileInfo->getStat($fileName);
+                    $mime = $fileInfo->getMimeType($fileName);
 
                     // phpcs:ignore Magento2.Functions.DiscouragedFunction
                     $categoryData[$attributeCode][0]['name'] = basename($fileName);
 
-                    $categoryData[$attributeCode][0]['url'] = $this->categoryImage->getUrl($category, $attributeCode);
+                    if ($fileInfo->isBeginsWithMediaDirectoryPath($fileName)) {
+                        $categoryData[$attributeCode][0]['url'] = $fileName;
+                    } else {
+                        $categoryData[$attributeCode][0]['url'] = $category->getImageUrl($attributeCode);
+                    }
 
-                    $categoryData[$attributeCode][0]['size'] = $stat['size'];
+                    $categoryData[$attributeCode][0]['size'] = isset($stat) ? $stat['size'] : 0;
                     $categoryData[$attributeCode][0]['type'] = $mime;
                 }
             }
@@ -658,42 +609,56 @@ class DataProvider extends ModifierPoolDataProvider
      */
     protected function getFieldsMap()
     {
-        $referenceName = 'category_form';
-        $config = $this->uiConfigFactory
-            ->create(['componentName' => $referenceName])
-            ->get($referenceName);
-
-        if (empty($config)) {
-            return [];
-        }
-
-        $fieldsMap = [];
-
-        foreach ($config['children'] as $group => $node) {
-            // Skip disabled components (required for Commerce Edition)
-            if ($node['arguments']['data']['config']['componentDisabled'] ?? false) {
-                continue;
-            }
-
-            $fields = [];
-
-            foreach ($node['children'] as $childName => $childNode) {
-                if (!empty($childNode['children'])) {
-                    // <container/> nodes need special handling
-                    foreach (array_keys($childNode['children']) as $grandchildName) {
-                        $fields[] = $grandchildName;
-                    }
-                } else {
-                    $fields[] = $childName;
-                }
-            }
-
-            if (!empty($fields)) {
-                $fieldsMap[$group] = $fields;
-            }
-        }
-
-        return $fieldsMap;
+        return [
+            'general' => [
+                    'parent',
+                    'path',
+                    'is_active',
+                    'include_in_menu',
+                    'name',
+                ],
+            'content' => [
+                    'image',
+                    'description',
+                    'landing_page',
+                ],
+            'display_settings' => [
+                    'display_mode',
+                    'is_anchor',
+                    'available_sort_by',
+                    'use_config.available_sort_by',
+                    'default_sort_by',
+                    'use_config.default_sort_by',
+                    'filter_price_range',
+                    'use_config.filter_price_range',
+                ],
+            'search_engine_optimization' => [
+                    'url_key',
+                    'url_key_create_redirect',
+                    'url_key_group',
+                    'meta_title',
+                    'meta_keywords',
+                    'meta_description',
+                ],
+            'assign_products' => [
+                ],
+            'design' => [
+                    'custom_use_parent_settings',
+                    'custom_apply_to_products',
+                    'custom_design',
+                    'page_layout',
+                    'custom_layout_update',
+                    'custom_layout_update_file'
+                ],
+            'schedule_design_update' => [
+                    'custom_design_from',
+                    'custom_design_to',
+                ],
+            'category_view_optimization' => [
+                ],
+            'category_permissions' => [
+                ],
+        ];
     }
 
     /**
@@ -705,5 +670,54 @@ class DataProvider extends ModifierPoolDataProvider
     {
         $fieldsMap = $this->getFieldsMap();
         return $this->arrayUtils->flatten($fieldsMap);
+    }
+
+    /**
+     * Retrieve scope overridden value
+     *
+     * @return ScopeOverriddenValue
+     * @deprecated 102.0.0
+     */
+    private function getScopeOverriddenValue(): ScopeOverriddenValue
+    {
+        if (null === $this->scopeOverriddenValue) {
+            $this->scopeOverriddenValue = \Magento\Framework\App\ObjectManager::getInstance()->get(
+                ScopeOverriddenValue::class
+            );
+        }
+
+        return $this->scopeOverriddenValue;
+    }
+
+    /**
+     * Retrieve array manager
+     *
+     * @return ArrayManager
+     * @deprecated 102.0.0
+     */
+    private function getArrayManager(): ArrayManager
+    {
+        if (null === $this->arrayManager) {
+            $this->arrayManager = \Magento\Framework\App\ObjectManager::getInstance()->get(
+                ArrayManager::class
+            );
+        }
+
+        return $this->arrayManager;
+    }
+
+    /**
+     * Get FileInfo instance
+     *
+     * @return FileInfo
+     *
+     * @deprecated 102.0.0
+     */
+    private function getFileInfo(): FileInfo
+    {
+        if ($this->fileInfo === null) {
+            $this->fileInfo = ObjectManager::getInstance()->get(FileInfo::class);
+        }
+        return $this->fileInfo;
     }
 }

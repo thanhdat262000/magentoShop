@@ -195,7 +195,7 @@ class InstallSchema implements InstallSchemaInterface
                 'last_subscribed_at',
                 Table::TYPE_TIMESTAMP,
                 null,
-                ['nullable' => true],
+                [],
                 'Last time user subscribed'
             );
     }
@@ -1035,6 +1035,20 @@ class InstallSchema implements InstallSchemaInterface
             10,
             ['unsigned' => true, 'nullable' => false],
             'Product Id'
+        )
+        ->addColumn(
+            'imported',
+            \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+            null,
+            ['unsigned' => true, 'nullable' => true],
+            'Product imported [deprecated]'
+        )
+        ->addColumn(
+            'modified',
+            \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+            null,
+            ['unsigned' => true, 'nullable' => true],
+            'Product modified [deprecated]'
         )
         ->addColumn(
             'processed',

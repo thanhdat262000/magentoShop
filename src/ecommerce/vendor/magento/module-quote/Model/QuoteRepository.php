@@ -25,7 +25,7 @@ use Magento\Quote\Model\ResourceModel\Quote\CollectionFactory as QuoteCollection
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Repository for quote entity.
+ * Quote repository.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -134,8 +134,8 @@ class QuoteRepository implements CartRepositoryInterface
     {
         if (!isset($this->quotesById[$cartId])) {
             $quote = $this->loadQuote('loadByIdWithoutStore', 'cartId', $cartId, $sharedStoreIds);
-            $this->quotesById[$cartId] = $quote;
             $this->getLoadHandler()->load($quote);
+            $this->quotesById[$cartId] = $quote;
         }
         return $this->quotesById[$cartId];
     }
@@ -146,16 +146,10 @@ class QuoteRepository implements CartRepositoryInterface
     public function getForCustomer($customerId, array $sharedStoreIds = [])
     {
         if (!isset($this->quotesByCustomerId[$customerId])) {
-            $customerQuote = $this->loadQuote('loadByCustomer', 'customerId', $customerId, $sharedStoreIds);
-            $customerQuoteId = $customerQuote->getId();
-            //prevent loading quote items for same quote
-            if (isset($this->quotesById[$customerQuoteId])) {
-                $customerQuote = $this->quotesById[$customerQuoteId];
-            } else {
-                $this->getLoadHandler()->load($customerQuote);
-            }
-            $this->quotesById[$customerQuoteId] = $customerQuote;
-            $this->quotesByCustomerId[$customerId] = $customerQuote;
+            $quote = $this->loadQuote('loadByCustomer', 'customerId', $customerId, $sharedStoreIds);
+            $this->getLoadHandler()->load($quote);
+            $this->quotesById[$quote->getId()] = $quote;
+            $this->quotesByCustomerId[$customerId] = $quote;
         }
         return $this->quotesByCustomerId[$customerId];
     }

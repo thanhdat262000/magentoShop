@@ -9,7 +9,6 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Directory\TargetDirectory;
 use Magento\Framework\Filesystem\DriverPool;
 
 /**
@@ -113,16 +112,6 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
     private $fileSystem;
 
     /**
-     * Directory and filename must be no more than 255 characters in length
-     */
-    private $maxFilenameLength = 255;
-
-    /**
-     * @var TargetDirectory
-     */
-    private $targetDirectory;
-
-    /**
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDb
      * @param \Magento\MediaStorage\Helper\File\Storage $coreFileStorage
      * @param \Magento\Framework\Image\AdapterFactory $imageFactory
@@ -131,7 +120,6 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
      * @param Filesystem\File\ReadFactory $readFactory
      * @param string|null $filePath
      * @param \Magento\Framework\Math\Random|null $random
-     * @param TargetDirectory|null $targetDirectory
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -143,8 +131,7 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
         Filesystem $filesystem,
         Filesystem\File\ReadFactory $readFactory,
         $filePath = null,
-        \Magento\Framework\Math\Random $random = null,
-        TargetDirectory $targetDirectory = null
+        \Magento\Framework\Math\Random $random = null
     ) {
         $this->_imageFactory = $imageFactory;
         $this->_coreFileStorageDb = $coreFileStorageDb;
@@ -157,7 +144,6 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
             $this->_setUploadFile($filePath);
         }
         $this->random = $random ?: ObjectManager::getInstance()->get(\Magento\Framework\Math\Random::class);
-        $this->targetDirectory = $targetDirectory ?: ObjectManager::getInstance()->get(TargetDirectory::class);
     }
 
     /**
@@ -197,18 +183,10 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
         }
 
         $this->_setUploadFile($tmpFilePath);
-        $rootDirectory = $this->getTargetDirectory()->getDirectoryRead(DirectoryList::ROOT);
-        $destDir = $rootDirectory->getAbsolutePath($this->getDestDir());
+        $destDir = $this->_directory->getAbsolutePath($this->getDestDir());
         $result = $this->save($destDir);
         unset($result['path']);
         $result['name'] = self::getCorrectFileName($result['name']);
-
-        // Directory and filename must be no more than 255 characters in length
-        if (strlen($result['file']) > $this->maxFilenameLength) {
-            throw new \LengthException(
-                __('Filename is too long; must be %1 characters or less', $this->maxFilenameLength)
-            );
-        }
 
         return $result;
     }
@@ -251,20 +229,6 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
         );
 
         return $tmpFilePath;
-    }
-
-    /**
-     * Retrieves target directory.
-     *
-     * @return TargetDirectory
-     */
-    private function getTargetDirectory(): TargetDirectory
-    {
-        if (!isset($this->targetDirectory)) {
-            $this->targetDirectory = ObjectManager::getInstance()->get(TargetDirectory::class);
-        }
-
-        return $this->targetDirectory;
     }
 
     /**
@@ -405,8 +369,7 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
      */
     public function setDestDir($path)
     {
-        $directoryRoot = $this->getTargetDirectory()->getDirectoryWrite(DirectoryList::ROOT);
-        if (is_string($path) && $directoryRoot->isWritable($path)) {
+        if (is_string($path) && $this->_directory->isWritable($path)) {
             $this->_destDir = $path;
             return true;
         }
@@ -429,8 +392,7 @@ class Uploader extends \Magento\MediaStorage\Model\File\Uploader
             $destinationRealPath = $this->_directory->getDriver()->getRealPath($destPath);
             $relativeDestPath = $this->_directory->getRelativePath($destPath);
             $isSameFile = $tmpRealPath === $destinationRealPath;
-            $rootDirectory = $this->getTargetDirectory()->getDirectoryWrite(DirectoryList::ROOT);
-            return $isSameFile ?: $this->_directory->copyFile($tmpPath, $relativeDestPath, $rootDirectory);
+            return $isSameFile ?: $this->_directory->copyFile($tmpPath, $relativeDestPath);
         } else {
             return false;
         }

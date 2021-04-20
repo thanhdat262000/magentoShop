@@ -6,31 +6,35 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\BundleImportExport\Model\Import\Product\Type;
 
-use Magento\Bundle\Model\Product\Price as BundlePrice;
-use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
-use Magento\CatalogImportExport\Model\Import\Product;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\CollectionFactory as AttributeSetCollectionFactory;
 use Magento\Framework\App\ObjectManager;
+use Magento\Bundle\Model\Product\Price as BundlePrice;
+use Magento\Catalog\Model\Product\Type\AbstractType;
+use Magento\CatalogImportExport\Model\Import\Product;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Import entity Bundle product type.
+ * Class Bundle
  *
+ * @package Magento\BundleImportExport\Model\Import\Product\Type
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\AbstractType
 {
+
     /**
      * Delimiter before product option value.
      */
     const BEFORE_OPTION_VALUE_DELIMITER = ';';
 
+    /**
+     * Pair value separator.
+     */
     const PAIR_VALUE_SEPARATOR = '=';
 
     /**
@@ -43,10 +47,19 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
      */
     const VALUE_FIXED = 'fixed';
 
+    /**
+     * Not fixed dynamic attribute.
+     */
     const NOT_FIXED_DYNAMIC_ATTRIBUTE = 'price_view';
 
+    /**
+     * Selection price type fixed.
+     */
     const SELECTION_PRICE_TYPE_FIXED = 0;
 
+    /**
+     * Selection price type percent.
+     */
     const SELECTION_PRICE_TYPE_PERCENT = 1;
 
     /**
@@ -120,7 +133,7 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
     protected $_optionTypeMapping = [
         'dropdown' => 'select',
         'radiobutton' => 'radio',
-        'checkbox' => 'checkbox',
+        'checkbox'  => 'checkbox',
         'multiselect' => 'multi',
     ];
 
@@ -530,7 +543,7 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
                             ? $this->_bundleFieldMapping[$origKey]
                             : $origKey;
                         if (
-                        !isset($this->_cachedOptions[$existingSelection['parent_product_id']][$optionTitle]['selections'][$selectIndex][$key])
+                            !isset($this->_cachedOptions[$existingSelection['parent_product_id']][$optionTitle]['selections'][$selectIndex][$key])
                         ) {
                             $this->_cachedOptions[$existingSelection['parent_product_id']][$optionTitle]['selections'][$selectIndex][$key] =
                                 $existingSelection[$origKey];
@@ -603,7 +616,10 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
                     if ($assoc['position'] == $this->_cachedOptions[$entityId][$key]['index']
                         && $assoc['parent_id'] == $entityId) {
                         $option['parent_id'] = $entityId;
-                        $optionValues[] = $this->populateOptionValueTemplate($option, $optionId);
+                        $optionValues = array_merge(
+                            $optionValues,
+                            $this->populateOptionValueTemplate($option, $optionId)
+                        );
                         $this->_cachedOptions[$entityId][$key]['option_id'] = $optionId;
                         break;
                     }
@@ -611,7 +627,7 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
             }
         }
 
-        return array_merge([], ...$optionValues);
+        return $optionValues;
     }
 
     /**
@@ -659,7 +675,10 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
             $childIds = [];
             foreach ($options as $option) {
                 foreach ($option['selections'] as $selection) {
-                    if (isset($this->_cachedSkuToProducts[$selection['sku']])) {
+                    if (!isset($selection['parent_product_id'])) {
+                        if (!isset($this->_cachedSkuToProducts[$selection['sku']])) {
+                            continue;
+                        }
                         $childIds[] = $this->_cachedSkuToProducts[$selection['sku']];
                     }
                 }
@@ -698,8 +717,6 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
                 }
             }
         }
-
-        return $this;
     }
 
     /**
@@ -718,19 +735,17 @@ class Bundle extends \Magento\CatalogImportExport\Model\Import\Product\Type\Abst
         $optionTable = $this->_resource->getTableName('catalog_product_bundle_option');
         $optionValueTable = $this->_resource->getTableName('catalog_product_bundle_option_value');
         $selectionTable = $this->_resource->getTableName('catalog_product_bundle_selection');
-        $valuesIds = $this->connection->fetchAssoc(
-            $this->connection->select()->from(
-                ['bov' => $optionValueTable],
-                ['value_id']
-            )->joinLeft(
-                ['bo' => $optionTable],
-                'bo.option_id = bov.option_id',
-                ['option_id']
-            )->where(
-                'parent_id IN (?)',
-                $productIds
-            )
-        );
+        $valuesIds =  $this->connection->fetchAssoc($this->connection->select()->from(
+            ['bov' => $optionValueTable],
+            ['value_id']
+        )->joinLeft(
+            ['bo' => $optionTable],
+            'bo.option_id = bov.option_id',
+            ['option_id']
+        )->where(
+            'parent_id IN (?)',
+            $productIds
+        ));
         $this->connection->delete(
             $optionValueTable,
             $this->connection->quoteInto('value_id IN (?)', array_keys($valuesIds))

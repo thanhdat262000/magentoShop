@@ -51,7 +51,7 @@ class Filter implements ArgumentApplierInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function applyArgument(
         SearchCriteriaInterface $searchCriteria,

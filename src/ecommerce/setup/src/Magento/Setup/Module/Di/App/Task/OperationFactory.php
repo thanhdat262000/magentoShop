@@ -19,49 +19,44 @@ class OperationFactory
     private $objectManager;
 
     /**
-     * Area config generator operation definition
+     * Area
      */
     const AREA_CONFIG_GENERATOR = 'area';
 
     /**
-     * Interception operation definition
+     * Interception
      */
     const INTERCEPTION = 'interception';
 
     /**
-     * Interception cache operation definition
+     * Interception cache
      */
     const INTERCEPTION_CACHE = 'interception_cache';
 
     /**
-     * Repository generator operation definition
+     * Repository generator
      */
     const REPOSITORY_GENERATOR = 'repository_generator';
 
     /**
-     * Proxy generator operation definition
+     * Proxy generator
      */
     const PROXY_GENERATOR = 'proxy_generator';
 
     /**
-     * Service data attributes generator operation definition
+     * Service data attributes generator
      */
     const DATA_ATTRIBUTES_GENERATOR = 'extension_attributes_generator';
 
     /**
-     * Application code generator operation definition
+     * Application code generator
      */
     const APPLICATION_CODE_GENERATOR = 'application_code_generator';
 
     /**
-     * Application action list generator operation definition
+     * Application action list generator
      */
     const APPLICATION_ACTION_LIST_GENERATOR = 'application_action_list_generator';
-
-    /**
-     * Plugin list generator operation definition
-     */
-    const PLUGIN_LIST_GENERATOR = 'plugin_list_generator';
 
     /**
      * Operations definitions
@@ -78,7 +73,6 @@ class OperationFactory
         self::REPOSITORY_GENERATOR => \Magento\Setup\Module\Di\App\Task\Operation\RepositoryGenerator::class,
         self::PROXY_GENERATOR => \Magento\Setup\Module\Di\App\Task\Operation\ProxyGenerator::class,
         self::APPLICATION_ACTION_LIST_GENERATOR => AppActionListGenerator::class,
-        self::PLUGIN_LIST_GENERATOR => PluginListGenerator::class,
     ];
 
     /**

@@ -19,10 +19,10 @@
             <group value="Bundle"/>
         </annotations>
         <before>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="amOnLogoutPage"/>
+            <amOnPage url="{{AdminLogoutPage.url}}" stepKey="amOnLogoutPage"/>
         </after>
         <!-- Create a new attribute set -->
         <amOnPage url="{{AdminProductAttributeSetGridPage.url}}" stepKey="goToAttributeSets"/>
@@ -49,13 +49,14 @@
         <fillField selector="{{AdminProductFormBundleSection.productSku}}" userInput="{{BundleProduct.sku}}" stepKey="fillProductSku"/>
 
         <!--save the product/published by default-->
-        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="clickSaveButton"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickSaveButton"/>
         <seeElement selector="{{AdminCategoryMessagesSection.SuccessMessage}}" stepKey="messageYouSavedTheProductIsShown"/>
 
         <!--Testing that price appears correctly in admin catalog-->
         <!--Set filter to product name-->
-        <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToCatalogProductPage"/>
-        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBundleProductOptionsDownToName">
+        <amOnPage url="{{AdminCatalogProductPage.url}}" stepKey="GoToCatalogProductPage"/>
+        <waitForPageLoad stepKey="WaitForPageToLoad"/>
+        <actionGroup ref="filterProductGridByName" stepKey="filterBundleProductOptionsDownToName">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <seeElement selector="{{AdminProductFiltersSection.attributeSetOfFirstRow(ProductAttributeFrontendLabel.label)}}" stepKey="seeAttributeSet"/>
@@ -69,13 +70,14 @@
         <click selector="{{AdminProductFormSection.attributeSetFilterResult}}" stepKey="selectAttrSet2"/>
 
         <!--save the product/published by default-->
-        <actionGroup ref="AdminProductFormSaveActionGroup" stepKey="clickSaveButton2"/>
+        <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="clickSaveButton2"/>
         <seeElement selector="{{AdminCategoryMessagesSection.SuccessMessage}}" stepKey="messageYouSavedTheProductIsShown2"/>
 
         <!--Testing that price appears correctly in admin catalog-->
         <!--Set filter to product name-->
-        <actionGroup ref="AdminOpenCatalogProductPageActionGroup" stepKey="goToCatalogProductPage2"/>
-        <actionGroup ref="FilterProductGridByNameActionGroup" stepKey="filterBundleProductOptionsDownToName2">
+        <amOnPage url="{{AdminCatalogProductPage.url}}" stepKey="GoToCatalogProductPage2"/>
+        <waitForPageLoad stepKey="WaitForPageToLoad2"/>
+        <actionGroup ref="filterProductGridByName" stepKey="filterBundleProductOptionsDownToName2">
             <argument name="product" value="BundleProduct"/>
         </actionGroup>
         <seeElement selector="{{AdminProductFiltersSection.attributeSetOfFirstRow(BundleProduct.defaultAttribute)}}" stepKey="seeAttributeSet2"/>

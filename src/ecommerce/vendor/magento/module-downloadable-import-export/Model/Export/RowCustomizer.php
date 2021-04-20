@@ -82,9 +82,7 @@ class RowCustomizer implements RowCustomizerInterface
             ->addAttributeToSelect('samples_title');
         // set global scope during export
         $this->storeManager->setCurrentStore(Store::DEFAULT_STORE_ID);
-
-        while ($product = $productCollection->fetchItem()) {
-            /** @var $product \Magento\Catalog\Api\Data\ProductInterface */
+        foreach ($collection as $product) {
             $productLinks = $this->linkRepository->getLinksByProduct($product);
             $productSamples = $this->sampleRepository->getSamplesByProduct($product);
             $this->downloadableData[$product->getId()] = [];

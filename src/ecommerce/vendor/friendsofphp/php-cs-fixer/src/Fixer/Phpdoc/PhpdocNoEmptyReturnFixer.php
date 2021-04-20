@@ -63,13 +63,12 @@ function foo() {}
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before NoEmptyPhpdocFixer, PhpdocAlignFixer, PhpdocOrderFixer, PhpdocSeparationFixer, PhpdocTrimFixer.
-     * Must run after CommentToPhpdocFixer, PhpdocIndentFixer, PhpdocScalarFixer, PhpdocToCommentFixer, PhpdocTypesFixer, VoidReturnFixer.
      */
     public function getPriority()
     {
-        return 4;
+        // must be run before the PhpdocSeparationFixer, PhpdocOrderFixer
+        // must be run after the PhpdocAddMissingParamAnnotationFixer
+        return 10;
     }
 
     /**
@@ -111,6 +110,9 @@ function foo() {}
 
     /**
      * Remove return void or return null annotations..
+     *
+     * @param DocBlock   $doc
+     * @param Annotation $annotation
      */
     private function fixAnnotation(DocBlock $doc, Annotation $annotation)
     {

@@ -8,11 +8,11 @@ declare(strict_types=1);
 
 namespace Magento\AdobeStockImageApi\Api;
 
-use Magento\Framework\Api\Search\SearchCriteriaInterface;
 use Magento\Framework\Api\Search\SearchResultInterface;
+use Magento\Framework\Api\Search\SearchCriteriaInterface;
 
 /**
- * Search for images on Adobe Stock API
+ * GetImageListInterface
  *
  * @api
  */

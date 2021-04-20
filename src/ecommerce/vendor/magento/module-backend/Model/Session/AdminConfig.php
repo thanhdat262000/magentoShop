@@ -85,7 +85,6 @@ class AdminConfig extends Config
         $this->setCookiePath($adminPath);
         $this->setName($sessionName);
         $this->setCookieSecure($this->_httpRequest->isSecure());
-        $this->setCookieSameSite('Lax');
     }
 
     /**
@@ -97,7 +96,6 @@ class AdminConfig extends Config
     {
         $backendApp = $this->backendAppList->getCurrentApp();
         $cookiePath = null;
-        //phpcs:ignore
         $baseUrl = parse_url($this->backendUrlFactory->create()->getBaseUrl(), PHP_URL_PATH);
         if (!$backendApp) {
             $cookiePath = $baseUrl . $this->_frontNameResolver->getFrontName();

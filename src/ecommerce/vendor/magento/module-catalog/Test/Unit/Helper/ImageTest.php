@@ -3,28 +3,12 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Catalog\Test\Unit\Helper;
 
 use Magento\Catalog\Helper\Image;
-use Magento\Catalog\Model\Config\CatalogMediaConfig;
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\ImageFactory as ProductImageFactory;
-use Magento\Catalog\Model\View\Asset\PlaceholderFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\Config\View;
-use Magento\Framework\View\Asset\Repository;
-use Magento\Framework\View\ConfigInterface;
-use Magento\Store\Model\ScopeInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
-class ImageTest extends TestCase
+class ImageTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Image
@@ -32,91 +16,81 @@ class ImageTest extends TestCase
     protected $helper;
 
     /**
-     * @var Context|MockObject
+     * @var \Magento\Framework\App\Helper\Context|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $context;
 
     /**
-     * @var \Magento\Catalog\Block\Product\ImageFactory|MockObject
+     * @var \Magento\Catalog\Block\Product\ImageFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $imageFactory;
 
     /**
-     * @var Repository|MockObject
+     * @var \Magento\Framework\View\Asset\Repository|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $assetRepository;
 
     /**
-     * @var View|MockObject
+     * @var \Magento\Framework\Config\View|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configView;
 
     /**
-     * @var ConfigInterface|MockObject
+     * @var \Magento\Framework\View\ConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $viewConfig;
 
     /**
-     * @var \Magento\Catalog\Model\Product\Image|MockObject
+     * @var \Magento\Catalog\Model\Product\Image|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $image;
 
     /**
-     * @var ScopeConfigInterface|MockObject
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $scopeConfig;
 
     /**
-     * @var PlaceholderFactory|MockObject
+     * @var \Magento\Catalog\Model\View\Asset\PlaceholderFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $placeholderFactory;
 
-    /**
-     * @var CatalogMediaConfig|MockObject
-     */
-    private $catalogMediaConfigMock;
-
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->mockContext();
         $this->mockImage();
 
-        $this->assetRepository = $this->getMockBuilder(Repository::class)
+        $this->assetRepository = $this->getMockBuilder(\Magento\Framework\View\Asset\Repository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->configView = $this->getMockBuilder(View::class)
+        $this->configView = $this->getMockBuilder(\Magento\Framework\Config\View::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->viewConfig = $this->getMockBuilder(ConfigInterface::class)
+        $this->viewConfig = $this->getMockBuilder(\Magento\Framework\View\ConfigInterface::class)
             ->getMockForAbstractClass();
 
-        $this->placeholderFactory = $this->getMockBuilder(PlaceholderFactory::class)
+        $this->placeholderFactory = $this->getMockBuilder(\Magento\Catalog\Model\View\Asset\PlaceholderFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->catalogMediaConfigMock = $this->createPartialMock(CatalogMediaConfig::class, ['getMediaUrlFormat']);
-        $this->catalogMediaConfigMock->method('getMediaUrlFormat')->willReturn(CatalogMediaConfig::HASH);
-
 
         $this->helper = new Image(
             $this->context,
             $this->imageFactory,
             $this->assetRepository,
             $this->viewConfig,
-            $this->placeholderFactory,
-            $this->catalogMediaConfigMock
+            $this->placeholderFactory
         );
     }
 
     protected function mockContext()
     {
-        $this->context = $this->getMockBuilder(Context::class)
+        $this->context = $this->getMockBuilder(\Magento\Framework\App\Helper\Context::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
+        $this->scopeConfig = $this->getMockBuilder(\Magento\Framework\App\Config\ScopeConfigInterface::class)
             ->getMockForAbstractClass();
         $this->context->expects($this->any())
             ->method('getScopeConfig')
@@ -125,7 +99,7 @@ class ImageTest extends TestCase
 
     protected function mockImage()
     {
-        $this->imageFactory = $this->getMockBuilder(ProductImageFactory::class)
+        $this->imageFactory = $this->getMockBuilder(\Magento\Catalog\Model\Product\ImageFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();
@@ -147,7 +121,7 @@ class ImageTest extends TestCase
         $imageId = 'test_image_id';
         $attributes = [];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -198,7 +172,7 @@ class ImageTest extends TestCase
         $imageId = 'test_image_id';
         $attributes = [];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -326,25 +300,25 @@ class ImageTest extends TestCase
                 [
                     [
                         'design/watermark/' . $data['type'] . '_image',
-                        ScopeInterface::SCOPE_STORE,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                         null,
                         $data['watermark']
                     ],
                     [
                         'design/watermark/' . $data['type'] . '_imageOpacity',
-                        ScopeInterface::SCOPE_STORE,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                         null,
                         $data['watermark_opacity']
                     ],
                     [
                         'design/watermark/' . $data['type'] . '_position',
-                        ScopeInterface::SCOPE_STORE,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                         null,
                         $data['watermark_position']
                     ],
                     [
                         'design/watermark/' . $data['type'] . '_size',
-                        ScopeInterface::SCOPE_STORE,
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                         null,
                         $data['watermark_size']
                     ],
@@ -378,7 +352,7 @@ class ImageTest extends TestCase
             'type' => 'image',
         ];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -397,7 +371,7 @@ class ImageTest extends TestCase
             'width' => 100,
         ];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -405,14 +379,6 @@ class ImageTest extends TestCase
 
         $this->helper->init($productMock, $imageId, $attributes);
         $this->assertEquals($data['width'], $this->helper->getWidth());
-    }
-
-    /**
-     * Check initBaseFile without properties - product
-     */
-    public function testGetUrlWithOutProduct()
-    {
-        $this->assertNull($this->helper->getUrl());
     }
 
     /**
@@ -424,7 +390,7 @@ class ImageTest extends TestCase
         $imageId = 'test_image_id';
         $attributes = [];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -466,7 +432,7 @@ class ImageTest extends TestCase
         $imageId = 'test_image_id';
         $attributes = [];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -503,7 +469,7 @@ class ImageTest extends TestCase
         $imageId = 'test_image_id';
         $attributes = [];
 
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -565,7 +531,7 @@ class ImageTest extends TestCase
         $isBaseFilePlaceholder,
         $resizedImageInfo
     ) {
-        $productMock = $this->getMockBuilder(Product::class)
+        $productMock = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
             ->disableOriginalConstructor()
             ->getMock();
 

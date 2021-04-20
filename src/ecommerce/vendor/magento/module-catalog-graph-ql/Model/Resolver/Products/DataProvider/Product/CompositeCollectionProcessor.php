@@ -9,7 +9,6 @@ namespace Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\GraphQl\Model\Query\ContextInterface;
 
 /**
  * {@inheritdoc}
@@ -30,22 +29,15 @@ class CompositeCollectionProcessor implements CollectionProcessorInterface
     }
 
     /**
-     * Process collection to add additional joins, attributes, and clauses to a product collection.
-     *
-     * @param Collection $collection
-     * @param SearchCriteriaInterface $searchCriteria
-     * @param array $attributeNames
-     * @param ContextInterface|null $context
-     * @return Collection
+     * {@inheritdoc}
      */
     public function process(
         Collection $collection,
         SearchCriteriaInterface $searchCriteria,
-        array $attributeNames,
-        ContextInterface $context = null
+        array $attributeNames
     ): Collection {
         foreach ($this->collectionProcessors as $collectionProcessor) {
-            $collection = $collectionProcessor->process($collection, $searchCriteria, $attributeNames, $context);
+            $collection = $collectionProcessor->process($collection, $searchCriteria, $attributeNames);
         }
 
         return $collection;

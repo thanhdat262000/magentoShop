@@ -8,9 +8,7 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,6 +58,9 @@ class GenerateSuiteCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
             $this->removeGeneratedDirectory($output, $output->isVerbose());
@@ -67,34 +68,13 @@ class GenerateSuiteCommand extends BaseGenerateCommand
 
         $suites = $input->getArgument('suites');
 
-        $generated = 0;
         foreach ($suites as $suite) {
-            try {
-                SuiteGenerator::getInstance()->generateSuite($suite);
-                if ($output->isVerbose()) {
-                    $output->writeLn("suite $suite generated");
-                }
-                $generated++;
-            } catch (FastFailException $e) {
-                throw $e;
-            } catch (\Exception $e) {
+            SuiteGenerator::getInstance()->generateSuite($suite);
+            if ($output->isVerbose()) {
+                $output->writeLn("suite $suite generated");
             }
         }
 
-        if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
-            if ($generated > 0) {
-                $output->writeln("Suites Generated" . PHP_EOL);
-                return 0;
-            }
-        } else {
-            GenerationErrorHandler::getInstance()->printErrorSummary();
-            if ($generated > 0) {
-                $output->writeln("Suites Generated (with errors)" . PHP_EOL);
-                return 1;
-            }
-        }
-
-        $output->writeln("No Suite Generated" . PHP_EOL);
-        return 1;
+        $output->writeLn("Suites Generated");
     }
 }

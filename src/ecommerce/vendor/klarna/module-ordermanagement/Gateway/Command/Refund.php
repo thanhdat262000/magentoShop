@@ -27,7 +27,7 @@ class Refund extends AbstractCommand
     {
         /** @var \Magento\Payment\Model\InfoInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
-        $amount = (float) $commandSubject['amount'];
+        $amount = $commandSubject['amount'];
         $order = $payment->getOrder();
         $klarnaOrder = $this->getKlarnaOrder($order);
 

@@ -101,10 +101,9 @@ class SearchCriteriaBuilder
         }
 
         if (!$searchCriteria->getSortOrders()) {
-            $this->addDefaultSortOrder($searchCriteria, $args, $isSearch);
+            $this->addDefaultSortOrder($searchCriteria, $isSearch);
         }
 
-        $this->addEntityIdSort($searchCriteria, $isSearch);
         $this->addVisibilityFilter($searchCriteria, $isSearch, !empty($args['filter']));
 
         $searchCriteria->setCurrentPage($args['currentPage']);
@@ -124,32 +123,13 @@ class SearchCriteriaBuilder
     {
         if ($isFilter && $isSearch) {
             // Index already contains products filtered by visibility: catalog, search, both
-            return;
+            return ;
         }
         $visibilityIds = $isSearch
             ? $this->visibility->getVisibleInSearchIds()
             : $this->visibility->getVisibleInCatalogIds();
 
         $this->addFilter($searchCriteria, 'visibility', $visibilityIds, 'in');
-    }
-
-    /**
-     * Add sort by Entity ID
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     * @param bool $isSearch
-     */
-    private function addEntityIdSort(SearchCriteriaInterface $searchCriteria, bool $isSearch): void
-    {
-        if ($isSearch) {
-            return;
-        }
-        $sortOrderArray = $searchCriteria->getSortOrders();
-        $sortOrderArray[] = $this->sortOrderBuilder
-            ->setField('_id')
-            ->setDirection(SortOrder::SORT_DESC)
-            ->create();
-        $searchCriteria->setSortOrders($sortOrderArray);
     }
 
     /**
@@ -199,32 +179,18 @@ class SearchCriteriaBuilder
      * Sort by relevance DESC by default
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param array $args
      * @param bool $isSearch
      */
-    private function addDefaultSortOrder(SearchCriteriaInterface $searchCriteria, array $args, $isSearch = false): void
+    private function addDefaultSortOrder(SearchCriteriaInterface $searchCriteria, $isSearch = false): void
     {
-        $defaultSortOrder = [];
-        if ($isSearch) {
-            $defaultSortOrder[] = $this->sortOrderBuilder
-                ->setField('relevance')
-                ->setDirection(SortOrder::SORT_DESC)
-                ->create();
-        } else {
-            $categoryIdFilter = isset($args['filter']['category_id']) ? $args['filter']['category_id'] : false;
-            if ($categoryIdFilter) {
-                if (!is_array($categoryIdFilter[array_key_first($categoryIdFilter)])
-                    || count($categoryIdFilter[array_key_first($categoryIdFilter)]) <= 1
-                ) {
-                    $defaultSortOrder[] = $this->sortOrderBuilder
-                        ->setField(EavAttributeInterface::POSITION)
-                        ->setDirection(SortOrder::SORT_ASC)
-                        ->create();
-                }
-            }
-        }
+        $sortField = $isSearch ? 'relevance' : EavAttributeInterface::POSITION;
+        $sortDirection = $isSearch ? SortOrder::SORT_DESC : SortOrder::SORT_ASC;
+        $defaultSortOrder = $this->sortOrderBuilder
+            ->setField($sortField)
+            ->setDirection($sortDirection)
+            ->create();
 
-        $searchCriteria->setSortOrders($defaultSortOrder);
+        $searchCriteria->setSortOrders([$defaultSortOrder]);
     }
 
     /**

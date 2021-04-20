@@ -52,29 +52,28 @@ define([
          * @param {String} method
          */
         _setPlaceOrderHandler: function (event, method) {
-            var $editForm = $(this.options.editFormSelector);
-
-            $editForm.off('beforeSubmitOrder.' + this.options.gateway);
-
             if (method === this.options.gateway) {
-                $editForm.on('beforeSubmitOrder.' +  this.options.gateway, this._placeOrderHandler.bind(this));
+                $(this.options.editFormSelector)
+                    .off('submitOrder')
+                    .on('submitOrder.' +  this.options.gateway, this._placeOrderHandler.bind(this));
+            } else {
+                $(this.options.editFormSelector)
+                    .off('submitOrder.' + this.options.gateway);
             }
         },
 
         /**
          * Handler for form submit to call gateway for credit card validation.
          *
-         * @param {Event} event
          * @return {Boolean}
          * @private
          */
-        _placeOrderHandler: function (event) {
+        _placeOrderHandler: function () {
             if ($(this.options.editFormSelector).valid()) {
                 this._orderSave();
             } else {
                 $('body').trigger('processStop');
             }
-            event.stopImmediatePropagation();
 
             return false;
         },

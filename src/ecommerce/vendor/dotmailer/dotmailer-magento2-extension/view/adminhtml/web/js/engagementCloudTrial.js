@@ -2,7 +2,8 @@ define(['jquery', 'domReady!'], function ($) {
     'use strict';
 
     return function (config) {
-        var eventMethod, eventMessage;
+        var eventMethod;
+        var eventMessage;
 
         if (window.addEventListener) {
             eventMethod = 'addEventListener';
@@ -13,9 +14,7 @@ define(['jquery', 'domReady!'], function ($) {
         }
 
         window[eventMethod](eventMessage, function (e) {
-            if (e.origin !== config.micrositeUrl) {
-                return;
-            }
+            if (e.origin !== config.micrositeUrl) return;
 
             $.post({
                 url: config.callback,

@@ -139,8 +139,6 @@ class Address extends AbstractAddress implements
     const ADDRESS_TYPE_BILLING = 'billing';
 
     const ADDRESS_TYPE_SHIPPING = 'shipping';
-    
-    private const CACHED_ITEMS_ALL = 'cached_items_all';
 
     /**
      * Prefix of model events
@@ -638,7 +636,8 @@ class Address extends AbstractAddress implements
     public function getAllItems()
     {
         // We calculate item list once and cache it in three arrays - all items
-        if (!$this->hasData(self::CACHED_ITEMS_ALL)) {
+        $key = 'cached_items_all';
+        if (!$this->hasData($key)) {
             $quoteItems = $this->getQuote()->getItemsCollection();
             $addressItems = $this->getItemsCollection();
 
@@ -677,10 +676,10 @@ class Address extends AbstractAddress implements
             }
 
             // Cache calculated lists
-            $this->setData(self::CACHED_ITEMS_ALL, $items);
+            $this->setData('cached_items_all', $items);
         }
 
-        $items = $this->getData(self::CACHED_ITEMS_ALL);
+        $items = $this->getData($key);
 
         return $items;
     }
@@ -1020,13 +1019,6 @@ class Address extends AbstractAddress implements
      */
     public function requestShippingRates(AbstractItem $item = null)
     {
-        $storeId = $this->getQuote()->getStoreId() ?: $this->storeManager->getStore()->getId();
-        $taxInclude = $this->_scopeConfig->getValue(
-            'tax/calculation/price_includes_tax',
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-
         /** @var $request RateRequest */
         $request = $this->_rateRequestFactory->create();
         $request->setAllItems($item ? [$item] : $this->getAllItems());
@@ -1036,11 +1028,9 @@ class Address extends AbstractAddress implements
         $request->setDestStreet($this->getStreetFull());
         $request->setDestCity($this->getCity());
         $request->setDestPostcode($this->getPostcode());
-        $baseSubtotal = $taxInclude ? $this->getBaseSubtotalTotalInclTax() : $this->getBaseSubtotal();
-        $request->setPackageValue($item ? $item->getBaseRowTotal() : $baseSubtotal);
-        $baseSubtotalWithDiscount = $baseSubtotal + $this->getBaseDiscountAmount();
+        $request->setPackageValue($item ? $item->getBaseRowTotal() : $this->getBaseSubtotal());
         $packageWithDiscount = $item ? $item->getBaseRowTotal() -
-            $item->getBaseDiscountAmount() : $baseSubtotalWithDiscount;
+            $item->getBaseDiscountAmount() : $this->getBaseSubtotalWithDiscount();
         $request->setPackageValueWithDiscount($packageWithDiscount);
         $request->setPackageWeight($item ? $item->getRowWeight() : $this->getWeight());
         $request->setPackageQty($item ? $item->getQty() : $this->getItemQty());
@@ -1048,7 +1038,8 @@ class Address extends AbstractAddress implements
         /**
          * Need for shipping methods that use insurance based on price of physical products
          */
-        $packagePhysicalValue = $item ? $item->getBaseRowTotal() : $baseSubtotal - $this->getBaseVirtualAmount();
+        $packagePhysicalValue = $item ? $item->getBaseRowTotal() : $this->getBaseSubtotal() -
+            $this->getBaseVirtualAmount();
         $request->setPackagePhysicalValue($packagePhysicalValue);
 
         $request->setFreeMethodWeight($item ? 0 : $this->getFreeMethodWeight());
@@ -1056,10 +1047,12 @@ class Address extends AbstractAddress implements
         /**
          * Store and website identifiers specified from StoreManager
          */
-        $request->setStoreId($storeId);
         if ($this->getQuote()->getStoreId()) {
+            $storeId = $this->getQuote()->getStoreId();
+            $request->setStoreId($storeId);
             $request->setWebsiteId($this->storeManager->getStore($storeId)->getWebsiteId());
         } else {
+            $request->setStoreId($this->storeManager->getStore()->getId());
             $request->setWebsiteId($this->storeManager->getWebsite()->getId());
         }
         $request->setFreeShipping($this->getFreeShipping());
@@ -1071,7 +1064,6 @@ class Address extends AbstractAddress implements
         $request->setLimitCarrier($this->getLimitCarrier());
         $baseSubtotalInclTax = $this->getBaseSubtotalTotalInclTax();
         $request->setBaseSubtotalInclTax($baseSubtotalInclTax);
-        $request->setBaseSubtotalWithDiscountInclTax($this->getBaseSubtotalWithDiscount() + $this->getBaseTaxAmount());
 
         $result = $this->_rateCollector->create()->collectRates($request)->getResult();
 

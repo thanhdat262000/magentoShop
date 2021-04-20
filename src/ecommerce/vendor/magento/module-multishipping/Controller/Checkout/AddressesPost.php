@@ -4,15 +4,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Multishipping\Controller\Checkout;
 
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Multishipping\Controller\Checkout;
 use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
 
-class AddressesPost extends Checkout implements HttpPostActionInterface
+class AddressesPost extends \Magento\Multishipping\Controller\Checkout
 {
     /**
      * Multishipping checkout process posted addresses
@@ -40,7 +36,7 @@ class AddressesPost extends Checkout implements HttpPostActionInterface
                 $this->_getCheckout()->setShippingItemsInformation($shipToInfo);
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addError($e->getMessage());
             $this->_redirect('*/*/addresses');
         } catch (\Exception $e) {
             $this->messageManager->addException($e, __('Data saving problem'));

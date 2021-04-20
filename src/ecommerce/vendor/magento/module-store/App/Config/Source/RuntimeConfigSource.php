@@ -9,7 +9,6 @@ use Magento\Framework\App\Config\ConfigSourceInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\DB\Adapter\TableNotFoundException;
 
 /**
  * Config source. Retrieve all configuration for scopes from db
@@ -54,21 +53,15 @@ class RuntimeConfigSource implements ConfigSourceInterface
      */
     public function get($path = '')
     {
-        $data = [];
-        try {
-            if ($this->canUseDatabase()) {
-                $data = [
-                    'websites' => $this->getEntities('store_website', 'code'),
-                    'groups' => $this->getEntities('store_group', 'group_id'),
-                    'stores' => $this->getEntities('store', 'code'),
-                ];
-            }
-        } catch (TableNotFoundException $exception) {
-            // database is empty or not setup
-            $data = [];
+        if ($this->canUseDatabase()) {
+            return [
+                'websites' => $this->getEntities('store_website', 'code'),
+                'groups' => $this->getEntities('store_group', 'group_id'),
+                'stores' => $this->getEntities('store', 'code'),
+            ];
         }
 
-        return $data;
+        return [];
     }
 
     /**
@@ -96,13 +89,14 @@ class RuntimeConfigSource implements ConfigSourceInterface
         $data = [];
         $tableName = $this->resourceConnection->getTableName($table);
         // Check if db table exists before fetch data
+        if ($this->resourceConnection->getConnection()->isTableExists($tableName)) {
+            $entities = $this->getConnection()->fetchAll(
+                $this->getConnection()->select()->from($tableName)
+            );
 
-        $entities = $this->getConnection()->fetchAll(
-            $this->getConnection()->select()->from($tableName)
-        );
-
-        foreach ($entities as $entity) {
-            $data[$entity[$keyField]] = $entity;
+            foreach ($entities as $entity) {
+                $data[$entity[$keyField]] = $entity;
+            }
         }
 
         return $data;
@@ -115,6 +109,6 @@ class RuntimeConfigSource implements ConfigSourceInterface
      */
     private function canUseDatabase()
     {
-        return $this->deploymentConfig->isDbAvailable();
+        return $this->deploymentConfig->get('db');
     }
 }

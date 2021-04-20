@@ -577,10 +577,8 @@
                 isOverThumb = inBounds;
             }
 
-            if (inBounds && isOverThumb) {
-                if (gMode === 'outside') {
-                    $magnifierPreview.removeClass(MagnifyCls.magnifyHidden);
-                }
+            if (inBounds && isOverThumb && gMode === 'outside') {
+                $magnifierPreview.removeClass(MagnifyCls.magnifyHidden);
                 move();
             }
         }

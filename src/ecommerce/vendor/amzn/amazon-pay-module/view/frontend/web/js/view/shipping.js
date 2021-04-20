@@ -2,22 +2,27 @@
 define(
     [
         'jquery',
+        'underscore',
+        'ko',
         'Magento_Checkout/js/view/shipping',
         'Magento_Customer/js/model/customer',
-        'Amazon_Payment/js/model/storage',
-        'Amazon_Payment/js/messages'
+        'Magento_Checkout/js/action/set-shipping-information',
+        'Magento_Checkout/js/model/step-navigator',
+        'Amazon_Payment/js/model/storage'
     ],
     function (
         $,
+        _,
+        ko,
         Component,
         customer,
-        amazonStorage,
-        amazonMessages
+        setShippingInformationAction,
+        stepNavigator,
+        amazonStorage
     ) {
         'use strict';
 
         return Component.extend({
-            noShippingAddressSelectedMsg: 'No shipping address has been selected for this order, please try to refresh the page or add a new shipping address in the Address Book widget.',
 
             /**
              * Initialize shipping
@@ -44,32 +49,32 @@ define(
             },
 
             /**
-             * Overridden validateShippingInformation for Amazon Pay to bypass validation
-             *
-             * @inheritDoc
+             * New setShipping Action for Amazon Pay to bypass validation
              */
-            validateShippingInformation: function () {
-                if (!amazonStorage.isAmazonAccountLoggedIn()) {
-                    return this._super();
+            setShippingInformation: function () {
+
+                /**
+                 * Set Amazon shipping info
+                 */
+                function setShippingInformationAmazon() {
+                    setShippingInformationAction().done(
+                        function () {
+                            stepNavigator.next();
+                        }
+                    );
                 }
 
-                if (!customer.isLoggedIn()) {
-                    if (!(amazonStorage.isAmazonShippingAddressSelected() && this.validateGuestEmail())) {
-                        amazonMessages.addMessage('error', this.noShippingAddressSelectedMsg);
-                        amazonMessages.displayMessages();
+                if (amazonStorage.isAmazonAccountLoggedIn() && customer.isLoggedIn()) {
+                    setShippingInformationAmazon();
+                } else if (amazonStorage.isAmazonAccountLoggedIn() && !customer.isLoggedIn()) {
 
-                        return false;
+                    if (this.validateGuestEmail()) {
+                        setShippingInformationAmazon();
                     }
+                    //if using guest checkout or guest checkout with amazon pay we need to use the main validation
+                } else if (this.validateShippingInformation()) {
+                    setShippingInformationAmazon();
                 }
-
-                if (!(amazonStorage.isAmazonShippingAddressSelected())) {
-                    amazonMessages.addMessage('error', this.noShippingAddressSelectedMsg);
-                    amazonMessages.displayMessages();
-
-                    return false;
-                }
-
-                return true;
             }
         });
     }

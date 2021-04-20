@@ -3,7 +3,6 @@
 namespace Dotdigitalgroup\Email\Model\Customer;
 
 use Dotdigitalgroup\Email\Model\Sync\SyncInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Guest sync cronjob.
@@ -46,33 +45,25 @@ class Guest implements SyncInterface
     private $importerFactory;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * Guest constructor.
      * @param \Dotdigitalgroup\Email\Model\ImporterFactory $importerFactory
      * @param \Dotdigitalgroup\Email\Model\ContactFactory $contactFactory
      * @param \Dotdigitalgroup\Email\Helper\File $file
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Contact $contactResource
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
-     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         \Dotdigitalgroup\Email\Model\ImporterFactory $importerFactory,
         \Dotdigitalgroup\Email\Model\ContactFactory $contactFactory,
         \Dotdigitalgroup\Email\Helper\File $file,
         \Dotdigitalgroup\Email\Model\ResourceModel\Contact $contactResource,
-        \Dotdigitalgroup\Email\Helper\Data $helper,
-        StoreManagerInterface $storeManager
+        \Dotdigitalgroup\Email\Helper\Data $helper
     ) {
         $this->importerFactory = $importerFactory;
         $this->contactFactory = $contactFactory;
         $this->contactResource = $contactResource;
         $this->helper = $helper;
         $this->file = $file;
-        $this->storeManager = $storeManager;
     }
 
     /**
@@ -128,13 +119,14 @@ class Guest implements SyncInterface
                 . date('d_m_Y_His') . '.csv'
             );
             $this->helper->log('Guest file: ' . $guestFilename);
-
+            $storeName = $this->helper->getMappedStoreName($website);
             $this->file->outputCSV(
                 $this->file->getFilePath($guestFilename),
-                $this->getGuestColumns($website)
+                ['Email', 'emailType', $storeName]
             );
+
             foreach ($guests as $guest) {
-                $this->outputCsvToFile($guest, $guestFilename);
+                $this->outputCsvToFile($guest, $website, $guestFilename);
             }
             if ($this->countGuests) {
                 //register in queue with importer
@@ -151,56 +143,26 @@ class Guest implements SyncInterface
     }
 
     /**
-     * @param $guest
-     * @param $guestFilename
-     * @param $website
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * Output
+     *
+     * @param \Dotdigitalgroup\Email\Model\Contact $guest
+     * @param \Magento\Store\Model\Website $website
+     * @param string $guestFilename
+     *
+     * @return null
      */
-    private function outputCsvToFile($guest, $guestFilename)
+    private function outputCsvToFile($guest, $website, $guestFilename)
     {
         $email = $guest->getEmail();
         $guest->setEmailImported(\Dotdigitalgroup\Email\Model\Contact::EMAIL_CONTACT_IMPORTED);
 
         $this->contactResource->save($guest);
-
-        $storeId = $guest->getData('store_id');
-        $store = $this->storeManager->getStore($storeId);
-
-        $storeViewName = $store->getName();
-        $websiteName = $store->getWebsite()->getName();
-        $storeName = $store->getGroup()->getName();
-
+        $storeName = $website->getName();
         // save data for guests
         $this->file->outputCSV(
             $this->file->getFilePath($guestFilename),
-            [$email, 'Html', $websiteName, $storeName, $storeViewName]
+            [$email, 'Html', $storeName]
         );
         ++$this->countGuests;
-    }
-
-    /**
-     * @param \Magento\Store\Model\Website $website
-     * @return array
-     */
-    private function getGuestColumns(\Magento\Store\Model\Website $website)
-    {
-        $storeName = $website->getConfig(
-            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_MAPPING_CUSTOMER_STORENAME
-        );
-
-        $websiteName = $website->getConfig(
-            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_CUSTOMER_WEBSITE_NAME
-        );
-
-        $storeNameAdditional = $website->getConfig(
-            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME_ADDITIONAL
-        );
-
-        $storeName = ($storeName) ? $storeName : '';
-        $websiteName = ($websiteName) ? $websiteName : '';
-        $storeNameAdditional = ($storeNameAdditional) ? $storeNameAdditional : '';
-
-        return ['Email', 'emailType' , $websiteName, $storeNameAdditional, $storeName];
     }
 }

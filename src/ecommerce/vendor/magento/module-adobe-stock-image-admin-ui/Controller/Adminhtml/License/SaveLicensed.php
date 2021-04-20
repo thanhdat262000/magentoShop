@@ -10,17 +10,15 @@ namespace Magento\AdobeStockImageAdminUi\Controller\Adminhtml\License;
 
 use Magento\AdobeStockImageApi\Api\SaveLicensedImageInterface;
 use Magento\Backend\App\Action;
-use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Exception\AuthenticationException;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
 
 /**
  * Backend controller for saving licensed image
  */
-class SaveLicensed extends Action implements HttpPostActionInterface
+class SaveLicensed extends Action
 {
     private const HTTP_OK = 200;
     private const HTTP_INTERNAL_ERROR = 500;
@@ -43,17 +41,17 @@ class SaveLicensed extends Action implements HttpPostActionInterface
 
     /**
      * @param Action\Context $context
-     * @param SaveLicensedImageInterface $saveLicensed
+     * @param SaveLicensedImageInterface $saveLicensedImage
      * @param LoggerInterface $logger
      */
     public function __construct(
         Action\Context $context,
-        SaveLicensedImageInterface $saveLicensed,
+        SaveLicensedImageInterface $saveLicensedImage,
         LoggerInterface $logger
     ) {
         parent::__construct($context);
 
-        $this->saveLicensedImage = $saveLicensed;
+        $this->saveLicensedImage = $saveLicensedImage;
         $this->logger = $logger;
     }
 
@@ -74,24 +72,6 @@ class SaveLicensed extends Action implements HttpPostActionInterface
             $responseContent = [
                 'success' => true,
                 'message' => __('You have successfully downloaded the licensed image.'),
-            ];
-        } catch (AuthenticationException $exception) {
-            $responseCode = self::HTTP_BAD_REQUEST;
-            $responseContent = [
-                'success' => false,
-                'message' => __(
-                    'Failed to authenticate to Adobe Stock API. <br> Please correct the API credentials in '
-                    . '<a href="%url">Configuration → System → Adobe Stock Integration.</a>',
-                    [
-                        'url' => $this->getUrl(
-                            'adminhtml/system_config/edit',
-                            [
-                                'section' => 'system',
-                                '_fragment' => 'system_adobe_stock_integration-link'
-                            ]
-                        )
-                    ]
-                ),
             ];
         } catch (LocalizedException $exception) {
             $responseCode = self::HTTP_BAD_REQUEST;

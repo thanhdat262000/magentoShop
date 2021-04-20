@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Product\Initiali
     public function filter(array $stockData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'filter');
-        return $pluginInfo ? $this->___callPlugins('filter', func_get_args(), $pluginInfo) : parent::filter($stockData);
+        if (!$pluginInfo) {
+            return parent::filter($stockData);
+        } else {
+            return $this->___callPlugins('filter', func_get_args(), $pluginInfo);
+        }
     }
 }

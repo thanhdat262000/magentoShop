@@ -41,13 +41,15 @@ class VertexUsageDeterminer
      * @param string|null $storeCode
      * @param AddressInterface|null $address
      * @param int|null $customerId
+     * @param bool $isVirtual
      * @param bool $checkCalculation
      * @return bool
      */
     public function shouldUseVertex(
         $storeCode = null,
         $address = null,
-        ?int $customerId = null,
+        $customerId = null,
+        $isVirtual = false,
         $checkCalculation = false
     ) {
         if (!$this->config->isVertexActive($storeCode)
@@ -58,35 +60,14 @@ class VertexUsageDeterminer
         if ($address !== null && !($address instanceof AddressInterface || $address instanceof QuoteAddressInterface)) {
             throw new \InvalidArgumentException(
                 '$address must be a Customer or Quote Address.  Is: '
-                // gettype() used for debug output and not for checking types
-                // phpcs:ignore Magento2.Functions.DiscouragedFunction
-                . (is_object($address) ? get_class($address) : gettype($address))
+                .(is_object($address) ? get_class($address) : gettype($address))
             );
         }
+        $address = $this->addressDeterminer->determineAddress($address, $customerId, $isVirtual);
 
-        if ($this->config->isDisplayPriceInCatalogEnabled($storeCode)) {
-            return false;
-        }
-
-        $billingAddress = $this->addressDeterminer->determineAdministrativeDestination($address, $customerId);
-        $billingCountry = $billingAddress ? $billingAddress->getCountryId() : false;
-        $shippingAddress = $this->addressDeterminer->determineDestination($address, $customerId);
-        $shippingCountry = $shippingAddress ? $shippingAddress->getCountryId() : false;
-
-        $hasAddress = ($billingAddress !== null && $billingCountry) || ($shippingAddress !== null && $shippingCountry);
-        if (!$hasAddress) {
-            return false;
-        }
-
-        if ($shippingCountry && !$this->countryGuard->isCountryIdServiceableByVertex($shippingCountry)) {
-            return false;
-        }
-
-        if (!$shippingCountry && $billingCountry
-            && !$this->countryGuard->isCountryIdServiceableByVertex($billingCountry)) {
-            return false;
-        }
-
-        return true;
+        return !$this->config->isDisplayPriceInCatalogEnabled($storeCode)
+            && $address !== null
+            && $address->getCountryId()
+            && $this->countryGuard->isCountryIdServiceableByVertex($address->getCountryId());
     }
 }

@@ -32,9 +32,9 @@ class CompositeValidator implements ValidatorInterface
     {
         $errors = [];
         foreach ($this->validators as $validator) {
-            $errors[] = $validator->validate($address);
+            $errors = array_merge($errors, $validator->validate($address));
         }
 
-        return array_merge([], ...$errors);
+        return $errors;
     }
 }

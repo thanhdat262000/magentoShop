@@ -67,7 +67,7 @@ class BuildProjectCommand extends Command
      * @param OutputInterface $output
      * @return void
      * @throws \Exception
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -109,7 +109,7 @@ class BuildProjectCommand extends Command
 
         if ($input->getOption('upgrade')) {
             $upgradeCommand = new UpgradeTestsCommand();
-            $upgradeOptions = new ArrayInput([]);
+            $upgradeOptions = new ArrayInput(['path' => FilePathFormatter::format(TESTS_MODULE_PATH)]);
             $upgradeCommand->run($upgradeOptions, $output);
         }
     }

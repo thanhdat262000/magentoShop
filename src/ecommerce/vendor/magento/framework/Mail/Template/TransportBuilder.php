@@ -12,8 +12,9 @@ namespace Magento\Framework\Mail\Template;
 use Magento\Framework\App\TemplateTypesInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
-use Magento\Framework\Mail\AddressConverter;
+use Magento\Framework\Mail\EmailMessageInterface;
 use Magento\Framework\Mail\EmailMessageInterfaceFactory;
+use Magento\Framework\Mail\AddressConverter;
 use Magento\Framework\Mail\Exception\InvalidArgumentException;
 use Magento\Framework\Mail\MessageInterface;
 use Magento\Framework\Mail\MessageInterfaceFactory;
@@ -27,7 +28,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Phrase;
 
 /**
- * TransportBuilder for Mail Templates
+ * TransportBuilder
  *
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -381,11 +382,11 @@ class TransportBuilder
 
         switch ($template->getType()) {
             case TemplateTypesInterface::TYPE_TEXT:
-                $partType = MimeInterface::TYPE_TEXT;
+                $part['type'] = MimeInterface::TYPE_TEXT;
                 break;
 
             case TemplateTypesInterface::TYPE_HTML:
-                $partType = MimeInterface::TYPE_HTML;
+                $part['type'] = MimeInterface::TYPE_HTML;
                 break;
 
             default:
@@ -395,12 +396,7 @@ class TransportBuilder
         }
 
         /** @var \Magento\Framework\Mail\MimePartInterface $mimePart */
-        $mimePart = $this->mimePartInterfaceFactory->create(
-            [
-                'content' => $content,
-                'type' => $partType
-            ]
-        );
+        $mimePart = $this->mimePartInterfaceFactory->create(['content' => $content]);
         $this->messageData['encoding'] = $mimePart->getCharset();
         $this->messageData['body'] = $this->mimeMessageInterfaceFactory->create(
             ['parts' => [$mimePart]]

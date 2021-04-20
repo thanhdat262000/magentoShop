@@ -62,7 +62,7 @@ Read <https://getcomposer.org/doc/articles/troubleshooting.md> for further commo
         ]
     ];
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->application = $this->createMock(\Magento\Composer\MagentoComposerApplication::class);
         $this->infoCommand = $this->createMock(\Magento\Composer\InfoCommand::class);
@@ -79,12 +79,15 @@ Read <https://getcomposer.org/doc/articles/troubleshooting.md> for further commo
         $this->requireUpdateDryRunCommand->run([], '');
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage
+     */
     public function testRunException()
     {
         $this->application->expects($this->at(1))
             ->method('runComposerCommand')
             ->willThrowException(new \RuntimeException($this->errorMessage));
-        $this->expectException(\RuntimeException::class);
         $this->infoCommand->expects($this->once())->method('run')->willReturn($this->packageInfo);
         $this->requireUpdateDryRunCommand->run(['3rdp/e 1.2.0'], '');
     }

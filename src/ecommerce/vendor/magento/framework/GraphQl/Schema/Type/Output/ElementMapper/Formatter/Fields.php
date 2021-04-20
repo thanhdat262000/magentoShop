@@ -10,7 +10,6 @@ namespace Magento\Framework\GraphQl\Schema\Type\Output\ElementMapper\Formatter;
 use Magento\Framework\GraphQl\Config\Data\WrappedTypeProcessor;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Config\Element\TypeInterface;
-use Magento\Framework\GraphQl\Config\ConfigElementInterface;
 use Magento\Framework\GraphQl\Schema\Type\Input\InputMapper;
 use Magento\Framework\GraphQl\Schema\Type\Output\ElementMapper\FormatterInterface;
 use Magento\Framework\GraphQl\Schema\Type\Output\OutputMapper;
@@ -90,20 +89,17 @@ class Fields implements FormatterInterface
     /**
      * @inheritdoc
      */
-    public function format(ConfigElementInterface $configElement, OutputTypeInterface $outputType): array
+    public function format(TypeInterface $configElement, OutputTypeInterface $outputType): array
     {
-        $typeConfig = [];
-        if ($configElement instanceof TypeInterface) {
-            $typeConfig = [
-                'fields' => function () use ($configElement, $outputType) {
-                    $fieldsConfig = [];
-                    foreach ($configElement->getFields() as $field) {
-                        $fieldsConfig[$field->getName()] = $this->getFieldConfig($configElement, $outputType, $field);
-                    }
-                    return $fieldsConfig;
+        $typeConfig = [
+            'fields' => function () use ($configElement, $outputType) {
+                $fieldsConfig = [];
+                foreach ($configElement->getFields() as $field) {
+                    $fieldsConfig[$field->getName()] = $this->getFieldConfig($configElement, $outputType, $field);
                 }
-            ];
-        }
+                return $fieldsConfig;
+            }
+        ];
         return $typeConfig;
     }
 

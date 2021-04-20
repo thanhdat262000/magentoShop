@@ -32,7 +32,7 @@
             </getData>
             <createData entity="ApiSimplePrice100Qty100v2" stepKey="simpleProduct"/>
             <createData entity="Simple_US_Utah_Customer" stepKey="customer" />
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
         <after>
             <deleteData stepKey="deleteTaxRule" createDataKey="initialTaxRule" />
@@ -43,7 +43,8 @@
             <deleteData stepKey="deleteCustomer" createDataKey="customer" />
         </after>
 
-        <actionGroup ref="AdminTaxRuleGridOpenPageActionGroup" stepKey="goToTaxRuleIndex1"/>
+        <amOnPage url="{{AdminTaxRuleGridPage.url}}" stepKey="goToTaxRuleIndex1"/>
+        <waitForPageLoad stepKey="waitForTaxRuleIndex1"/>
         <click selector="{{AdminDataGridHeaderSection.clearFilters}}" stepKey="clickClearFilters1"/>
         <fillField selector="{{AdminTaxRuleGridSection.code}}" userInput="$$initialTaxRule.code$$" stepKey="fillTaxCodeSearch"/>
         <click selector="{{AdminTaxRuleGridSection.search}}" stepKey="clickSearch1"/>

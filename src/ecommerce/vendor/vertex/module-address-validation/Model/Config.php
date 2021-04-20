@@ -16,7 +16,6 @@ class Config
     const VERTEX_ADDRESS_API_HOST = 'tax/vertex_settings/address_api_url';
     const VERTEX_ADDRESS_SHOW_MESSAGE_ALWAYS = 'vertex_address_validation/vertex_settings/always_message';
     const VERTEX_ADDRESS_VALIDATION_ENABLE = 'vertex_address_validation/vertex_settings/enable';
-    const VERTEX_ADDRESS_LEGACY_WEBAPI_ENABLE = 'vertex_address_validation/integration/use_legacy_api';
 
     /** @var ScopeConfigInterface */
     private $scopeConfig;
@@ -38,7 +37,7 @@ class Config
      * @param string $scope
      * @return string
      */
-    public function getConfigValue(string $value, $scopeId = null, string $scope = ScopeInterface::SCOPE_STORE): string
+    public function getConfigValue(string $value, $scopeId = null, string $scope = ScopeInterface::SCOPE_STORE) : string
     {
         return $this->scopeConfig->getValue($value, $scope, $scopeId);
     }
@@ -48,7 +47,7 @@ class Config
      *
      * @return string[]
      */
-    public function getCountriesToValidate(): array
+    public function getCountriesToValidate() : array
     {
         return $this->countryValidation;
     }
@@ -60,9 +59,9 @@ class Config
      * @param string $scope
      * @return string
      */
-    public function getVertexAddressHost(string $store = null, string $scope = ScopeInterface::SCOPE_STORE): string
+    public function getVertexAddressHost(string $store = null, string $scope = ScopeInterface::SCOPE_STORE) : string
     {
-        return (string)$this->getConfigValue(self::VERTEX_ADDRESS_API_HOST, $store, $scope);
+        return (string) $this->getConfigValue(self::VERTEX_ADDRESS_API_HOST, $store, $scope);
     }
 
     /**
@@ -72,21 +71,9 @@ class Config
      * @param string $scope
      * @return bool
      */
-    public function isAddressValidationEnabled($scopeId = null, string $scope = ScopeInterface::SCOPE_STORE): bool
+    public function isAddressValidationEnabled($scopeId = null, string $scope = ScopeInterface::SCOPE_STORE) : bool
     {
         return $this->scopeConfig->isSetFlag(self::VERTEX_ADDRESS_VALIDATION_ENABLE, $scope, $scopeId);
-    }
-
-    /**
-     * Check if the legacy webapi is enabled
-     *
-     * @param null|string|int $scopeId
-     * @param string $scope
-     * @return bool
-     */
-    public function isLegacyWebApiEnabled($scopeId = null, string $scope = ScopeInterface::SCOPE_WEBSITE): bool
-    {
-        return $this->scopeConfig->isSetFlag(static::VERTEX_ADDRESS_LEGACY_WEBAPI_ENABLE, $scope, $scopeId);
     }
 
     /**
@@ -99,7 +86,7 @@ class Config
     public function showValidationSuccessMessage(
         $scopeId = null,
         string $scope = ScopeInterface::SCOPE_STORE
-    ): bool {
+    ) : bool {
         return $this->scopeConfig->isSetFlag(self::VERTEX_ADDRESS_SHOW_MESSAGE_ALWAYS, $scope, $scopeId);
     }
 }

@@ -48,6 +48,10 @@ class Image
     {
         $this->_adapter->checkDependencies();
 
+        if (!file_exists($this->_fileName)) {
+            throw new \Exception("File '{$this->_fileName}' does not exist.");
+        }
+
         $this->_adapter->open($this->_fileName);
     }
 
@@ -90,7 +94,7 @@ class Image
     /**
      * Crop an image.
      *
-     * @param int $top Default value is 0
+     * @param int $top  Default value is 0
      * @param int $left Default value is 0
      * @param int $right Default value is 0
      * @param int $bottom Default value is 0
@@ -200,6 +204,9 @@ class Image
         $watermarkImageOpacity = 30,
         $repeat = false
     ) {
+        if (!file_exists($watermarkImage)) {
+            throw new \Exception("Required file '{$watermarkImage}' does not exists.");
+        }
         $this->_adapter->watermark($watermarkImage, $positionX, $positionY, $watermarkImageOpacity, $repeat);
     }
 
@@ -231,7 +238,7 @@ class Image
      * @access public
      * @return void
      */
-    public function process() //phpcs:ignore Magento2.CodeAnalysis.EmptyBlock
+    public function process()
     {
     }
 
@@ -241,7 +248,7 @@ class Image
      * @access public
      * @return void
      */
-    public function instruction() //phpcs:ignore Magento2.CodeAnalysis.EmptyBlock
+    public function instruction()
     {
     }
 

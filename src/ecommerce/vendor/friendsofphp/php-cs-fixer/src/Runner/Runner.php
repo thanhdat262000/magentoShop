@@ -19,7 +19,6 @@ use PhpCsFixer\Cache\DirectoryInterface;
 use PhpCsFixer\Differ\DifferInterface;
 use PhpCsFixer\Error\Error;
 use PhpCsFixer\Error\ErrorsManager;
-use PhpCsFixer\Event\Event;
 use PhpCsFixer\FileReader;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\FixerFileProcessedEvent;
@@ -27,6 +26,7 @@ use PhpCsFixer\Linter\LinterInterface;
 use PhpCsFixer\Linter\LintingException;
 use PhpCsFixer\Linter\LintingResultInterface;
 use PhpCsFixer\Tokenizer\Tokens;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -245,43 +245,14 @@ final class Runner
             }
 
             if (!$this->isDryRun) {
-                $fileName = $file->getRealPath();
-
-                if (!file_exists($fileName)) {
-                    throw new IOException(
-                        sprintf('Failed to write file "%s" (no longer) exists.', $file->getPathname()),
-                        0,
-                        null,
-                        $file->getPathname()
-                    );
-                }
-
-                if (is_dir($fileName)) {
-                    throw new IOException(
-                        sprintf('Cannot write file "%s" as the location exists as directory.', $fileName),
-                        0,
-                        null,
-                        $fileName
-                    );
-                }
-
-                if (!is_writable($fileName)) {
-                    throw new IOException(
-                        sprintf('Cannot write to file "%s" as it is not writable.', $fileName),
-                        0,
-                        null,
-                        $fileName
-                    );
-                }
-
-                if (false === @file_put_contents($fileName, $new)) {
+                if (false === @file_put_contents($file->getRealPath(), $new)) {
                     $error = error_get_last();
 
                     throw new IOException(
-                        sprintf('Failed to write file "%s", "%s".', $fileName, $error ? $error['message'] : 'no reason available'),
+                        sprintf('Failed to write file "%s", "%s".', $file->getPathname(), $error ? $error['message'] : 'no reason available'),
                         0,
                         null,
-                        $file
+                        $file->getRealPath()
                     );
                 }
             }
@@ -315,6 +286,7 @@ final class Runner
 
     /**
      * @param string $name
+     * @param Event  $event
      */
     private function dispatchEvent($name, Event $event)
     {

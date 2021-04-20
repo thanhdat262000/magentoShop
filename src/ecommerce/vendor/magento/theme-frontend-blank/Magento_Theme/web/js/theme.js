@@ -12,6 +12,16 @@ define([
 ], function ($, keyboardHandler) {
     'use strict';
 
+    if ($('body').hasClass('checkout-cart-index')) {
+        if ($('#co-shipping-method-form .fieldset.rates').length > 0 &&
+            $('#co-shipping-method-form .fieldset.rates :checked').length === 0
+        ) {
+            $('#block-shipping').on('collapsiblecreate', function () {
+                $('#block-shipping').collapsible('forceActivate');
+            });
+        }
+    }
+
     $('.cart-summary').mage('sticky', {
         container: '#maincontent'
     });

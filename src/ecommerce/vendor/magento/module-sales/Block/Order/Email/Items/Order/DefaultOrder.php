@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Sales\Block\Order\Email\Items\Order;
 
 use Magento\Sales\Model\Order\Item as OrderItem;
@@ -28,8 +27,6 @@ class DefaultOrder extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Returns array of Item options
-     *
      * @return array
      */
     public function getItemOptions()
@@ -37,40 +34,41 @@ class DefaultOrder extends \Magento\Framework\View\Element\Template
         $result = [];
         if ($options = $this->getItem()->getProductOptions()) {
             if (isset($options['options'])) {
-                $result[] = $options['options'];
+                $result = array_merge($result, $options['options']);
             }
             if (isset($options['additional_options'])) {
-                $result[] = $options['additional_options'];
+                $result = array_merge($result, $options['additional_options']);
             }
             if (isset($options['attributes_info'])) {
-                $result[] = $options['attributes_info'];
+                $result = array_merge($result, $options['attributes_info']);
             }
         }
 
-        return array_merge([], ...$result);
+        return $result;
     }
 
     /**
-     * Formats the value in HTML
-     *
      * @param string|array $value
      * @return string
      */
     public function getValueHtml($value)
     {
         if (is_array($value)) {
-            return sprintf('%d', $value['qty'])
-                . ' x ' . $this->escapeHtml($value['title'])
-                . " " . $this->getItem()->getOrder()->formatPrice($value['price']);
+            return sprintf(
+                '%d',
+                $value['qty']
+            ) . ' x ' . $this->escapeHtml(
+                $value['title']
+            ) . " " . $this->getItem()->getOrder()->formatPrice(
+                $value['price']
+            );
         } else {
             return $this->escapeHtml($value);
         }
     }
 
     /**
-     * Returns Product SKU for Item provided
-     *
-     * @param OrderItem $item
+     * @param mixed $item
      * @return mixed
      */
     public function getSku($item)

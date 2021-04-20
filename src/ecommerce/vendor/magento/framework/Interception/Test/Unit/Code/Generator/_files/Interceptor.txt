@@ -18,7 +18,11 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function getValue()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValue');
-        return $pluginInfo ? $this->___callPlugins('getValue', func_get_args(), $pluginInfo) : parent::getValue();
+        if (!$pluginInfo) {
+            return parent::getValue();
+        } else {
+            return $this->___callPlugins('getValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -27,7 +31,11 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function setValue($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setValue');
-        return $pluginInfo ? $this->___callPlugins('setValue', func_get_args(), $pluginInfo) : parent::setValue($value);
+        if (!$pluginInfo) {
+            return parent::setValue($value);
+        } else {
+            return $this->___callPlugins('setValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -36,7 +44,11 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function & getReference()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getReference');
-        return $pluginInfo ? $this->___callPlugins('getReference', func_get_args(), $pluginInfo) : parent::getReference();
+        if (!$pluginInfo) {
+            return parent::getReference();
+        } else {
+            return $this->___callPlugins('getReference', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -45,7 +57,11 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function firstVariadicParameter(... $variadicValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'firstVariadicParameter');
-        return $pluginInfo ? $this->___callPlugins('firstVariadicParameter', func_get_args(), $pluginInfo) : parent::firstVariadicParameter(... $variadicValue);
+        if (!$pluginInfo) {
+            return parent::firstVariadicParameter(... $variadicValue);
+        } else {
+            return $this->___callPlugins('firstVariadicParameter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -54,7 +70,11 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function secondVariadicParameter($value, ... $variadicValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'secondVariadicParameter');
-        return $pluginInfo ? $this->___callPlugins('secondVariadicParameter', func_get_args(), $pluginInfo) : parent::secondVariadicParameter($value, ... $variadicValue);
+        if (!$pluginInfo) {
+            return parent::secondVariadicParameter($value, ... $variadicValue);
+        } else {
+            return $this->___callPlugins('secondVariadicParameter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -63,6 +83,10 @@ class Interceptor extends \Magento\Framework\Interception\Code\Generator\Sample 
     public function byRefVariadic(&... $variadicValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'byRefVariadic');
-        return $pluginInfo ? $this->___callPlugins('byRefVariadic', func_get_args(), $pluginInfo) : parent::byRefVariadic(... $variadicValue);
+        if (!$pluginInfo) {
+            return parent::byRefVariadic(... $variadicValue);
+        } else {
+            return $this->___callPlugins('byRefVariadic', func_get_args(), $pluginInfo);
+        }
     }
 }

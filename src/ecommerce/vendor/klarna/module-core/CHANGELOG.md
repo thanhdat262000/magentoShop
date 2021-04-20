@@ -1,23 +1,4 @@
 
-6.0.3 / 2020-11-24
-==================
-
-  * MAGE-2711 Fix product URLs and images
-
-6.0.2 / 2020-08-10
-==================
-
-  * MAGE-1252 Fix orderline for giftcards having the wrong name
-  * MAGE-1897 Fix issue with shipping method not showing "Capture" badge in Merchant Portal
-  * MAGE-2190 Change admin configuration labels for API credentials
-  * MAGE-2354 Add sanitization of country data
-
-6.0.0 / 2020-04-28
-==================
-
-  * MAGE-1939 Updates for PHP 7.4
-  * MAGE-2015 Update order line code to handle discounts on item level instead of separate line
-
 5.3.0 / 2020-02-11
 ==================
 

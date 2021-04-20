@@ -6,13 +6,10 @@
 
 namespace Vertex\Tax\Model\Loader;
 
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
-use Vertex\Tax\Model\ExceptionLogger;
-use Vertex\Tax\Model\Repository\VatCountryCodeRepository;
 
 /**
  * Handles loading and assignment of necessary data for Tax Calculation purposes
@@ -25,22 +22,12 @@ class VertexCalculationExtensionLoader
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 
-    /** @var VatCountryCodeRepository */
-    private $vatCountryCodeRepository;
-
-    /** @var ExceptionLogger */
-    private $logger;
-
     public function __construct(
         OrderAddressRepositoryInterface $addressRepository,
-        OrderRepositoryInterface $orderRepository,
-        VatCountryCodeRepository $vatCountryCodeRepository,
-        ExceptionLogger $logger
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->addressRepository = $addressRepository;
         $this->orderRepository = $orderRepository;
-        $this->vatCountryCodeRepository = $vatCountryCodeRepository;
-        $this->logger = $logger;
     }
 
     /**
@@ -78,10 +65,6 @@ class VertexCalculationExtensionLoader
             ->setVertexTaxCalculationOrder($order);
 
         if ($order && $order->getBillingAddress()) {
-            /** Manually loading the Vat Country Code Id since address is not loaded using a repository at this point */
-            $countryCode = $this->getVatCountryCode($order->getBillingAddress()->getEntityId());
-            $order->getBillingAddress()->getExtensionAttributes()->setVertexVatCountryCode($countryCode);
-
             $invoice->getExtensionAttributes()
                 ->setVertexTaxCalculationBillingAddress($order->getBillingAddress());
         } elseif ($invoice->getBillingAddressId()) {
@@ -92,10 +75,6 @@ class VertexCalculationExtensionLoader
         }
 
         if ($order instanceof Order && $order->getShippingAddress()) {
-            /** Manually loading the Vat Country Code Id since address is not loaded using a repository at this point */
-            $countryCode = $this->getVatCountryCode($order->getShippingAddress()->getEntityId());
-            $order->getShippingAddress()->getExtensionAttributes()->setVertexVatCountryCode($countryCode);
-
             $invoice->getExtensionAttributes()
                 ->setVertexTaxCalculationShippingAddress($order->getShippingAddress());
         } elseif ($invoice->getShippingAddressId()) {
@@ -106,29 +85,5 @@ class VertexCalculationExtensionLoader
         }
 
         return $invoice;
-    }
-
-    /**
-     * Load the country code attached to the address, if any
-     *
-     * @param string $addressId
-     * @return string|null
-     */
-    private function getVatCountryCode($addressId)
-    {
-        try {
-            $countryCode = null;
-            $countryCodeItem = $this->vatCountryCodeRepository->getByAddressId($addressId);
-            if ($countryCodeItem !== null) {
-                $countryCode = $countryCodeItem->getVatCountryCode();
-            }
-        } catch (NoSuchEntityException $exception) {
-            $countryCode = null;
-        } catch (\Exception $exception) {
-            $countryCode = null;
-            $this->logger->critical($exception);
-        }
-
-        return $countryCode;
     }
 }

@@ -695,7 +695,7 @@ class Multishipping extends \Magento\Framework\DataObject
         );
 
         $shippingMethodCode = $address->getShippingMethod();
-        if ($shippingMethodCode) {
+        if (isset($shippingMethodCode) && !empty($shippingMethodCode)) {
             $rate = $address->getShippingRateByCode($shippingMethodCode);
             $shippingPrice = $rate->getPrice();
         } else {
@@ -975,8 +975,7 @@ class Multishipping extends \Magento\Framework\DataObject
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE
             );
         }
-
-        return __($error);
+        return $error;
     }
 
     /**
@@ -1263,7 +1262,7 @@ class Multishipping extends \Magento\Framework\DataObject
             }
         }
 
-        throw new NotFoundException(__('Quote address for failed order ID "%1" not found.', $order->getEntityId()));
+        throw new NotFoundException(__('Quote address for failed order not found.'));
     }
 
     /**

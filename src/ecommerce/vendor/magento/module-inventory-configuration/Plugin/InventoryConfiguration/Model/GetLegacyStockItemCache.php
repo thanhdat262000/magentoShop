@@ -31,17 +31,10 @@ class GetLegacyStockItemCache
      */
     public function aroundExecute(GetLegacyStockItem $subject, callable $proceed, string $sku): StockItemInterface
     {
-        if (isset($this->legacyStockItemsBySku[$sku])) {
-            return $this->legacyStockItemsBySku[$sku];
+        if (!isset($this->legacyStockItemsBySku[$sku])) {
+            $this->legacyStockItemsBySku[$sku] = $proceed($sku);
         }
 
-        /** @var StockItemInterface $item */
-        $item = $proceed($sku);
-        /* Avoid add to cache a new item */
-        if ($item->getItemId()) {
-            $this->legacyStockItemsBySku[$sku] = $item;
-        }
-
-        return $item;
+        return $this->legacyStockItemsBySku[$sku];
     }
 }

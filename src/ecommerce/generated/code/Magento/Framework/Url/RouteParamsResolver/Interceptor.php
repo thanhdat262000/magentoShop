@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function setRouteParams(array $data, $unsetOldParams = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setRouteParams');
-        return $pluginInfo ? $this->___callPlugins('setRouteParams', func_get_args(), $pluginInfo) : parent::setRouteParams($data, $unsetOldParams);
+        if (!$pluginInfo) {
+            return parent::setRouteParams($data, $unsetOldParams);
+        } else {
+            return $this->___callPlugins('setRouteParams', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function setRouteParam($key, $data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setRouteParam');
-        return $pluginInfo ? $this->___callPlugins('setRouteParam', func_get_args(), $pluginInfo) : parent::setRouteParam($key, $data);
+        if (!$pluginInfo) {
+            return parent::setRouteParam($key, $data);
+        } else {
+            return $this->___callPlugins('setRouteParam', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getRouteParams()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRouteParams');
-        return $pluginInfo ? $this->___callPlugins('getRouteParams', func_get_args(), $pluginInfo) : parent::getRouteParams();
+        if (!$pluginInfo) {
+            return parent::getRouteParams();
+        } else {
+            return $this->___callPlugins('getRouteParams', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getRouteParam($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRouteParam');
-        return $pluginInfo ? $this->___callPlugins('getRouteParam', func_get_args(), $pluginInfo) : parent::getRouteParam($key);
+        if (!$pluginInfo) {
+            return parent::getRouteParam($key);
+        } else {
+            return $this->___callPlugins('getRouteParam', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function addData(array $arr)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addData');
-        return $pluginInfo ? $this->___callPlugins('addData', func_get_args(), $pluginInfo) : parent::addData($arr);
+        if (!$pluginInfo) {
+            return parent::addData($arr);
+        } else {
+            return $this->___callPlugins('addData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function setData($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($key, $value);
+        if (!$pluginInfo) {
+            return parent::setData($key, $value);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function unsetData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetData');
-        return $pluginInfo ? $this->___callPlugins('unsetData', func_get_args(), $pluginInfo) : parent::unsetData($key);
+        if (!$pluginInfo) {
+            return parent::unsetData($key);
+        } else {
+            return $this->___callPlugins('unsetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getData($key = '', $index = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $index);
+        if (!$pluginInfo) {
+            return parent::getData($key, $index);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getDataByPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByPath');
-        return $pluginInfo ? $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo) : parent::getDataByPath($path);
+        if (!$pluginInfo) {
+            return parent::getDataByPath($path);
+        } else {
+            return $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getDataByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByKey');
-        return $pluginInfo ? $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo) : parent::getDataByKey($key);
+        if (!$pluginInfo) {
+            return parent::getDataByKey($key);
+        } else {
+            return $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function setDataUsingMethod($key, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo) : parent::setDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::setDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function getDataUsingMethod($key, $args = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo) : parent::getDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::getDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function hasData($key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasData');
-        return $pluginInfo ? $this->___callPlugins('hasData', func_get_args(), $pluginInfo) : parent::hasData($key);
+        if (!$pluginInfo) {
+            return parent::hasData($key);
+        } else {
+            return $this->___callPlugins('hasData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function toArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($keys);
+        if (!$pluginInfo) {
+            return parent::toArray($keys);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function convertToArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToArray');
-        return $pluginInfo ? $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo) : parent::convertToArray($keys);
+        if (!$pluginInfo) {
+            return parent::convertToArray($keys);
+        } else {
+            return $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function convertToXml(array $arrAttributes = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToXml');
-        return $pluginInfo ? $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo) : parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function toJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toJson');
-        return $pluginInfo ? $this->___callPlugins('toJson', func_get_args(), $pluginInfo) : parent::toJson($keys);
+        if (!$pluginInfo) {
+            return parent::toJson($keys);
+        } else {
+            return $this->___callPlugins('toJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function convertToJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToJson');
-        return $pluginInfo ? $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo) : parent::convertToJson($keys);
+        if (!$pluginInfo) {
+            return parent::convertToJson($keys);
+        } else {
+            return $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function toString($format = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString($format);
+        if (!$pluginInfo) {
+            return parent::toString($format);
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function isEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmpty');
-        return $pluginInfo ? $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo) : parent::isEmpty();
+        if (!$pluginInfo) {
+            return parent::isEmpty();
+        } else {
+            return $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serialize');
-        return $pluginInfo ? $this->___callPlugins('serialize', func_get_args(), $pluginInfo) : parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        if (!$pluginInfo) {
+            return parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        } else {
+            return $this->___callPlugins('serialize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function debug($data = null, &$objects = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debug');
-        return $pluginInfo ? $this->___callPlugins('debug', func_get_args(), $pluginInfo) : parent::debug($data, $objects);
+        if (!$pluginInfo) {
+            return parent::debug($data, $objects);
+        } else {
+            return $this->___callPlugins('debug', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function offsetSet($offset, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetSet');
-        return $pluginInfo ? $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo) : parent::offsetSet($offset, $value);
+        if (!$pluginInfo) {
+            return parent::offsetSet($offset, $value);
+        } else {
+            return $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function offsetExists($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetExists');
-        return $pluginInfo ? $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo) : parent::offsetExists($offset);
+        if (!$pluginInfo) {
+            return parent::offsetExists($offset);
+        } else {
+            return $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function offsetUnset($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetUnset');
-        return $pluginInfo ? $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo) : parent::offsetUnset($offset);
+        if (!$pluginInfo) {
+            return parent::offsetUnset($offset);
+        } else {
+            return $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,6 +371,10 @@ class Interceptor extends \Magento\Framework\Url\RouteParamsResolver implements 
     public function offsetGet($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetGet');
-        return $pluginInfo ? $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo) : parent::offsetGet($offset);
+        if (!$pluginInfo) {
+            return parent::offsetGet($offset);
+        } else {
+            return $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo);
+        }
     }
 }

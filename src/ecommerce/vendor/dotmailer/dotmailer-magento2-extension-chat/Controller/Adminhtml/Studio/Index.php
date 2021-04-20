@@ -13,7 +13,7 @@ class Index extends \Magento\Backend\App\AbstractAction
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Dotdigitalgroup_Chat::config';
+    const ADMIN_RESOURCE = 'Dotdigitalgroup_Chat::iframe';
 
     /**
      * @var Data

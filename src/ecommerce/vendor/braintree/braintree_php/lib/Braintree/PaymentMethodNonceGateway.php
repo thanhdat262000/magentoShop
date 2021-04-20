@@ -31,23 +31,11 @@ class PaymentMethodNonceGateway
     }
 
 
-    public function create($token, $params = [])
+    public function create($token)
     {
         $subPath = '/payment_methods/' . $token . '/nonces';
         $fullPath = $this->_config->merchantPath() . $subPath;
-        $schema = [[
-            'paymentMethodNonce' => [
-                'merchantAccountId',
-                'authenticationInsight',
-            ['authenticationInsightOptions' => [
-                    'amount',
-                    'recurringCustomerConsent',
-                    'recurringMaxAmount'
-                ]
-            ]]
-        ]];
-        Util::verifyKeys($schema, $params);
-        $response = $this->_http->post($fullPath, $params);
+        $response = $this->_http->post($fullPath);
 
         return new Result\Successful(
             PaymentMethodNonce::factory($response['paymentMethodNonce']),
@@ -73,3 +61,4 @@ class PaymentMethodNonceGateway
 
     }
 }
+class_alias('Braintree\PaymentMethodNonceGateway', 'Braintree_PaymentMethodNonceGateway');

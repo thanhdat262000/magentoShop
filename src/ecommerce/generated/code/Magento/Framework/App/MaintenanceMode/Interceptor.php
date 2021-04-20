@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\App\MaintenanceMode implements \Mag
     public function isOn($remoteAddr = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isOn');
-        return $pluginInfo ? $this->___callPlugins('isOn', func_get_args(), $pluginInfo) : parent::isOn($remoteAddr);
+        if (!$pluginInfo) {
+            return parent::isOn($remoteAddr);
+        } else {
+            return $this->___callPlugins('isOn', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\App\MaintenanceMode implements \Mag
     public function set($isOn)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'set');
-        return $pluginInfo ? $this->___callPlugins('set', func_get_args(), $pluginInfo) : parent::set($isOn);
+        if (!$pluginInfo) {
+            return parent::set($isOn);
+        } else {
+            return $this->___callPlugins('set', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\App\MaintenanceMode implements \Mag
     public function setAddresses($addresses)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAddresses');
-        return $pluginInfo ? $this->___callPlugins('setAddresses', func_get_args(), $pluginInfo) : parent::setAddresses($addresses);
+        if (!$pluginInfo) {
+            return parent::setAddresses($addresses);
+        } else {
+            return $this->___callPlugins('setAddresses', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,6 +59,10 @@ class Interceptor extends \Magento\Framework\App\MaintenanceMode implements \Mag
     public function getAddressInfo()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAddressInfo');
-        return $pluginInfo ? $this->___callPlugins('getAddressInfo', func_get_args(), $pluginInfo) : parent::getAddressInfo();
+        if (!$pluginInfo) {
+            return parent::getAddressInfo();
+        } else {
+            return $this->___callPlugins('getAddressInfo', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getLabel($labelPrefix = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLabel');
-        return $pluginInfo ? $this->___callPlugins('getLabel', func_get_args(), $pluginInfo) : parent::getLabel($labelPrefix);
+        if (!$pluginInfo) {
+            return parent::getLabel($labelPrefix);
+        } else {
+            return $this->___callPlugins('getLabel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getHint()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getHint');
-        return $pluginInfo ? $this->___callPlugins('getHint', func_get_args(), $pluginInfo) : parent::getHint();
+        if (!$pluginInfo) {
+            return parent::getHint();
+        } else {
+            return $this->___callPlugins('getHint', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getComment($currentValue = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getComment');
-        return $pluginInfo ? $this->___callPlugins('getComment', func_get_args(), $pluginInfo) : parent::getComment($currentValue);
+        if (!$pluginInfo) {
+            return parent::getComment($currentValue);
+        } else {
+            return $this->___callPlugins('getComment', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getTooltip()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTooltip');
-        return $pluginInfo ? $this->___callPlugins('getTooltip', func_get_args(), $pluginInfo) : parent::getTooltip();
+        if (!$pluginInfo) {
+            return parent::getTooltip();
+        } else {
+            return $this->___callPlugins('getTooltip', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getType');
-        return $pluginInfo ? $this->___callPlugins('getType', func_get_args(), $pluginInfo) : parent::getType();
+        if (!$pluginInfo) {
+            return parent::getType();
+        } else {
+            return $this->___callPlugins('getType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getRequiredGroups($fieldPrefix = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequiredGroups');
-        return $pluginInfo ? $this->___callPlugins('getRequiredGroups', func_get_args(), $pluginInfo) : parent::getRequiredGroups($fieldPrefix);
+        if (!$pluginInfo) {
+            return parent::getRequiredGroups($fieldPrefix);
+        } else {
+            return $this->___callPlugins('getRequiredGroups', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getRequiredFields($fieldPrefix = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequiredFields');
-        return $pluginInfo ? $this->___callPlugins('getRequiredFields', func_get_args(), $pluginInfo) : parent::getRequiredFields($fieldPrefix);
+        if (!$pluginInfo) {
+            return parent::getRequiredFields($fieldPrefix);
+        } else {
+            return $this->___callPlugins('getRequiredFields', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getFrontendClass()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendClass');
-        return $pluginInfo ? $this->___callPlugins('getFrontendClass', func_get_args(), $pluginInfo) : parent::getFrontendClass();
+        if (!$pluginInfo) {
+            return parent::getFrontendClass();
+        } else {
+            return $this->___callPlugins('getFrontendClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function hasBackendModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasBackendModel');
-        return $pluginInfo ? $this->___callPlugins('hasBackendModel', func_get_args(), $pluginInfo) : parent::hasBackendModel();
+        if (!$pluginInfo) {
+            return parent::hasBackendModel();
+        } else {
+            return $this->___callPlugins('hasBackendModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getBackendModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBackendModel');
-        return $pluginInfo ? $this->___callPlugins('getBackendModel', func_get_args(), $pluginInfo) : parent::getBackendModel();
+        if (!$pluginInfo) {
+            return parent::getBackendModel();
+        } else {
+            return $this->___callPlugins('getBackendModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getSectionId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSectionId');
-        return $pluginInfo ? $this->___callPlugins('getSectionId', func_get_args(), $pluginInfo) : parent::getSectionId();
+        if (!$pluginInfo) {
+            return parent::getSectionId();
+        } else {
+            return $this->___callPlugins('getSectionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getGroupPath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getGroupPath');
-        return $pluginInfo ? $this->___callPlugins('getGroupPath', func_get_args(), $pluginInfo) : parent::getGroupPath();
+        if (!$pluginInfo) {
+            return parent::getGroupPath();
+        } else {
+            return $this->___callPlugins('getGroupPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getConfigPath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfigPath');
-        return $pluginInfo ? $this->___callPlugins('getConfigPath', func_get_args(), $pluginInfo) : parent::getConfigPath();
+        if (!$pluginInfo) {
+            return parent::getConfigPath();
+        } else {
+            return $this->___callPlugins('getConfigPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function showInDefault()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'showInDefault');
-        return $pluginInfo ? $this->___callPlugins('showInDefault', func_get_args(), $pluginInfo) : parent::showInDefault();
+        if (!$pluginInfo) {
+            return parent::showInDefault();
+        } else {
+            return $this->___callPlugins('showInDefault', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function showInWebsite()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'showInWebsite');
-        return $pluginInfo ? $this->___callPlugins('showInWebsite', func_get_args(), $pluginInfo) : parent::showInWebsite();
+        if (!$pluginInfo) {
+            return parent::showInWebsite();
+        } else {
+            return $this->___callPlugins('showInWebsite', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function showInStore()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'showInStore');
-        return $pluginInfo ? $this->___callPlugins('showInStore', func_get_args(), $pluginInfo) : parent::showInStore();
+        if (!$pluginInfo) {
+            return parent::showInStore();
+        } else {
+            return $this->___callPlugins('showInStore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function canRestore()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canRestore');
-        return $pluginInfo ? $this->___callPlugins('canRestore', func_get_args(), $pluginInfo) : parent::canRestore();
+        if (!$pluginInfo) {
+            return parent::canRestore();
+        } else {
+            return $this->___callPlugins('canRestore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function populateInput($formField)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'populateInput');
-        return $pluginInfo ? $this->___callPlugins('populateInput', func_get_args(), $pluginInfo) : parent::populateInput($formField);
+        if (!$pluginInfo) {
+            return parent::populateInput($formField);
+        } else {
+            return $this->___callPlugins('populateInput', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function hasValidation()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasValidation');
-        return $pluginInfo ? $this->___callPlugins('hasValidation', func_get_args(), $pluginInfo) : parent::hasValidation();
+        if (!$pluginInfo) {
+            return parent::hasValidation();
+        } else {
+            return $this->___callPlugins('hasValidation', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getValidation()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValidation');
-        return $pluginInfo ? $this->___callPlugins('getValidation', func_get_args(), $pluginInfo) : parent::getValidation();
+        if (!$pluginInfo) {
+            return parent::getValidation();
+        } else {
+            return $this->___callPlugins('getValidation', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function canBeEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canBeEmpty');
-        return $pluginInfo ? $this->___callPlugins('canBeEmpty', func_get_args(), $pluginInfo) : parent::canBeEmpty();
+        if (!$pluginInfo) {
+            return parent::canBeEmpty();
+        } else {
+            return $this->___callPlugins('canBeEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function hasSourceModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasSourceModel');
-        return $pluginInfo ? $this->___callPlugins('hasSourceModel', func_get_args(), $pluginInfo) : parent::hasSourceModel();
+        if (!$pluginInfo) {
+            return parent::hasSourceModel();
+        } else {
+            return $this->___callPlugins('hasSourceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function hasOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasOptions');
-        return $pluginInfo ? $this->___callPlugins('hasOptions', func_get_args(), $pluginInfo) : parent::hasOptions();
+        if (!$pluginInfo) {
+            return parent::hasOptions();
+        } else {
+            return $this->___callPlugins('hasOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getOptions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOptions');
-        return $pluginInfo ? $this->___callPlugins('getOptions', func_get_args(), $pluginInfo) : parent::getOptions();
+        if (!$pluginInfo) {
+            return parent::getOptions();
+        } else {
+            return $this->___callPlugins('getOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getDependencies($fieldPrefix, $storeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDependencies');
-        return $pluginInfo ? $this->___callPlugins('getDependencies', func_get_args(), $pluginInfo) : parent::getDependencies($fieldPrefix, $storeCode);
+        if (!$pluginInfo) {
+            return parent::getDependencies($fieldPrefix, $storeCode);
+        } else {
+            return $this->___callPlugins('getDependencies', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function isAdvanced()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAdvanced');
-        return $pluginInfo ? $this->___callPlugins('isAdvanced', func_get_args(), $pluginInfo) : parent::isAdvanced();
+        if (!$pluginInfo) {
+            return parent::isAdvanced();
+        } else {
+            return $this->___callPlugins('isAdvanced', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function setData(array $data, $scope)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($data, $scope);
+        if (!$pluginInfo) {
+            return parent::setData($data, $scope);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData();
+        if (!$pluginInfo) {
+            return parent::getData();
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getFrontendModel()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendModel');
-        return $pluginInfo ? $this->___callPlugins('getFrontendModel', func_get_args(), $pluginInfo) : parent::getFrontendModel();
+        if (!$pluginInfo) {
+            return parent::getFrontendModel();
+        } else {
+            return $this->___callPlugins('getFrontendModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getAttribute($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttribute');
-        return $pluginInfo ? $this->___callPlugins('getAttribute', func_get_args(), $pluginInfo) : parent::getAttribute($key);
+        if (!$pluginInfo) {
+            return parent::getAttribute($key);
+        } else {
+            return $this->___callPlugins('getAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function isVisible()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isVisible');
-        return $pluginInfo ? $this->___callPlugins('isVisible', func_get_args(), $pluginInfo) : parent::isVisible();
+        if (!$pluginInfo) {
+            return parent::isVisible();
+        } else {
+            return $this->___callPlugins('isVisible', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getClass()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getClass');
-        return $pluginInfo ? $this->___callPlugins('getClass', func_get_args(), $pluginInfo) : parent::getClass();
+        if (!$pluginInfo) {
+            return parent::getClass();
+        } else {
+            return $this->___callPlugins('getClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getPath($fieldPrefix = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPath');
-        return $pluginInfo ? $this->___callPlugins('getPath', func_get_args(), $pluginInfo) : parent::getPath($fieldPrefix);
+        if (!$pluginInfo) {
+            return parent::getPath($fieldPrefix);
+        } else {
+            return $this->___callPlugins('getPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,6 +462,10 @@ class Interceptor extends \Magento\Config\Model\Config\Structure\Element\Field i
     public function getElementVisibility()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getElementVisibility');
-        return $pluginInfo ? $this->___callPlugins('getElementVisibility', func_get_args(), $pluginInfo) : parent::getElementVisibility();
+        if (!$pluginInfo) {
+            return parent::getElementVisibility();
+        } else {
+            return $this->___callPlugins('getElementVisibility', func_get_args(), $pluginInfo);
+        }
     }
 }

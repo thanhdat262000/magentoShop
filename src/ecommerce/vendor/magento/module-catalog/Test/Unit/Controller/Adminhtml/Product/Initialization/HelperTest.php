@@ -3,37 +3,27 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Catalog\Test\Unit\Controller\Adminhtml\Product\Initialization;
 
-use Magento\Catalog\Api\Data\CategoryLinkInterface;
-use Magento\Catalog\Api\Data\CategoryLinkInterfaceFactory;
-use Magento\Catalog\Api\Data\ProductCustomOptionInterfaceFactory;
-use Magento\Catalog\Api\Data\ProductExtensionInterface;
-use Magento\Catalog\Api\Data\ProductLinkInterfaceFactory;
-use Magento\Catalog\Api\Data\ProductLinkTypeInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface as ProductRepository;
 use Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper;
-use Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper\AttributeFilter;
 use Magento\Catalog\Controller\Adminhtml\Product\Initialization\StockDataFilter;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Filter\DateTime;
-use Magento\Catalog\Model\Product\Initialization\Helper\ProductLinks;
-use Magento\Catalog\Model\Product\Link\Resolver;
-use Magento\Catalog\Model\Product\LinkTypeProvider;
 use Magento\Catalog\Model\Product\Option;
-use Magento\Catalog\Model\ProductLink\Link as ProductLink;
-use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
-use Magento\Eav\Model\Entity\Attribute\Backend\DefaultBackend;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Locale\Format;
 use Magento\Framework\Locale\FormatInterface;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Magento\Catalog\Api\Data\ProductCustomOptionInterfaceFactory;
+use Magento\Catalog\Api\Data\ProductLinkInterfaceFactory;
+use Magento\Catalog\Model\Product\Initialization\Helper\ProductLinks;
+use Magento\Catalog\Model\Product\LinkTypeProvider;
+use Magento\Catalog\Api\Data\ProductLinkTypeInterface;
+use Magento\Catalog\Model\ProductLink\Link as ProductLink;
+use Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper\AttributeFilter;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -41,7 +31,7 @@ use PHPUnit\Framework\TestCase;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class HelperTest extends TestCase
+class HelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager
@@ -54,87 +44,91 @@ class HelperTest extends TestCase
     protected $helper;
 
     /**
-     * @var ProductLinkInterfaceFactory|MockObject
+     * @var ProductLinkInterfaceFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $productLinkFactoryMock;
 
     /**
-     * @var RequestInterface|MockObject
+     * @var RequestInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $requestMock;
 
     /**
-     * @var StoreManagerInterface|MockObject
+     * @var StoreManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $storeManagerMock;
 
     /**
-     * @var StockDataFilter|MockObject
+     * @var StockDataFilter|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $stockFilterMock;
 
     /**
-     * @var Product|MockObject
+     * @var Product|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $productMock;
 
     /**
-     * @var ProductRepository|MockObject
+     * @var ProductRepository|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $productRepositoryMock;
 
     /**
-     * @var ProductCustomOptionInterfaceFactory|MockObject
+     * @var ProductCustomOptionInterfaceFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $customOptionFactoryMock;
 
     /**
-     * @var Resolver|MockObject
+     * @var \Magento\Catalog\Model\Product\Link\Resolver|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $linkResolverMock;
 
     /**
-     * @var LinkTypeProvider|MockObject
+     * @var \Magento\Catalog\Model\Product\LinkTypeProvider|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $linkTypeProviderMock;
 
     /**
-     * @var ProductLinks|MockObject
+     * @var ProductLinks|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $productLinksMock;
 
     /**
-     * @var AttributeFilter|MockObject
+     * @var AttributeFilter|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $attributeFilterMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $dateTimeFilterMock;
 
     /**
-     * @var FormatInterface|MockObject
+     * @var FormatInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $localeFormatMock;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = new ObjectManager($this);
         $this->productLinkFactoryMock = $this->getMockBuilder(ProductLinkInterfaceFactory::class)
             ->setMethods(['create'])
             ->disableOriginalConstructor()
             ->getMock();
-        $this->productRepositoryMock = $this->createMock(ProductRepository::class);
+        $this->productRepositoryMock = $this->getMockBuilder(ProductRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->requestMock = $this->getMockBuilder(RequestInterface::class)
             ->setMethods(['getPost'])
             ->getMockForAbstractClass();
-        $this->storeManagerMock = $this->createMock(StoreManagerInterface::class);
-        $this->stockFilterMock = $this->createMock(StockDataFilter::class);
-
+        $this->storeManagerMock = $this->getMockBuilder(StoreManagerInterface::class)
+            ->getMockForAbstractClass();
+        $this->stockFilterMock = $this->getMockBuilder(StockDataFilter::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->productMock = $this->getMockBuilder(Product::class)
             ->setMethods(
                 [
@@ -149,33 +143,29 @@ class HelperTest extends TestCase
             )
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
-        $productExtensionAttributes = $this->getMockBuilder(ProductExtensionInterface::class)
-            ->setMethods(['getCategoryLinks', 'setCategoryLinks'])
-            ->getMockForAbstractClass();
-        $this->productMock->setExtensionAttributes($productExtensionAttributes);
-
         $this->customOptionFactoryMock = $this->getMockBuilder(ProductCustomOptionInterfaceFactory::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();
-        $this->productLinksMock = $this->createMock(ProductLinks::class);
-        $this->linkTypeProviderMock = $this->createMock(LinkTypeProvider::class);
+        $this->productLinksMock = $this->getMockBuilder(ProductLinks::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->linkTypeProviderMock = $this->getMockBuilder(LinkTypeProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->productLinksMock->expects($this->any())
             ->method('initializeLinks')
             ->willReturn($this->productMock);
-        $this->attributeFilterMock = $this->createMock(AttributeFilter::class);
-        $this->localeFormatMock = $this->createMock(Format::class);
-
-        $this->dateTimeFilterMock = $this->createMock(DateTime::class);
-
-        $categoryLinkFactoryMock = $this->getMockBuilder(CategoryLinkInterfaceFactory::class)
-            ->setMethods(['create'])
+        $this->attributeFilterMock = $this->getMockBuilder(AttributeFilter::class)
+            ->setMethods(['prepareProductAttributes'])
             ->disableOriginalConstructor()
             ->getMock();
-        $categoryLinkFactoryMock->method('create')
-            ->willReturnCallback(function () {
-                return $this->createMock(CategoryLinkInterface::class);
-            });
+        $this->localeFormatMock = $this->getMockBuilder(Format::class)
+            ->setMethods(['getNumber'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->dateTimeFilterMock = $this->createMock(\Magento\Catalog\Model\Product\Filter\DateTime::class);
 
         $this->helper = $this->objectManager->getObject(
             Helper::class,
@@ -190,12 +180,13 @@ class HelperTest extends TestCase
                 'linkTypeProvider' => $this->linkTypeProviderMock,
                 'attributeFilter' => $this->attributeFilterMock,
                 'localeFormat' => $this->localeFormatMock,
-                'dateTimeFilter' => $this->dateTimeFilterMock,
-                'categoryLinkFactory' => $categoryLinkFactoryMock,
+                'dateTimeFilter' => $this->dateTimeFilterMock
             ]
         );
 
-        $this->linkResolverMock = $this->createMock(Resolver::class);
+        $this->linkResolverMock = $this->getMockBuilder(\Magento\Catalog\Model\Product\Link\Resolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $helperReflection = new \ReflectionClass(get_class($this->helper));
         $resolverProperty = $helperReflection->getProperty('linkResolver');
         $resolverProperty->setAccessible(true);
@@ -300,8 +291,7 @@ class HelperTest extends TestCase
                     ],
                 ]
             );
-        $website = $this->getMockBuilder(WebsiteInterface::class)
-            ->getMockForAbstractClass();
+        $website = $this->getMockBuilder(WebsiteInterface::class)->getMockForAbstractClass();
         $website->expects($this->any())->method('getId')->willReturn(1);
         $this->storeManagerMock->expects($this->once())->method('isSingleStoreMode')->willReturn($isSingleStore);
         $this->storeManagerMock->expects($this->any())->method('getWebsite')->willReturn($website);
@@ -328,12 +318,12 @@ class HelperTest extends TestCase
         $this->assertEquals($expWebsiteIds, $this->productMock->getDataByKey('website_ids'));
 
         $productOptions = $this->productMock->getOptions();
-        $this->assertCount(2, $productOptions);
+        $this->assertTrue(2 == count($productOptions));
         list($option2, $option3) = $productOptions;
-        $this->assertEquals($optionsData['option2']['option_id'], $option2->getOptionId());
-        $this->assertEquals('sku', $option2->getData('product_sku'));
-        $this->assertEquals($optionsData['option3']['option_id'], $option3->getOptionId());
-        $this->assertEquals('sku', $option2->getData('product_sku'));
+        $this->assertTrue($option2->getOptionId() == $optionsData['option2']['option_id']);
+        $this->assertTrue('sku' == $option2->getData('product_sku'));
+        $this->assertTrue($option3->getOptionId() == $optionsData['option3']['option_id']);
+        $this->assertTrue('sku' == $option2->getData('product_sku'));
 
         $productLinks = $this->productMock->getProductLinks();
         $this->assertCount(count($expectedLinks), $productLinks);
@@ -360,9 +350,9 @@ class HelperTest extends TestCase
     {
         $attributesModels = [];
         foreach ($attributes as $attribute) {
-            $attributeModel = $this->createMock(Attribute::class);
+            $attributeModel = $this->createMock(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class);
             $backendModel = $attribute['backend_model']
-                ?? $this->createMock(DefaultBackend::class);
+                ?? $this->createMock(\Magento\Eav\Model\Entity\Attribute\Backend\DefaultBackend::class);
             $attributeModel->expects($this->any())
                 ->method('getBackend')
                 ->willReturn($backendModel);
@@ -723,7 +713,7 @@ class HelperTest extends TestCase
         $linkTypeCode = 1;
 
         foreach ($types as $typeName) {
-            $linkType = $this->getMockForAbstractClass(ProductLinkTypeInterface::class);
+            $linkType = $this->createMock(ProductLinkTypeInterface::class);
             $linkType->method('getCode')->willReturn($linkTypeCode++);
             $linkType->method('getName')->willReturn($typeName);
 
@@ -761,6 +751,6 @@ class HelperTest extends TestCase
 
         $this->productRepositoryMock->expects($this->any())
             ->method('getById')
-            ->willReturnMap($repositoryReturnMap);
+            ->will($this->returnValueMap($repositoryReturnMap));
     }
 }

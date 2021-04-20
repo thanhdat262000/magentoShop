@@ -16,10 +16,7 @@ define([
             groupedInfo: '#super-product-table input',
             downloadableInfo: '#downloadable-links-list input',
             customOptionsInfo: '.product-custom-option',
-            qtyInfo: '#qty',
-            actionElement: '[data-action="add-to-wishlist"]',
-            productListWrapper: '.product-item-info',
-            productPageWrapper: '.product-info-main'
+            qtyInfo: '#qty'
         },
 
         /** @inheritdoc */
@@ -33,10 +30,8 @@ define([
         _bind: function () {
             var options = this.options,
                 dataUpdateFunc = '_updateWishlistData',
-                validateProductQty = '_validateWishlistQty',
                 changeCustomOption = 'change ' + options.customOptionsInfo,
                 changeQty = 'change ' + options.qtyInfo,
-                updateWishlist = 'click ' + options.actionElement,
                 events = {},
                 key;
 
@@ -50,7 +45,6 @@ define([
 
             events[changeCustomOption] = dataUpdateFunc;
             events[changeQty] = dataUpdateFunc;
-            events[updateWishlist] = validateProductQty;
 
             for (key in options.productType) {
                 if (options.productType.hasOwnProperty(key) && options.productType[key] + 'Info' in options) {
@@ -67,19 +61,15 @@ define([
         _updateWishlistData: function (event) {
             var dataToAdd = {},
                 isFileUploaded = false,
-                handleObjSelector = null,
                 self = this;
 
             if (event.handleObj.selector == this.options.qtyInfo) { //eslint-disable-line eqeqeq
-                this._updateAddToWishlistButton({}, event);
+                this._updateAddToWishlistButton({});
                 event.stopPropagation();
 
                 return;
             }
-
-            handleObjSelector = $(event.currentTarget).closest('form').find(event.handleObj.selector);
-
-            handleObjSelector.each(function (index, element) {
+            $(event.handleObj.selector).each(function (index, element) {
                 if ($(element).is('input[type=text]') ||
                     $(element).is('input[type=email]') ||
                     $(element).is('input[type=number]') ||
@@ -104,20 +94,18 @@ define([
             if (isFileUploaded) {
                 this.bindFormSubmit();
             }
-            this._updateAddToWishlistButton(dataToAdd, event);
+            this._updateAddToWishlistButton(dataToAdd);
             event.stopPropagation();
         },
 
         /**
          * @param {Object} dataToAdd
-         * @param {jQuery.Event} event
          * @private
          */
-        _updateAddToWishlistButton: function (dataToAdd, event) {
-            var self = this,
-                buttons = this._getAddToWishlistButton(event);
+        _updateAddToWishlistButton: function (dataToAdd) {
+            var self = this;
 
-            buttons.each(function (index, element) {
+            $('[data-action="add-to-wishlist"]').each(function (index, element) {
                 var params = $(element).data('post');
 
                 if (!params) {
@@ -131,20 +119,6 @@ define([
                 });
                 $(element).data('post', params);
             });
-        },
-
-        /**
-         * @param {jQuery.Event} event
-         * @private
-         */
-        _getAddToWishlistButton: function (event) {
-            var productListWrapper = $(event.currentTarget).closest(this.options.productListWrapper);
-
-            if (productListWrapper.length) {
-                return productListWrapper.find(this.options.actionElement);
-            }
-
-            return $(this.options.productPageWrapper).find(this.options.actionElement);
         },
 
         /**
@@ -246,23 +220,6 @@ define([
 
                 $(form).attr('action', action).submit();
             });
-        },
-
-        /**
-         * Validate product quantity before updating Wish List
-         *
-         * @param {jQuery.Event} event
-         * @private
-         */
-        _validateWishlistQty: function (event) {
-            var element = $(this.options.qtyInfo);
-
-            if (!(element.validation() && element.validation('isValid'))) {
-                event.preventDefault();
-                event.stopPropagation();
-
-                return;
-            }
         }
     });
 

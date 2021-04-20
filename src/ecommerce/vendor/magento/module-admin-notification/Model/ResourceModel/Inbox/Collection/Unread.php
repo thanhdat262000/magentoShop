@@ -6,6 +6,8 @@
 
 /**
  * Collection of unread notifications
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
  */
 namespace Magento\AdminNotification\Model\ResourceModel\Inbox\Collection;
 

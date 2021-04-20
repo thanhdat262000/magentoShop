@@ -49,16 +49,6 @@ function filesize($file)
 }
 
 /**
- * @param $file
- * @return bool
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- */
-function file_exists($file)
-{
-    return !($file === 'not_exist');
-}
-
-/**
  * @param $real
  * @return int
  *

@@ -25,7 +25,6 @@ use Amazon\Payment\Model\Adapter\AmazonPaymentAdapter;
 use Amazon\Payment\Model\OrderInformationManagement;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
-use Magento\Framework\Webapi\Rest\Request;
 use Magento\Framework\Exception\LocalizedException;
 use Amazon\Payment\Gateway\Config\Config as GatewayConfig;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -34,13 +33,6 @@ use Magento\Quote\Api\CartRepositoryInterface;
  * Class ConfirmOrderReference
  *
  * Confirm the OrderReference when payment details are saved
- *
- * @deprecated As of February 2021, this Legacy Amazon Pay plugin has been
- * deprecated, in favor of a newer Amazon Pay version available through GitHub
- * and Magento Marketplace. Please download the new plugin for automatic
- * updates and to continue providing your customers with a seamless checkout
- * experience. Please see https://pay.amazon.com/help/E32AAQBC2FY42HS for details
- * and installation instructions.
  */
 class ConfirmOrderReference
 {
@@ -48,11 +40,6 @@ class ConfirmOrderReference
      * @var Session
      */
     private $checkoutSession;
-
-    /**
-     * @var Request
-     */
-    private $request;
 
     /**
      * @var OrderInformationManagement
@@ -67,29 +54,17 @@ class ConfirmOrderReference
     /**
      * ConfirmOrderReference constructor.
      * @param Session $checkoutSession
-     * @param Request $request
      * @param OrderInformationManagement $orderInformationManagement
      * @param CartRepositoryInterface $quoteRepository
      */
     public function __construct(
         Session $checkoutSession,
-        Request $request,
         OrderInformationManagement $orderInformationManagement,
         CartRepositoryInterface $quoteRepository
     ) {
         $this->checkoutSession = $checkoutSession;
-        $this->request = $request;
         $this->orderInformationManagement = $orderInformationManagement;
         $this->quoteRepository = $quoteRepository;
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function canConfirmOrderReference()
-    {
-        $data = $this->request->getRequestData();
-        return !empty($data['confirmOrder']);
     }
 
     /**
@@ -110,7 +85,7 @@ class ConfirmOrderReference
         if ($paymentMethod->getMethod() == GatewayConfig::CODE) {
             $quote = $this->quoteRepository->get($cartId);
             $quoteExtensionAttributes = $quote->getExtensionAttributes();
-            if ($quoteExtensionAttributes && $quoteExtensionAttributes->getAmazonOrderReferenceId()) {
+            if ($quoteExtensionAttributes) {
                 $amazonOrderReferenceId = $quoteExtensionAttributes
                     ->getAmazonOrderReferenceId()
                     ->getAmazonOrderReferenceId();
@@ -119,12 +94,10 @@ class ConfirmOrderReference
                     $this->orderInformationManagement->saveOrderInformation($amazonOrderReferenceId);
                 }
 
-                if ($this->canConfirmOrderReference()) {
-                    $this->orderInformationManagement->confirmOrderReference(
-                        $amazonOrderReferenceId,
-                        $quote->getStoreId()
-                    );
-                }
+                $this->orderInformationManagement->confirmOrderReference(
+                    $amazonOrderReferenceId,
+                    $quote->getStoreId()
+                );
             }
         }
 

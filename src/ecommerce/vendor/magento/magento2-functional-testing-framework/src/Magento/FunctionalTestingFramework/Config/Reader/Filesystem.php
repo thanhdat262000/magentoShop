@@ -6,7 +6,6 @@
 namespace Magento\FunctionalTestingFramework\Config\Reader;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
@@ -147,7 +146,6 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     {
         /** @var \Magento\FunctionalTestingFramework\Config\Dom $configMerger */
         $configMerger = null;
-        $debugLevel = MftfApplicationConfig::getConfig()->getDebugLevel();
         foreach ($fileList as $key => $content) {
             //check if file is empty and continue to next if it is
             if (!$this->verifyFileEmpty($content, $fileList->getFilename())) {
@@ -159,7 +157,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
-                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) == 0) {
+                if (MftfApplicationConfig::getConfig()->getDebugLevel() === MftfApplicationConfig::LEVEL_DEVELOPER) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -241,7 +239,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                         true
                     );
                 }
-                throw new FastFailException("Schema validation errors found in xml file(s)" . $filename);
+                throw new \Exception("Schema validation errors found in xml file(s)" . $filename);
             }
         }
     }

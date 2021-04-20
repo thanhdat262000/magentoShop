@@ -3,79 +3,88 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Multishipping\Controller;
 
-use Magento\Checkout\Controller\Action;
-use Magento\Checkout\Controller\Express\RedirectLoginInterface;
-use Magento\Checkout\Model\Session as ModelSession;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\StateException;
-use Magento\Multishipping\Helper\Url;
-use Magento\Multishipping\Model\Checkout\Type\Multishipping;
-use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
 
 /**
  * Multishipping checkout controller
- *
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-abstract class Checkout extends Action implements RedirectLoginInterface
+abstract class Checkout extends \Magento\Checkout\Controller\Action implements
+    \Magento\Checkout\Controller\Express\RedirectLoginInterface
 {
+    /**
+     * Constructor
+     *
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param AccountManagementInterface $accountManagement
+     */
+    public function __construct(
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Customer\Model\Session $customerSession,
+        CustomerRepositoryInterface $customerRepository,
+        AccountManagementInterface $accountManagement
+    ) {
+        parent::__construct(
+            $context,
+            $customerSession,
+            $customerRepository,
+            $accountManagement
+        );
+    }
 
     /**
      * Retrieve checkout model
      *
-     * @return Multishipping
+     * @return \Magento\Multishipping\Model\Checkout\Type\Multishipping
      */
     protected function _getCheckout()
     {
-        return $this->_objectManager->get(Multishipping::class);
+        return $this->_objectManager->get(\Magento\Multishipping\Model\Checkout\Type\Multishipping::class);
     }
 
     /**
      * Retrieve checkout state model
      *
-     * @return State
+     * @return \Magento\Multishipping\Model\Checkout\Type\Multishipping\State
      */
     protected function _getState()
     {
-        return $this->_objectManager->get(State::class);
+        return $this->_objectManager->get(\Magento\Multishipping\Model\Checkout\Type\Multishipping\State::class);
     }
 
     /**
      * Retrieve checkout url helper
      *
-     * @return Url
+     * @return \Magento\Multishipping\Helper\Url
      */
     protected function _getHelper()
     {
-        return $this->_objectManager->get(Url::class);
+        return $this->_objectManager->get(\Magento\Multishipping\Helper\Url::class);
     }
 
     /**
      * Retrieve checkout session
      *
-     * @return ModelSession
+     * @return \Magento\Checkout\Model\Session
      */
     protected function _getCheckoutSession()
     {
-        return $this->_objectManager->get(ModelSession::class);
+        return $this->_objectManager->get(\Magento\Checkout\Model\Session::class);
     }
 
     /**
      * Dispatch request
      *
      * @param RequestInterface $request
-     * @return ResponseInterface
+     * @return \Magento\Framework\App\ResponseInterface
      * @throws \Magento\Framework\Exception\NotFoundException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -95,7 +104,7 @@ abstract class Checkout extends Action implements RedirectLoginInterface
          */
         if ($action == 'index') {
             $checkoutSessionQuote->setIsMultiShipping(true);
-            $this->_getCheckoutSession()->setCheckoutState(ModelSession::CHECKOUT_STATE_BEGIN);
+            $this->_getCheckoutSession()->setCheckoutState(\Magento\Checkout\Model\Session::CHECKOUT_STATE_BEGIN);
         } elseif (!$checkoutSessionQuote->getIsMultiShipping() && !in_array(
             $action,
             ['login', 'register', 'success']
@@ -107,7 +116,7 @@ abstract class Checkout extends Action implements RedirectLoginInterface
         }
 
         if (!in_array($action, ['login', 'register'])) {
-            $customerSession = $this->_objectManager->get(Session::class);
+            $customerSession = $this->_objectManager->get(\Magento\Customer\Model\Session::class);
             if (!$customerSession->authenticate($this->_getHelper()->getMSLoginUrl())) {
                 $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
             }
@@ -116,7 +125,7 @@ abstract class Checkout extends Action implements RedirectLoginInterface
                 \Magento\Multishipping\Helper\Data::class
             )->isMultishippingCheckoutAvailable()) {
                 $error = $this->_getCheckout()->getMinimumAmountError();
-                $this->messageManager->addErrorMessage($error);
+                $this->messageManager->addError($error);
                 $this->getResponse()->setRedirect($this->_getHelper()->getCartUrl());
                 $this->_actionFlag->set('', self::FLAG_NO_DISPATCH, true);
                 return parent::dispatch($request);
@@ -124,7 +133,7 @@ abstract class Checkout extends Action implements RedirectLoginInterface
         }
 
         $result = $this->_preDispatchValidateCustomer();
-        if ($result instanceof ResultInterface) {
+        if ($result instanceof \Magento\Framework\Controller\ResultInterface) {
             return $result;
         }
 
@@ -171,7 +180,7 @@ abstract class Checkout extends Action implements RedirectLoginInterface
     {
         if (!$this->_getCheckout()->validateMinimumAmount()) {
             $error = $this->_getCheckout()->getMinimumAmountError();
-            $this->messageManager->addErrorMessage($error);
+            $this->messageManager->addError($error);
             $this->_forward('backToAddresses');
             return false;
         }

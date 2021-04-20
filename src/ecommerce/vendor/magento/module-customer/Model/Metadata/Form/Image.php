@@ -3,33 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Customer\Model\Metadata\Form;
 
 use Magento\Customer\Api\AddressMetadataInterface;
 use Magento\Customer\Api\CustomerMetadataInterface;
-use Magento\Customer\Api\Data\AttributeMetadataInterface;
 use Magento\Customer\Model\FileProcessor;
-use Magento\Customer\Model\FileProcessorFactory;
 use Magento\Framework\Api\ArrayObjectSearch;
 use Magento\Framework\Api\Data\ImageContentInterface;
 use Magento\Framework\Api\Data\ImageContentInterfaceFactory;
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\File\UploaderFactory;
 use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Directory\WriteFactory;
-use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\Filesystem\Io\File as IoFileSystem;
-use Magento\Framework\Locale\ResolverInterface;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Framework\Url\EncoderInterface;
-use Magento\MediaStorage\Model\File\Validator\NotProtectedExtension;
-use Psr\Log\LoggerInterface;
 
 /**
  * Metadata for form image field
@@ -44,52 +28,37 @@ class Image extends File
     private $imageContentFactory;
 
     /**
-     * @var IoFileSystem
-     */
-    private $ioFileSystem;
-
-    /**
-     * @var WriteInterface
-     */
-    private $mediaEntityTmpDirectory;
-
-    /**
-     * @param TimezoneInterface $localeDate
-     * @param LoggerInterface $logger
-     * @param AttributeMetadataInterface $attribute
-     * @param ResolverInterface $localeResolver
+     * Constructor
+     *
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Customer\Api\Data\AttributeMetadataInterface $attribute
+     * @param \Magento\Framework\Locale\ResolverInterface $localeResolver
      * @param null|string $value
      * @param string $entityTypeCode
      * @param bool $isAjax
-     * @param EncoderInterface $urlEncoder
-     * @param NotProtectedExtension $fileValidator
+     * @param \Magento\Framework\Url\EncoderInterface $urlEncoder
+     * @param \Magento\MediaStorage\Model\File\Validator\NotProtectedExtension $fileValidator
      * @param Filesystem $fileSystem
      * @param UploaderFactory $uploaderFactory
-     * @param FileProcessorFactory|null $fileProcessorFactory
-     * @param ImageContentInterfaceFactory|null $imageContentInterfaceFactory
-     * @param IoFileSystem|null $ioFileSystem
-     * @param DirectoryList|null $directoryList
-     * @param WriteFactory|null $writeFactory
+     * @param \Magento\Customer\Model\FileProcessorFactory|null $fileProcessorFactory
+     * @param \Magento\Framework\Api\Data\ImageContentInterfaceFactory|null $imageContentInterfaceFactory
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @throws FileSystemException
      */
     public function __construct(
-        TimezoneInterface $localeDate,
-        LoggerInterface $logger,
-        AttributeMetadataInterface $attribute,
-        ResolverInterface $localeResolver,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Customer\Api\Data\AttributeMetadataInterface $attribute,
+        \Magento\Framework\Locale\ResolverInterface $localeResolver,
         $value,
         $entityTypeCode,
         $isAjax,
-        EncoderInterface $urlEncoder,
-        NotProtectedExtension $fileValidator,
+        \Magento\Framework\Url\EncoderInterface $urlEncoder,
+        \Magento\MediaStorage\Model\File\Validator\NotProtectedExtension $fileValidator,
         Filesystem $fileSystem,
         UploaderFactory $uploaderFactory,
-        FileProcessorFactory $fileProcessorFactory = null,
-        ImageContentInterfaceFactory $imageContentInterfaceFactory = null,
-        IoFileSystem $ioFileSystem = null,
-        ?DirectoryList $directoryList = null,
-        ?WriteFactory $writeFactory = null
+        \Magento\Customer\Model\FileProcessorFactory $fileProcessorFactory = null,
+        \Magento\Framework\Api\Data\ImageContentInterfaceFactory $imageContentInterfaceFactory = null
     ) {
         parent::__construct(
             $localeDate,
@@ -106,16 +75,7 @@ class Image extends File
             $fileProcessorFactory
         );
         $this->imageContentFactory = $imageContentInterfaceFactory ?: ObjectManager::getInstance()
-            ->get(ImageContentInterfaceFactory::class);
-        $this->ioFileSystem = $ioFileSystem ?: ObjectManager::getInstance()
-            ->get(IoFileSystem::class);
-        $writeFactory = $writeFactory ?? ObjectManager::getInstance()->get(WriteFactory::class);
-        $directoryList = $directoryList ?? ObjectManager::getInstance()->get(DirectoryList::class);
-        $this->mediaEntityTmpDirectory = $writeFactory->create(
-            $directoryList->getPath($directoryList::MEDIA)
-            . '/' . $this->_entityTypeCode
-            . '/' . FileProcessor::TMP_DIR
-        );
+            ->get(\Magento\Framework\Api\Data\ImageContentInterfaceFactory::class);
     }
 
     /**
@@ -125,7 +85,6 @@ class Image extends File
      *
      * @param array $value
      * @return string[]
-     * @throws LocalizedException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
@@ -134,11 +93,7 @@ class Image extends File
         $label = $value['name'];
         $rules = $this->getAttribute()->getValidationRules();
 
-        try {
-            $imageProp = getimagesize($value['tmp_name']);
-        } catch (\Throwable $e) {
-            $imageProp = false;
-        }
+        $imageProp = @getimagesize($value['tmp_name']);
 
         if (!$this->_isUploadedFile($value['tmp_name']) || !$imageProp) {
             return [__('"%1" is not a valid file.', $label)];
@@ -151,11 +106,9 @@ class Image extends File
         }
 
         // modify image name
-        $extension = $this->ioFileSystem->getPathInfo($value['name'])['extension'];
+        $extension = pathinfo($value['name'], PATHINFO_EXTENSION);
         if ($extension != $allowImageTypes[$imageProp[2]]) {
-            $value['name'] = $this->ioFileSystem->getPathInfo($value['name'])['filename']
-                . '.'
-                . $allowImageTypes[$imageProp[2]];
+            $value['name'] = pathinfo($value['name'], PATHINFO_FILENAME) . '.' . $allowImageTypes[$imageProp[2]];
         }
 
         $maxFileSize = ArrayObjectSearch::getArrayElementByName(
@@ -200,16 +153,17 @@ class Image extends File
      *
      * @param array $value
      * @return bool|int|ImageContentInterface|string
-     * @throws LocalizedException
      */
     protected function processUiComponentValue(array $value)
     {
         if ($this->_entityTypeCode == AddressMetadataInterface::ENTITY_TYPE_ADDRESS) {
-            return $this->processCustomerAddressValue($value);
+            $result = $this->processCustomerAddressValue($value);
+            return $result;
         }
 
         if ($this->_entityTypeCode == CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER) {
-            return $this->processCustomerValue($value);
+            $result = $this->processCustomerValue($value);
+            return $result;
         }
 
         return $this->_value;
@@ -220,23 +174,11 @@ class Image extends File
      *
      * @param array $value
      * @return string
-     * @throws LocalizedException
      */
     protected function processCustomerAddressValue(array $value)
     {
-        $fileName = $this->mediaEntityTmpDirectory
-            ->getDriver()
-            ->getRealPathSafety(
-                $this->mediaEntityTmpDirectory->getAbsolutePath(
-                    ltrim(
-                        $value['file'],
-                        '/'
-                    )
-                )
-            );
-        return $this->getFileProcessor()->moveTemporaryFile(
-            $this->mediaEntityTmpDirectory->getRelativePath($fileName)
-        );
+        $result = $this->getFileProcessor()->moveTemporaryFile($value['file']);
+        return $result;
     }
 
     /**
@@ -244,25 +186,26 @@ class Image extends File
      *
      * @param array $value
      * @return bool|int|ImageContentInterface|string
-     * @throws LocalizedException
      */
     protected function processCustomerValue(array $value)
     {
-        $file = ltrim($value['file'], '/');
-        if ($this->mediaEntityTmpDirectory->isExist($file)) {
-            $temporaryFile = FileProcessor::TMP_DIR . '/' . $file;
+        $temporaryFile = FileProcessor::TMP_DIR . '/' . ltrim($value['file'], '/');
+
+        if ($this->getFileProcessor()->isExist($temporaryFile)) {
             $base64EncodedData = $this->getFileProcessor()->getBase64EncodedData($temporaryFile);
+
             /** @var ImageContentInterface $imageContentDataObject */
             $imageContentDataObject = $this->imageContentFactory->create()
                 ->setName($value['name'])
                 ->setBase64EncodedData($base64EncodedData)
                 ->setType($value['type']);
+
             // Remove temporary file
             $this->getFileProcessor()->removeUploadedFile($temporaryFile);
 
             return $imageContentDataObject;
         }
 
-        return $this->_value ?: $value['file'];
+        return $this->_value;
     }
 }

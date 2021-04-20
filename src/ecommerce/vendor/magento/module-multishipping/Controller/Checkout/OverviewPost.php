@@ -3,46 +3,33 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Multishipping\Controller\Checkout;
 
-use Magento\Checkout\Api\AgreementsValidatorInterface;
+use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Checkout\Api\PaymentProcessingRateLimiterInterface;
-use Magento\Checkout\Api\Exception\PaymentProcessingRateLimitExceededException;
-use Magento\Framework\App\ObjectManager;
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\PaymentException;
 use Magento\Framework\Session\SessionManagerInterface;
-use Magento\Multishipping\Controller\Checkout;
-use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
-use Psr\Log\LoggerInterface;
 
 /**
- * Placing orders.
+ * Class OverviewPost
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class OverviewPost extends Checkout implements HttpPostActionInterface
+class OverviewPost extends \Magento\Multishipping\Controller\Checkout
 {
     /**
-     * @var Validator
-     * @deprecated Form key validation is handled on the framework level.
+     * @var \Magento\Framework\Data\Form\FormKey\Validator
      */
     protected $formKeyValidator;
 
     /**
-     * @var LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
     /**
-     * @var AgreementsValidatorInterface
+     * @var \Magento\Checkout\Api\AgreementsValidatorInterface
      */
     protected $agreementsValidator;
 
@@ -52,38 +39,29 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
     private $session;
 
     /**
-     * @var PaymentProcessingRateLimiterInterface
-     */
-    private $paymentRateLimiter;
-
-    /**
-     * @param Context $context
-     * @param Session $customerSession
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param CustomerRepositoryInterface $customerRepository
      * @param AccountManagementInterface $accountManagement
-     * @param Validator $formKeyValidator
-     * @param LoggerInterface $logger
-     * @param AgreementsValidatorInterface $agreementValidator
+     * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Checkout\Api\AgreementsValidatorInterface $agreementValidator
      * @param SessionManagerInterface $session
-     * @param PaymentProcessingRateLimiterInterface|null $paymentRateLimiter
      */
     public function __construct(
-        Context $context,
-        Session $customerSession,
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Customer\Model\Session $customerSession,
         CustomerRepositoryInterface $customerRepository,
         AccountManagementInterface $accountManagement,
-        Validator $formKeyValidator,
-        LoggerInterface $logger,
-        AgreementsValidatorInterface $agreementValidator,
-        SessionManagerInterface $session,
-        ?PaymentProcessingRateLimiterInterface $paymentRateLimiter = null
+        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Checkout\Api\AgreementsValidatorInterface $agreementValidator,
+        SessionManagerInterface $session
     ) {
         $this->formKeyValidator = $formKeyValidator;
         $this->logger = $logger;
         $this->agreementsValidator = $agreementValidator;
         $this->session = $session;
-        $this->paymentRateLimiter = $paymentRateLimiter
-            ?? ObjectManager::getInstance()->get(PaymentProcessingRateLimiterInterface::class);
 
         parent::__construct(
             $context,
@@ -101,14 +79,17 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
      */
     public function execute()
     {
-        try {
-            $this->paymentRateLimiter->limit();
-            if (!$this->_validateMinimumAmount()) {
-                return;
-            }
+        if (!$this->formKeyValidator->validate($this->getRequest())) {
+            $this->_forward('backToAddresses');
+            return;
+        }
+        if (!$this->_validateMinimumAmount()) {
+            return;
+        }
 
+        try {
             if (!$this->agreementsValidator->isValid(array_keys($this->getRequest()->getPost('agreement', [])))) {
-                $this->messageManager->addErrorMessage(
+                $this->messageManager->addError(
                     __('Please agree to all Terms and Conditions before placing the order.')
                 );
                 $this->_redirect('*/*/billing');
@@ -135,13 +116,10 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
                 $this->_getCheckout()->getCheckoutSession()->setDisplaySuccess(true);
                 $this->_redirect('*/*/success');
             }
-        } catch (PaymentProcessingRateLimitExceededException $ex) {
-            $this->messageManager->addErrorMessage($ex->getMessage());
-            $this->_redirect('*/*/overview');
         } catch (PaymentException $e) {
             $message = $e->getMessage();
             if (!empty($message)) {
-                $this->messageManager->addErrorMessage($message);
+                $this->messageManager->addError($message);
             }
             $this->_redirect('*/*/billing');
         } catch (\Magento\Checkout\Exception $e) {
@@ -153,7 +131,7 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
                 'multi-shipping'
             );
             $this->_getCheckout()->getCheckoutSession()->clearQuote();
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addError($e->getMessage());
             $this->_redirect('*/cart');
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->_objectManager->get(
@@ -163,7 +141,7 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
                 $e->getMessage(),
                 'multi-shipping'
             );
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addError($e->getMessage());
             $this->_redirect('*/*/billing');
         } catch (\Exception $e) {
             $this->logger->critical($e);
@@ -178,7 +156,7 @@ class OverviewPost extends Checkout implements HttpPostActionInterface
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
             }
-            $this->messageManager->addErrorMessage(__('Order place error'));
+            $this->messageManager->addError(__('Order place error'));
             $this->_redirect('*/*/billing');
         }
     }

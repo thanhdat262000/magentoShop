@@ -2,9 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Block\Recommended;
 
-use Dotdigitalgroup\Email\Model\Product\ImageFinder;
-use Dotdigitalgroup\Email\Model\Product\ImageType\Context\DynamicContent;
-
 /**
  * Recently viewed block
  *
@@ -48,8 +45,6 @@ class Recentlyviewed extends \Dotdigitalgroup\Email\Block\Recommended
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Dotdigitalgroup\Email\Block\Helper\Font $font
      * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
-     * @param DynamicContent $imageType
-     * @param ImageFinder $imageFinder
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog
      * @param \Magento\Customer\Model\SessionFactory $sessionFactory
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
@@ -61,8 +56,6 @@ class Recentlyviewed extends \Dotdigitalgroup\Email\Block\Recommended
         \Magento\Catalog\Block\Product\Context $context,
         \Dotdigitalgroup\Email\Block\Helper\Font $font,
         \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
-        DynamicContent $imageType,
-        ImageFinder $imageFinder,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog,
         \Magento\Customer\Model\SessionFactory $sessionFactory,
         \Dotdigitalgroup\Email\Helper\Data $helper,
@@ -77,7 +70,7 @@ class Recentlyviewed extends \Dotdigitalgroup\Email\Block\Recommended
         $this->storeManager      = $this->_storeManager;
         $this->catalog           = $catalog;
 
-        parent::__construct($context, $font, $urlFinder, $imageType, $imageFinder, $data);
+        parent::__construct($context, $font, $urlFinder, $data);
     }
 
     /**

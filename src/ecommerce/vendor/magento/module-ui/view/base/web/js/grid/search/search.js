@@ -19,7 +19,7 @@ define([
     return Element.extend({
         defaults: {
             template: 'ui/grid/search/search',
-            placeholder: $t('Search by keyword'),
+            placeholder: 'Search by keyword',
             label: $t('Keyword'),
             value: '',
             previews: [],

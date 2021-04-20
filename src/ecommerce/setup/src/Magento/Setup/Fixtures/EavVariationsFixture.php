@@ -77,7 +77,7 @@ class EavVariationsFixture extends Fixture
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function execute()
     {
@@ -93,7 +93,7 @@ class EavVariationsFixture extends Fixture
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getActionTitle()
     {
@@ -101,7 +101,7 @@ class EavVariationsFixture extends Fixture
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function introduceParamLabels()
     {
@@ -109,8 +109,6 @@ class EavVariationsFixture extends Fixture
     }
 
     /**
-     * Generate Attribute
-     *
      * @param int $optionCount
      * @return void
      */
@@ -171,7 +169,7 @@ class EavVariationsFixture extends Fixture
         );
         $data['optionvisual']['value'] = array_reduce(
             range(1, $optionCount),
-            function ($values, $index) {
+            function ($values, $index) use ($optionCount) {
                 $values['option_' . $index] = ['option ' . $index];
                 return $values;
             },
@@ -196,8 +194,6 @@ class EavVariationsFixture extends Fixture
     }
 
     /**
-     * Get attribute code
-     *
      * @return string
      */
     private function getAttributeCode()

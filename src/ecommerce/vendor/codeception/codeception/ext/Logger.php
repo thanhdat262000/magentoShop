@@ -7,10 +7,8 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ExtensionException;
 use Codeception\Extension;
 use Codeception\Test\Descriptor;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 
 /**
@@ -21,8 +19,7 @@ use Monolog\Handler\RotatingFileHandler;
  * composer require monolog/monolog
  * ```
  *
- * Codeception's core/internal stuff is logged into `tests/_output/codeception.log`.
- * Test suites' steps are logged into `tests/_output/<test_full_name>-<rotation_date>.log`.
+ * Steps are logged into `tests/_output/codeception.log`
  *
  * To enable this module add to your `codeception.yml`:
  *
@@ -55,7 +52,7 @@ class Logger extends Extension
     /**
      * @var \Monolog\Logger
      */
-    protected static $logger;
+    protected $logger;
 
     protected $path;
 
@@ -70,33 +67,22 @@ class Logger extends Extension
 
         // internal log
         $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
-
-        $formatter = $logHandler->getFormatter();
-        if ($formatter instanceof LineFormatter) {
-            $formatter->ignoreEmptyContextAndExtra(true);
-        }
-
-        self::$logger = new \Monolog\Logger('Codeception');
-        self::$logger->pushHandler($logHandler);
-    }
-
-    public static function getLogger()
-    {
-        return self::$logger;
+        $this->logger = new \Monolog\Logger('Codeception');
+        $this->logger->pushHandler($logHandler);
     }
 
     public function beforeSuite(SuiteEvent $e)
     {
-        $suiteLogFile = str_replace('\\', '_', $e->getSuite()->getName()) . '.log';
-        $this->logHandler = new RotatingFileHandler($this->path . $suiteLogFile, $this->config['max_files']);
+        $suite = str_replace('\\', '_', $e->getSuite()->getName());
+        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
     }
 
     public function beforeTest(TestEvent $e)
     {
-        self::$logger = new \Monolog\Logger(Descriptor::getTestFullName($e->getTest()));
-        self::$logger->pushHandler($this->logHandler);
-        self::$logger->info('------------------------------------');
-        self::$logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
+        $this->logger = new \Monolog\Logger(Descriptor::getTestFileName($e->getTest()));
+        $this->logger->pushHandler($this->logHandler);
+        $this->logger->info('------------------------------------');
+        $this->logger->info("STARTED: " . ucfirst(Descriptor::getTestAsString($e->getTest())));
     }
 
     public function afterTest(TestEvent $e)
@@ -105,42 +91,33 @@ class Logger extends Extension
 
     public function endTest(TestEvent $e)
     {
-        self::$logger->info("PASSED");
+        $this->logger->info("PASSED");
     }
 
     public function testFail(FailEvent $e)
     {
-        self::$logger->alert($e->getFail()->getMessage());
-        self::$logger->info("# FAILED #");
+        $this->logger->alert($e->getFail()->getMessage());
+        $this->logger->info("# FAILED #");
     }
 
     public function testError(FailEvent $e)
     {
-        self::$logger->alert($e->getFail()->getMessage());
-        self::$logger->info("# ERROR #");
+        $this->logger->alert($e->getFail()->getMessage());
+        $this->logger->info("# ERROR #");
     }
 
     public function testSkipped(FailEvent $e)
     {
-        self::$logger->info("# Skipped #");
+        $this->logger->info("# Skipped #");
     }
 
     public function testIncomplete(FailEvent $e)
     {
-        self::$logger->info("# Incomplete #");
+        $this->logger->info("# Incomplete #");
     }
 
     public function beforeStep(StepEvent $e)
     {
-        self::$logger->info((string) $e->getStep());
+        $this->logger->info((string) $e->getStep());
     }
-}
-
-if (!function_exists('codecept_log')) {
-    function codecept_log()
-    {
-        return Logger::getLogger();
-    }
-} else {
-    throw new ExtensionException('Codeception\Extension\Logger', "function 'codecept_log' already defined");
 }

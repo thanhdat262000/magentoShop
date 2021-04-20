@@ -44,14 +44,6 @@ define(
                         }
                     });
                 }
-            },
-
-            addMessage: function (type, messageText) {
-                var messageComponent = messagesFactory();
-
-                if (type === 'error') {
-                    messageList.addErrorMessage({message: $.mage.__($("<textarea/>").html(messageText).text())});
-                }
             }
         }
     }

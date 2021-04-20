@@ -312,9 +312,8 @@ define('globalNavigation', [
 
 define('globalSearch', [
     'jquery',
-    'Magento_Ui/js/lib/key-codes',
-    'jquery-ui-modules/widget'
-], function ($, keyCodes) {
+    'jquery/ui'
+], function ($) {
     'use strict';
 
     $.widget('mage.globalSearch', {
@@ -345,25 +344,6 @@ define('globalSearch', [
 
             this.input.on('focus.activateGlobalSearchForm', function () {
                 self.field.addClass(self.options.fieldActiveClass);
-            });
-
-            $(document).on('keydown.activateGlobalSearchForm', function (event) {
-                var inputs = [
-                    'input',
-                    'select',
-                    'textarea'
-                ];
-
-                if (keyCodes[event.which] !== 'forwardSlashKey' ||
-                    inputs.indexOf(event.target.tagName.toLowerCase()) !== -1 ||
-                    event.target.isContentEditable
-                ) {
-                    return;
-                }
-
-                event.preventDefault();
-
-                self.input.focus();
             });
         }
     });

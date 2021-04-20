@@ -8,7 +8,7 @@ use Dotdigitalgroup\Email\Model\Sales\QuoteFactory as DdgQuoteFactory;
 use Magento\Quote\Model\QuoteFactory as MagentoQuoteFactory;
 use PHPUnit\Framework\TestCase;
 
-class UpdateTest extends TestCase
+class UpdateAbandonedCartFieldsTest extends TestCase
 {
     /**
      * @var Data|\PHPUnit_Framework_MockObject_MockObject
@@ -73,7 +73,7 @@ class UpdateTest extends TestCase
     /**
      * Prepare data
      */
-    protected function setUp() :void
+    protected function setUp()
     {
         $this->helperMock = $this->createMock(Data::class);
         $this->magentoQuoteFactoryMock = $this->createMock(MagentoQuoteFactory::class);

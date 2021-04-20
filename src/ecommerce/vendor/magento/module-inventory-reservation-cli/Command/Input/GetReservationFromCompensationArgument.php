@@ -103,7 +103,6 @@ class GetReservationFromCompensationArgument
                         'event_type' => 'manual_compensation',
                         'object_type' => 'order',
                         'object_id' => $order->getEntityId(),
-                        'object_increment_id' => $order->getIncrementId(),
                     ]
                 )
             )

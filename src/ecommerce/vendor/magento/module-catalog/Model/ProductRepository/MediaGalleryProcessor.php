@@ -224,15 +224,7 @@ class MediaGalleryProcessor
             $this->processNewMediaGalleryEntry($product, $newEntry);
 
             $finalGallery = $product->getData('media_gallery');
-
-            $entryIds = array_keys(
-                array_diff_key(
-                    $product->getData('media_gallery')['images'],
-                    $entriesById
-                )
-            );
-            $newEntryId = array_pop($entryIds);
-
+            $newEntryId = key(array_diff_key($product->getData('media_gallery')['images'], $entriesById));
             $newEntry = array_replace_recursive($newEntry, $finalGallery['images'][$newEntryId]);
             $entriesById[$newEntryId] = $newEntry;
             $finalGallery['images'][$newEntryId] = $newEntry;

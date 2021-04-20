@@ -16,21 +16,13 @@ class FilterUnresolvedReservations
 {
     /**
      * Remove all compensated reservations
-     *
      * @param SalableQuantityInconsistency[] $inconsistencies
      * @return SalableQuantityInconsistency[]
      */
     public function execute(array $inconsistencies): array
     {
         foreach ($inconsistencies as $inconsistency) {
-            $inconsistency->setItems(
-                array_filter(
-                    $inconsistency->getItems(),
-                    function ($qty) {
-                        return $qty > 0;
-                    }
-                )
-            );
+            $inconsistency->setItems(array_filter($inconsistency->getItems()));
         }
 
         return array_filter(

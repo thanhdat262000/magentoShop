@@ -3,23 +3,12 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\GiftMessage\Test\Unit\Model\Plugin;
 
-use Magento\GiftMessage\Api\Data\MessageInterface;
-use Magento\GiftMessage\Api\OrderItemRepositoryInterface;
-use Magento\GiftMessage\Api\OrderRepositoryInterface;
 use Magento\GiftMessage\Model\Plugin\OrderSave;
-use Magento\Sales\Api\Data\OrderExtension;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\OrderItemExtension;
-use Magento\Sales\Api\Data\OrderItemInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\RuntimeException;
-use PHPUnit\Framework\TestCase;
 
-class OrderSaveTest extends TestCase
+class OrderSaveTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var OrderSave
@@ -27,64 +16,70 @@ class OrderSaveTest extends TestCase
     private $plugin;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $giftMessageOrderRepositoryMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $giftMessageOrderItemRepositoryMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $orderMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $orderExtensionMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $giftMessageMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $orderItemMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $orderItemExtensionMock;
 
     /**
-     * @var MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $orderRepositoryMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->giftMessageOrderRepositoryMock = $this->createMock(
-            OrderRepositoryInterface::class
+            \Magento\GiftMessage\Api\OrderRepositoryInterface::class
         );
         $this->giftMessageOrderItemRepositoryMock = $this->createMock(
-            OrderItemRepositoryInterface::class
+            \Magento\GiftMessage\Api\OrderItemRepositoryInterface::class
         );
         $this->orderMock = $this->createMock(
-            OrderInterface::class
+            \Magento\Sales\Api\Data\OrderInterface::class
         );
-        $this->orderExtensionMock = $this->getOrderExtensionMock();
+        $this->orderExtensionMock = $this->createPartialMock(
+            \Magento\Sales\Api\Data\OrderExtension::class,
+            ['getGiftMessage', 'setGiftMessage']
+        );
         $this->giftMessageMock = $this->createMock(
-            MessageInterface::class
+            \Magento\GiftMessage\Api\Data\MessageInterface::class
         );
         $this->orderItemMock = $this->createMock(
-            OrderItemInterface::class
+            \Magento\Sales\Api\Data\OrderItemInterface::class
         );
-        $this->orderItemExtensionMock = $this->getOrderItemExtensionMock();
+        $this->orderItemExtensionMock = $this->createPartialMock(
+            \Magento\Sales\Api\Data\OrderItemExtension::class,
+            ['setGiftMessage', 'getGiftMessage']
+        );
         $this->orderRepositoryMock = $this->createMock(
             \Magento\Sales\Api\OrderRepositoryInterface::class
         );
@@ -131,10 +126,12 @@ class OrderSaveTest extends TestCase
         $this->plugin->afterSave($this->orderRepositoryMock, $this->orderMock);
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\CouldNotSaveException
+     * @expectedExceptionMessage The gift message couldn't be added to the "Test message" order.
+     */
     public function testAfterSaveIfGiftMessagesNotExist()
     {
-        $this->expectException('Magento\Framework\Exception\CouldNotSaveException');
-        $this->expectExceptionMessage('The gift message couldn\'t be added to the "Test message" order.');
         // save Gift Message on order level
         $orderId = 1;
         $this->orderMock->expects($this->once())->method('getEntityId')->willReturn($orderId);
@@ -156,10 +153,12 @@ class OrderSaveTest extends TestCase
         $this->plugin->afterSave($this->orderRepositoryMock, $this->orderMock);
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\CouldNotSaveException
+     * @expectedExceptionMessage The gift message couldn't be added to the "Test message" order item.
+     */
     public function testAfterSaveIfItemGiftMessagesNotExist()
     {
-        $this->expectException('Magento\Framework\Exception\CouldNotSaveException');
-        $this->expectExceptionMessage('The gift message couldn\'t be added to the "Test message" order item.');
         // save Gift Message on order level
         $orderId = 1;
         $orderItemId = 2;
@@ -188,39 +187,5 @@ class OrderSaveTest extends TestCase
             ->with($orderId, $orderItemId, $this->giftMessageMock)
             ->willThrowException(new \Exception('Test message'));
         $this->plugin->afterSave($this->orderRepositoryMock, $this->orderMock);
-    }
-
-    /**
-     * Build order extension mock.
-     *
-     * @return MockObject
-     */
-    private function getOrderExtensionMock(): MockObject
-    {
-        $mockBuilder = $this->getMockBuilder(OrderExtension::class);
-        try {
-            $mockBuilder->addMethods(['getGiftMessage', 'setGiftMessage']);
-        } catch (RuntimeException $e) {
-            // OrderExtension already generated.
-        }
-
-        return $mockBuilder->getMock();
-    }
-
-    /**
-     * Build order item extension mock.
-     *
-     * @return MockObject
-     */
-    private function getOrderItemExtensionMock(): MockObject
-    {
-        $mockBuilder = $this->getMockBuilder(OrderItemExtension::class);
-        try {
-            $mockBuilder->addMethods(['getGiftMessage', 'setGiftMessage']);
-        } catch (RuntimeException $e) {
-            // OrderItemExtension already generated.
-        }
-
-        return $mockBuilder->getMock();
     }
 }

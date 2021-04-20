@@ -12,22 +12,22 @@
 
 namespace PhpCsFixer\Fixer\PhpUnit;
 
-use PhpCsFixer\Fixer\AbstractPhpUnitFixer;
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
+use PhpCsFixer\Indicator\PhpUnitTestCaseIndicator;
 use PhpCsFixer\Tokenizer\Analyzer\ArgumentsAnalyzer;
-use PhpCsFixer\Tokenizer\Analyzer\WhitespacesAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  */
-final class PhpUnitExpectationFixer extends AbstractPhpUnitFixer implements ConfigurationDefinitionFixerInterface, WhitespacesAwareFixerInterface
+final class PhpUnitExpectationFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface, WhitespacesAwareFixerInterface
 {
     /**
      * @var array<string, string>
@@ -122,12 +122,10 @@ final class MyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * {@inheritdoc}
-     *
-     * Must run after PhpUnitNoExpectationAnnotationFixer.
      */
-    public function getPriority()
+    public function isCandidate(Tokens $tokens)
     {
-        return 0;
+        return $tokens->isTokenKindFound(T_CLASS);
     }
 
     /**
@@ -136,6 +134,17 @@ final class MyTest extends \PHPUnit_Framework_TestCase
     public function isRisky()
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    {
+        $phpUnitTestCaseIndicator = new PhpUnitTestCaseIndicator();
+        foreach ($phpUnitTestCaseIndicator->findPhpUnitClasses($tokens) as $indexes) {
+            $this->fixExpectation($tokens, $indexes[0], $indexes[1]);
+        }
     }
 
     /**
@@ -152,10 +161,7 @@ final class MyTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function applyPhpUnitClassFix(Tokens $tokens, $startIndex, $endIndex)
+    private function fixExpectation(Tokens $tokens, $startIndex, $endIndex)
     {
         $argumentsAnalyzer = new ArgumentsAnalyzer();
 
@@ -191,7 +197,7 @@ final class MyTest extends \PHPUnit_Framework_TestCase
 
             $argumentsReplacements = ['expectException', $this->methodMap[$tokens[$index]->getContent()], 'expectExceptionCode'];
 
-            $indent = $this->whitespacesConfig->getLineEnding().WhitespacesAnalyzer::detectIndent($tokens, $thisIndex);
+            $indent = $this->whitespacesConfig->getLineEnding().$this->detectIndent($tokens, $thisIndex);
 
             $isMultilineWhitespace = false;
 
@@ -231,7 +237,7 @@ final class MyTest extends \PHPUnit_Framework_TestCase
                 ];
 
                 if ($isMultilineWhitespace) {
-                    $tokensOverrideArgStart[] = new Token([T_WHITESPACE, $indent.$this->whitespacesConfig->getIndent()]);
+                    array_push($tokensOverrideArgStart, new Token([T_WHITESPACE, $indent.$this->whitespacesConfig->getIndent()]));
                     array_unshift($tokensOverrideArgBefore, new Token([T_WHITESPACE, $indent]));
                 }
 
@@ -246,5 +252,22 @@ final class MyTest extends \PHPUnit_Framework_TestCase
 
             $tokens[$index] = new Token([T_STRING, 'expectException']);
         }
+    }
+
+    /**
+     * @param Tokens $tokens
+     * @param int    $index
+     *
+     * @return string
+     */
+    private function detectIndent(Tokens $tokens, $index)
+    {
+        if (!$tokens[$index - 1]->isWhitespace()) {
+            return ''; // cannot detect indent
+        }
+
+        $explodedContent = explode("\n", $tokens[$index - 1]->getContent());
+
+        return end($explodedContent);
     }
 }

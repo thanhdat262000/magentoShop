@@ -26,6 +26,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * @var string
      */
+    private $testsFailedFile;
+
+    /**
+     * @var string
+     */
     private $testsReRunFile;
 
     /**
@@ -64,8 +69,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
-        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
+        $testsOutputDir = FilePathFormatter::format(TESTS_BP) .
+            "tests" .
+            DIRECTORY_SEPARATOR .
+            "_output" .
+            DIRECTORY_SEPARATOR;
+
+        $this->testsFailedFile = $testsOutputDir . "failed";
+        $this->testsReRunFile = $testsOutputDir . "rerun_tests";
         $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
             "_generated" .
             DIRECTORY_SEPARATOR .
@@ -84,6 +95,9 @@ class RunTestFailedCommand extends BaseGenerateCommand
             $debug,
             $allowSkipped
         );
+
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
 
         $testConfiguration = $this->getFailedTestList();
 
@@ -105,28 +119,19 @@ class RunTestFailedCommand extends BaseGenerateCommand
 
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
-        for ($i = 0; $i < count($testManifestList); $i++) {
-            if ($this->pauseEnabled()) {
-                $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testManifestList[$i] . ' --debug ';
-                if ($i != count($testManifestList) - 1) {
-                    $codeceptionCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
+        foreach ($testManifestList as $testCommand) {
+            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+            $codeceptionCommand .= $testCommand;
+
+            $process = new Process($codeceptionCommand);
+            $process->setWorkingDirectory(TESTS_BP);
+            $process->setIdleTimeout(600);
+            $process->setTimeout(0);
+            $returnCode = max($returnCode, $process->run(
+                function ($type, $buffer) use ($output) {
+                    $output->write($buffer);
                 }
-                $returnCode = $this->codeceptRunTest($codeceptionCommand, $output);
-            } else {
-                $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
-                $codeceptionCommand .= $testManifestList[$i];
-
-                $process = new Process($codeceptionCommand);
-                $process->setWorkingDirectory(TESTS_BP);
-                $process->setIdleTimeout(600);
-                $process->setTimeout(0);
-                $returnCode = max($returnCode, $process->run(
-                    function ($type, $buffer) use ($output) {
-                        $output->write($buffer);
-                    }
-                ));
-            }
-
+            ));
             if (file_exists($this->testsFailedFile)) {
                 $this->failedList = array_merge(
                     $this->failedList,
@@ -134,7 +139,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 );
             }
         }
-
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
@@ -164,7 +168,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     if ($suiteName == self::DEFAULT_TEST_GROUP) {
                         array_push($failedTestDetails['tests'], $testName);
                     } else {
-                        $suiteName = $this->sanitizeSuiteName($suiteName);
+                        // Trim potential suite_parallel_0 to suite_parallel
+                        $suiteNameArray = explode("_", $suiteName);
+                        if (is_numeric(array_pop($suiteNameArray))) {
+                            $suiteName = implode("_", $suiteNameArray);
+                        }
                         $failedTestDetails['suites'] = array_merge_recursive(
                             $failedTestDetails['suites'],
                             [$suiteName => [$testName]]
@@ -184,23 +192,6 @@ class RunTestFailedCommand extends BaseGenerateCommand
         }
         $testConfigurationJson = json_encode($failedTestDetails);
         return $testConfigurationJson;
-    }
-
-    /**
-     * Trim potential suite_parallel_0_G to suite_parallel
-     *
-     * @param string $suiteName
-     * @return string
-     */
-    private function sanitizeSuiteName($suiteName)
-    {
-        $suiteNameArray = explode("_", $suiteName);
-        if (array_pop($suiteNameArray) == 'G') {
-            if (is_numeric(array_pop($suiteNameArray))) {
-                $suiteName = implode("_", $suiteNameArray);
-            }
-        }
-        return $suiteName;
     }
 
     /**

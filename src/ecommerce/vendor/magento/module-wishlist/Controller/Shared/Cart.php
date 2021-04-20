@@ -3,17 +3,13 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Wishlist\Controller\Shared;
 
 use Magento\Catalog\Model\Product\Exception as ProductException;
 use Magento\Checkout\Helper\Cart as CartHelper;
 use Magento\Checkout\Model\Cart as CustomerCart;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context as ActionContext;
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Controller\Result\Redirect as ResultRedirect;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Escaper;
 use Magento\Framework\Exception\LocalizedException;
@@ -27,7 +23,7 @@ use Magento\Wishlist\Model\ResourceModel\Item\Option\Collection as OptionCollect
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Cart extends Action implements HttpPostActionInterface
+class Cart extends \Magento\Framework\App\Action\Action implements HttpGetActionInterface
 {
     /**
      * @var CustomerCart
@@ -84,7 +80,7 @@ class Cart extends Action implements HttpPostActionInterface
      * If Product has required options - redirect
      * to product view page with message about needed defined required options
      *
-     * @return Redirect
+     * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()
     {
@@ -124,11 +120,9 @@ class Cart extends Action implements HttpPostActionInterface
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage($e, __('We can\'t add the item to the cart right now.'));
         }
-
-        /** @var ResultRedirect $resultRedirect */
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($redirectUrl);
-
         return $resultRedirect;
     }
 }

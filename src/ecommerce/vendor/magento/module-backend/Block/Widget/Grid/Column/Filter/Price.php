@@ -162,7 +162,7 @@ class Price extends \Magento\Backend\Block\Widget\Grid\Column\Filter\AbstractFil
     /**
      * Retrieve filter value
      *
-     * @param string|null $index
+     * @param null $index
      * @return array|null
      */
     public function getValue($index = null)
@@ -194,11 +194,11 @@ class Price extends \Magento\Backend\Block\Widget\Grid\Column\Filter\AbstractFil
         $rate = $this->_getRate($displayCurrency, $this->_getColumnCurrencyCode());
 
         if (isset($value['from'])) {
-            $value['from'] = (float) $value['from'] * $rate;
+            $value['from'] *= $rate;
         }
 
         if (isset($value['to'])) {
-            $value['to'] = (float) $value['to'] * $rate;
+            $value['to'] *= $rate;
         }
 
         $this->prepareRates($displayCurrency);

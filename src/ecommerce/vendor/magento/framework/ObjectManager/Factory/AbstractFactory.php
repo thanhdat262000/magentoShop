@@ -129,10 +129,7 @@ abstract class AbstractFactory implements \Magento\Framework\ObjectManager\Facto
             );
 
             throw new RuntimeException(
-                new Phrase('Type Error occurred when creating object: %type, %msg', [
-                    'type' => $type,
-                    'msg' => $exception->getMessage()
-                ])
+                new Phrase('Type Error occurred when creating object: %type', ['type' => $type])
             );
         }
     }
@@ -239,7 +236,7 @@ abstract class AbstractFactory implements \Magento\Framework\ObjectManager\Facto
             $resolvedArguments[] = $this->getResolvedArgument((string)$requestedType, $parameter, $arguments);
         }
 
-        return array_merge([], ...$resolvedArguments);
+        return empty($resolvedArguments) ? [] : array_merge(...$resolvedArguments);
     }
 
     /**

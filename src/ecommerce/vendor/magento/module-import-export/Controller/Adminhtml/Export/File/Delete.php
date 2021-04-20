@@ -9,13 +9,13 @@ namespace Magento\ImportExport\Controller\Adminhtml\Export\File;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Exception\ValidatorException;
 use Magento\ImportExport\Controller\Adminhtml\Export as ExportController;
 use Magento\Framework\Filesystem;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Filesystem\Directory\WriteFactory;
+use Magento\Framework\Filesystem\DriverInterface;
 
 /**
  * Controller that delete file by name.
@@ -33,60 +33,52 @@ class Delete extends ExportController implements HttpPostActionInterface
     private $filesystem;
 
     /**
-     * @var WriteFactory
+     * @var DriverInterface
      */
-    private $writeFactory;
+    private $file;
 
     /**
      * Delete constructor.
-     *
      * @param Action\Context $context
      * @param Filesystem $filesystem
-     * @param WriteFactory $writeFactory
+     * @param DriverInterface $file
      */
     public function __construct(
         Action\Context $context,
         Filesystem $filesystem,
-        WriteFactory $writeFactory
+        DriverInterface $file
     ) {
         $this->filesystem = $filesystem;
-        $this->writeFactory = $writeFactory;
+        $this->file = $file;
         parent::__construct($context);
     }
 
     /**
      * Controller basic method implementation.
      *
-     * @return ResultInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws LocalizedException
      */
     public function execute()
     {
-        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-        $resultRedirect = $this->resultRedirectFactory->create();
-        $resultRedirect->setPath('adminhtml/export/index');
         try {
             if (empty($fileName = $this->getRequest()->getParam('filename'))) {
-                $this->messageManager->addErrorMessage(__('Please provide valid export file name'));
+                throw new LocalizedException(__('Please provide export file name'));
+            }
+            $directory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
+            $path = $directory->getAbsolutePath() . 'export/' . $fileName;
 
-                return $resultRedirect;
+            if (!$directory->isFile($path)) {
+                throw new LocalizedException(__('Sorry, but the data is invalid or the file is not uploaded.'));
             }
-            $directoryWrite = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_IMPORT_EXPORT);
-            try {
-                $directoryWrite->delete($directoryWrite->getAbsolutePath() . 'export/' . $fileName);
-                $this->messageManager->addSuccessMessage(__('File %1 deleted', $fileName));
-            } catch (ValidatorException $exception) {
-                $this->messageManager->addErrorMessage(
-                    __('Sorry, but the data is invalid or the file is not uploaded.')
-                );
-            } catch (FileSystemException $exception) {
-                $this->messageManager->addErrorMessage(
-                    __('Sorry, but the data is invalid or the file is not uploaded.')
-                );
-            }
+
+            $this->file->deleteFile($path);
+            /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            $resultRedirect->setPath('adminhtml/export/index');
+            return $resultRedirect;
         } catch (FileSystemException $exception) {
-            $this->messageManager->addErrorMessage(__('There are no export file with such name %1', $fileName));
+            throw new LocalizedException(__('There are no export file with such name %1', $fileName));
         }
-
-        return $resultRedirect;
     }
 }

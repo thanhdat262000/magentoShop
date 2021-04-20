@@ -3,7 +3,6 @@
 namespace Dotdigitalgroup\Email\Observer\Adminhtml;
 
 use Dotdigitalgroup\Email\Model\Sync\IntegrationInsightsFactory;
-use Dotdigitalgroup\Email\Model\Sync\DummyRecordsFactory;
 
 /**
  * Validate api when saving credentials in admin.
@@ -41,11 +40,6 @@ class ApiValidate implements \Magento\Framework\Event\ObserverInterface
     private $integrationInsightsFactory;
 
     /**
-     * @var DummyRecordsFactory
-     */
-    private $dummyRecordsFactory;
-
-    /**
      * ApiValidate constructor.
      *
      * @param \Dotdigitalgroup\Email\Helper\Data $data
@@ -53,15 +47,13 @@ class ApiValidate implements \Magento\Framework\Event\ObserverInterface
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\App\Config\Storage\Writer $writer
      * @param IntegrationInsightsFactory $integrationInsightsFactory
-     * @param DummyRecordsFactory $dummyRecordsFactory
      */
     public function __construct(
         \Dotdigitalgroup\Email\Helper\Data $data,
         \Dotdigitalgroup\Email\Model\Apiconnector\Test $test,
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Config\Storage\Writer $writer,
-        IntegrationInsightsFactory $integrationInsightsFactory,
-        DummyRecordsFactory $dummyRecordsFactory
+        IntegrationInsightsFactory $integrationInsightsFactory
     ) {
         $this->test           = $test;
         $this->helper         = $data;
@@ -69,7 +61,6 @@ class ApiValidate implements \Magento\Framework\Event\ObserverInterface
         $this->context        = $context;
         $this->messageManager = $context->getMessageManager();
         $this->integrationInsightsFactory = $integrationInsightsFactory;
-        $this->dummyRecordsFactory = $dummyRecordsFactory;
     }
 
     /**
@@ -98,18 +89,6 @@ class ApiValidate implements \Magento\Framework\Event\ObserverInterface
             if ($isValidAccount) {
                 // send integration data
                 $this->integrationInsightsFactory->create()
-                    ->sync();
-
-                $websiteId = $this->context->getRequest()->getParam('website');
-
-                if ($websiteId) {
-                    $this->dummyRecordsFactory->create()
-                    ->syncForWebsite($websiteId);
-
-                    return $this;
-                }
-
-                $this->dummyRecordsFactory->create()
                     ->sync();
             }
         }

@@ -6,57 +6,53 @@
 namespace Magento\Payment\Model;
 
 use Magento\Payment\Api\Data\PaymentMethodInterface;
-use Magento\Payment\Api\Data\PaymentMethodInterfaceFactory;
-use Magento\Payment\Api\PaymentMethodListInterface;
-use Magento\Payment\Helper\Data;
-use UnexpectedValueException;
 
-class PaymentMethodList implements PaymentMethodListInterface
+/**
+ * Payment method list class.
+ */
+class PaymentMethodList implements \Magento\Payment\Api\PaymentMethodListInterface
 {
     /**
-     * @var PaymentMethodInterfaceFactory
+     * @var \Magento\Payment\Api\Data\PaymentMethodInterfaceFactory
      */
     private $methodFactory;
 
     /**
-     * @var Data
+     * @var \Magento\Payment\Helper\Data
      */
     private $helper;
 
     /**
-     * @param PaymentMethodInterfaceFactory $methodFactory
-     * @param Data $helper
+     * @param \Magento\Payment\Api\Data\PaymentMethodInterfaceFactory $methodFactory
+     * @param \Magento\Payment\Helper\Data $helper
      */
     public function __construct(
-        PaymentMethodInterfaceFactory $methodFactory,
-        Data $helper
+        \Magento\Payment\Api\Data\PaymentMethodInterfaceFactory $methodFactory,
+        \Magento\Payment\Helper\Data $helper
     ) {
         $this->methodFactory = $methodFactory;
         $this->helper = $helper;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getList($storeId)
     {
         $methodsCodes = array_keys($this->helper->getPaymentMethods());
+
         $methodsInstances = array_map(
             function ($code) {
-                try {
-                    return $this->helper->getMethodInstance($code);
-                } catch (UnexpectedValueException $e) {
-                    return null;
-                }
+                return $this->helper->getMethodInstance($code);
             },
             $methodsCodes
         );
 
-        $methodsInstances = array_filter($methodsInstances, function ($method) {
-            return $method && !($method instanceof \Magento\Payment\Model\Method\Substitution);
+        $methodsInstances = array_filter($methodsInstances, function (MethodInterface $method) {
+            return !($method instanceof \Magento\Payment\Model\Method\Substitution);
         });
 
-        uasort(
+        @uasort(
             $methodsInstances,
             function (MethodInterface $a, MethodInterface $b) use ($storeId) {
                 return (int)$a->getConfigData('sort_order', $storeId) - (int)$b->getConfigData('sort_order', $storeId);
@@ -80,7 +76,7 @@ class PaymentMethodList implements PaymentMethodListInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getActiveList($storeId)
     {

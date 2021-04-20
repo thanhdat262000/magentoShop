@@ -20,7 +20,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function sendResponse()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendResponse');
-        return $pluginInfo ? $this->___callPlugins('sendResponse', func_get_args(), $pluginInfo) : parent::sendResponse();
+        if (!$pluginInfo) {
+            return parent::sendResponse();
+        } else {
+            return $this->___callPlugins('sendResponse', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setFilePath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFilePath');
-        return $pluginInfo ? $this->___callPlugins('setFilePath', func_get_args(), $pluginInfo) : parent::setFilePath($path);
+        if (!$pluginInfo) {
+            return parent::setFilePath($path);
+        } else {
+            return $this->___callPlugins('setFilePath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setXFrameOptions($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setXFrameOptions');
-        return $pluginInfo ? $this->___callPlugins('setXFrameOptions', func_get_args(), $pluginInfo) : parent::setXFrameOptions($value);
+        if (!$pluginInfo) {
+            return parent::setXFrameOptions($value);
+        } else {
+            return $this->___callPlugins('setXFrameOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function sendVary()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendVary');
-        return $pluginInfo ? $this->___callPlugins('sendVary', func_get_args(), $pluginInfo) : parent::sendVary();
+        if (!$pluginInfo) {
+            return parent::sendVary();
+        } else {
+            return $this->___callPlugins('sendVary', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setPublicHeaders($ttl)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPublicHeaders');
-        return $pluginInfo ? $this->___callPlugins('setPublicHeaders', func_get_args(), $pluginInfo) : parent::setPublicHeaders($ttl);
+        if (!$pluginInfo) {
+            return parent::setPublicHeaders($ttl);
+        } else {
+            return $this->___callPlugins('setPublicHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setPrivateHeaders($ttl)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPrivateHeaders');
-        return $pluginInfo ? $this->___callPlugins('setPrivateHeaders', func_get_args(), $pluginInfo) : parent::setPrivateHeaders($ttl);
+        if (!$pluginInfo) {
+            return parent::setPrivateHeaders($ttl);
+        } else {
+            return $this->___callPlugins('setPrivateHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setNoCacheHeaders()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setNoCacheHeaders');
-        return $pluginInfo ? $this->___callPlugins('setNoCacheHeaders', func_get_args(), $pluginInfo) : parent::setNoCacheHeaders();
+        if (!$pluginInfo) {
+            return parent::setNoCacheHeaders();
+        } else {
+            return $this->___callPlugins('setNoCacheHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function representJson($content)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'representJson');
-        return $pluginInfo ? $this->___callPlugins('representJson', func_get_args(), $pluginInfo) : parent::representJson($content);
+        if (!$pluginInfo) {
+            return parent::representJson($content);
+        } else {
+            return $this->___callPlugins('representJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getHeader($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getHeader');
-        return $pluginInfo ? $this->___callPlugins('getHeader', func_get_args(), $pluginInfo) : parent::getHeader($name);
+        if (!$pluginInfo) {
+            return parent::getHeader($name);
+        } else {
+            return $this->___callPlugins('getHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function appendBody($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'appendBody');
-        return $pluginInfo ? $this->___callPlugins('appendBody', func_get_args(), $pluginInfo) : parent::appendBody($value);
+        if (!$pluginInfo) {
+            return parent::appendBody($value);
+        } else {
+            return $this->___callPlugins('appendBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setBody($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBody');
-        return $pluginInfo ? $this->___callPlugins('setBody', func_get_args(), $pluginInfo) : parent::setBody($value);
+        if (!$pluginInfo) {
+            return parent::setBody($value);
+        } else {
+            return $this->___callPlugins('setBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function clearBody()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearBody');
-        return $pluginInfo ? $this->___callPlugins('clearBody', func_get_args(), $pluginInfo) : parent::clearBody();
+        if (!$pluginInfo) {
+            return parent::clearBody();
+        } else {
+            return $this->___callPlugins('clearBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setHeader($name, $value, $replace = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeader');
-        return $pluginInfo ? $this->___callPlugins('setHeader', func_get_args(), $pluginInfo) : parent::setHeader($name, $value, $replace);
+        if (!$pluginInfo) {
+            return parent::setHeader($name, $value, $replace);
+        } else {
+            return $this->___callPlugins('setHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function clearHeader($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearHeader');
-        return $pluginInfo ? $this->___callPlugins('clearHeader', func_get_args(), $pluginInfo) : parent::clearHeader($name);
+        if (!$pluginInfo) {
+            return parent::clearHeader($name);
+        } else {
+            return $this->___callPlugins('clearHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function clearHeaders()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearHeaders');
-        return $pluginInfo ? $this->___callPlugins('clearHeaders', func_get_args(), $pluginInfo) : parent::clearHeaders();
+        if (!$pluginInfo) {
+            return parent::clearHeaders();
+        } else {
+            return $this->___callPlugins('clearHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setRedirect($url, $code = 302)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setRedirect');
-        return $pluginInfo ? $this->___callPlugins('setRedirect', func_get_args(), $pluginInfo) : parent::setRedirect($url, $code);
+        if (!$pluginInfo) {
+            return parent::setRedirect($url, $code);
+        } else {
+            return $this->___callPlugins('setRedirect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setHttpResponseCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHttpResponseCode');
-        return $pluginInfo ? $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo) : parent::setHttpResponseCode($code);
+        if (!$pluginInfo) {
+            return parent::setHttpResponseCode($code);
+        } else {
+            return $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setStatusHeader($httpCode, $version = null, $phrase = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatusHeader');
-        return $pluginInfo ? $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo) : parent::setStatusHeader($httpCode, $version, $phrase);
+        if (!$pluginInfo) {
+            return parent::setStatusHeader($httpCode, $version, $phrase);
+        } else {
+            return $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getHttpResponseCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getHttpResponseCode');
-        return $pluginInfo ? $this->___callPlugins('getHttpResponseCode', func_get_args(), $pluginInfo) : parent::getHttpResponseCode();
+        if (!$pluginInfo) {
+            return parent::getHttpResponseCode();
+        } else {
+            return $this->___callPlugins('getHttpResponseCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isRedirect()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isRedirect');
-        return $pluginInfo ? $this->___callPlugins('isRedirect', func_get_args(), $pluginInfo) : parent::isRedirect();
+        if (!$pluginInfo) {
+            return parent::isRedirect();
+        } else {
+            return $this->___callPlugins('isRedirect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getVersion()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVersion');
-        return $pluginInfo ? $this->___callPlugins('getVersion', func_get_args(), $pluginInfo) : parent::getVersion();
+        if (!$pluginInfo) {
+            return parent::getVersion();
+        } else {
+            return $this->___callPlugins('getVersion', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function headersSent()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'headersSent');
-        return $pluginInfo ? $this->___callPlugins('headersSent', func_get_args(), $pluginInfo) : parent::headersSent();
+        if (!$pluginInfo) {
+            return parent::headersSent();
+        } else {
+            return $this->___callPlugins('headersSent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function contentSent()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'contentSent');
-        return $pluginInfo ? $this->___callPlugins('contentSent', func_get_args(), $pluginInfo) : parent::contentSent();
+        if (!$pluginInfo) {
+            return parent::contentSent();
+        } else {
+            return $this->___callPlugins('contentSent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setHeadersSentHandler(callable $handler)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeadersSentHandler');
-        return $pluginInfo ? $this->___callPlugins('setHeadersSentHandler', func_get_args(), $pluginInfo) : parent::setHeadersSentHandler($handler);
+        if (!$pluginInfo) {
+            return parent::setHeadersSentHandler($handler);
+        } else {
+            return $this->___callPlugins('setHeadersSentHandler', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function sendHeaders()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendHeaders');
-        return $pluginInfo ? $this->___callPlugins('sendHeaders', func_get_args(), $pluginInfo) : parent::sendHeaders();
+        if (!$pluginInfo) {
+            return parent::sendHeaders();
+        } else {
+            return $this->___callPlugins('sendHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function sendContent()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendContent');
-        return $pluginInfo ? $this->___callPlugins('sendContent', func_get_args(), $pluginInfo) : parent::sendContent();
+        if (!$pluginInfo) {
+            return parent::sendContent();
+        } else {
+            return $this->___callPlugins('sendContent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function send()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'send');
-        return $pluginInfo ? $this->___callPlugins('send', func_get_args(), $pluginInfo) : parent::send();
+        if (!$pluginInfo) {
+            return parent::send();
+        } else {
+            return $this->___callPlugins('send', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getCookie()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookie');
-        return $pluginInfo ? $this->___callPlugins('getCookie', func_get_args(), $pluginInfo) : parent::getCookie();
+        if (!$pluginInfo) {
+            return parent::getCookie();
+        } else {
+            return $this->___callPlugins('getCookie', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setStatusCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatusCode');
-        return $pluginInfo ? $this->___callPlugins('setStatusCode', func_get_args(), $pluginInfo) : parent::setStatusCode($code);
+        if (!$pluginInfo) {
+            return parent::setStatusCode($code);
+        } else {
+            return $this->___callPlugins('setStatusCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getStatusCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStatusCode');
-        return $pluginInfo ? $this->___callPlugins('getStatusCode', func_get_args(), $pluginInfo) : parent::getStatusCode();
+        if (!$pluginInfo) {
+            return parent::getStatusCode();
+        } else {
+            return $this->___callPlugins('getStatusCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setCustomStatusCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomStatusCode');
-        return $pluginInfo ? $this->___callPlugins('setCustomStatusCode', func_get_args(), $pluginInfo) : parent::setCustomStatusCode($code);
+        if (!$pluginInfo) {
+            return parent::setCustomStatusCode($code);
+        } else {
+            return $this->___callPlugins('setCustomStatusCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setReasonPhrase($reasonPhrase)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setReasonPhrase');
-        return $pluginInfo ? $this->___callPlugins('setReasonPhrase', func_get_args(), $pluginInfo) : parent::setReasonPhrase($reasonPhrase);
+        if (!$pluginInfo) {
+            return parent::setReasonPhrase($reasonPhrase);
+        } else {
+            return $this->___callPlugins('setReasonPhrase', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getReasonPhrase()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getReasonPhrase');
-        return $pluginInfo ? $this->___callPlugins('getReasonPhrase', func_get_args(), $pluginInfo) : parent::getReasonPhrase();
+        if (!$pluginInfo) {
+            return parent::getReasonPhrase();
+        } else {
+            return $this->___callPlugins('getReasonPhrase', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getBody()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBody');
-        return $pluginInfo ? $this->___callPlugins('getBody', func_get_args(), $pluginInfo) : parent::getBody();
+        if (!$pluginInfo) {
+            return parent::getBody();
+        } else {
+            return $this->___callPlugins('getBody', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isClientError()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isClientError');
-        return $pluginInfo ? $this->___callPlugins('isClientError', func_get_args(), $pluginInfo) : parent::isClientError();
+        if (!$pluginInfo) {
+            return parent::isClientError();
+        } else {
+            return $this->___callPlugins('isClientError', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isForbidden()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isForbidden');
-        return $pluginInfo ? $this->___callPlugins('isForbidden', func_get_args(), $pluginInfo) : parent::isForbidden();
+        if (!$pluginInfo) {
+            return parent::isForbidden();
+        } else {
+            return $this->___callPlugins('isForbidden', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isInformational()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isInformational');
-        return $pluginInfo ? $this->___callPlugins('isInformational', func_get_args(), $pluginInfo) : parent::isInformational();
+        if (!$pluginInfo) {
+            return parent::isInformational();
+        } else {
+            return $this->___callPlugins('isInformational', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isNotFound()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isNotFound');
-        return $pluginInfo ? $this->___callPlugins('isNotFound', func_get_args(), $pluginInfo) : parent::isNotFound();
+        if (!$pluginInfo) {
+            return parent::isNotFound();
+        } else {
+            return $this->___callPlugins('isNotFound', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isGone()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isGone');
-        return $pluginInfo ? $this->___callPlugins('isGone', func_get_args(), $pluginInfo) : parent::isGone();
+        if (!$pluginInfo) {
+            return parent::isGone();
+        } else {
+            return $this->___callPlugins('isGone', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isOk()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isOk');
-        return $pluginInfo ? $this->___callPlugins('isOk', func_get_args(), $pluginInfo) : parent::isOk();
+        if (!$pluginInfo) {
+            return parent::isOk();
+        } else {
+            return $this->___callPlugins('isOk', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +540,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isServerError()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isServerError');
-        return $pluginInfo ? $this->___callPlugins('isServerError', func_get_args(), $pluginInfo) : parent::isServerError();
+        if (!$pluginInfo) {
+            return parent::isServerError();
+        } else {
+            return $this->___callPlugins('isServerError', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +553,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function isSuccess()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSuccess');
-        return $pluginInfo ? $this->___callPlugins('isSuccess', func_get_args(), $pluginInfo) : parent::isSuccess();
+        if (!$pluginInfo) {
+            return parent::isSuccess();
+        } else {
+            return $this->___callPlugins('isSuccess', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +566,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function renderStatusLine()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderStatusLine');
-        return $pluginInfo ? $this->___callPlugins('renderStatusLine', func_get_args(), $pluginInfo) : parent::renderStatusLine();
+        if (!$pluginInfo) {
+            return parent::renderStatusLine();
+        } else {
+            return $this->___callPlugins('renderStatusLine', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +579,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function toString()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString();
+        if (!$pluginInfo) {
+            return parent::toString();
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +592,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setVersion($version)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setVersion');
-        return $pluginInfo ? $this->___callPlugins('setVersion', func_get_args(), $pluginInfo) : parent::setVersion($version);
+        if (!$pluginInfo) {
+            return parent::setVersion($version);
+        } else {
+            return $this->___callPlugins('setVersion', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +605,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setHeaders(\Laminas\Http\Headers $headers)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeaders');
-        return $pluginInfo ? $this->___callPlugins('setHeaders', func_get_args(), $pluginInfo) : parent::setHeaders($headers);
+        if (!$pluginInfo) {
+            return parent::setHeaders($headers);
+        } else {
+            return $this->___callPlugins('setHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +618,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getHeaders()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getHeaders');
-        return $pluginInfo ? $this->___callPlugins('getHeaders', func_get_args(), $pluginInfo) : parent::getHeaders();
+        if (!$pluginInfo) {
+            return parent::getHeaders();
+        } else {
+            return $this->___callPlugins('getHeaders', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +631,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function __toString()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__toString');
-        return $pluginInfo ? $this->___callPlugins('__toString', func_get_args(), $pluginInfo) : parent::__toString();
+        if (!$pluginInfo) {
+            return parent::__toString();
+        } else {
+            return $this->___callPlugins('__toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +644,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setMetadata($spec, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setMetadata');
-        return $pluginInfo ? $this->___callPlugins('setMetadata', func_get_args(), $pluginInfo) : parent::setMetadata($spec, $value);
+        if (!$pluginInfo) {
+            return parent::setMetadata($spec, $value);
+        } else {
+            return $this->___callPlugins('setMetadata', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +657,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getMetadata($key = null, $default = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMetadata');
-        return $pluginInfo ? $this->___callPlugins('getMetadata', func_get_args(), $pluginInfo) : parent::getMetadata($key, $default);
+        if (!$pluginInfo) {
+            return parent::getMetadata($key, $default);
+        } else {
+            return $this->___callPlugins('getMetadata', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +670,11 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function setContent($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setContent');
-        return $pluginInfo ? $this->___callPlugins('setContent', func_get_args(), $pluginInfo) : parent::setContent($value);
+        if (!$pluginInfo) {
+            return parent::setContent($value);
+        } else {
+            return $this->___callPlugins('setContent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,6 +683,10 @@ class Interceptor extends \Magento\MediaStorage\Model\File\Storage\Response impl
     public function getContent()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getContent');
-        return $pluginInfo ? $this->___callPlugins('getContent', func_get_args(), $pluginInfo) : parent::getContent();
+        if (!$pluginInfo) {
+            return parent::getContent();
+        } else {
+            return $this->___callPlugins('getContent', func_get_args(), $pluginInfo);
+        }
     }
 }

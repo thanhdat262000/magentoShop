@@ -3,33 +3,24 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Store\Model\Service;
-
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Api\Data\StoreConfigInterface;
-use Magento\Store\Api\Data\StoreInterface;
-use Magento\Store\Model\Data\StoreConfig;
-use Magento\Store\Model\Data\StoreConfigFactory;
-use Magento\Store\Model\ResourceModel\Store\CollectionFactory;
-use Magento\Store\Model\Store;
 
 class StoreConfigManager implements \Magento\Store\Api\StoreConfigManagerInterface
 {
     /**
-     * @var CollectionFactory
+     * @var \Magento\Store\Model\ResourceModel\Store\CollectionFactory
      */
     protected $storeCollectionFactory;
 
     /**
-     * @var StoreConfigFactory
+     * @var \Magento\Store\Model\Data\StoreConfigFactory
      */
     protected $storeConfigFactory;
 
     /**
      * Core store config
      *
-     * @var ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
 
@@ -47,14 +38,14 @@ class StoreConfigManager implements \Magento\Store\Api\StoreConfigManagerInterfa
     ];
 
     /**
-     * @param CollectionFactory $storeCollectionFactory
-     * @param ScopeConfigInterface $scopeConfig
-     * @param StoreConfigFactory $storeConfigFactory
+     * @param \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\Data\StoreConfigFactory $storeConfigFactory
      */
     public function __construct(
-        CollectionFactory $storeCollectionFactory,
-        ScopeConfigInterface $scopeConfig,
-        StoreConfigFactory $storeConfigFactory
+        \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Store\Model\Data\StoreConfigFactory $storeConfigFactory
     ) {
         $this->storeCollectionFactory = $storeCollectionFactory;
         $this->scopeConfig = $scopeConfig;
@@ -62,10 +53,8 @@ class StoreConfigManager implements \Magento\Store\Api\StoreConfigManagerInterfa
     }
 
     /**
-     * Get store configurations
-     *
      * @param string[] $storeCodes list of stores by store codes, will return all if storeCodes is not set
-     * @return StoreConfigInterface[]
+     * @return \Magento\Store\Api\Data\StoreConfigInterface[]
      */
     public function getStoreConfigs(array $storeCodes = null)
     {
@@ -82,14 +71,12 @@ class StoreConfigManager implements \Magento\Store\Api\StoreConfigManagerInterfa
     }
 
     /**
-     * Get store specific configs
-     *
-     * @param Store|StoreInterface $store
-     * @return StoreConfigInterface
+     * @param \Magento\Store\Model\Store $store
+     * @return \Magento\Store\Api\Data\StoreConfigInterface
      */
     protected function getStoreConfig($store)
     {
-        /** @var StoreConfig $storeConfig */
+        /** @var \Magento\Store\Model\Data\StoreConfig $storeConfig */
         $storeConfig = $this->storeConfigFactory->create();
 
         $storeConfig->setId($store->getId())

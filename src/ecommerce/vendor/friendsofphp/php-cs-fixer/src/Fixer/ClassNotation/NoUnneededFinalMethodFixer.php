@@ -28,26 +28,25 @@ final class NoUnneededFinalMethodFixer extends AbstractFixer
     public function getDefinition()
     {
         return new FixerDefinition(
-            'A `final` class must not have `final` methods and `private` methods must not be `final`.',
+            'A final class must not have final methods.',
             [
                 new CodeSample(
                     '<?php
-final class Foo
-{
-    final public function foo1() {}
+final class Foo {
+    final public function foo() {}
     final protected function bar() {}
     final private function baz() {}
 }
-
-class Bar
-{
-    final private function bar1() {}
+'
+                ),
+                new CodeSample(
+                    '<?php
+class Foo {
+    final private function bar() {}
 }
 '
                 ),
-            ],
-            null,
-            'Risky when child class overrides a `private` method.'
+            ]
         );
     }
 
@@ -57,11 +56,6 @@ class Bar
     public function isCandidate(Tokens $tokens)
     {
         return $tokens->isAllTokenKindsFound([T_CLASS, T_FINAL]);
-    }
-
-    public function isRisky()
-    {
-        return true;
     }
 
     /**
@@ -84,13 +78,13 @@ class Bar
     }
 
     /**
-     * @param int  $classOpenIndex
-     * @param bool $classIsFinal
+     * @param Tokens $tokens
+     * @param int    $classOpenIndex
+     * @param bool   $classIsFinal
      */
     private function fixClass(Tokens $tokens, $classOpenIndex, $classIsFinal)
     {
         $tokensCount = \count($tokens);
-
         for ($index = $classOpenIndex + 1; $index < $tokensCount; ++$index) {
             // Class end
             if ($tokens[$index]->equals('}')) {
@@ -108,39 +102,38 @@ class Bar
                 continue;
             }
 
-            if (!$classIsFinal && !$this->isPrivateMethodOtherThanConstructor($tokens, $index, $classOpenIndex)) {
+            if (!$classIsFinal && !$this->isPrivateMethod($tokens, $index, $classOpenIndex)) {
                 continue;
             }
 
             $tokens->clearAt($index);
 
-            ++$index;
-
-            if ($tokens[$index]->isWhitespace()) {
-                $tokens->clearAt($index);
+            $nextTokenIndex = $index + 1;
+            if ($tokens[$nextTokenIndex]->isWhitespace()) {
+                $tokens->clearAt($nextTokenIndex);
             }
         }
     }
 
     /**
-     * @param int $index
-     * @param int $classOpenIndex
+     * @param Tokens $tokens
+     * @param int    $index
+     * @param int    $classOpenIndex
      *
      * @return bool
      */
-    private function isPrivateMethodOtherThanConstructor(Tokens $tokens, $index, $classOpenIndex)
+    private function isPrivateMethod(Tokens $tokens, $index, $classOpenIndex)
     {
         $index = max($classOpenIndex + 1, $tokens->getPrevTokenOfKind($index, [';', '{', '}']));
-        $private = false;
 
         while (!$tokens[$index]->isGivenKind(T_FUNCTION)) {
             if ($tokens[$index]->isGivenKind(T_PRIVATE)) {
-                $private = true;
+                return true;
             }
 
-            $index = $tokens->getNextMeaningfulToken($index);
+            ++$index;
         }
 
-        return $private && '__construct' !== strtolower($tokens[$tokens->getNextMeaningfulToken($index)]->getContent());
+        return false;
     }
 }

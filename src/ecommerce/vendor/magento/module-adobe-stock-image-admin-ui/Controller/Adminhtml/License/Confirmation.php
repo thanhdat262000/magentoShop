@@ -10,7 +10,6 @@ namespace Magento\AdobeStockImageAdminUi\Controller\Adminhtml\License;
 
 use Magento\AdobeStockClientApi\Api\ClientInterface;
 use Magento\Backend\App\Action;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Psr\Log\LoggerInterface;
@@ -18,7 +17,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Backend controller for retrieving license confirmation before purchasing an asset
  */
-class Confirmation extends Action implements HttpGetActionInterface
+class Confirmation extends Action
 {
     private const HTTP_OK = 200;
     private const HTTP_INTERNAL_ERROR = 500;
@@ -70,9 +69,10 @@ class Confirmation extends Action implements HttpGetActionInterface
                 'success' => true,
                 'result' => [
                     'message' => $confirmation->getMessage(),
-                    'canLicense' => $confirmation->isCanLicense()
+                    'canLicense' => $confirmation->getCanLicense()
                 ]
             ];
+
         } catch (\Exception $exception) {
             $responseCode = self::HTTP_INTERNAL_ERROR;
             $this->logger->critical($exception);

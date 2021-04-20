@@ -125,11 +125,4 @@ class Conversion extends \Magento\Framework\View\Element\Template
             )
         );
     }
-
-    /**
-     * @return string
-     */
-    public function getYotpoWidgetUrl() {
-        return $this->yotpoConfig->getYotpoWidgetUrl();
-    }
 }

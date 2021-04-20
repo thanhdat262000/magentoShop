@@ -3,12 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Sales\Block\Order\Email\Items;
 
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\View\Element\Template;
 use Magento\Sales\Model\Order\Creditmemo\Item as CreditmemoItem;
 use Magento\Sales\Model\Order\Invoice\Item as InvoiceItem;
 use Magento\Sales\Model\Order\Item as OrderItem;
@@ -20,7 +16,7 @@ use Magento\Sales\Model\Order\Item as OrderItem;
  * @author     Magento Core Team <core@magentocommerce.com>
  * @since 100.0.2
  */
-class DefaultItems extends Template
+class DefaultItems extends \Magento\Framework\View\Element\Template
 {
     /**
      * Retrieve current order model instance
@@ -33,8 +29,6 @@ class DefaultItems extends Template
     }
 
     /**
-     * Returns Items options as array
-     *
      * @return array
      */
     public function getItemOptions()
@@ -42,22 +36,20 @@ class DefaultItems extends Template
         $result = [];
         if ($options = $this->getItem()->getOrderItem()->getProductOptions()) {
             if (isset($options['options'])) {
-                $result[] = $options['options'];
+                $result = array_merge($result, $options['options']);
             }
             if (isset($options['additional_options'])) {
-                $result[] = $options['additional_options'];
+                $result = array_merge($result, $options['additional_options']);
             }
             if (isset($options['attributes_info'])) {
-                $result[] = $options['attributes_info'];
+                $result = array_merge($result, $options['attributes_info']);
             }
         }
 
-        return array_merge([], ...$result);
+        return $result;
     }
 
     /**
-     * Formats the value in HTML
-     *
      * @param string|array $value
      * @return string
      */
@@ -78,9 +70,7 @@ class DefaultItems extends Template
     }
 
     /**
-     * Returns Product SKU for Item provided
-     *
-     * @param OrderItem $item
+     * @param mixed $item
      * @return mixed
      */
     public function getSku($item)
@@ -96,7 +86,6 @@ class DefaultItems extends Template
      * Return product additional information block
      *
      * @return \Magento\Framework\View\Element\AbstractBlock
-     * @throws LocalizedException
      */
     public function getProductAdditionalInformationBlock()
     {
@@ -108,13 +97,10 @@ class DefaultItems extends Template
      *
      * @param OrderItem|InvoiceItem|CreditmemoItem $item
      * @return string
-     * @throws LocalizedException
      */
     public function getItemPrice($item)
     {
         $block = $this->getLayout()->getBlock('item_price');
-        $item->setRowTotal((float) $item->getPrice() * (float) $this->getItem()->getQty());
-        $item->setBaseRowTotal((float) $item->getBasePrice() * (float) $this->getItem()->getQty());
         $block->setItem($item);
         return $block->toHtml();
     }

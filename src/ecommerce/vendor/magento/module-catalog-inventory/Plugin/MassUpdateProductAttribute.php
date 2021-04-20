@@ -3,19 +3,13 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\CatalogInventory\Plugin;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Controller\Adminhtml\Product\Action\Attribute\Save;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
-use Magento\CatalogInventory\Observer\ParentItemProcessorInterface;
 
 /**
- * Around plugin for MassUpdate product attribute via product grid.
- *
+ * MassUpdate product attribute.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MassUpdateProductAttribute
@@ -56,15 +50,6 @@ class MassUpdateProductAttribute
     private $messageManager;
 
     /**
-     * @var ParentItemProcessorInterface[]
-     */
-    private $parentItemProcessorPool;
-
-    /**
-     * @var ProductRepositoryInterface
-     */
-    private $productRepository;
-    /**
      * @param \Magento\CatalogInventory\Model\Indexer\Stock\Processor $stockIndexerProcessor
      * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
@@ -72,8 +57,6 @@ class MassUpdateProductAttribute
      * @param \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration
      * @param \Magento\Catalog\Helper\Product\Edit\Action\Attribute $attributeHelper
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param ProductRepositoryInterface $productRepository
-     * @param ParentItemProcessorInterface[] $parentItemProcessorPool
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -83,9 +66,7 @@ class MassUpdateProductAttribute
         \Magento\CatalogInventory\Api\StockItemRepositoryInterface $stockItemRepository,
         \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration,
         \Magento\Catalog\Helper\Product\Edit\Action\Attribute $attributeHelper,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
-        ProductRepositoryInterface $productRepository,
-        array $parentItemProcessorPool = []
+        \Magento\Framework\Message\ManagerInterface $messageManager
     ) {
         $this->stockIndexerProcessor = $stockIndexerProcessor;
         $this->dataObjectHelper = $dataObjectHelper;
@@ -94,8 +75,6 @@ class MassUpdateProductAttribute
         $this->stockConfiguration = $stockConfiguration;
         $this->attributeHelper = $attributeHelper;
         $this->messageManager = $messageManager;
-        $this->productRepository = $productRepository;
-        $this->parentItemProcessorPool = $parentItemProcessorPool;
     }
 
     /**
@@ -166,7 +145,6 @@ class MassUpdateProductAttribute
     private function updateInventoryInProducts($productIds, $websiteId, $inventoryData): void
     {
         foreach ($productIds as $productId) {
-            $product = $this->productRepository->getById($productId);
             $stockItemDo = $this->stockRegistry->getStockItem($productId, $websiteId);
             if (!$stockItemDo->getProductId()) {
                 $inventoryData['product_id'] = $productId;
@@ -175,21 +153,7 @@ class MassUpdateProductAttribute
             $this->dataObjectHelper->populateWithArray($stockItemDo, $inventoryData, StockItemInterface::class);
             $stockItemDo->setItemId($stockItemId);
             $this->stockItemRepository->save($stockItemDo);
-            $this->processParents($product);
         }
         $this->stockIndexerProcessor->reindexList($productIds);
-    }
-
-    /**
-     * Process stock data for parent products
-     *
-     * @param ProductInterface $product
-     * @return void
-     */
-    private function processParents(ProductInterface $product): void
-    {
-        foreach ($this->parentItemProcessorPool as $processor) {
-            $processor->process($product);
-        }
     }
 }

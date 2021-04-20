@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Framework\View\TemplateEngineFactory implemen
     public function create($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'create');
-        return $pluginInfo ? $this->___callPlugins('create', func_get_args(), $pluginInfo) : parent::create($name);
+        if (!$pluginInfo) {
+            return parent::create($name);
+        } else {
+            return $this->___callPlugins('create', func_get_args(), $pluginInfo);
+        }
     }
 }

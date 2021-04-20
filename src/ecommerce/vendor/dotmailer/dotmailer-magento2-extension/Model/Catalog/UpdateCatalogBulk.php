@@ -24,27 +24,20 @@ class UpdateCatalogBulk
      */
     private $bunch;
 
-    /**
-     * @var \Dotdigitalgroup\Email\Model\Product\ParentFinder
-     */
-    private $parentFinder;
-
     public function __construct(
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalogResource,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog\CollectionFactory $catalogFactory,
         \Magento\Framework\Stdlib\DateTime $dateTime,
-        \Dotdigitalgroup\Email\Model\Product\Bunch $bunch,
-        \Dotdigitalgroup\Email\Model\Product\ParentFinder $parentFinder
+        \Dotdigitalgroup\Email\Model\Product\Bunch $bunch
     ) {
         $this->catalogResource = $catalogResource;
         $this->catalogFactory = $catalogFactory;
         $this->dateTime = $dateTime;
         $this->bunch = $bunch;
-        $this->parentFinder = $parentFinder;
     }
 
     /**
-     * @param $bunch
+     * @param array $bunch
      */
     public function execute($bunch)
     {
@@ -62,12 +55,7 @@ class UpdateCatalogBulk
      */
     private function processBatch($bunch)
     {
-        $mergedWithConfigurableParents = array_merge(
-            $bunch,
-            $this->parentFinder->getConfigurableParentsFromBunchOfProducts($bunch)
-        );
-
-        $productIds = $this->bunch->getProductIdsBySkuInBunch($mergedWithConfigurableParents);
+        $productIds = $this->bunch->getProductIdsBySkuInBunch($bunch);
         $existingProductIds = $this->getExistingProductIds($productIds);
 
         $newEntryIds = array_diff($productIds, $existingProductIds);
@@ -92,7 +80,6 @@ class UpdateCatalogBulk
 
     /**
      * Returns all product Id's that belongs to Catalog Collection
-     * @param $productIds
      * @return array
      */
     private function getExistingProductIds($productIds)
@@ -101,6 +88,7 @@ class UpdateCatalogBulk
             ->addFieldToFilter('product_id', ['in' => $productIds])
             ->addFieldToSelect(['product_id']);
 
-        return $connectorCollection->getColumnValues('product_id');
+        $catalogIds = $connectorCollection->getColumnValues('product_id');
+        return $catalogIds;
     }
 }

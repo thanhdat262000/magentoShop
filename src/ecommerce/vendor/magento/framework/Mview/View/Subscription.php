@@ -11,7 +11,9 @@ use Magento\Framework\DB\Ddl\Trigger;
 use Magento\Framework\Mview\View\StateInterface;
 
 /**
- * Class Subscription for handling partial indexation triggers
+ * Class Subscription
+ *
+ * @package Magento\Framework\Mview\View
  */
 class Subscription implements SubscriptionInterface
 {
@@ -55,18 +57,12 @@ class Subscription implements SubscriptionInterface
     protected $linkedViews = [];
 
     /**
-     * List of columns that can be updated in any subscribed table
+     * List of columns that can be updated in a subscribed table
      * without creating a new change log entry
      *
      * @var array
      */
     private $ignoredUpdateColumns = [];
-
-    /**
-     * List of columns that can be updated in a specific subscribed table
-     * for a specific view without creating a new change log entry
-     */
-    private $ignoredUpdateColumnsBySubscription = [];
 
     /**
      * @var Resource
@@ -81,7 +77,6 @@ class Subscription implements SubscriptionInterface
      * @param string $tableName
      * @param string $columnName
      * @param array $ignoredUpdateColumns
-     * @param array $ignoredUpdateColumnsBySubscription
      */
     public function __construct(
         ResourceConnection $resource,
@@ -90,8 +85,7 @@ class Subscription implements SubscriptionInterface
         \Magento\Framework\Mview\ViewInterface $view,
         $tableName,
         $columnName,
-        $ignoredUpdateColumns = [],
-        $ignoredUpdateColumnsBySubscription = []
+        $ignoredUpdateColumns = []
     ) {
         $this->connection = $resource->getConnection();
         $this->triggerFactory = $triggerFactory;
@@ -101,7 +95,6 @@ class Subscription implements SubscriptionInterface
         $this->columnName = $columnName;
         $this->resource = $resource;
         $this->ignoredUpdateColumns = $ignoredUpdateColumns;
-        $this->ignoredUpdateColumnsBySubscription = $ignoredUpdateColumnsBySubscription;
     }
 
     /**
@@ -216,14 +209,7 @@ class Subscription implements SubscriptionInterface
                     $describe = $this->connection->describeTable($tableName)
                 ) {
                     $columnNames = array_column($describe, 'COLUMN_NAME');
-                    $ignoredColumnsBySubscription = array_filter(
-                        $this->ignoredUpdateColumnsBySubscription[$changelog->getViewId()][$this->getTableName()] ?? []
-                    );
-                    $ignoredColumns = array_merge(
-                        $this->ignoredUpdateColumns,
-                        array_keys($ignoredColumnsBySubscription)
-                    );
-                    $columnNames = array_diff($columnNames, $ignoredColumns);
+                    $columnNames = array_diff($columnNames, $this->ignoredUpdateColumns);
                     if ($columnNames) {
                         $columns = [];
                         foreach ($columnNames as $columnName) {

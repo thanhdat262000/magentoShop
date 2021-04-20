@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Magento\Framework\GraphQl\Schema\Type\Output\ElementMapper;
 
-use Magento\Framework\GraphQl\Config\ConfigElementInterface;
+use Magento\Framework\GraphQl\Config\Element\TypeInterface;
 use Magento\Framework\GraphQl\Schema\Type\OutputTypeInterface;
 
 /**
- * @inheritDoc
+ * {@inheritdoc}
  */
 class FormatterComposite implements FormatterInterface
 {
@@ -29,19 +29,18 @@ class FormatterComposite implements FormatterInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function format(ConfigElementInterface $configElement, OutputTypeInterface $outputType): array
+    public function format(TypeInterface $configElement, OutputTypeInterface $outputType) : array
     {
-        $defaultConfig = [
+        $config = [
             'name' => $configElement->getName(),
             'description' => $configElement->getDescription()
         ];
-        $formattedConfig = [];
         foreach ($this->formatters as $formatter) {
-            $formattedConfig[] = $formatter->format($configElement, $outputType);
+            $config = array_merge($config, $formatter->format($configElement, $outputType));
         }
 
-        return array_merge($defaultConfig, ...$formattedConfig);
+        return $config;
     }
 }

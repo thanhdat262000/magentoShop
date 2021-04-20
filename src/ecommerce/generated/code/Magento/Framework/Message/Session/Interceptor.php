@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function writeClose()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'writeClose');
-        return $pluginInfo ? $this->___callPlugins('writeClose', func_get_args(), $pluginInfo) : parent::writeClose();
+        if (!$pluginInfo) {
+            return parent::writeClose();
+        } else {
+            return $this->___callPlugins('writeClose', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function start()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'start');
-        return $pluginInfo ? $this->___callPlugins('start', func_get_args(), $pluginInfo) : parent::start();
+        if (!$pluginInfo) {
+            return parent::start();
+        } else {
+            return $this->___callPlugins('start', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function isSessionExists()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSessionExists');
-        return $pluginInfo ? $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo) : parent::isSessionExists();
+        if (!$pluginInfo) {
+            return parent::isSessionExists();
+        } else {
+            return $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getData($key = '', $clear = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $clear);
+        if (!$pluginInfo) {
+            return parent::getData($key, $clear);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getSessionId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionId');
-        return $pluginInfo ? $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo) : parent::getSessionId();
+        if (!$pluginInfo) {
+            return parent::getSessionId();
+        } else {
+            return $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function destroy(?array $options = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'destroy');
-        return $pluginInfo ? $this->___callPlugins('destroy', func_get_args(), $pluginInfo) : parent::destroy($options);
+        if (!$pluginInfo) {
+            return parent::destroy($options);
+        } else {
+            return $this->___callPlugins('destroy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function clearStorage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearStorage');
-        return $pluginInfo ? $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo) : parent::clearStorage();
+        if (!$pluginInfo) {
+            return parent::clearStorage();
+        } else {
+            return $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getCookieDomain()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieDomain');
-        return $pluginInfo ? $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo) : parent::getCookieDomain();
+        if (!$pluginInfo) {
+            return parent::getCookieDomain();
+        } else {
+            return $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getCookiePath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookiePath');
-        return $pluginInfo ? $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo) : parent::getCookiePath();
+        if (!$pluginInfo) {
+            return parent::getCookiePath();
+        } else {
+            return $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getCookieLifetime()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieLifetime');
-        return $pluginInfo ? $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo) : parent::getCookieLifetime();
+        if (!$pluginInfo) {
+            return parent::getCookieLifetime();
+        } else {
+            return $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function setSessionId($sessionId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSessionId');
-        return $pluginInfo ? $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo) : parent::setSessionId($sessionId);
+        if (!$pluginInfo) {
+            return parent::setSessionId($sessionId);
+        } else {
+            return $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function getSessionIdForHost($urlHost)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionIdForHost');
-        return $pluginInfo ? $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo) : parent::getSessionIdForHost($urlHost);
+        if (!$pluginInfo) {
+            return parent::getSessionIdForHost($urlHost);
+        } else {
+            return $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function isValidForHost($host)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForHost');
-        return $pluginInfo ? $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo) : parent::isValidForHost($host);
+        if (!$pluginInfo) {
+            return parent::isValidForHost($host);
+        } else {
+            return $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function isValidForPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForPath');
-        return $pluginInfo ? $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo) : parent::isValidForPath($path);
+        if (!$pluginInfo) {
+            return parent::isValidForPath($path);
+        } else {
+            return $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function regenerateId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'regenerateId');
-        return $pluginInfo ? $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo) : parent::regenerateId();
+        if (!$pluginInfo) {
+            return parent::regenerateId();
+        } else {
+            return $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,6 +254,10 @@ class Interceptor extends \Magento\Framework\Message\Session implements \Magento
     public function expireSessionCookie()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'expireSessionCookie');
-        return $pluginInfo ? $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo) : parent::expireSessionCookie();
+        if (!$pluginInfo) {
+            return parent::expireSessionCookie();
+        } else {
+            return $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo);
+        }
     }
 }

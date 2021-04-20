@@ -2,12 +2,8 @@
 
 namespace Dotdigitalgroup\Email\Model\Connector;
 
-use Dotdigitalgroup\Email\Model\Catalog\UrlFinder;
 use Dotdigitalgroup\Email\Model\Product\AttributeFactory;
-use Dotdigitalgroup\Email\Model\Product\ImageFinder;
-use Dotdigitalgroup\Email\Model\Product\ImageType\Context\CatalogSync;
 use Dotdigitalgroup\Email\Model\Product\ParentFinder;
-use Dotdigitalgroup\Email\Api\StockFinderInterface;
 use Dotdigitalgroup\Email\Api\TierPriceFinderInterface;
 
 /**
@@ -120,9 +116,14 @@ class Product
     public $visibilityFactory;
 
     /**
-     * @var UrlFinder
+     * @var \Dotdigitalgroup\Email\Model\Catalog\UrlFinder
      */
     private $urlFinder;
+
+    /**
+     * @var \Magento\CatalogInventory\Api\StockStateInterface
+     */
+    private $stockStateInterface;
 
     /**
      * @var AttributeFactory $attributeHandler
@@ -135,63 +136,43 @@ class Product
     private $parentFinder;
 
     /**
-     * @var ImageFinder
-     */
-    private $imageFinder;
-
-    /**
      * @var TierPriceFinderInterface
      */
     private $tierPriceFinder;
 
     /**
-     * @var StockFinderInterface
-     */
-    private $stockFinderInterface;
-
-    /**
-     * @var CatalogSync
-     */
-    private $imageType;
-
-    /**
      * Product constructor.
+     *
      * @param \Magento\Store\Model\StoreManagerInterface $storeManagerInterface
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Magento\Catalog\Model\Product\Attribute\Source\StatusFactory $statusFactory
      * @param \Magento\Catalog\Model\Product\VisibilityFactory $visibilityFactory
-     * @param UrlFinder $urlFinder
+     * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
+     * @param \Magento\CatalogInventory\Api\StockStateInterface $stockStateInterface
      * @param AttributeFactory $attributeHandler
      * @param ParentFinder $parentFinder
-     * @param ImageFinder $imageFinder
      * @param TierPriceFinderInterface $tierPriceFinder
-     * @param StockFinderInterface $stockFinderInterface
-     * @param CatalogSync $imageType
      */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Magento\Catalog\Model\Product\Attribute\Source\StatusFactory $statusFactory,
         \Magento\Catalog\Model\Product\VisibilityFactory $visibilityFactory,
-        UrlFinder $urlFinder,
+        \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
+        \Magento\CatalogInventory\Api\StockStateInterface $stockStateInterface,
         AttributeFactory $attributeHandler,
         ParentFinder $parentFinder,
-        ImageFinder $imageFinder,
-        TierPriceFinderInterface $tierPriceFinder,
-        StockFinderInterface $stockFinderInterface,
-        CatalogSync $imageType
+        TierPriceFinderInterface $tierPriceFinder
     ) {
         $this->visibilityFactory = $visibilityFactory;
         $this->statusFactory = $statusFactory;
         $this->helper = $helper;
         $this->storeManager = $storeManagerInterface;
         $this->urlFinder = $urlFinder;
+        $this->stockStateInterface = $stockStateInterface;
         $this->attributeHandler = $attributeHandler;
         $this->parentFinder = $parentFinder;
-        $this->imageFinder = $imageFinder;
         $this->tierPriceFinder = $tierPriceFinder;
-        $this->stockFinderInterface = $stockFinderInterface;
-        $this->imageType = $imageType;
     }
 
     /**
@@ -221,14 +202,9 @@ class Product
 
         $this->url = $this->urlFinder->fetchFor($product);
 
-        $this->imagePath = $this->imageFinder->getImageUrl(
-            $product,
-            $this->imageType->getImageType(
-                $this->storeManager->getStore($storeId)->getWebsiteId()
-            )
-        );
+        $this->imagePath = $this->urlFinder->getProductSmallImageUrl($product);
 
-        $this->stock = (float)number_format($this->stockFinderInterface->getStockQty($product), 2, '.', '');
+        $this->stock = (float)number_format($this->getStockQty($product), 2, '.', '');
 
         //limit short description
         $this->shortDescription = mb_substr(
@@ -255,7 +231,7 @@ class Product
                 $websiteId
             );
             $this->websites[$count]['Id'] = $website->getId();
-            $this->websites[$count]['Name'] = $website->getName() ?: '';
+            $this->websites[$count]['Name'] = $website->getName();
             ++$count;
         }
 
@@ -269,12 +245,20 @@ class Product
             $this->storeManager,
             $this->attributeHandler,
             $this->parentFinder,
-            $this->imageFinder,
-            $this->tierPriceFinder,
-            $this->stockFinderInterface
+            $this->tierPriceFinder
         );
 
         return $this;
+    }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * This function calculates the stock Quantity for each Product.
+     * @return float
+     */
+    private function getStockQty($product)
+    {
+        return $this->stockStateInterface->getStockQty($product->getId(), $product->getStore()->getWebsiteId());
     }
 
     /**
@@ -333,7 +317,7 @@ class Product
                 'statusFactory',
                 'storeManager',
                 'urlFinder',
-                'stockFinderInterface',
+                'stockStateInterface',
                 'attributeHandler',
                 'parentFinder',
                 'tierPriceFinder'

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getDestElementId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDestElementId');
-        return $pluginInfo ? $this->___callPlugins('getDestElementId', func_get_args(), $pluginInfo) : parent::getDestElementId();
+        if (!$pluginInfo) {
+            return parent::getDestElementId();
+        } else {
+            return $this->___callPlugins('getDestElementId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setDestElementId($elementId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDestElementId');
-        return $pluginInfo ? $this->___callPlugins('setDestElementId', func_get_args(), $pluginInfo) : parent::setDestElementId($elementId);
+        if (!$pluginInfo) {
+            return parent::setDestElementId($elementId);
+        } else {
+            return $this->___callPlugins('setDestElementId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function addTabAfter($tabId, $tab, $afterTabId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addTabAfter');
-        return $pluginInfo ? $this->___callPlugins('addTabAfter', func_get_args(), $pluginInfo) : parent::addTabAfter($tabId, $tab, $afterTabId);
+        if (!$pluginInfo) {
+            return parent::addTabAfter($tabId, $tab, $afterTabId);
+        } else {
+            return $this->___callPlugins('addTabAfter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function addTab($tabId, $tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addTab');
-        return $pluginInfo ? $this->___callPlugins('addTab', func_get_args(), $pluginInfo) : parent::addTab($tabId, $tab);
+        if (!$pluginInfo) {
+            return parent::addTab($tabId, $tab);
+        } else {
+            return $this->___callPlugins('addTab', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getActiveTabId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActiveTabId');
-        return $pluginInfo ? $this->___callPlugins('getActiveTabId', func_get_args(), $pluginInfo) : parent::getActiveTabId();
+        if (!$pluginInfo) {
+            return parent::getActiveTabId();
+        } else {
+            return $this->___callPlugins('getActiveTabId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setActiveTab($tabId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setActiveTab');
-        return $pluginInfo ? $this->___callPlugins('setActiveTab', func_get_args(), $pluginInfo) : parent::setActiveTab($tabId);
+        if (!$pluginInfo) {
+            return parent::setActiveTab($tabId);
+        } else {
+            return $this->___callPlugins('setActiveTab', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getJsObjectName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getJsObjectName');
-        return $pluginInfo ? $this->___callPlugins('getJsObjectName', func_get_args(), $pluginInfo) : parent::getJsObjectName();
+        if (!$pluginInfo) {
+            return parent::getJsObjectName();
+        } else {
+            return $this->___callPlugins('getJsObjectName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabsIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabsIds');
-        return $pluginInfo ? $this->___callPlugins('getTabsIds', func_get_args(), $pluginInfo) : parent::getTabsIds();
+        if (!$pluginInfo) {
+            return parent::getTabsIds();
+        } else {
+            return $this->___callPlugins('getTabsIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabId($tab, $withPrefix = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabId');
-        return $pluginInfo ? $this->___callPlugins('getTabId', func_get_args(), $pluginInfo) : parent::getTabId($tab, $withPrefix);
+        if (!$pluginInfo) {
+            return parent::getTabId($tab, $withPrefix);
+        } else {
+            return $this->___callPlugins('getTabId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function canShowTab($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'canShowTab');
-        return $pluginInfo ? $this->___callPlugins('canShowTab', func_get_args(), $pluginInfo) : parent::canShowTab($tab);
+        if (!$pluginInfo) {
+            return parent::canShowTab($tab);
+        } else {
+            return $this->___callPlugins('canShowTab', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabIsHidden($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabIsHidden');
-        return $pluginInfo ? $this->___callPlugins('getTabIsHidden', func_get_args(), $pluginInfo) : parent::getTabIsHidden($tab);
+        if (!$pluginInfo) {
+            return parent::getTabIsHidden($tab);
+        } else {
+            return $this->___callPlugins('getTabIsHidden', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabUrl($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabUrl');
-        return $pluginInfo ? $this->___callPlugins('getTabUrl', func_get_args(), $pluginInfo) : parent::getTabUrl($tab);
+        if (!$pluginInfo) {
+            return parent::getTabUrl($tab);
+        } else {
+            return $this->___callPlugins('getTabUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabTitle($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabTitle');
-        return $pluginInfo ? $this->___callPlugins('getTabTitle', func_get_args(), $pluginInfo) : parent::getTabTitle($tab);
+        if (!$pluginInfo) {
+            return parent::getTabTitle($tab);
+        } else {
+            return $this->___callPlugins('getTabTitle', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabClass($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabClass');
-        return $pluginInfo ? $this->___callPlugins('getTabClass', func_get_args(), $pluginInfo) : parent::getTabClass($tab);
+        if (!$pluginInfo) {
+            return parent::getTabClass($tab);
+        } else {
+            return $this->___callPlugins('getTabClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabLabel($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabLabel');
-        return $pluginInfo ? $this->___callPlugins('getTabLabel', func_get_args(), $pluginInfo) : parent::getTabLabel($tab);
+        if (!$pluginInfo) {
+            return parent::getTabLabel($tab);
+        } else {
+            return $this->___callPlugins('getTabLabel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTabContent($tab)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabContent');
-        return $pluginInfo ? $this->___callPlugins('getTabContent', func_get_args(), $pluginInfo) : parent::getTabContent($tab);
+        if (!$pluginInfo) {
+            return parent::getTabContent($tab);
+        } else {
+            return $this->___callPlugins('getTabContent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function bindShadowTabs($tabOneId, $tabTwoId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'bindShadowTabs');
-        return $pluginInfo ? $this->___callPlugins('bindShadowTabs', func_get_args(), $pluginInfo) : parent::bindShadowTabs($tabOneId, $tabTwoId);
+        if (!$pluginInfo) {
+            return parent::bindShadowTabs($tabOneId, $tabTwoId);
+        } else {
+            return $this->___callPlugins('bindShadowTabs', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getAllShadowTabs($asJson = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAllShadowTabs');
-        return $pluginInfo ? $this->___callPlugins('getAllShadowTabs', func_get_args(), $pluginInfo) : parent::getAllShadowTabs($asJson);
+        if (!$pluginInfo) {
+            return parent::getAllShadowTabs($asJson);
+        } else {
+            return $this->___callPlugins('getAllShadowTabs', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setTabData($tab, $key, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTabData');
-        return $pluginInfo ? $this->___callPlugins('setTabData', func_get_args(), $pluginInfo) : parent::setTabData($tab, $key, $value);
+        if (!$pluginInfo) {
+            return parent::setTabData($tab, $key, $value);
+        } else {
+            return $this->___callPlugins('setTabData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function removeTab($tabId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeTab');
-        return $pluginInfo ? $this->___callPlugins('removeTab', func_get_args(), $pluginInfo) : parent::removeTab($tabId);
+        if (!$pluginInfo) {
+            return parent::removeTab($tabId);
+        } else {
+            return $this->___callPlugins('removeTab', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getSuffixId($suffix)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSuffixId');
-        return $pluginInfo ? $this->___callPlugins('getSuffixId', func_get_args(), $pluginInfo) : parent::getSuffixId($suffix);
+        if (!$pluginInfo) {
+            return parent::getSuffixId($suffix);
+        } else {
+            return $this->___callPlugins('getSuffixId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getHtmlId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getHtmlId');
-        return $pluginInfo ? $this->___callPlugins('getHtmlId', func_get_args(), $pluginInfo) : parent::getHtmlId();
+        if (!$pluginInfo) {
+            return parent::getHtmlId();
+        } else {
+            return $this->___callPlugins('getHtmlId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getCurrentUrl($params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurrentUrl');
-        return $pluginInfo ? $this->___callPlugins('getCurrentUrl', func_get_args(), $pluginInfo) : parent::getCurrentUrl($params);
+        if (!$pluginInfo) {
+            return parent::getCurrentUrl($params);
+        } else {
+            return $this->___callPlugins('getCurrentUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getButtonHtml($label, $onclick, $class = '', $buttonId = null, $dataAttr = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getButtonHtml');
-        return $pluginInfo ? $this->___callPlugins('getButtonHtml', func_get_args(), $pluginInfo) : parent::getButtonHtml($label, $onclick, $class, $buttonId, $dataAttr);
+        if (!$pluginInfo) {
+            return parent::getButtonHtml($label, $onclick, $class, $buttonId, $dataAttr);
+        } else {
+            return $this->___callPlugins('getButtonHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getFormKey()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFormKey');
-        return $pluginInfo ? $this->___callPlugins('getFormKey', func_get_args(), $pluginInfo) : parent::getFormKey();
+        if (!$pluginInfo) {
+            return parent::getFormKey();
+        } else {
+            return $this->___callPlugins('getFormKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function isOutputEnabled($moduleName = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isOutputEnabled');
-        return $pluginInfo ? $this->___callPlugins('isOutputEnabled', func_get_args(), $pluginInfo) : parent::isOutputEnabled($moduleName);
+        if (!$pluginInfo) {
+            return parent::isOutputEnabled($moduleName);
+        } else {
+            return $this->___callPlugins('isOutputEnabled', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getAuthorization()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAuthorization');
-        return $pluginInfo ? $this->___callPlugins('getAuthorization', func_get_args(), $pluginInfo) : parent::getAuthorization();
+        if (!$pluginInfo) {
+            return parent::getAuthorization();
+        } else {
+            return $this->___callPlugins('getAuthorization', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getToolbar()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getToolbar');
-        return $pluginInfo ? $this->___callPlugins('getToolbar', func_get_args(), $pluginInfo) : parent::getToolbar();
+        if (!$pluginInfo) {
+            return parent::getToolbar();
+        } else {
+            return $this->___callPlugins('getToolbar', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setTemplateContext($templateContext)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplateContext');
-        return $pluginInfo ? $this->___callPlugins('setTemplateContext', func_get_args(), $pluginInfo) : parent::setTemplateContext($templateContext);
+        if (!$pluginInfo) {
+            return parent::setTemplateContext($templateContext);
+        } else {
+            return $this->___callPlugins('setTemplateContext', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTemplate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTemplate');
-        return $pluginInfo ? $this->___callPlugins('getTemplate', func_get_args(), $pluginInfo) : parent::getTemplate();
+        if (!$pluginInfo) {
+            return parent::getTemplate();
+        } else {
+            return $this->___callPlugins('getTemplate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setTemplate($template)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplate');
-        return $pluginInfo ? $this->___callPlugins('setTemplate', func_get_args(), $pluginInfo) : parent::setTemplate($template);
+        if (!$pluginInfo) {
+            return parent::setTemplate($template);
+        } else {
+            return $this->___callPlugins('setTemplate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getTemplateFile($template = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTemplateFile');
-        return $pluginInfo ? $this->___callPlugins('getTemplateFile', func_get_args(), $pluginInfo) : parent::getTemplateFile($template);
+        if (!$pluginInfo) {
+            return parent::getTemplateFile($template);
+        } else {
+            return $this->___callPlugins('getTemplateFile', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getArea()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getArea');
-        return $pluginInfo ? $this->___callPlugins('getArea', func_get_args(), $pluginInfo) : parent::getArea();
+        if (!$pluginInfo) {
+            return parent::getArea();
+        } else {
+            return $this->___callPlugins('getArea', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function assign($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'assign');
-        return $pluginInfo ? $this->___callPlugins('assign', func_get_args(), $pluginInfo) : parent::assign($key, $value);
+        if (!$pluginInfo) {
+            return parent::assign($key, $value);
+        } else {
+            return $this->___callPlugins('assign', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function fetchView($fileName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'fetchView');
-        return $pluginInfo ? $this->___callPlugins('fetchView', func_get_args(), $pluginInfo) : parent::fetchView($fileName);
+        if (!$pluginInfo) {
+            return parent::fetchView($fileName);
+        } else {
+            return $this->___callPlugins('fetchView', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getBaseUrl()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseUrl');
-        return $pluginInfo ? $this->___callPlugins('getBaseUrl', func_get_args(), $pluginInfo) : parent::getBaseUrl();
+        if (!$pluginInfo) {
+            return parent::getBaseUrl();
+        } else {
+            return $this->___callPlugins('getBaseUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getObjectData(\Magento\Framework\DataObject $object, $key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getObjectData');
-        return $pluginInfo ? $this->___callPlugins('getObjectData', func_get_args(), $pluginInfo) : parent::getObjectData($object, $key);
+        if (!$pluginInfo) {
+            return parent::getObjectData($object, $key);
+        } else {
+            return $this->___callPlugins('getObjectData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getCacheKeyInfo()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheKeyInfo');
-        return $pluginInfo ? $this->___callPlugins('getCacheKeyInfo', func_get_args(), $pluginInfo) : parent::getCacheKeyInfo();
+        if (!$pluginInfo) {
+            return parent::getCacheKeyInfo();
+        } else {
+            return $this->___callPlugins('getCacheKeyInfo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getJsLayout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getJsLayout');
-        return $pluginInfo ? $this->___callPlugins('getJsLayout', func_get_args(), $pluginInfo) : parent::getJsLayout();
+        if (!$pluginInfo) {
+            return parent::getJsLayout();
+        } else {
+            return $this->___callPlugins('getJsLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +540,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getRequest()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequest');
-        return $pluginInfo ? $this->___callPlugins('getRequest', func_get_args(), $pluginInfo) : parent::getRequest();
+        if (!$pluginInfo) {
+            return parent::getRequest();
+        } else {
+            return $this->___callPlugins('getRequest', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +553,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getParentBlock()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getParentBlock');
-        return $pluginInfo ? $this->___callPlugins('getParentBlock', func_get_args(), $pluginInfo) : parent::getParentBlock();
+        if (!$pluginInfo) {
+            return parent::getParentBlock();
+        } else {
+            return $this->___callPlugins('getParentBlock', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +566,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setLayout(\Magento\Framework\View\LayoutInterface $layout)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setLayout');
-        return $pluginInfo ? $this->___callPlugins('setLayout', func_get_args(), $pluginInfo) : parent::setLayout($layout);
+        if (!$pluginInfo) {
+            return parent::setLayout($layout);
+        } else {
+            return $this->___callPlugins('setLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +579,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getLayout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLayout');
-        return $pluginInfo ? $this->___callPlugins('getLayout', func_get_args(), $pluginInfo) : parent::getLayout();
+        if (!$pluginInfo) {
+            return parent::getLayout();
+        } else {
+            return $this->___callPlugins('getLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +592,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setNameInLayout($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setNameInLayout');
-        return $pluginInfo ? $this->___callPlugins('setNameInLayout', func_get_args(), $pluginInfo) : parent::setNameInLayout($name);
+        if (!$pluginInfo) {
+            return parent::setNameInLayout($name);
+        } else {
+            return $this->___callPlugins('setNameInLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +605,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getChildNames()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChildNames');
-        return $pluginInfo ? $this->___callPlugins('getChildNames', func_get_args(), $pluginInfo) : parent::getChildNames();
+        if (!$pluginInfo) {
+            return parent::getChildNames();
+        } else {
+            return $this->___callPlugins('getChildNames', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +618,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setAttribute($name, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttribute');
-        return $pluginInfo ? $this->___callPlugins('setAttribute', func_get_args(), $pluginInfo) : parent::setAttribute($name, $value);
+        if (!$pluginInfo) {
+            return parent::setAttribute($name, $value);
+        } else {
+            return $this->___callPlugins('setAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +631,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setChild($alias, $block)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setChild');
-        return $pluginInfo ? $this->___callPlugins('setChild', func_get_args(), $pluginInfo) : parent::setChild($alias, $block);
+        if (!$pluginInfo) {
+            return parent::setChild($alias, $block);
+        } else {
+            return $this->___callPlugins('setChild', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +644,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function addChild($alias, $block, $data = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addChild');
-        return $pluginInfo ? $this->___callPlugins('addChild', func_get_args(), $pluginInfo) : parent::addChild($alias, $block, $data);
+        if (!$pluginInfo) {
+            return parent::addChild($alias, $block, $data);
+        } else {
+            return $this->___callPlugins('addChild', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +657,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function unsetChild($alias)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetChild');
-        return $pluginInfo ? $this->___callPlugins('unsetChild', func_get_args(), $pluginInfo) : parent::unsetChild($alias);
+        if (!$pluginInfo) {
+            return parent::unsetChild($alias);
+        } else {
+            return $this->___callPlugins('unsetChild', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +670,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function unsetCallChild($alias, $callback, $result, $params)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetCallChild');
-        return $pluginInfo ? $this->___callPlugins('unsetCallChild', func_get_args(), $pluginInfo) : parent::unsetCallChild($alias, $callback, $result, $params);
+        if (!$pluginInfo) {
+            return parent::unsetCallChild($alias, $callback, $result, $params);
+        } else {
+            return $this->___callPlugins('unsetCallChild', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,7 +683,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function unsetChildren()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetChildren');
-        return $pluginInfo ? $this->___callPlugins('unsetChildren', func_get_args(), $pluginInfo) : parent::unsetChildren();
+        if (!$pluginInfo) {
+            return parent::unsetChildren();
+        } else {
+            return $this->___callPlugins('unsetChildren', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -488,7 +696,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getChildBlock($alias)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChildBlock');
-        return $pluginInfo ? $this->___callPlugins('getChildBlock', func_get_args(), $pluginInfo) : parent::getChildBlock($alias);
+        if (!$pluginInfo) {
+            return parent::getChildBlock($alias);
+        } else {
+            return $this->___callPlugins('getChildBlock', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -497,7 +709,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getChildHtml($alias = '', $useCache = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChildHtml');
-        return $pluginInfo ? $this->___callPlugins('getChildHtml', func_get_args(), $pluginInfo) : parent::getChildHtml($alias, $useCache);
+        if (!$pluginInfo) {
+            return parent::getChildHtml($alias, $useCache);
+        } else {
+            return $this->___callPlugins('getChildHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -506,7 +722,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getChildChildHtml($alias, $childChildAlias = '', $useCache = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChildChildHtml');
-        return $pluginInfo ? $this->___callPlugins('getChildChildHtml', func_get_args(), $pluginInfo) : parent::getChildChildHtml($alias, $childChildAlias, $useCache);
+        if (!$pluginInfo) {
+            return parent::getChildChildHtml($alias, $childChildAlias, $useCache);
+        } else {
+            return $this->___callPlugins('getChildChildHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -515,7 +735,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getBlockHtml($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBlockHtml');
-        return $pluginInfo ? $this->___callPlugins('getBlockHtml', func_get_args(), $pluginInfo) : parent::getBlockHtml($name);
+        if (!$pluginInfo) {
+            return parent::getBlockHtml($name);
+        } else {
+            return $this->___callPlugins('getBlockHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -524,7 +748,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function insert($element, $siblingName = 0, $after = true, $alias = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'insert');
-        return $pluginInfo ? $this->___callPlugins('insert', func_get_args(), $pluginInfo) : parent::insert($element, $siblingName, $after, $alias);
+        if (!$pluginInfo) {
+            return parent::insert($element, $siblingName, $after, $alias);
+        } else {
+            return $this->___callPlugins('insert', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -533,7 +761,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function append($element, $alias = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'append');
-        return $pluginInfo ? $this->___callPlugins('append', func_get_args(), $pluginInfo) : parent::append($element, $alias);
+        if (!$pluginInfo) {
+            return parent::append($element, $alias);
+        } else {
+            return $this->___callPlugins('append', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -542,7 +774,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getGroupChildNames($groupName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getGroupChildNames');
-        return $pluginInfo ? $this->___callPlugins('getGroupChildNames', func_get_args(), $pluginInfo) : parent::getGroupChildNames($groupName);
+        if (!$pluginInfo) {
+            return parent::getGroupChildNames($groupName);
+        } else {
+            return $this->___callPlugins('getGroupChildNames', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -551,7 +787,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getChildData($alias, $key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChildData');
-        return $pluginInfo ? $this->___callPlugins('getChildData', func_get_args(), $pluginInfo) : parent::getChildData($alias, $key);
+        if (!$pluginInfo) {
+            return parent::getChildData($alias, $key);
+        } else {
+            return $this->___callPlugins('getChildData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -560,7 +800,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function toHtml()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toHtml');
-        return $pluginInfo ? $this->___callPlugins('toHtml', func_get_args(), $pluginInfo) : parent::toHtml();
+        if (!$pluginInfo) {
+            return parent::toHtml();
+        } else {
+            return $this->___callPlugins('toHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -569,7 +813,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getUiId($arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUiId');
-        return $pluginInfo ? $this->___callPlugins('getUiId', func_get_args(), $pluginInfo) : parent::getUiId($arg1, $arg2, $arg3, $arg4, $arg5);
+        if (!$pluginInfo) {
+            return parent::getUiId($arg1, $arg2, $arg3, $arg4, $arg5);
+        } else {
+            return $this->___callPlugins('getUiId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -578,7 +826,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getJsId($arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getJsId');
-        return $pluginInfo ? $this->___callPlugins('getJsId', func_get_args(), $pluginInfo) : parent::getJsId($arg1, $arg2, $arg3, $arg4, $arg5);
+        if (!$pluginInfo) {
+            return parent::getJsId($arg1, $arg2, $arg3, $arg4, $arg5);
+        } else {
+            return $this->___callPlugins('getJsId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -587,7 +839,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getUrl($route = '', $params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUrl');
-        return $pluginInfo ? $this->___callPlugins('getUrl', func_get_args(), $pluginInfo) : parent::getUrl($route, $params);
+        if (!$pluginInfo) {
+            return parent::getUrl($route, $params);
+        } else {
+            return $this->___callPlugins('getUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -596,7 +852,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getViewFileUrl($fileId, array $params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getViewFileUrl');
-        return $pluginInfo ? $this->___callPlugins('getViewFileUrl', func_get_args(), $pluginInfo) : parent::getViewFileUrl($fileId, $params);
+        if (!$pluginInfo) {
+            return parent::getViewFileUrl($fileId, $params);
+        } else {
+            return $this->___callPlugins('getViewFileUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -605,7 +865,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function formatDate($date = null, $format = 3, $showTime = false, $timezone = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'formatDate');
-        return $pluginInfo ? $this->___callPlugins('formatDate', func_get_args(), $pluginInfo) : parent::formatDate($date, $format, $showTime, $timezone);
+        if (!$pluginInfo) {
+            return parent::formatDate($date, $format, $showTime, $timezone);
+        } else {
+            return $this->___callPlugins('formatDate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -614,7 +878,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function formatTime($time = null, $format = 3, $showDate = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'formatTime');
-        return $pluginInfo ? $this->___callPlugins('formatTime', func_get_args(), $pluginInfo) : parent::formatTime($time, $format, $showDate);
+        if (!$pluginInfo) {
+            return parent::formatTime($time, $format, $showDate);
+        } else {
+            return $this->___callPlugins('formatTime', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -623,7 +891,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getModuleName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getModuleName');
-        return $pluginInfo ? $this->___callPlugins('getModuleName', func_get_args(), $pluginInfo) : parent::getModuleName();
+        if (!$pluginInfo) {
+            return parent::getModuleName();
+        } else {
+            return $this->___callPlugins('getModuleName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -632,7 +904,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeHtml($data, $allowedTags = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeHtml');
-        return $pluginInfo ? $this->___callPlugins('escapeHtml', func_get_args(), $pluginInfo) : parent::escapeHtml($data, $allowedTags);
+        if (!$pluginInfo) {
+            return parent::escapeHtml($data, $allowedTags);
+        } else {
+            return $this->___callPlugins('escapeHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -641,7 +917,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeJs($string)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeJs');
-        return $pluginInfo ? $this->___callPlugins('escapeJs', func_get_args(), $pluginInfo) : parent::escapeJs($string);
+        if (!$pluginInfo) {
+            return parent::escapeJs($string);
+        } else {
+            return $this->___callPlugins('escapeJs', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -650,7 +930,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeHtmlAttr($string, $escapeSingleQuote = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeHtmlAttr');
-        return $pluginInfo ? $this->___callPlugins('escapeHtmlAttr', func_get_args(), $pluginInfo) : parent::escapeHtmlAttr($string, $escapeSingleQuote);
+        if (!$pluginInfo) {
+            return parent::escapeHtmlAttr($string, $escapeSingleQuote);
+        } else {
+            return $this->___callPlugins('escapeHtmlAttr', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -659,7 +943,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeCss($string)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeCss');
-        return $pluginInfo ? $this->___callPlugins('escapeCss', func_get_args(), $pluginInfo) : parent::escapeCss($string);
+        if (!$pluginInfo) {
+            return parent::escapeCss($string);
+        } else {
+            return $this->___callPlugins('escapeCss', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -668,7 +956,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function stripTags($data, $allowableTags = null, $allowHtmlEntities = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'stripTags');
-        return $pluginInfo ? $this->___callPlugins('stripTags', func_get_args(), $pluginInfo) : parent::stripTags($data, $allowableTags, $allowHtmlEntities);
+        if (!$pluginInfo) {
+            return parent::stripTags($data, $allowableTags, $allowHtmlEntities);
+        } else {
+            return $this->___callPlugins('stripTags', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -677,7 +969,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeUrl($string)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeUrl');
-        return $pluginInfo ? $this->___callPlugins('escapeUrl', func_get_args(), $pluginInfo) : parent::escapeUrl($string);
+        if (!$pluginInfo) {
+            return parent::escapeUrl($string);
+        } else {
+            return $this->___callPlugins('escapeUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -686,7 +982,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeXssInUrl($data)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeXssInUrl');
-        return $pluginInfo ? $this->___callPlugins('escapeXssInUrl', func_get_args(), $pluginInfo) : parent::escapeXssInUrl($data);
+        if (!$pluginInfo) {
+            return parent::escapeXssInUrl($data);
+        } else {
+            return $this->___callPlugins('escapeXssInUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -695,7 +995,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeQuote($data, $addSlashes = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeQuote');
-        return $pluginInfo ? $this->___callPlugins('escapeQuote', func_get_args(), $pluginInfo) : parent::escapeQuote($data, $addSlashes);
+        if (!$pluginInfo) {
+            return parent::escapeQuote($data, $addSlashes);
+        } else {
+            return $this->___callPlugins('escapeQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -704,7 +1008,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function escapeJsQuote($data, $quote = '\'')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'escapeJsQuote');
-        return $pluginInfo ? $this->___callPlugins('escapeJsQuote', func_get_args(), $pluginInfo) : parent::escapeJsQuote($data, $quote);
+        if (!$pluginInfo) {
+            return parent::escapeJsQuote($data, $quote);
+        } else {
+            return $this->___callPlugins('escapeJsQuote', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -713,7 +1021,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getNameInLayout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getNameInLayout');
-        return $pluginInfo ? $this->___callPlugins('getNameInLayout', func_get_args(), $pluginInfo) : parent::getNameInLayout();
+        if (!$pluginInfo) {
+            return parent::getNameInLayout();
+        } else {
+            return $this->___callPlugins('getNameInLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -722,7 +1034,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getCacheKey()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheKey');
-        return $pluginInfo ? $this->___callPlugins('getCacheKey', func_get_args(), $pluginInfo) : parent::getCacheKey();
+        if (!$pluginInfo) {
+            return parent::getCacheKey();
+        } else {
+            return $this->___callPlugins('getCacheKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -731,7 +1047,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getVar($name, $module = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getVar');
-        return $pluginInfo ? $this->___callPlugins('getVar', func_get_args(), $pluginInfo) : parent::getVar($name, $module);
+        if (!$pluginInfo) {
+            return parent::getVar($name, $module);
+        } else {
+            return $this->___callPlugins('getVar', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -740,7 +1060,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function isScopePrivate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isScopePrivate');
-        return $pluginInfo ? $this->___callPlugins('isScopePrivate', func_get_args(), $pluginInfo) : parent::isScopePrivate();
+        if (!$pluginInfo) {
+            return parent::isScopePrivate();
+        } else {
+            return $this->___callPlugins('isScopePrivate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -749,7 +1073,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function addData(array $arr)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addData');
-        return $pluginInfo ? $this->___callPlugins('addData', func_get_args(), $pluginInfo) : parent::addData($arr);
+        if (!$pluginInfo) {
+            return parent::addData($arr);
+        } else {
+            return $this->___callPlugins('addData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -758,7 +1086,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setData($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($key, $value);
+        if (!$pluginInfo) {
+            return parent::setData($key, $value);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -767,7 +1099,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function unsetData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetData');
-        return $pluginInfo ? $this->___callPlugins('unsetData', func_get_args(), $pluginInfo) : parent::unsetData($key);
+        if (!$pluginInfo) {
+            return parent::unsetData($key);
+        } else {
+            return $this->___callPlugins('unsetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -776,7 +1112,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getData($key = '', $index = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $index);
+        if (!$pluginInfo) {
+            return parent::getData($key, $index);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -785,7 +1125,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getDataByPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByPath');
-        return $pluginInfo ? $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo) : parent::getDataByPath($path);
+        if (!$pluginInfo) {
+            return parent::getDataByPath($path);
+        } else {
+            return $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -794,7 +1138,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getDataByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByKey');
-        return $pluginInfo ? $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo) : parent::getDataByKey($key);
+        if (!$pluginInfo) {
+            return parent::getDataByKey($key);
+        } else {
+            return $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -803,7 +1151,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function setDataUsingMethod($key, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo) : parent::setDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::setDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -812,7 +1164,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function getDataUsingMethod($key, $args = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo) : parent::getDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::getDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -821,7 +1177,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function hasData($key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasData');
-        return $pluginInfo ? $this->___callPlugins('hasData', func_get_args(), $pluginInfo) : parent::hasData($key);
+        if (!$pluginInfo) {
+            return parent::hasData($key);
+        } else {
+            return $this->___callPlugins('hasData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -830,7 +1190,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function toArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($keys);
+        if (!$pluginInfo) {
+            return parent::toArray($keys);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -839,7 +1203,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function convertToArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToArray');
-        return $pluginInfo ? $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo) : parent::convertToArray($keys);
+        if (!$pluginInfo) {
+            return parent::convertToArray($keys);
+        } else {
+            return $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -848,7 +1216,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -857,7 +1229,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function convertToXml(array $arrAttributes = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToXml');
-        return $pluginInfo ? $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo) : parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -866,7 +1242,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function toJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toJson');
-        return $pluginInfo ? $this->___callPlugins('toJson', func_get_args(), $pluginInfo) : parent::toJson($keys);
+        if (!$pluginInfo) {
+            return parent::toJson($keys);
+        } else {
+            return $this->___callPlugins('toJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -875,7 +1255,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function convertToJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToJson');
-        return $pluginInfo ? $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo) : parent::convertToJson($keys);
+        if (!$pluginInfo) {
+            return parent::convertToJson($keys);
+        } else {
+            return $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -884,7 +1268,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function toString($format = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString($format);
+        if (!$pluginInfo) {
+            return parent::toString($format);
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -893,7 +1281,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -902,7 +1294,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function isEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmpty');
-        return $pluginInfo ? $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo) : parent::isEmpty();
+        if (!$pluginInfo) {
+            return parent::isEmpty();
+        } else {
+            return $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -911,7 +1307,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serialize');
-        return $pluginInfo ? $this->___callPlugins('serialize', func_get_args(), $pluginInfo) : parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        if (!$pluginInfo) {
+            return parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        } else {
+            return $this->___callPlugins('serialize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -920,7 +1320,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function debug($data = null, &$objects = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debug');
-        return $pluginInfo ? $this->___callPlugins('debug', func_get_args(), $pluginInfo) : parent::debug($data, $objects);
+        if (!$pluginInfo) {
+            return parent::debug($data, $objects);
+        } else {
+            return $this->___callPlugins('debug', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -929,7 +1333,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function offsetSet($offset, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetSet');
-        return $pluginInfo ? $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo) : parent::offsetSet($offset, $value);
+        if (!$pluginInfo) {
+            return parent::offsetSet($offset, $value);
+        } else {
+            return $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -938,7 +1346,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function offsetExists($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetExists');
-        return $pluginInfo ? $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo) : parent::offsetExists($offset);
+        if (!$pluginInfo) {
+            return parent::offsetExists($offset);
+        } else {
+            return $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -947,7 +1359,11 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function offsetUnset($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetUnset');
-        return $pluginInfo ? $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo) : parent::offsetUnset($offset);
+        if (!$pluginInfo) {
+            return parent::offsetUnset($offset);
+        } else {
+            return $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -956,6 +1372,10 @@ class Interceptor extends \Magento\Backend\Block\Dashboard\Grids implements \Mag
     public function offsetGet($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetGet');
-        return $pluginInfo ? $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo) : parent::offsetGet($offset);
+        if (!$pluginInfo) {
+            return parent::offsetGet($offset);
+        } else {
+            return $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -6,24 +6,21 @@
 namespace Magento\CacheInvalidate\Model;
 
 use Magento\Framework\Cache\InvalidateLogger;
-use Magento\PageCache\Model\Cache\Server;
-use Laminas\Http\Client\Adapter\Socket;
-use Laminas\Uri\Uri;
 
 /**
- * Invalidate external HTTP cache(s) based on tag pattern
+ * Class PurgeCache
  */
 class PurgeCache
 {
     const HEADER_X_MAGENTO_TAGS_PATTERN = 'X-Magento-Tags-Pattern';
 
     /**
-     * @var Server
+     * @var \Magento\PageCache\Model\Cache\Server
      */
     protected $cacheServer;
 
     /**
-     * @var SocketFactory
+     * @var \Magento\CacheInvalidate\Model\SocketFactory
      */
     protected $socketAdapterFactory;
 
@@ -42,46 +39,39 @@ class PurgeCache
      *
      * @var int
      */
-    private $maxHeaderSize;
+    private $requestSize = 7680;
 
     /**
      * Constructor
      *
-     * @param Server $cacheServer
-     * @param SocketFactory $socketAdapterFactory
+     * @param \Magento\PageCache\Model\Cache\Server $cacheServer
+     * @param \Magento\CacheInvalidate\Model\SocketFactory $socketAdapterFactory
      * @param InvalidateLogger $logger
-     * @param int $maxHeaderSize
      */
     public function __construct(
-        Server $cacheServer,
-        SocketFactory $socketAdapterFactory,
-        InvalidateLogger $logger,
-        int $maxHeaderSize = 7680
+        \Magento\PageCache\Model\Cache\Server $cacheServer,
+        \Magento\CacheInvalidate\Model\SocketFactory $socketAdapterFactory,
+        InvalidateLogger $logger
     ) {
         $this->cacheServer = $cacheServer;
         $this->socketAdapterFactory = $socketAdapterFactory;
         $this->logger = $logger;
-        $this->maxHeaderSize = $maxHeaderSize;
     }
 
     /**
      * Send curl purge request to invalidate cache by tags pattern
      *
-     * @param array|string $tags
+     * @param string $tagsPattern
      * @return bool Return true if successful; otherwise return false
      */
-    public function sendPurgeRequest($tags)
+    public function sendPurgeRequest($tagsPattern)
     {
-        if (is_string($tags)) {
-            $tags = [$tags];
-        }
-
         $successful = true;
         $socketAdapter = $this->socketAdapterFactory->create();
         $servers = $this->cacheServer->getUris();
         $socketAdapter->setOptions(['timeout' => 10]);
 
-        $formattedTagsChunks = $this->chunkTags($tags);
+        $formattedTagsChunks = $this->splitTags($tagsPattern);
         foreach ($formattedTagsChunks as $formattedTagsChunk) {
             if (!$this->sendPurgeRequestToServers($socketAdapter, $servers, $formattedTagsChunk)) {
                 $successful = false;
@@ -92,24 +82,24 @@ class PurgeCache
     }
 
     /**
-     * Split tags into batches to suit Varnish max. header size
+     * Split tags by batches
      *
-     * @param array $tags
+     * @param string $tagsPattern
      * @return \Generator
      */
-    private function chunkTags(array $tags): \Generator
+    private function splitTags($tagsPattern)
     {
-        $currentBatchSize = 0;
+        $tagsBatchSize = 0;
         $formattedTagsChunk = [];
-        foreach ($tags as $formattedTag) {
-            // Check if (currentBatchSize + length of next tag + number of pipe delimiters) would exceed header size.
-            if ($currentBatchSize + strlen($formattedTag) + count($formattedTagsChunk) > $this->maxHeaderSize) {
+        $formattedTags = explode('|', $tagsPattern);
+        foreach ($formattedTags as $formattedTag) {
+            if ($tagsBatchSize + strlen($formattedTag) > $this->requestSize - count($formattedTagsChunk) - 1) {
                 yield implode('|', $formattedTagsChunk);
                 $formattedTagsChunk = [];
-                $currentBatchSize = 0;
+                $tagsBatchSize = 0;
             }
 
-            $currentBatchSize += strlen($formattedTag);
+            $tagsBatchSize += strlen($formattedTag);
             $formattedTagsChunk[] = $formattedTag;
         }
         if (!empty($formattedTagsChunk)) {
@@ -120,12 +110,12 @@ class PurgeCache
     /**
      * Send curl purge request to servers to invalidate cache by tags pattern
      *
-     * @param Socket $socketAdapter
-     * @param Uri[] $servers
+     * @param \Zend\Http\Client\Adapter\Socket $socketAdapter
+     * @param \Zend\Uri\Uri[] $servers
      * @param string $formattedTagsChunk
      * @return bool Return true if successful; otherwise return false
      */
-    private function sendPurgeRequestToServers(Socket $socketAdapter, array $servers, string $formattedTagsChunk): bool
+    private function sendPurgeRequestToServers($socketAdapter, $servers, $formattedTagsChunk)
     {
         $headers = [self::HEADER_X_MAGENTO_TAGS_PATTERN => $formattedTagsChunk];
         $unresponsiveServerError = [];
@@ -155,14 +145,14 @@ class PurgeCache
             if ($errorCount == count($servers)) {
                 $this->logger->critical(
                     'No cache server(s) could be purged ' . $loggerMessage,
-                    compact('servers', 'formattedTagsChunk')
+                    compact('server', 'formattedTagsChunk')
                 );
                 return false;
             }
 
             $this->logger->warning(
                 'Unresponsive cache server(s) hit' . $loggerMessage,
-                compact('servers', 'formattedTagsChunk')
+                compact('server', 'formattedTagsChunk')
             );
         }
 

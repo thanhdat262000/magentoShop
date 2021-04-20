@@ -25,7 +25,7 @@ class TypeReaderComposite implements TypeMetaReaderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function read(\GraphQL\Type\Definition\Type $typeMeta) : array
     {

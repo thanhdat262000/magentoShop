@@ -8,7 +8,8 @@ namespace Magento\Store\Model\Config\Processor;
 use Magento\Framework\App\Config\Spi\PostProcessorInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Adapter\TableNotFoundException;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\App\Config\Type\Scopes;
 use Magento\Store\Model\ResourceModel\Store;
 use Magento\Store\Model\ResourceModel\Store\AllStoresCollectionFactory;
@@ -84,7 +85,13 @@ class Fallback implements PostProcessorInterface
      */
     public function process(array $data)
     {
-        $this->loadScopes();
+        if ($this->deploymentConfig->isDbAvailable()) {//read only from db
+            $this->storeData = $this->storeResource->readAllStores();
+            $this->websiteData = $this->websiteResource->readAllWebsites();
+        } else {
+            $this->storeData = $this->scopes->get('stores');
+            $this->websiteData = $this->scopes->get('websites');
+        }
 
         $defaultConfig = isset($data['default']) ? $data['default'] : [];
         $result = [
@@ -165,31 +172,9 @@ class Fallback implements PostProcessorInterface
         foreach ((array)$this->websiteData as $website) {
             if ($website['website_id'] == $id) {
                 $code = $website['code'];
-                return $websites[$code] ?? [];
+                return isset($websites[$code]) ? $websites[$code] : [];
             }
         }
         return [];
-    }
-
-    /**
-     * Load config from database.
-     *
-     * @return void
-     */
-    private function loadScopes(): void
-    {
-        try {
-            if ($this->deploymentConfig->isDbAvailable()) {
-                $this->storeData = $this->storeResource->readAllStores();
-                $this->websiteData = $this->websiteResource->readAllWebsites();
-            } else {
-                $this->storeData = $this->scopes->get('stores');
-                $this->websiteData = $this->scopes->get('websites');
-            }
-        } catch (TableNotFoundException $exception) {
-            // database is empty or not setup
-            $this->storeData = [];
-            $this->websiteData = [];
-        }
     }
 }

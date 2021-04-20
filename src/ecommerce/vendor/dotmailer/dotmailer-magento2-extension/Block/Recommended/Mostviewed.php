@@ -2,9 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Block\Recommended;
 
-use Dotdigitalgroup\Email\Model\Product\ImageFinder;
-use Dotdigitalgroup\Email\Model\Product\ImageType\Context\DynamicContent;
-
 /**
  * Most viewed block
  *
@@ -38,8 +35,6 @@ class Mostviewed extends \Dotdigitalgroup\Email\Block\Recommended
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Dotdigitalgroup\Email\Block\Helper\Font $font
      * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
-     * @param DynamicContent $imageType
-     * @param ImageFinder $imageFinder
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Magento\Framework\Pricing\Helper\Data $priceHelper
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog
@@ -50,8 +45,6 @@ class Mostviewed extends \Dotdigitalgroup\Email\Block\Recommended
         \Magento\Catalog\Block\Product\Context $context,
         \Dotdigitalgroup\Email\Block\Helper\Font $font,
         \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
-        DynamicContent $imageType,
-        ImageFinder $imageFinder,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Magento\Framework\Pricing\Helper\Data $priceHelper,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog,
@@ -63,7 +56,7 @@ class Mostviewed extends \Dotdigitalgroup\Email\Block\Recommended
         $this->recommendedHelper        = $recommended;
         $this->priceHelper              = $priceHelper;
 
-        parent::__construct($context, $font, $urlFinder, $imageType, $imageFinder, $data);
+        parent::__construct($context, $font, $urlFinder, $data);
     }
 
     /**

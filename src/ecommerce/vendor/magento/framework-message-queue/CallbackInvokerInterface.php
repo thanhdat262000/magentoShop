@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Magento\Framework\MessageQueue;
 
 /**
- * Callback invoker interface. Invoke callbacks for consumer classes.
+ * Callback invoker interface
  */
 interface CallbackInvokerInterface
 {
@@ -18,15 +18,7 @@ interface CallbackInvokerInterface
      * @param QueueInterface $queue
      * @param int $maxNumberOfMessages
      * @param \Closure $callback
-     * @param int|null $maxIdleTime
-     * @param int|null $sleep
      * @return void
      */
-    public function invoke(
-        QueueInterface $queue,
-        $maxNumberOfMessages,
-        $callback,
-        $maxIdleTime = null,
-        $sleep = null
-    );
+    public function invoke(QueueInterface $queue, $maxNumberOfMessages, $callback);
 }

@@ -7,7 +7,6 @@
 namespace Magento\Setup\Console\Command;
 
 use Magento\Framework\Setup\ConsoleLogger;
-use Magento\Framework\Validation\ValidationException;
 use Magento\Setup\Model\AdminAccount;
 use Magento\Setup\Model\InstallerFactory;
 use Magento\User\Model\UserValidationRules;
@@ -82,7 +81,7 @@ class AdminUserCreateCommand extends AbstractSetupCommand
             $question = new Question('<question>Admin password:</question> ', '');
             $question->setHidden(true);
 
-            $question->setValidator(function ($value) {
+            $question->setValidator(function ($value) use ($output) {
                 $user = new \Magento\Framework\DataObject();
                 $user->setPassword($value);
 
@@ -91,7 +90,7 @@ class AdminUserCreateCommand extends AbstractSetupCommand
 
                 $validator->isValid($user);
                 foreach ($validator->getMessages() as $message) {
-                    throw new ValidationException(__($message));
+                    throw new \Exception($message);
                 }
 
                 return $value;
@@ -144,7 +143,7 @@ class AdminUserCreateCommand extends AbstractSetupCommand
     {
         $question->setValidator(function ($value) {
             if (trim($value) == '') {
-                throw new ValidationException(__('The value cannot be empty'));
+                throw new \Exception('The value cannot be empty');
             }
 
             return $value;

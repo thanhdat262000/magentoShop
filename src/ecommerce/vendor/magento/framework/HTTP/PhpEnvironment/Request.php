@@ -5,14 +5,13 @@
  */
 namespace Magento\Framework\HTTP\PhpEnvironment;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Stdlib\Cookie\CookieReaderInterface;
 use Magento\Framework\Stdlib\StringUtils;
-use Laminas\Http\Header\HeaderInterface;
-use Laminas\Stdlib\Parameters;
-use Laminas\Stdlib\ParametersInterface;
-use Laminas\Uri\UriFactory;
-use Laminas\Uri\UriInterface;
+use Zend\Http\Header\HeaderInterface;
+use Zend\Stdlib\Parameters;
+use Zend\Stdlib\ParametersInterface;
+use Zend\Uri\UriFactory;
+use Zend\Uri\UriInterface;
 
 /**
  * HTTP Request for current PHP environment.
@@ -20,7 +19,7 @@ use Laminas\Uri\UriInterface;
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
-class Request extends \Laminas\Http\PhpEnvironment\Request
+class Request extends \Zend\Http\PhpEnvironment\Request
 {
     /**#@+
      * Protocols
@@ -795,7 +794,7 @@ class Request extends \Laminas\Http\PhpEnvironment\Request
     public function getBaseUrl()
     {
         $url = urldecode(parent::getBaseUrl());
-        $url = str_replace(['\\', '/' . DirectoryList::PUB .'/'], '/', $url);
+        $url = str_replace('\\', '/', $url);
         return $url;
     }
 

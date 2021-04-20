@@ -143,11 +143,12 @@ class Parser
             if ($tokens[$i][0] === T_NAMESPACE) {
                 $namespace = '';
                 for ($j = $i + 1; $j < $tokenCount; $j++) {
-                    if ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                        break;
-                    }
-                    if ($tokens[$j][0] === T_STRING || (PHP_MAJOR_VERSION >= 8 && $tokens[$j][0] === T_NAME_QUALIFIED)) {
+                    if ($tokens[$j][0] === T_STRING) {
                         $namespace .= $tokens[$j][1] . '\\';
+                    } else {
+                        if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
                     }
                 }
             }

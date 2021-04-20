@@ -7,10 +7,9 @@ define([
     'jquery',
     'domReady',
     'consoleLogger',
-    'Magento_PageCache/js/form-key-provider',
     'jquery-ui-modules/widget',
     'mage/cookies'
-], function ($, domReady, consoleLogger, formKeyInit) {
+], function ($, domReady, consoleLogger) {
     'use strict';
 
     /**
@@ -100,7 +99,6 @@ define([
 
     /**
      * FormKey Widget - this widget is generating from key, saves it to cookie and
-     * @deprecated see Magento/PageCache/view/frontend/web/js/form-key-provider.js
      */
     $.widget('mage.formKey', {
         options: {
@@ -300,7 +298,8 @@ define([
     });
 
     domReady(function () {
-        formKeyInit();
+        $('body')
+            .formKey();
     });
 
     return {

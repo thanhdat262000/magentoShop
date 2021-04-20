@@ -14,7 +14,7 @@ class ConsoleArrayInputFactoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $factory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->factory = new ConsoleArrayInputFactory();
     }

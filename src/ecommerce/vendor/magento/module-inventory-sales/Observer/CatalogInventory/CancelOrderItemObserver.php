@@ -15,8 +15,6 @@ use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterfaceFactory;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterface;
 use Magento\InventorySalesApi\Api\Data\SalesEventInterfaceFactory;
-use Magento\InventorySalesApi\Api\Data\SalesEventExtensionFactory;
-use Magento\InventorySalesApi\Api\Data\SalesEventExtensionInterface;
 use Magento\InventorySalesApi\Api\PlaceReservationsForSalesEventInterface;
 use Magento\Sales\Model\Order\Item as OrderItem;
 use Magento\Store\Api\WebsiteRepositoryInterface;
@@ -54,18 +52,12 @@ class CancelOrderItemObserver implements ObserverInterface
     private $getItemsToCancelFromOrderItem;
 
     /**
-     * @var SalesEventExtensionFactory;
-     */
-    private $salesEventExtensionFactory;
-
-    /**
      * @param Processor $priceIndexer
      * @param SalesEventInterfaceFactory $salesEventFactory
      * @param PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent
      * @param SalesChannelInterfaceFactory $salesChannelFactory
      * @param WebsiteRepositoryInterface $websiteRepository
      * @param GetItemsToCancelFromOrderItem $getItemsToCancelFromOrderItem
-     * @param SalesEventExtensionFactory $salesEventExtensionFactory
      */
     public function __construct(
         Processor $priceIndexer,
@@ -73,8 +65,7 @@ class CancelOrderItemObserver implements ObserverInterface
         PlaceReservationsForSalesEventInterface $placeReservationsForSalesEvent,
         SalesChannelInterfaceFactory $salesChannelFactory,
         WebsiteRepositoryInterface $websiteRepository,
-        GetItemsToCancelFromOrderItem $getItemsToCancelFromOrderItem,
-        SalesEventExtensionFactory $salesEventExtensionFactory
+        GetItemsToCancelFromOrderItem $getItemsToCancelFromOrderItem
     ) {
         $this->priceIndexer = $priceIndexer;
         $this->salesEventFactory = $salesEventFactory;
@@ -82,12 +73,9 @@ class CancelOrderItemObserver implements ObserverInterface
         $this->salesChannelFactory = $salesChannelFactory;
         $this->websiteRepository = $websiteRepository;
         $this->getItemsToCancelFromOrderItem = $getItemsToCancelFromOrderItem;
-        $this->salesEventExtensionFactory = $salesEventExtensionFactory;
     }
 
     /**
-     * Add compensatory reservation for the canceled order
-     *
      * @param EventObserver $observer
      * @return void
      */
@@ -111,17 +99,11 @@ class CancelOrderItemObserver implements ObserverInterface
             ]
         ]);
 
-        /** @var SalesEventExtensionInterface */
-        $salesEventExtension = $this->salesEventExtensionFactory->create([
-            'data' => ['objectIncrementId' => (string)$orderItem->getOrder()->getIncrementId()]
-        ]);
-
         $salesEvent = $this->salesEventFactory->create([
             'type' => SalesEventInterface::EVENT_ORDER_CANCELED,
             'objectType' => SalesEventInterface::OBJECT_TYPE_ORDER,
             'objectId' => (string)$orderItem->getOrderId()
         ]);
-        $salesEvent->setExtensionAttributes($salesEventExtension);
 
         $this->placeReservationsForSalesEvent->execute($itemsToCancel, $salesChannel, $salesEvent);
 

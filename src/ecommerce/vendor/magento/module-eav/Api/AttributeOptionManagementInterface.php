@@ -15,8 +15,8 @@ interface AttributeOptionManagementInterface
     /**
      * Add option to attribute
      *
-     * @param int $entityType
      * @param string $attributeCode
+     * @param int $entityType
      * @param \Magento\Eav\Api\Data\AttributeOptionInterface $option
      * @throws \Magento\Framework\Exception\StateException
      * @throws \Magento\Framework\Exception\InputException

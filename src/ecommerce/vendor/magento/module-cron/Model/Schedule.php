@@ -189,7 +189,6 @@ class Schedule extends \Magento\Framework\Model\AbstractModel
         }
 
         // handle all match by modulus
-        $offset = 0;
         if ($expr === '*') {
             $from = 0;
             $to = 60;
@@ -202,13 +201,6 @@ class Schedule extends \Magento\Framework\Model\AbstractModel
 
             $from = $this->getNumeric($e[0]);
             $to = $this->getNumeric($e[1]);
-            if ($mod !== 1) {
-                $offset = $from;
-            }
-        } elseif ($mod !== 1) {
-            $offset = $this->getNumeric($expr);
-            $from = 0;
-            $to = 60;
         } else {
             // handle regular token
             $from = $this->getNumeric($expr);
@@ -219,7 +211,7 @@ class Schedule extends \Magento\Framework\Model\AbstractModel
             throw new CronException(__('Invalid cron expression: %1', $expr));
         }
 
-        return $num >= $from && $num <= $to && ($num - $offset) % $mod === 0;
+        return $num >= $from && $num <= $to && $num % $mod === 0;
     }
 
     /**

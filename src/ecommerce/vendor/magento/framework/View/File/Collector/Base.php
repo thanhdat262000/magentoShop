@@ -65,7 +65,7 @@ class Base implements CollectorInterface
         foreach ($sharedFiles as $file) {
             $result[] = $this->fileFactory->create($file->getFullPath(), $file->getComponentName(), null, true);
         }
-        $area = $theme->getArea();
+        $area = $theme->getData('area');
         $themeFiles = $this->componentDirSearch->collectFilesWithContext(
             ComponentRegistrar::MODULE,
             "view/{$area}/{$this->subDir}{$filePath}"

@@ -13,11 +13,11 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Filters\FilterModifier;
-use Magento\Ui\Component\Filters\Type\AbstractFilter;
-use Magento\Ui\Component\Filters\Type\Input;
 use Magento\Ui\Component\Form\Element\ColorPicker;
 use Magento\Ui\Component\Form\Element\Input as ElementInput;
+use Magento\Ui\Component\Filters\Type\AbstractFilter;
 use Magento\Ui\Model\ColorPicker\ColorModesProvider;
+use Magento\Ui\Component\Filters\Type\Input;
 
 /**
  * Color grid filter
@@ -25,6 +25,13 @@ use Magento\Ui\Model\ColorPicker\ColorModesProvider;
 class Color extends AbstractFilter
 {
     public const NAME = 'filter_input';
+
+    /**
+     * Wrapped component
+     *
+     * @var ElementInput
+     */
+    private $wrappedComponent;
 
     /**
      * Provides color picker modes configuration
@@ -71,15 +78,15 @@ class Color extends AbstractFilter
      */
     public function prepare(): void
     {
-        $wrappedComponent = $this->uiComponentFactory->create(
+        $this->wrappedComponent = $this->uiComponentFactory->create(
             $this->getName(),
             Input::COMPONENT,
             ['context' => $this->getContext()]
         );
-        $wrappedComponent->prepare();
+        $this->wrappedComponent->prepare();
         // Merge JS configuration with wrapped component configuration
         $jsConfig = array_replace_recursive(
-            $this->getJsConfig($wrappedComponent),
+            $this->getJsConfig($this->wrappedComponent),
             $this->getJsConfig($this)
         );
         $this->setData('js_config', $jsConfig);
@@ -87,7 +94,7 @@ class Color extends AbstractFilter
         $this->setData(
             'config',
             array_replace_recursive(
-                (array)$wrappedComponent->getData('config'),
+                (array)$this->wrappedComponent->getData('config'),
                 (array)$this->getData('config')
             )
         );
@@ -115,19 +122,17 @@ class Color extends AbstractFilter
      */
     private function applyFilter(): void
     {
-        if (!isset($this->filterData[$this->getName()])) {
-            return;
-        }
+        if (isset($this->filterData[$this->getName()])) {
+            $value = str_replace(['%', '_', '#'], ['\%', '\_', ''], $this->filterData[$this->getName()]);
 
-        $value = str_replace(['%', '_', '#'], ['\%', '\_', ''], $this->filterData[$this->getName()]);
+            if ($value || $value === '0') {
+                $filter = $this->filterBuilder->setConditionType('like')
+                    ->setField($this->getName())
+                    ->setValue($value)
+                    ->create();
 
-        if ($value || $value === '0') {
-            $filter = $this->filterBuilder->setConditionType('like')
-                ->setField($this->getName())
-                ->setValue($value)
-                ->create();
-
-            $this->getContext()->getDataProvider()->addFilter($filter);
+                $this->getContext()->getDataProvider()->addFilter($filter);
+            }
         }
     }
 }

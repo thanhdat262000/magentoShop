@@ -10,6 +10,6 @@ class ConfigureTeamsButton extends ButtonField
      */
     protected function getButtonUrl()
     {
-        return $this->getEcAuthorisedUrl($this->config->getConfigureChatTeamUrl());
+        return $this->config->getConfigureChatTeamButtonUrl();
     }
 }

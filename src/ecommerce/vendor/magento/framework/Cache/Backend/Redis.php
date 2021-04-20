@@ -73,25 +73,11 @@ class Redis extends \Cm_Cache_Backend_Redis
     public function save($data, $id, $tags = [], $specificLifetime = false)
     {
         try {
-            $result = parent::save($data, $id, $tags, $specificLifetime);
+            parent::save($data, $id, $tags, $specificLifetime);
         } catch (\Throwable $exception) {
-            $result = false;
+            return false;
         }
 
-        return $result;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function remove($id)
-    {
-        try {
-            $result = parent::remove($id);
-        } catch (\Throwable $exception) {
-            $result = false;
-        }
-
-        return $result;
+        return true;
     }
 }

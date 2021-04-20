@@ -24,8 +24,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**
- * Test for controller downloading Adobe Stock asset preview version
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * DownloadTest
  */
 class DownloadTest extends TestCase
 {
@@ -115,7 +114,7 @@ class DownloadTest extends TestCase
         $this->context->expects($this->once())
             ->method('getResultFactory')
             ->willReturn($this->resultFactory);
-        $this->saveImage->expects($this->once())->method('execute');
+        $this->saveImage->expects($this->once())->method('execute')->willReturn(null);
         $this->jsonObject = $this->createMock(Json::class);
         $this->resultFactory->expects($this->once())->method('create')->with('json')->willReturn($this->jsonObject);
 

@@ -8,10 +8,10 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
 {
     use \Magento\Framework\Interception\Interceptor;
 
-    public function __construct(\Magento\Cms\Api\PageRepositoryInterface $repository, array $validators = [], ?\Magento\Framework\EntityManager\HydratorInterface $hydrator = null)
+    public function __construct(\Magento\Cms\Api\PageRepositoryInterface $repository, array $validators = [])
     {
         $this->___init();
-        parent::__construct($repository, $validators, $hydrator);
+        parent::__construct($repository, $validators);
     }
 
     /**
@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
     public function save(\Magento\Cms\Api\Data\PageInterface $page)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save($page);
+        if (!$pluginInfo) {
+            return parent::save($page);
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
     public function getById($pageId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getById');
-        return $pluginInfo ? $this->___callPlugins('getById', func_get_args(), $pluginInfo) : parent::getById($pageId);
+        if (!$pluginInfo) {
+            return parent::getById($pageId);
+        } else {
+            return $this->___callPlugins('getById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getList');
-        return $pluginInfo ? $this->___callPlugins('getList', func_get_args(), $pluginInfo) : parent::getList($searchCriteria);
+        if (!$pluginInfo) {
+            return parent::getList($searchCriteria);
+        } else {
+            return $this->___callPlugins('getList', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
     public function delete(\Magento\Cms\Api\Data\PageInterface $page)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete($page);
+        if (!$pluginInfo) {
+            return parent::delete($page);
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,6 +72,10 @@ class Interceptor extends \Magento\Cms\Model\PageRepository\ValidationComposite 
     public function deleteById($pageId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'deleteById');
-        return $pluginInfo ? $this->___callPlugins('deleteById', func_get_args(), $pluginInfo) : parent::deleteById($pageId);
+        if (!$pluginInfo) {
+            return parent::deleteById($pageId);
+        } else {
+            return $this->___callPlugins('deleteById', func_get_args(), $pluginInfo);
+        }
     }
 }

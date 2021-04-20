@@ -8,8 +8,6 @@ namespace Magento\Framework\Filesystem\Directory;
 
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\ValidatorException;
-use Magento\Framework\Filesystem\DriverInterface;
-use Magento\Framework\Phrase;
 
 /**
  * Write Interface implementation
@@ -27,14 +25,14 @@ class Write extends Read implements WriteInterface
      * Constructor
      *
      * @param \Magento\Framework\Filesystem\File\WriteFactory $fileFactory
-     * @param DriverInterface $driver
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
      * @param string $path
      * @param int $createPermissions
      * @param PathValidatorInterface|null $pathValidator
      */
     public function __construct(
         \Magento\Framework\Filesystem\File\WriteFactory $fileFactory,
-        DriverInterface $driver,
+        \Magento\Framework\Filesystem\DriverInterface $driver,
         $path,
         $createPermissions = null,
         ?PathValidatorInterface $pathValidator = null
@@ -50,13 +48,13 @@ class Write extends Read implements WriteInterface
      *
      * @param string $path
      * @return void
-     * @throws FileSystemException|ValidatorException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function assertWritable($path)
     {
         if ($this->isWritable($path) === false) {
             $path = $this->getAbsolutePath($path);
-            throw new FileSystemException(new Phrase('The path "%1" is not writable.', [$path]));
+            throw new FileSystemException(new \Magento\Framework\Phrase('The path "%1" is not writable.', [$path]));
         }
     }
 
@@ -65,15 +63,15 @@ class Write extends Read implements WriteInterface
      *
      * @param string $path
      * @return void
-     * @throws FileSystemException
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function assertIsFile($path)
     {
+        clearstatcache();
         $absolutePath = $this->driver->getAbsolutePath($this->path, $path);
-        clearstatcache(true, $absolutePath);
         if (!$this->driver->isFile($absolutePath)) {
             throw new FileSystemException(
-                new Phrase('The "%1" file doesn\'t exist.', [$absolutePath])
+                new \Magento\Framework\Phrase('The "%1" file doesn\'t exist.', [$absolutePath])
             );
         }
     }
@@ -116,7 +114,7 @@ class Write extends Read implements WriteInterface
         }
         $absolutePath = $this->driver->getAbsolutePath($this->path, $path);
         $absoluteNewPath = $targetDirectory->getAbsolutePath($newPath);
-        return $this->driver->rename($absolutePath, $absoluteNewPath, $targetDirectory->getDriver());
+        return $this->driver->rename($absolutePath, $absoluteNewPath, $targetDirectory->driver);
     }
 
     /**
@@ -151,7 +149,7 @@ class Write extends Read implements WriteInterface
      * @param string $destination
      * @param WriteInterface $targetDirectory [optional]
      * @return bool
-     * @throws FileSystemException
+     * @throws \Magento\Framework\Exception\FileSystemException
      * @throws ValidatorException
      */
     public function createSymlink($path, $destination, WriteInterface $targetDirectory = null)
@@ -180,18 +178,10 @@ class Write extends Read implements WriteInterface
     {
         $exceptionMessages = [];
         $this->validatePath($path);
-
         if (!$this->isExist($path)) {
             return true;
         }
-
         $absolutePath = $this->driver->getAbsolutePath($this->path, $path);
-        $basePath = $this->driver->getRealPathSafety($this->driver->getAbsolutePath($this->path, ''));
-
-        if ($path !== null && $path !== '' && $this->driver->getRealPathSafety($absolutePath) === $basePath) {
-            throw new FileSystemException(new Phrase('The path "%1" is not writable.', [$path]));
-        }
-
         if ($this->driver->isFile($absolutePath)) {
             $this->driver->deleteFile($absolutePath);
         } else {
@@ -208,13 +198,12 @@ class Write extends Read implements WriteInterface
 
             if (!empty($exceptionMessages)) {
                 throw new FileSystemException(
-                    new Phrase(
+                    new \Magento\Framework\Phrase(
                         \implode(' ', $exceptionMessages)
                     )
                 );
             }
         }
-
         return true;
     }
 
@@ -242,7 +231,7 @@ class Write extends Read implements WriteInterface
         }
         if (!empty($exceptionMessages)) {
             throw new FileSystemException(
-                new Phrase(
+                new \Magento\Framework\Phrase(
                     \implode(' ', $exceptionMessages)
                 )
             );
@@ -308,7 +297,7 @@ class Write extends Read implements WriteInterface
      *
      * @param string|null $path
      * @return bool
-     * @throws FileSystemException
+     * @throws \Magento\Framework\Exception\FileSystemException
      * @throws ValidatorException
      */
     public function isWritable($path = null)
@@ -324,7 +313,7 @@ class Write extends Read implements WriteInterface
      * @param string $path
      * @param string $mode
      * @return \Magento\Framework\Filesystem\File\WriteInterface
-     * @throws FileSystemException
+     * @throws \Magento\Framework\Exception\FileSystemException
      * @throws ValidatorException
      */
     public function openFile($path, $mode = 'w')
@@ -345,21 +334,17 @@ class Write extends Read implements WriteInterface
      * @param string $content
      * @param string|null $mode
      * @return int The number of bytes that were written.
-     * @throws FileSystemException|ValidatorException
+     * @throws FileSystemException
      */
     public function writeFile($path, $content, $mode = 'w+')
     {
-         $file = $this->openFile($path, $mode);
-         $result = $file->write($content);
-         $file->close();
-
-         return $result;
+        return $this->openFile($path, $mode)->write($content);
     }
 
     /**
      * Get driver
      *
-     * @return DriverInterface
+     * @return \Magento\Framework\Filesystem\DriverInterface
      */
     public function getDriver()
     {

@@ -3,28 +3,25 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Translation\Model\ResourceModel;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\Config;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\ScopeResolverInterface;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\Framework\Translate\ResourceInterface;
 use Magento\Translation\App\Config\Type\Translation;
 
-/**
- * Translate data resource model
- */
-class Translate extends AbstractDb implements ResourceInterface
+class Translate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb implements
+    \Magento\Framework\Translate\ResourceInterface
 {
     /**
-     * @var ScopeResolverInterface
+     * @var \Magento\Framework\App\ScopeResolverInterface
      */
     protected $scopeResolver;
+
+    /**
+     * @var null|string
+     */
+    protected $scope;
 
     /**
      * @var Config
@@ -37,30 +34,19 @@ class Translate extends AbstractDb implements ResourceInterface
     private $deployedConfig;
 
     /**
-     * @var null|string
-     */
-    protected $scope;
-
-    /**
-     * @param Context $context
-     * @param ScopeResolverInterface $scopeResolver
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
+     * @param \Magento\Framework\App\ScopeResolverInterface $scopeResolver
      * @param string $connectionName
      * @param null|string $scope
-     * @param Config|null $appConfig
-     * @param DeploymentConfig|null $deployedConfig
      */
     public function __construct(
-        Context $context,
-        ScopeResolverInterface $scopeResolver,
+        \Magento\Framework\Model\ResourceModel\Db\Context $context,
+        \Magento\Framework\App\ScopeResolverInterface $scopeResolver,
         $connectionName = null,
-        $scope = null,
-        ?Config $appConfig = null,
-        ?DeploymentConfig $deployedConfig = null
+        $scope = null
     ) {
         $this->scopeResolver = $scopeResolver;
         $this->scope = $scope;
-        $this->appConfig = $appConfig ?? ObjectManager::getInstance()->get(Config::class);
-        $this->deployedConfig = $deployedConfig ?? ObjectManager::getInstance()->get(DeploymentConfig::class);
         parent::__construct($context, $connectionName);
     }
 
@@ -79,7 +65,6 @@ class Translate extends AbstractDb implements ResourceInterface
      *
      * @param int $storeId
      * @param string $locale
-     *
      * @return array
      */
     public function getTranslationArray($storeId = null, $locale = null)
@@ -89,7 +74,7 @@ class Translate extends AbstractDb implements ResourceInterface
         }
         $locale = (string) $locale;
 
-        $data = $this->appConfig->get(
+        $data = $this->getAppConfig()->get(
             Translation::CONFIG_TYPE,
             $locale . '/' . $this->getStoreCode($storeId),
             []
@@ -102,9 +87,7 @@ class Translate extends AbstractDb implements ResourceInterface
                 ->where('locale = :locale')
                 ->order('store_id');
             $bind = [':locale' => $locale, ':store_id' => $storeId];
-            $dbData = array_map(function ($value) {
-                return htmlspecialchars_decode($value);
-            }, $connection->fetchPairs($select, $bind));
+            $dbData = $connection->fetchPairs($select, $bind);
             $data = array_replace($data, $dbData);
         }
         return $data;
@@ -115,7 +98,6 @@ class Translate extends AbstractDb implements ResourceInterface
      *
      * @param array $strings
      * @param int|null $storeId
-     *
      * @return array
      */
     public function getTranslationArrayByStrings(array $strings, $storeId = null)
@@ -159,7 +141,7 @@ class Translate extends AbstractDb implements ResourceInterface
      */
     public function getConnection()
     {
-        if (!$this->deployedConfig->isDbAvailable()) {
+        if (!$this->getDeployedConfig()->isDbAvailable()) {
             return false;
         }
         return parent::getConnection();
@@ -179,11 +161,34 @@ class Translate extends AbstractDb implements ResourceInterface
      * Retrieve store code by store id
      *
      * @param int $storeId
-     *
      * @return string
      */
     private function getStoreCode($storeId)
     {
         return $this->scopeResolver->getScope($storeId)->getCode();
+    }
+
+    /**
+     * @deprecated 100.1.2
+     * @return DeploymentConfig
+     */
+    private function getDeployedConfig()
+    {
+        if ($this->deployedConfig === null) {
+            $this->deployedConfig = ObjectManager::getInstance()->get(DeploymentConfig::class);
+        }
+        return $this->deployedConfig;
+    }
+
+    /**
+     * @deprecated 100.1.2
+     * @return Config
+     */
+    private function getAppConfig()
+    {
+        if ($this->appConfig === null) {
+            $this->appConfig = ObjectManager::getInstance()->get(Config::class);
+        }
+        return $this->appConfig;
     }
 }

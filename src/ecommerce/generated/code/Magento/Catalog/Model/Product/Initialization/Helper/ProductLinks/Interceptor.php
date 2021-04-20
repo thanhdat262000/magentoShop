@@ -19,6 +19,10 @@ class Interceptor extends \Magento\Catalog\Model\Product\Initialization\Helper\P
     public function initializeLinks(\Magento\Catalog\Model\Product $product, array $links)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'initializeLinks');
-        return $pluginInfo ? $this->___callPlugins('initializeLinks', func_get_args(), $pluginInfo) : parent::initializeLinks($product, $links);
+        if (!$pluginInfo) {
+            return parent::initializeLinks($product, $links);
+        } else {
+            return $this->___callPlugins('initializeLinks', func_get_args(), $pluginInfo);
+        }
     }
 }

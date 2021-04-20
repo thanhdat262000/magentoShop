@@ -18,7 +18,6 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\VersionSpecification;
 use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Preg;
-use PhpCsFixer\Tokenizer\Analyzer\WhitespacesAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
@@ -91,13 +90,12 @@ SAMPLE
      */
     private function fixIndentation(Tokens $tokens, $start, $end)
     {
-        $indent = WhitespacesAnalyzer::detectIndent($tokens, $start).$this->whitespacesConfig->getIndent();
+        $indent = $this->getIndentAt($tokens, $start).$this->whitespacesConfig->getIndent();
 
-        Preg::match('/^\h*/', $tokens[$end]->getContent(), $matches);
+        Preg::match('/^[ \t]*/', $tokens[$end]->getContent(), $matches);
         $currentIndent = $matches[0];
-        $currentIndentLength = \strlen($currentIndent);
 
-        $content = $indent.substr($tokens[$end]->getContent(), $currentIndentLength);
+        $content = $indent.substr($tokens[$end]->getContent(), \strlen($currentIndent));
         $tokens[$end] = new Token([T_END_HEREDOC, $content]);
 
         if ($end === $start + 1) {
@@ -109,34 +107,44 @@ SAMPLE
                 continue;
             }
 
-            $content = $tokens[$index]->getContent();
-
-            if ('' !== $currentIndent) {
-                $content = Preg::replace('/(?<=\v)(?!'.$currentIndent.')\h+/', '', $content);
-            }
-
-            $regexEnd = $last && !$currentIndent ? '(?!\v|$)' : '(?!\v)';
-            $content = Preg::replace('/(?<=\v)'.$currentIndent.$regexEnd.'/', $indent, $content);
-
+            $regexEnd = $last && !$currentIndent ? '(?!$)' : '';
+            $content = Preg::replace('/(?<=\v)'.$currentIndent.$regexEnd.'/', $indent, $tokens[$index]->getContent());
             $tokens[$index] = new Token([$tokens[$index]->getId(), $content]);
         }
 
         ++$index;
 
-        if (!$tokens[$index]->isGivenKind(T_ENCAPSED_AND_WHITESPACE)) {
+        if ($tokens[$index]->isGivenKind(T_ENCAPSED_AND_WHITESPACE)) {
+            $content = $indent.substr($tokens[$index]->getContent(), \strlen($currentIndent));
+            $tokens[$index] = new Token([T_ENCAPSED_AND_WHITESPACE, $content]);
+        } else {
             $tokens->insertAt($index, new Token([T_ENCAPSED_AND_WHITESPACE, $indent]));
+        }
+    }
 
-            return;
+    /**
+     * @param int $index
+     *
+     * @return string
+     */
+    private function getIndentAt(Tokens $tokens, $index)
+    {
+        for (; $index >= 0; --$index) {
+            if (!$tokens[$index]->isGivenKind([T_WHITESPACE, T_INLINE_HTML, T_OPEN_TAG])) {
+                continue;
+            }
+
+            $content = $tokens[$index]->getContent();
+
+            if ($tokens[$index]->isWhitespace() && $tokens[$index - 1]->isGivenKind(T_OPEN_TAG)) {
+                $content = $tokens[$index - 1]->getContent().$content;
+            }
+
+            if (1 === Preg::match('/\R([ \t]*)$/', $content, $matches)) {
+                return $matches[1];
+            }
         }
 
-        $content = $tokens[$index]->getContent();
-
-        if (!\in_array($content[0], ["\r", "\n"], true) && (!$currentIndent || $currentIndent === substr($content, 0, $currentIndentLength))) {
-            $content = $indent.substr($content, $currentIndentLength);
-        } elseif ($currentIndent) {
-            $content = Preg::replace('/^(?!'.$currentIndent.')\h+/', '', $content);
-        }
-
-        $tokens[$index] = new Token([T_ENCAPSED_AND_WHITESPACE, $content]);
+        return '';
     }
 }

@@ -93,16 +93,12 @@ class FilePermissions
             $data = [
                 DirectoryList::CONFIG,
                 DirectoryList::VAR_DIR,
-                DirectoryList::MEDIA
+                DirectoryList::MEDIA,
+                DirectoryList::STATIC_VIEW,
             ];
             if ($this->state->getMode() !== State::MODE_PRODUCTION) {
                 $data[] = DirectoryList::GENERATED;
-                /**
-                 * Static files may be pre-generated on separate machine.
-                 */
-                $data[] = DirectoryList::STATIC_VIEW;
             }
-
             foreach ($data as $code) {
                 $this->installationWritableDirectories[$code] = $this->directoryList->getPath($code);
             }
@@ -264,7 +260,6 @@ class FilePermissions
                 if ($associative) {
                     $missingPaths[$missingPath] = $this->nonWritablePathsInDirectories[$missingPath];
                 } else {
-                    // phpcs:ignore Magento2.Performance.ForeachArrayMerge
                     $missingPaths = array_merge(
                         $missingPaths,
                         $this->nonWritablePathsInDirectories[$missingPath]

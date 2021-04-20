@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 declare(strict_types=1);
 
 namespace Magento\Quote\Model;
@@ -11,10 +12,13 @@ use Magento\Authorization\Model\UserContextInterface;
 use Magento\Quote\Api\ChangeQuoteControlInterface;
 use Magento\Quote\Api\Data\CartInterface;
 
+/**
+ * {@inheritdoc}
+ */
 class ChangeQuoteControl implements ChangeQuoteControlInterface
 {
     /**
-     * @var UserContextInterface
+     * @var UserContextInterface $userContext
      */
     private $userContext;
 
@@ -27,20 +31,25 @@ class ChangeQuoteControl implements ChangeQuoteControlInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isAllowed(CartInterface $quote): bool
     {
         switch ($this->userContext->getUserType()) {
             case UserContextInterface::USER_TYPE_CUSTOMER:
-                return ($quote->getCustomerId() == $this->userContext->getUserId());
+                $isAllowed = ($quote->getCustomerId() == $this->userContext->getUserId());
+                break;
             case UserContextInterface::USER_TYPE_GUEST:
-                return ($quote->getCustomerId() === null);
+                $isAllowed = ($quote->getCustomerId() === null);
+                break;
             case UserContextInterface::USER_TYPE_ADMIN:
             case UserContextInterface::USER_TYPE_INTEGRATION:
-                return true;
+                $isAllowed = true;
+                break;
+            default:
+                $isAllowed = false;
         }
 
-        return false;
+        return $isAllowed;
     }
 }

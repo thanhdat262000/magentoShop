@@ -5,139 +5,96 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Store\Test\Unit\App\Response;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\State;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use Magento\Store\App\Response\Redirect;
-use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\App\Area;
-use Magento\Store\Model\ScopeInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-
-/**
- * Test for \Magento\Store\App\Response\Redirect.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
-class RedirectTest extends TestCase
+class RedirectTest extends \PHPUnit\Framework\TestCase
 {
-    private const XML_PATH_USE_CUSTOM_ADMIN_URL = 'admin/url/use_custom';
-    private const XML_PATH_CUSTOM_ADMIN_URL = 'admin/url/custom';
-
-    private const STUB_INTERNAL_URL = 'http://internalurl.com/';
-    private const STUB_EXTERNAL_URL = 'http://externalurl.com/';
-    private const STUB_CUSTOM_ADMIN_URL = 'http://externalurl.com/admin/';
+    /**
+     * @var \Magento\Store\App\Response\Redirect
+     */
+    protected $_model;
 
     /**
-     * @var Redirect
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $model;
+    protected $_requestMock;
 
     /**
-     * @var Http|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $requestMock;
+    protected $_storeManagerMock;
 
     /**
-     * @var StoreManagerInterface|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $storeManagerMock;
+    protected $_urlCoderMock;
 
     /**
-     * @var State|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $appStateMock;
+    protected $_sessionMock;
 
     /**
-     * @var ScopeConfigInterface|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $scopeConfigMock;
+    protected $_sidResolverMock;
 
     /**
-     * @inheritDoc
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function setUp(): void
+    protected $_urlBuilderMock;
+
+    protected function setUp()
     {
-        $objectManager = new ObjectManager($this);
+        $this->_requestMock = $this->getMockBuilder(\Magento\Framework\App\Request\Http::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->_storeManagerMock = $this->createMock(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->_urlCoderMock = $this->createMock(\Magento\Framework\Encryption\UrlCoder::class);
+        $this->_sessionMock = $this->createMock(\Magento\Framework\Session\SessionManagerInterface::class);
+        $this->_sidResolverMock = $this->createMock(\Magento\Framework\Session\SidResolverInterface::class);
+        $this->_urlBuilderMock = $this->createMock(\Magento\Framework\UrlInterface::class);
 
-        $this->requestMock = $this->createMock(Http::class);
-        $this->storeManagerMock = $this->getMockForAbstractClass(StoreManagerInterface::class);
-        $this->appStateMock = $this->createMock(State::class);
-        $this->scopeConfigMock = $this->createMock(ScopeConfigInterface::class);
-
-        $this->model = $objectManager->getObject(
-            Redirect::class,
-            [
-                'request' => $this->requestMock,
-                'storeManager' => $this->storeManagerMock,
-                'appState' =>  $this->appStateMock,
-                'scopeConfig' =>  $this->scopeConfigMock,
-            ]
+        $this->_model = new \Magento\Store\App\Response\Redirect(
+            $this->_requestMock,
+            $this->_storeManagerMock,
+            $this->_urlCoderMock,
+            $this->_sessionMock,
+            $this->_sidResolverMock,
+            $this->_urlBuilderMock
         );
     }
 
     /**
-     * Success url test
-     *
      * @dataProvider urlAddresses
-     *
-     * @param string $url
-     * @param string $area
-     * @param bool $isCustomAdminUrlEnabled
-     * @param string $expectedUrl
-     * @return void
+     * @param string $baseUrl
+     * @param string $successUrl
      */
-    public function testSuccessUrl(
-        string $url,
-        string $area,
-        bool $isCustomAdminUrlEnabled,
-        string $expectedUrl
-    ): void {
-        $testStoreMock = $this->createMock(Store::class);
-        $testStoreMock->expects($this->atLeastOnce())
-            ->method('getBaseUrl')
-            ->willReturn(self::STUB_INTERNAL_URL);
-        $this->requestMock->expects($this->once())
-            ->method('getParam')
-            ->willReturn(null);
-        $this->storeManagerMock->expects($this->atLeastOnce())
-            ->method('getStore')
-            ->willReturn($testStoreMock);
-        $this->appStateMock->expects($this->once())
-            ->method('getAreaCode')
-            ->willReturn($area);
-        $this->scopeConfigMock->expects($this->any())
-            ->method('isSetFlag')
-            ->with(self::XML_PATH_USE_CUSTOM_ADMIN_URL, ScopeInterface::SCOPE_STORE)
-            ->willReturn($isCustomAdminUrlEnabled);
-        $this->scopeConfigMock->expects($this->any())
-            ->method('getValue')
-            ->with(self::XML_PATH_CUSTOM_ADMIN_URL, ScopeInterface::SCOPE_STORE)
-            ->willReturn(self::STUB_CUSTOM_ADMIN_URL);
-
-        $this->assertEquals($expectedUrl, $this->model->success($url));
+    public function testSuccessUrl($baseUrl, $successUrl)
+    {
+        $testStoreMock = $this->createMock(\Magento\Store\Model\Store::class);
+        $testStoreMock->expects($this->any())->method('getBaseUrl')->will($this->returnValue($baseUrl));
+        $this->_requestMock->expects($this->any())->method('getParam')->will($this->returnValue(null));
+        $this->_storeManagerMock->expects($this->any())->method('getStore')
+            ->will($this->returnValue($testStoreMock));
+        $this->assertEquals($baseUrl, $this->_model->success($successUrl));
     }
 
     /**
-     * Data provider for testSuccessUrlWithCustomAdminUrl
+     * DataProvider with the test urls
      *
      * @return array
      */
-    public function urlAddresses(): array
+    public function urlAddresses()
     {
         return [
-            [self::STUB_CUSTOM_ADMIN_URL, Area::AREA_ADMINHTML, true, self::STUB_CUSTOM_ADMIN_URL],
-            [self::STUB_CUSTOM_ADMIN_URL, Area::AREA_ADMINHTML, false, self::STUB_INTERNAL_URL],
-            [self::STUB_CUSTOM_ADMIN_URL, Area::AREA_FRONTEND, true, self::STUB_INTERNAL_URL],
-            [self::STUB_EXTERNAL_URL, Area::AREA_ADMINHTML, true, self::STUB_INTERNAL_URL],
-            [self::STUB_EXTERNAL_URL, Area::AREA_FRONTEND, true, self::STUB_INTERNAL_URL],
+            [
+                'http://externalurl.com/',
+                'http://internalurl.com/',
+            ],
+            [
+                'http://internalurl.com/',
+                'http://internalurl.com/'
+            ]
         ];
     }
 }

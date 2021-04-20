@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Framework\MessageQueue\Topology\Config\Compos
     public function read($scope = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'read');
-        return $pluginInfo ? $this->___callPlugins('read', func_get_args(), $pluginInfo) : parent::read($scope);
+        if (!$pluginInfo) {
+            return parent::read($scope);
+        } else {
+            return $this->___callPlugins('read', func_get_args(), $pluginInfo);
+        }
     }
 }

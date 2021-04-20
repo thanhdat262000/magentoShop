@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function addCc($address, $name = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addCc');
-        return $pluginInfo ? $this->___callPlugins('addCc', func_get_args(), $pluginInfo) : parent::addCc($address, $name);
+        if (!$pluginInfo) {
+            return parent::addCc($address, $name);
+        } else {
+            return $this->___callPlugins('addCc', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function addTo($address, $name = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addTo');
-        return $pluginInfo ? $this->___callPlugins('addTo', func_get_args(), $pluginInfo) : parent::addTo($address, $name);
+        if (!$pluginInfo) {
+            return parent::addTo($address, $name);
+        } else {
+            return $this->___callPlugins('addTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function addBcc($address)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addBcc');
-        return $pluginInfo ? $this->___callPlugins('addBcc', func_get_args(), $pluginInfo) : parent::addBcc($address);
+        if (!$pluginInfo) {
+            return parent::addBcc($address);
+        } else {
+            return $this->___callPlugins('addBcc', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setReplyTo($email, $name = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setReplyTo');
-        return $pluginInfo ? $this->___callPlugins('setReplyTo', func_get_args(), $pluginInfo) : parent::setReplyTo($email, $name);
+        if (!$pluginInfo) {
+            return parent::setReplyTo($email, $name);
+        } else {
+            return $this->___callPlugins('setReplyTo', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setFrom($from)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFrom');
-        return $pluginInfo ? $this->___callPlugins('setFrom', func_get_args(), $pluginInfo) : parent::setFrom($from);
+        if (!$pluginInfo) {
+            return parent::setFrom($from);
+        } else {
+            return $this->___callPlugins('setFrom', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setFromByScope($from, $scopeId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFromByScope');
-        return $pluginInfo ? $this->___callPlugins('setFromByScope', func_get_args(), $pluginInfo) : parent::setFromByScope($from, $scopeId);
+        if (!$pluginInfo) {
+            return parent::setFromByScope($from, $scopeId);
+        } else {
+            return $this->___callPlugins('setFromByScope', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setTemplateIdentifier($templateIdentifier)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplateIdentifier');
-        return $pluginInfo ? $this->___callPlugins('setTemplateIdentifier', func_get_args(), $pluginInfo) : parent::setTemplateIdentifier($templateIdentifier);
+        if (!$pluginInfo) {
+            return parent::setTemplateIdentifier($templateIdentifier);
+        } else {
+            return $this->___callPlugins('setTemplateIdentifier', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setTemplateModel($templateModel)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplateModel');
-        return $pluginInfo ? $this->___callPlugins('setTemplateModel', func_get_args(), $pluginInfo) : parent::setTemplateModel($templateModel);
+        if (!$pluginInfo) {
+            return parent::setTemplateModel($templateModel);
+        } else {
+            return $this->___callPlugins('setTemplateModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setTemplateVars($templateVars)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplateVars');
-        return $pluginInfo ? $this->___callPlugins('setTemplateVars', func_get_args(), $pluginInfo) : parent::setTemplateVars($templateVars);
+        if (!$pluginInfo) {
+            return parent::setTemplateVars($templateVars);
+        } else {
+            return $this->___callPlugins('setTemplateVars', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function setTemplateOptions($templateOptions)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setTemplateOptions');
-        return $pluginInfo ? $this->___callPlugins('setTemplateOptions', func_get_args(), $pluginInfo) : parent::setTemplateOptions($templateOptions);
+        if (!$pluginInfo) {
+            return parent::setTemplateOptions($templateOptions);
+        } else {
+            return $this->___callPlugins('setTemplateOptions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,6 +150,10 @@ class Interceptor extends \Magento\Framework\Mail\Template\TransportBuilder impl
     public function getTransport()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTransport');
-        return $pluginInfo ? $this->___callPlugins('getTransport', func_get_args(), $pluginInfo) : parent::getTransport();
+        if (!$pluginInfo) {
+            return parent::getTransport();
+        } else {
+            return $this->___callPlugins('getTransport', func_get_args(), $pluginInfo);
+        }
     }
 }

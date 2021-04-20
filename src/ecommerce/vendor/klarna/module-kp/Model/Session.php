@@ -12,23 +12,14 @@ namespace Klarna\Kp\Model;
 
 use Klarna\Core\Api\BuilderInterface;
 use Klarna\Core\Model\Api\Exception as KlarnaApiException;
-use Klarna\Core\Exception as KlarnaCoreException;
 use Klarna\Kp\Api\CreditApiInterface;
 use Klarna\Kp\Api\Data\RequestInterface;
 use Klarna\Kp\Api\Data\ResponseInterface;
 use Klarna\Kp\Api\QuoteInterface;
 use Klarna\Kp\Api\QuoteRepositoryInterface;
-use Klarna\Kp\Model\Payment\Kp;
 use Klarna\Kp\Model\QuoteFactory as KlarnaQuoteFactory;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ObjectManager;
 
-/**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class Session
 {
     /**
@@ -37,44 +28,42 @@ class Session
      * @var BuilderInterface
      */
     private $builder;
+
     /**
      * Klarna Payments API
      *
      * @var CreditApiInterface
      */
     private $api;
+
     /**
      * Klarna Quote Repository
      *
      * @var QuoteRepositoryInterface
      */
     private $kQuoteRepository;
+
     /**
      * Klarna Quote Factory
      *
      * @var KlarnaQuoteFactory
      */
     private $klarnaQuoteFactory;
+
     /**
      * @var ResponseInterface
      */
     private $apiResponse;
+
     /**
      * @var QuoteInterface
      */
     private $klarnaQuote;
+
     /**
      * @var \Magento\Checkout\Model\Session
      */
     private $session;
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-    /**
-     * @var CustomerSession
-     */
-    private $customerSession;
 
     /**
      * @param \Magento\Checkout\Model\Session $session
@@ -82,25 +71,19 @@ class Session
      * @param BuilderInterface                $builder
      * @param QuoteRepositoryInterface        $kQuoteRepository
      * @param KlarnaQuoteFactory              $klarnaQuoteFactory
-     * @param ScopeConfigInterface            $scopeConfig
-     * @param CustomerSession                 $customerSession
      */
     public function __construct(
         \Magento\Checkout\Model\Session $session,
         CreditApiInterface $api,
         BuilderInterface $builder,
         QuoteRepositoryInterface $kQuoteRepository,
-        KlarnaQuoteFactory $klarnaQuoteFactory,
-        ScopeConfigInterface $scopeConfig,
-        CustomerSession $customerSession
+        KlarnaQuoteFactory $klarnaQuoteFactory
     ) {
         $this->api = $api;
         $this->builder = $builder;
         $this->kQuoteRepository = $kQuoteRepository;
         $this->klarnaQuoteFactory = $klarnaQuoteFactory;
         $this->session = $session;
-        $this->scopeConfig = $scopeConfig ?? ObjectManager::getInstance()->create(ScopeConfigInterface::class);
-        $this->customerSession = $customerSession ?? ObjectManager::getInstance()->create(CustomerSession::class);
     }
 
     /**
@@ -108,8 +91,8 @@ class Session
      *
      * @param string $sessionId
      * @return ResponseInterface
-     * @throws KlarnaApiException
-     * @throws KlarnaCoreException
+     * @throws \Klarna\Core\Model\Api\Exception
+     * @throws \Klarna\Core\Exception
      */
     public function init($sessionId = null)
     {
@@ -122,45 +105,6 @@ class Session
             $this->setApiResponse($klarnaResponse);
         }
         return $klarnaResponse;
-    }
-
-    /**
-     * Wrapper to initialize a Klarna Session for a given cart ID
-     *
-     * @param string $cartId
-     * @param int $userId
-     * @return ResponseInterface
-     * @throws KlarnaApiException
-     * @throws KlarnaCoreException
-     */
-    public function initWithCartId(string $cartId, int $userId): ResponseInterface
-    {
-        $this->customerSession->setCustomerId($userId);
-        $this->session->setQuoteId($cartId);
-        return $this->init();
-    }
-
-    /**
-     * Returns true if the session for KP can be created
-     *
-     * @return bool
-     */
-    public function canSendRequest(): bool
-    {
-        $store = $this->session->getQuote()->getStore();
-
-        $kpFlag = $this->scopeConfig->isSetFlag(
-            sprintf('payment/%s/active', Kp::METHOD_CODE),
-            ScopeInterface::SCOPE_STORES,
-            $store
-        );
-        $api = $this->scopeConfig->getValue(
-            'klarna/api/api_version',
-            ScopeInterface::SCOPE_STORES,
-            $store
-        );
-
-        return $kpFlag && substr($api, 0, 3) === 'kp_';
     }
 
     /**
@@ -190,8 +134,8 @@ class Session
      *
      * @param string $sessionId
      * @return ResponseInterface
-     * @throws KlarnaApiException
-     * @throws KlarnaCoreException
+     * @throws \Klarna\Core\Model\Api\Exception
+     * @throws \Klarna\Core\Exception
      */
     private function requestKlarnaSession($sessionId = null)
     {
@@ -205,8 +149,8 @@ class Session
      * Create a new Klarna Session
      *
      * @return ResponseInterface
-     * @throws KlarnaApiException
-     * @throws KlarnaCoreException
+     * @throws \Klarna\Core\Model\Api\Exception
+     * @throws \Klarna\Core\Exception
      */
     private function initWithoutSession()
     {
@@ -220,7 +164,7 @@ class Session
      * Get the create request
      *
      * @return RequestInterface|string[]
-     * @throws KlarnaCoreException
+     * @throws \Klarna\Core\Exception
      */
     private function getGeneratedCreateRequest()
     {
@@ -283,8 +227,8 @@ class Session
      *
      * @param string $sessionId
      * @return ResponseInterface
-     * @throws KlarnaApiException
-     * @throws KlarnaCoreException
+     * @throws \Klarna\Core\Model\Api\Exception
+     * @throws \Klarna\Core\Exception
      */
     private function initWithSession($sessionId)
     {

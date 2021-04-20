@@ -4,36 +4,27 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Downloadable\Controller\Adminhtml\Downloadable\Product\Edit;
 
-use Magento\Catalog\Controller\Adminhtml\Product\Edit as ProductEdit;
 use Magento\Downloadable\Helper\Download as DownloadHelper;
-use Magento\Downloadable\Helper\File;
-use Magento\Downloadable\Model\Link as ModelLink;
 use Magento\Framework\App\Response\Http as HttpResponse;
 
-class Link extends ProductEdit
+class Link extends \Magento\Catalog\Controller\Adminhtml\Product\Edit
 {
     /**
-     * Create link
-     *
-     * @return ModelLink
+     * @return \Magento\Downloadable\Model\Link
      */
     protected function _createLink()
     {
-        return $this->_objectManager->create(ModelLink::class);
+        return $this->_objectManager->create(\Magento\Downloadable\Model\Link::class);
     }
 
     /**
-     * Get link
-     *
-     * @return ModelLink
+     * @return \Magento\Downloadable\Model\Link
      */
     protected function _getLink()
     {
-        return $this->_objectManager->get(ModelLink::class);
+        return $this->_objectManager->get(\Magento\Downloadable\Model\Link::class);
     }
 
     /**
@@ -43,10 +34,10 @@ class Link extends ProductEdit
      * @param string $resourceType
      * @return void
      */
-    protected function _processDownload(string $resource, string $resourceType)
+    protected function _processDownload($resource, $resourceType)
     {
-        /* @var $helper DownloadHelper */
-        $helper = $this->_objectManager->get(DownloadHelper::class);
+        /* @var $helper \Magento\Downloadable\Helper\Download */
+        $helper = $this->_objectManager->get(\Magento\Downloadable\Helper\Download::class);
         $helper->setResource($resource, $resourceType);
 
         $fileName = $helper->getFilename();
@@ -86,7 +77,7 @@ class Link extends ProductEdit
         //Rendering
         $response->clearBody();
         $response->sendHeaders();
-
+        
         $helper->output();
     }
 
@@ -99,7 +90,7 @@ class Link extends ProductEdit
     {
         $linkId = $this->getRequest()->getParam('id', 0);
         $type = $this->getRequest()->getParam('type', 0);
-        /** @var ModelLink $link */
+        /** @var \Magento\Downloadable\Model\Link $link */
         $link = $this->_createLink()->load($linkId);
         if ($link->getId()) {
             $resource = '';
@@ -110,7 +101,7 @@ class Link extends ProductEdit
                     $resourceType = DownloadHelper::LINK_TYPE_URL;
                 } elseif ($link->getLinkType() == DownloadHelper::LINK_TYPE_FILE) {
                     $resource = $this->_objectManager->get(
-                        File::class
+                        \Magento\Downloadable\Helper\File::class
                     )->getFilePath(
                         $this->_getLink()->getBasePath(),
                         $link->getLinkFile()
@@ -123,7 +114,7 @@ class Link extends ProductEdit
                     $resourceType = DownloadHelper::LINK_TYPE_URL;
                 } elseif ($link->getSampleType() == DownloadHelper::LINK_TYPE_FILE) {
                     $resource = $this->_objectManager->get(
-                        File::class
+                        \Magento\Downloadable\Helper\File::class
                     )->getFilePath(
                         $this->_getLink()->getBaseSamplePath(),
                         $link->getSampleFile()
@@ -134,7 +125,7 @@ class Link extends ProductEdit
             try {
                 $this->_processDownload($resource, $resourceType);
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addErrorMessage(__('Something went wrong while getting the requested content.'));
+                $this->messageManager->addError(__('Something went wrong while getting the requested content.'));
             }
         }
     }

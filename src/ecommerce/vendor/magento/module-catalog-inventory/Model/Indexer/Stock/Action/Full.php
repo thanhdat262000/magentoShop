@@ -149,21 +149,13 @@ class Full extends AbstractAction
 
                 $select = $connection->select();
                 $select->distinct(true);
-                $select->from(
-                    [
-                        'e' => $entityMetadata->getEntityTable()
-                    ],
-                    $entityMetadata->getIdentifierField()
-                )->where(
-                    'type_id = ?',
-                    $indexer->getTypeId()
-                );
+                $select->from(['e' => $entityMetadata->getEntityTable()], $entityMetadata->getIdentifierField());
 
                 $batchQueries = $this->batchQueryGenerator->generate(
                     $entityMetadata->getIdentifierField(),
                     $select,
                     $batchRowCount,
-                    BatchIteratorInterface::UNIQUE_FIELD_ITERATOR
+                    BatchIteratorInterface::NON_UNIQUE_FIELD_ITERATOR
                 );
 
                 foreach ($batchQueries as $query) {

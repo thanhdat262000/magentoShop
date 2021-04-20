@@ -2,9 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Model\Sync\Catalog;
 
-use Magento\Framework\App\Area;
-use Magento\Store\Model\App\Emulation;
-
 /**
  * @implements CatalogSyncerInterface
  */
@@ -21,25 +18,17 @@ class DefaultLevelCatalogSyncer implements CatalogSyncerInterface
     private $storeCatalogSyncer;
 
     /**
-     * @var Emulation
-     */
-    private $appEmulation;
-
-    /**
      * DefaultLevelCatalogSyncer constructor.
      *
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param StoreCatalogSyncer $storeCatalogSyncer
-     * @param Emulation $appEmulation
      */
     public function __construct(
         \Dotdigitalgroup\Email\Helper\Data $helper,
-        StoreCatalogSyncer $storeCatalogSyncer,
-        Emulation $appEmulation
+        StoreCatalogSyncer $storeCatalogSyncer
     ) {
         $this->helper = $helper;
         $this->storeCatalogSyncer = $storeCatalogSyncer;
-        $this->appEmulation = $appEmulation;
     }
 
     /**
@@ -58,17 +47,11 @@ class DefaultLevelCatalogSyncer implements CatalogSyncerInterface
             return [];
         }
 
-        $this->appEmulation->startEnvironmentEmulation(0, Area::AREA_FRONTEND, true);
-
-        $syncedProducts = $this->storeCatalogSyncer->syncByStore(
+        return $this->storeCatalogSyncer->syncByStore(
             $products,
             null,
             0,
             'Catalog_Default'
         );
-
-        $this->appEmulation->stopEnvironmentEmulation();
-
-        return $syncedProducts;
     }
 }

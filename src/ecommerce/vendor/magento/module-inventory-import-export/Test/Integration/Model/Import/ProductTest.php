@@ -7,19 +7,15 @@ declare(strict_types=1);
 
 namespace Magento\InventoryImportExport\Test\Integration\Model\Import;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogImportExport\Model\Import\Product;
-use Magento\CatalogImportExport\Model\Import\ProductFactory;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\ImportExport\Model\Import;
 use Magento\ImportExport\Model\Import\Source\Csv;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
-use Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface;
 use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -27,9 +23,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @see https://app.hiptest.com/projects/69435/test-plan/folders/908874/scenarios/2219820
- *
- * @magentoDbIsolation disabled
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductTest extends TestCase
 {
@@ -44,9 +37,9 @@ class ProductTest extends TestCase
     private $filesystem;
 
     /**
-     * @var ProductFactory
+     * @var Product
      */
-    private $productImporterFactory;
+    private $productImporter;
 
     /**
      * @var SearchCriteriaBuilderFactory
@@ -59,14 +52,9 @@ class ProductTest extends TestCase
     private $sourceItemRepository;
 
     /**
-     * @var string[]
-     */
-    private $importedProducts;
-
-    /**
      * Setup Test for Product Import
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->defaultSourceProvider = Bootstrap::getObjectManager()->get(
             DefaultSourceProviderInterface::class
@@ -74,8 +62,8 @@ class ProductTest extends TestCase
         $this->filesystem = Bootstrap::getObjectManager()->get(
             Filesystem::class
         );
-        $this->productImporterFactory = Bootstrap::getObjectManager()->get(
-            ProductFactory::class
+        $this->productImporter = Bootstrap::getObjectManager()->get(
+            Product::class
         );
         $this->searchCriteriaBuilderFactory = Bootstrap::getObjectManager()->get(
             SearchCriteriaBuilderFactory::class
@@ -87,10 +75,8 @@ class ProductTest extends TestCase
 
     /**
      * Test that following a Product Import Source Item is created as expected
-     *
-     * @return void
      */
-    public function testSourceItemCreatedOnProductImport(): void
+    public function testSourceItemCreatedOnProductImport()
     {
         $pathToFile = __DIR__ . '/_files/product_import.csv';
         /** @var Product $productImporterModel */
@@ -116,15 +102,12 @@ class ProductTest extends TestCase
             $expectedData,
             $compareData[$sku]
         );
-        $this->importedProducts = [$sku];
     }
 
     /**
      * Test that following a Product Import Source Item is updated as expected
-     *
-     * @return void
      */
-    public function testSourceItemUpdatedOnProductImport(): void
+    public function testSourceItemUpdatedOnProductImport()
     {
         $pathToFile = __DIR__ . '/_files/product_import_updated_qty.csv';
         /** @var Product $productImporterModel */
@@ -150,15 +133,14 @@ class ProductTest extends TestCase
             $expectedData,
             $compareData[$sku]
         );
-        $this->importedProducts = [$sku];
     }
 
     /**
      * Get List of Source Items which match SKU and Source ID of dummy data
      *
-     * @return SourceItemSearchResultsInterface
+     * @return \Magento\InventoryApi\Api\Data\SourceItemSearchResultsInterface
      */
-    private function getSourceItemList(): SourceItemSearchResultsInterface
+    private function getSourceItemList()
     {
         /** @var SearchCriteriaBuilder $searchCriteria */
         $searchCriteriaBuilder = $this->searchCriteriaBuilderFactory->create();
@@ -183,7 +165,7 @@ class ProductTest extends TestCase
      * @param SourceItemInterface[] $sourceItems
      * @return array
      */
-    private function buildDataArray(array $sourceItems): array
+    private function buildDataArray(array $sourceItems)
     {
         $comparableArray = [];
         foreach ($sourceItems as $sourceItem) {
@@ -208,7 +190,7 @@ class ProductTest extends TestCase
     private function getProductImporterModel(
         $pathToFile,
         $behavior = Import::BEHAVIOR_ADD_UPDATE
-    ): Product {
+    ) {
         /** @var Filesystem\Directory\WriteInterface $directory */
         $directory = $this->filesystem
             ->getDirectoryWrite(DirectoryList::ROOT);
@@ -220,43 +202,13 @@ class ProductTest extends TestCase
                 'directory' => $directory
             ]
         );
-        $productImporter = $this->productImporterFactory->create();
-        $productImporter->setParameters(
+        $this->productImporter->setParameters(
             [
                 'behavior' => $behavior,
                 'entity' => \Magento\Catalog\Model\Product::ENTITY
             ]
         )->setSource($source);
 
-        return $productImporter;
-    }
-
-    /**
-     * Cleanup test by removing products.
-     *
-     * @param string[] $skus
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-        if (!empty($this->importedProducts)) {
-            $objectManager = Bootstrap::getObjectManager();
-            /** @var ProductRepositoryInterface $productRepository */
-            $productRepository = $objectManager->create(ProductRepositoryInterface::class);
-            $registry = $objectManager->get(\Magento\Framework\Registry::class);
-            /** @var ProductRepositoryInterface $productRepository */
-            $registry->unregister('isSecureArea');
-            $registry->register('isSecureArea', true);
-
-            foreach ($this->importedProducts as $sku) {
-                try {
-                    $productRepository->deleteById($sku);
-                } catch (NoSuchEntityException $e) {
-                    // product already deleted
-                }
-            }
-            $registry->unregister('isSecureArea');
-            $registry->register('isSecureArea', false);
-        }
+        return $this->productImporter;
     }
 }

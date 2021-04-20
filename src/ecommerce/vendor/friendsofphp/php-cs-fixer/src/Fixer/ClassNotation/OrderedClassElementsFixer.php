@@ -30,7 +30,6 @@ final class OrderedClassElementsFixer extends AbstractFixer implements Configura
 {
     /** @internal */
     const SORT_ALPHA = 'alpha';
-
     /** @internal */
     const SORT_NONE = 'none';
 
@@ -211,12 +210,11 @@ class Example
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before ClassAttributesSeparationFixer, MethodSeparationFixer, NoBlankLinesAfterClassOpeningFixer, SpaceAfterSemicolonFixer.
-     * Must run after NoPhp4ConstructorFixer, ProtectedToPrivateFixer.
      */
     public function getPriority()
     {
+        // must run before MethodSeparationFixer, NoBlankLinesAfterClassOpeningFixer and SpaceAfterSemicolonFixer.
+        // must run after ProtectedToPrivateFixer.
         return 65;
     }
 
@@ -233,7 +231,7 @@ class Example
             $i = $tokens->getNextTokenOfKind($i, ['{']);
             $elements = $this->getElements($tokens, $i);
 
-            if (0 === \count($elements)) {
+            if (!$elements) {
                 continue;
             }
 
@@ -282,7 +280,8 @@ class Example
     }
 
     /**
-     * @param int $startIndex
+     * @param Tokens $tokens
+     * @param int    $startIndex
      *
      * @return array[]
      */
@@ -334,7 +333,7 @@ class Example
 
                 if ('property' === $element['type']) {
                     $element['name'] = $tokens[$i]->getContent();
-                } elseif (\in_array($element['type'], ['use_trait', 'constant', 'method', 'magic', 'construct', 'destruct'], true)) {
+                } elseif (\in_array($element['type'], ['use_trait', 'constant', 'method', 'magic'], true)) {
                     $element['name'] = $tokens[$tokens->getNextMeaningfulToken($i)]->getContent();
                 }
 
@@ -349,7 +348,8 @@ class Example
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      *
      * @return array|string type or array of type and name
      */
@@ -382,13 +382,9 @@ class Example
         if (
             $nameToken->equalsAny([
                 [T_STRING, 'setUpBeforeClass'],
-                [T_STRING, 'doSetUpBeforeClass'],
                 [T_STRING, 'tearDownAfterClass'],
-                [T_STRING, 'doTearDownAfterClass'],
                 [T_STRING, 'setUp'],
-                [T_STRING, 'doSetUp'],
                 [T_STRING, 'tearDown'],
-                [T_STRING, 'doTearDown'],
             ], false)
         ) {
             return ['phpunit', strtolower($nameToken->getContent())];
@@ -402,7 +398,8 @@ class Example
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      *
      * @return int
      */
@@ -430,13 +427,9 @@ class Example
     {
         static $phpunitPositions = [
             'setupbeforeclass' => 1,
-            'dosetupbeforeclass' => 2,
-            'teardownafterclass' => 3,
-            'doteardownafterclass' => 4,
-            'setup' => 5,
-            'dosetup' => 6,
-            'teardown' => 7,
-            'doteardown' => 8,
+            'teardownafterclass' => 2,
+            'setup' => 3,
+            'teardown' => 4,
         ];
 
         foreach ($elements as &$element) {
@@ -489,6 +482,7 @@ class Example
     }
 
     /**
+     * @param Tokens  $tokens
      * @param int     $startIndex
      * @param int     $endIndex
      * @param array[] $elements

@@ -76,12 +76,9 @@ class Onboarding
 
         $websiteId = $this->http->getParam('website', 0);
         $website = $this->storeManager->getWebsite($websiteId);
-        $scope = $this->getScope($website);
 
-        $country = urldecode(
-            $this->scopeConfig->getValue('general/store_information/country_id', $scope, $website)
-        );
-        $country = filter_var($country, FILTER_SANITIZE_STRING);
+        $scope = $this->getScope($website);
+        $country = $this->scopeConfig->getValue('general/store_information/country_id', $scope, $website);
 
         if (!empty($country)) {
             $queryParameter .= '&country=' . $country;

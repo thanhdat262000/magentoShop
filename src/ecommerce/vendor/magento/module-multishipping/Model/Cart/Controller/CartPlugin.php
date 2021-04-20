@@ -13,7 +13,6 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
-use Magento\Multishipping\Model\DisableMultishipping;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 
@@ -38,26 +37,18 @@ class CartPlugin
     private $addressRepository;
 
     /**
-     * @var DisableMultishipping
-     */
-    private $disableMultishipping;
-
-    /**
      * @param CartRepositoryInterface $cartRepository
      * @param Session $checkoutSession
      * @param AddressRepositoryInterface $addressRepository
-     * @param DisableMultishipping $disableMultishipping
      */
     public function __construct(
         CartRepositoryInterface $cartRepository,
         Session $checkoutSession,
-        AddressRepositoryInterface $addressRepository,
-        DisableMultishipping $disableMultishipping
+        AddressRepositoryInterface $addressRepository
     ) {
         $this->cartRepository = $cartRepository;
         $this->checkoutSession = $checkoutSession;
         $this->addressRepository = $addressRepository;
-        $this->disableMultishipping = $disableMultishipping;
     }
 
     /**
@@ -85,9 +76,6 @@ class CartPlugin
                 $shippingAddress->importCustomerAddressData($defaultCustomerAddress);
             }
             $this->cartRepository->save($quote);
-        } elseif ($this->disableMultishipping->execute($quote) && $this->isVirtualItemInQuote($quote)) {
-            $quote->setTotalsCollectedFlag(false);
-            $this->cartRepository->save($quote);
         }
     }
 
@@ -99,25 +87,5 @@ class CartPlugin
     private function isCheckoutComplete() : bool
     {
         return (bool) ($this->checkoutSession->getStepData(State::STEP_SHIPPING)['is_complete'] ?? true);
-    }
-
-    /**
-     * Checks whether quote has virtual items
-     *
-     * @param Quote $quote
-     * @return bool
-     */
-    private function isVirtualItemInQuote(Quote $quote): bool
-    {
-        $items = $quote->getItems();
-        if (!empty($items)) {
-            foreach ($items as $item) {
-                if ($item->getIsVirtual()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

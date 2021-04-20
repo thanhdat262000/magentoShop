@@ -12,14 +12,15 @@
 
 namespace PhpCsFixer\Fixer\PhpUnit;
 
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\DocBlock\DocBlock;
 use PhpCsFixer\DocBlock\Line;
-use PhpCsFixer\Fixer\AbstractPhpUnitFixer;
 use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
+use PhpCsFixer\Indicator\PhpUnitTestCaseIndicator;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
@@ -29,7 +30,7 @@ use PhpCsFixer\Utils;
 /**
  * @author Filippo Tessarotto <zoeslam@gmail.com>
  */
-final class PhpUnitMethodCasingFixer extends AbstractPhpUnitFixer implements ConfigurationDefinitionFixerInterface
+final class PhpUnitMethodCasingFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface
 {
     /**
      * @internal
@@ -72,12 +73,21 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
 
     /**
      * {@inheritdoc}
-     *
-     * Must run after PhpUnitTestAnnotationFixer.
      */
-    public function getPriority()
+    public function isCandidate(Tokens $tokens)
     {
-        return 0;
+        return $tokens->isAllTokenKindsFound([T_CLASS, T_FUNCTION]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    {
+        $phpUnitTestCaseIndicator = new PhpUnitTestCaseIndicator();
+        foreach ($phpUnitTestCaseIndicator->findPhpUnitClasses($tokens) as $indexes) {
+            $this->applyCasing($tokens, $indexes[0], $indexes[1]);
+        }
     }
 
     /**
@@ -94,9 +104,11 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
     }
 
     /**
-     * {@inheritdoc}
+     * @param Tokens $tokens
+     * @param int    $startIndex
+     * @param int    $endIndex
      */
-    protected function applyPhpUnitClassFix(Tokens $tokens, $startIndex, $endIndex)
+    private function applyCasing(Tokens $tokens, $startIndex, $endIndex)
     {
         for ($index = $endIndex - 1; $index > $startIndex; --$index) {
             if (!$this->isTestMethod($tokens, $index)) {
@@ -112,8 +124,7 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
             }
 
             $docBlockIndex = $this->getDocBlockIndex($tokens, $index);
-
-            if ($this->isPHPDoc($tokens, $docBlockIndex)) {
+            if ($this->hasDocBlock($tokens, $index)) {
                 $this->updateDocBlock($tokens, $docBlockIndex);
             }
         }
@@ -139,7 +150,8 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      *
      * @return bool
      */
@@ -157,17 +169,23 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
         if ($this->startsWith('test', $functionName)) {
             return true;
         }
+        // If the function doesn't have test in its name, and no doc block, it's not a test
+        if (!$this->hasDocBlock($tokens, $index)) {
+            return false;
+        }
 
         $docBlockIndex = $this->getDocBlockIndex($tokens, $index);
+        $doc = $tokens[$docBlockIndex]->getContent();
+        if (false === strpos($doc, '@test')) {
+            return false;
+        }
 
-        return
-            $this->isPHPDoc($tokens, $docBlockIndex) // If the function doesn't have test in its name, and no doc block, it's not a test
-            && false !== strpos($tokens[$docBlockIndex]->getContent(), '@test')
-        ;
+        return true;
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      *
      * @return bool
      */
@@ -190,14 +208,43 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
     }
 
     /**
-     * @param int $docBlockIndex
+     * @param Tokens $tokens
+     * @param int    $index
+     *
+     * @return bool
+     */
+    private function hasDocBlock(Tokens $tokens, $index)
+    {
+        $docBlockIndex = $this->getDocBlockIndex($tokens, $index);
+
+        return $tokens[$docBlockIndex]->isGivenKind(T_DOC_COMMENT);
+    }
+
+    /**
+     * @param Tokens $tokens
+     * @param int    $index
+     *
+     * @return int
+     */
+    private function getDocBlockIndex(Tokens $tokens, $index)
+    {
+        do {
+            $index = $tokens->getPrevNonWhitespace($index);
+        } while ($tokens[$index]->isGivenKind([T_PUBLIC, T_PROTECTED, T_PRIVATE, T_FINAL, T_ABSTRACT, T_COMMENT]));
+
+        return $index;
+    }
+
+    /**
+     * @param Tokens $tokens
+     * @param int    $docBlockIndex
      */
     private function updateDocBlock(Tokens $tokens, $docBlockIndex)
     {
         $doc = new DocBlock($tokens[$docBlockIndex]->getContent());
         $lines = $doc->getLines();
 
-        $docBlockNeedsUpdate = false;
+        $docBlockNeesUpdate = false;
         for ($inc = 0; $inc < \count($lines); ++$inc) {
             $lineContent = $lines[$inc]->getContent();
             if (false === strpos($lineContent, '@depends')) {
@@ -215,11 +262,11 @@ class MyTest extends \\PhpUnit\\FrameWork\\TestCase
 
             if ($newLineContent !== $lineContent) {
                 $lines[$inc] = new Line($newLineContent);
-                $docBlockNeedsUpdate = true;
+                $docBlockNeesUpdate = true;
             }
         }
 
-        if ($docBlockNeedsUpdate) {
+        if ($docBlockNeesUpdate) {
             $lines = implode('', $lines);
             $tokens[$docBlockIndex] = new Token([T_DOC_COMMENT, $lines]);
         }

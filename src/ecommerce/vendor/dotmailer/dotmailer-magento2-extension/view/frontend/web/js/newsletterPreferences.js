@@ -6,7 +6,6 @@ require([
     'use strict';
 
     var li = $('li a[href*="newsletter/manage"]').first();
-
     $('.date-field').each(function () {
         $(this).calendar({
             showTime: false
@@ -14,5 +13,5 @@ require([
     });
 
     li.parent().addClass('current');
-    li.replaceWith('<strong>' + li.text() + '</strong>');
+    li.replaceWith("<strong>" + li.text() + "</strong>");
 });

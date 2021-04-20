@@ -35,7 +35,7 @@ class SingleOrderSyncTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    public function setUp() :void
+    public function setup()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
@@ -99,11 +99,10 @@ class SingleOrderSyncTest extends \PHPUnit\Framework\TestCase
      */
     public function testSingleOrderTypeIsObject()
     {
-        $this->createModifiedEmailOrder();
         $this->prep();
         $item = $this->importerCollection->getFirstItem();
 
-        $this->assertIsObject(json_decode($item->getImportData()), 'Import data is not of object type');
+        $this->assertInternalType('object', json_decode($item->getImportData()), 'Import data is not of object type');
     }
 
     /**

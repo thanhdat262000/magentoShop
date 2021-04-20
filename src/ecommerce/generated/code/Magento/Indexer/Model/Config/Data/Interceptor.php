@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Indexer\Model\Config\Data implements \Magento
     public function merge(array $config)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'merge');
-        return $pluginInfo ? $this->___callPlugins('merge', func_get_args(), $pluginInfo) : parent::merge($config);
+        if (!$pluginInfo) {
+            return parent::merge($config);
+        } else {
+            return $this->___callPlugins('merge', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Indexer\Model\Config\Data implements \Magento
     public function get($path = null, $default = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'get');
-        return $pluginInfo ? $this->___callPlugins('get', func_get_args(), $pluginInfo) : parent::get($path, $default);
+        if (!$pluginInfo) {
+            return parent::get($path, $default);
+        } else {
+            return $this->___callPlugins('get', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,6 +46,10 @@ class Interceptor extends \Magento\Indexer\Model\Config\Data implements \Magento
     public function reset()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'reset');
-        return $pluginInfo ? $this->___callPlugins('reset', func_get_args(), $pluginInfo) : parent::reset();
+        if (!$pluginInfo) {
+            return parent::reset();
+        } else {
+            return $this->___callPlugins('reset', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -3,7 +3,6 @@
 namespace Dotdigitalgroup\Chat\Model\Api;
 
 use Dotdigitalgroup\Chat\Model\Config;
-use Dotdigitalgroup\Chat\Model\Api\Token\Token;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\ClientFactory;
 use Zend\Http\Response;
@@ -30,25 +29,17 @@ class LiveChatApiClient
     private $httpClientFactory;
 
     /**
-     * @var Token
-     */
-    private $token;
-
-    /**
      * Client constructor
      *
      * @param Config $config
      * @param ClientFactory $clientFactory
-     * @param Token $token
      */
     public function __construct(
         Config $config,
-        ClientFactory $clientFactory,
-        Token $token
+        ClientFactory $clientFactory
     ) {
         $this->config = $config;
         $this->httpClientFactory = $clientFactory;
-        $this->token = $token;
     }
 
     /**
@@ -59,12 +50,11 @@ class LiveChatApiClient
      * @param array $body
      * @param string $apiToken
      * @return Response
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function request($endpoint, $method, array $body = [], $apiToken = null)
     {
         // set up client
-        $apiToken = $apiToken ?: $this->token->getApiToken();
+        $apiToken = $apiToken ?: $this->config->getApiToken();
 
         /** @var HttpClient $httpClient */
         $httpClient = $this->httpClientFactory->create();

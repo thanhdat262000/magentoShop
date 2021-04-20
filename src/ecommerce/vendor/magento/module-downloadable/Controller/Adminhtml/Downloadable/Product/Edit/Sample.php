@@ -4,33 +4,26 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Downloadable\Controller\Adminhtml\Downloadable\Product\Edit;
 
 use Magento\Downloadable\Helper\Download as DownloadHelper;
-use Magento\Downloadable\Model\Sample as ModelSample;
 
-class Sample extends Link
+class Sample extends \Magento\Downloadable\Controller\Adminhtml\Downloadable\Product\Edit\Link
 {
     /**
-     * Create link
-     *
-     * @return ModelSample
+     * @return \Magento\Downloadable\Model\Sample
      */
     protected function _createLink()
     {
-        return $this->_objectManager->create(ModelSample::class);
+        return $this->_objectManager->create(\Magento\Downloadable\Model\Sample::class);
     }
 
     /**
-     * Get link
-     *
-     * @return ModelSample
+     * @return \Magento\Downloadable\Model\Sample
      */
     protected function _getLink()
     {
-        return $this->_objectManager->get(ModelSample::class);
+        return $this->_objectManager->get(\Magento\Downloadable\Model\Sample::class);
     }
 
     /**
@@ -41,7 +34,7 @@ class Sample extends Link
     public function execute()
     {
         $sampleId = $this->getRequest()->getParam('id', 0);
-        /** @var ModelSample $sample */
+        /** @var \Magento\Downloadable\Model\Sample $sample */
         $sample = $this->_createLink()->load($sampleId);
         if ($sample->getId()) {
             $resource = '';
@@ -61,7 +54,7 @@ class Sample extends Link
             try {
                 $this->_processDownload($resource, $resourceType);
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addErrorMessage(__('Something went wrong while getting the requested content.'));
+                $this->messageManager->addError(__('Something went wrong while getting the requested content.'));
             }
         }
     }

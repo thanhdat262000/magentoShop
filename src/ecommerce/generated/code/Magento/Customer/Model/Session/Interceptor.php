@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomerConfigShare()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomerConfigShare');
-        return $pluginInfo ? $this->___callPlugins('getCustomerConfigShare', func_get_args(), $pluginInfo) : parent::getCustomerConfigShare();
+        if (!$pluginInfo) {
+            return parent::getCustomerConfigShare();
+        } else {
+            return $this->___callPlugins('getCustomerConfigShare', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerData(\Magento\Customer\Api\Data\CustomerInterface $customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerData');
-        return $pluginInfo ? $this->___callPlugins('setCustomerData', func_get_args(), $pluginInfo) : parent::setCustomerData($customer);
+        if (!$pluginInfo) {
+            return parent::setCustomerData($customer);
+        } else {
+            return $this->___callPlugins('setCustomerData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomerData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomerData');
-        return $pluginInfo ? $this->___callPlugins('getCustomerData', func_get_args(), $pluginInfo) : parent::getCustomerData();
+        if (!$pluginInfo) {
+            return parent::getCustomerData();
+        } else {
+            return $this->___callPlugins('getCustomerData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomerDataObject()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomerDataObject');
-        return $pluginInfo ? $this->___callPlugins('getCustomerDataObject', func_get_args(), $pluginInfo) : parent::getCustomerDataObject();
+        if (!$pluginInfo) {
+            return parent::getCustomerDataObject();
+        } else {
+            return $this->___callPlugins('getCustomerDataObject', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerDataObject(\Magento\Customer\Api\Data\CustomerInterface $customerData)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerDataObject');
-        return $pluginInfo ? $this->___callPlugins('setCustomerDataObject', func_get_args(), $pluginInfo) : parent::setCustomerDataObject($customerData);
+        if (!$pluginInfo) {
+            return parent::setCustomerDataObject($customerData);
+        } else {
+            return $this->___callPlugins('setCustomerDataObject', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomer(\Magento\Customer\Model\Customer $customerModel)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomer');
-        return $pluginInfo ? $this->___callPlugins('setCustomer', func_get_args(), $pluginInfo) : parent::setCustomer($customerModel);
+        if (!$pluginInfo) {
+            return parent::setCustomer($customerModel);
+        } else {
+            return $this->___callPlugins('setCustomer', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomer()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomer');
-        return $pluginInfo ? $this->___callPlugins('getCustomer', func_get_args(), $pluginInfo) : parent::getCustomer();
+        if (!$pluginInfo) {
+            return parent::getCustomer();
+        } else {
+            return $this->___callPlugins('getCustomer', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerId($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerId');
-        return $pluginInfo ? $this->___callPlugins('setCustomerId', func_get_args(), $pluginInfo) : parent::setCustomerId($id);
+        if (!$pluginInfo) {
+            return parent::setCustomerId($id);
+        } else {
+            return $this->___callPlugins('setCustomerId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomerId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomerId');
-        return $pluginInfo ? $this->___callPlugins('getCustomerId', func_get_args(), $pluginInfo) : parent::getCustomerId();
+        if (!$pluginInfo) {
+            return parent::getCustomerId();
+        } else {
+            return $this->___callPlugins('getCustomerId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setId($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setId');
-        return $pluginInfo ? $this->___callPlugins('setId', func_get_args(), $pluginInfo) : parent::setId($customerId);
+        if (!$pluginInfo) {
+            return parent::setId($customerId);
+        } else {
+            return $this->___callPlugins('setId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerGroupId($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerGroupId');
-        return $pluginInfo ? $this->___callPlugins('setCustomerGroupId', func_get_args(), $pluginInfo) : parent::setCustomerGroupId($id);
+        if (!$pluginInfo) {
+            return parent::setCustomerGroupId($id);
+        } else {
+            return $this->___callPlugins('setCustomerGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCustomerGroupId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomerGroupId');
-        return $pluginInfo ? $this->___callPlugins('getCustomerGroupId', func_get_args(), $pluginInfo) : parent::getCustomerGroupId();
+        if (!$pluginInfo) {
+            return parent::getCustomerGroupId();
+        } else {
+            return $this->___callPlugins('getCustomerGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function isLoggedIn()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isLoggedIn');
-        return $pluginInfo ? $this->___callPlugins('isLoggedIn', func_get_args(), $pluginInfo) : parent::isLoggedIn();
+        if (!$pluginInfo) {
+            return parent::isLoggedIn();
+        } else {
+            return $this->___callPlugins('isLoggedIn', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function checkCustomerId($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'checkCustomerId');
-        return $pluginInfo ? $this->___callPlugins('checkCustomerId', func_get_args(), $pluginInfo) : parent::checkCustomerId($customerId);
+        if (!$pluginInfo) {
+            return parent::checkCustomerId($customerId);
+        } else {
+            return $this->___callPlugins('checkCustomerId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerAsLoggedIn($customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerAsLoggedIn');
-        return $pluginInfo ? $this->___callPlugins('setCustomerAsLoggedIn', func_get_args(), $pluginInfo) : parent::setCustomerAsLoggedIn($customer);
+        if (!$pluginInfo) {
+            return parent::setCustomerAsLoggedIn($customer);
+        } else {
+            return $this->___callPlugins('setCustomerAsLoggedIn', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setCustomerDataAsLoggedIn($customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomerDataAsLoggedIn');
-        return $pluginInfo ? $this->___callPlugins('setCustomerDataAsLoggedIn', func_get_args(), $pluginInfo) : parent::setCustomerDataAsLoggedIn($customer);
+        if (!$pluginInfo) {
+            return parent::setCustomerDataAsLoggedIn($customer);
+        } else {
+            return $this->___callPlugins('setCustomerDataAsLoggedIn', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function loginById($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loginById');
-        return $pluginInfo ? $this->___callPlugins('loginById', func_get_args(), $pluginInfo) : parent::loginById($customerId);
+        if (!$pluginInfo) {
+            return parent::loginById($customerId);
+        } else {
+            return $this->___callPlugins('loginById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function logout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'logout');
-        return $pluginInfo ? $this->___callPlugins('logout', func_get_args(), $pluginInfo) : parent::logout();
+        if (!$pluginInfo) {
+            return parent::logout();
+        } else {
+            return $this->___callPlugins('logout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function authenticate($loginUrl = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'authenticate');
-        return $pluginInfo ? $this->___callPlugins('authenticate', func_get_args(), $pluginInfo) : parent::authenticate($loginUrl);
+        if (!$pluginInfo) {
+            return parent::authenticate($loginUrl);
+        } else {
+            return $this->___callPlugins('authenticate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setBeforeAuthUrl($url)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setBeforeAuthUrl');
-        return $pluginInfo ? $this->___callPlugins('setBeforeAuthUrl', func_get_args(), $pluginInfo) : parent::setBeforeAuthUrl($url);
+        if (!$pluginInfo) {
+            return parent::setBeforeAuthUrl($url);
+        } else {
+            return $this->___callPlugins('setBeforeAuthUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setAfterAuthUrl($url)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAfterAuthUrl');
-        return $pluginInfo ? $this->___callPlugins('setAfterAuthUrl', func_get_args(), $pluginInfo) : parent::setAfterAuthUrl($url);
+        if (!$pluginInfo) {
+            return parent::setAfterAuthUrl($url);
+        } else {
+            return $this->___callPlugins('setAfterAuthUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function regenerateId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'regenerateId');
-        return $pluginInfo ? $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo) : parent::regenerateId();
+        if (!$pluginInfo) {
+            return parent::regenerateId();
+        } else {
+            return $this->___callPlugins('regenerateId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function writeClose()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'writeClose');
-        return $pluginInfo ? $this->___callPlugins('writeClose', func_get_args(), $pluginInfo) : parent::writeClose();
+        if (!$pluginInfo) {
+            return parent::writeClose();
+        } else {
+            return $this->___callPlugins('writeClose', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function start()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'start');
-        return $pluginInfo ? $this->___callPlugins('start', func_get_args(), $pluginInfo) : parent::start();
+        if (!$pluginInfo) {
+            return parent::start();
+        } else {
+            return $this->___callPlugins('start', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function isSessionExists()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSessionExists');
-        return $pluginInfo ? $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo) : parent::isSessionExists();
+        if (!$pluginInfo) {
+            return parent::isSessionExists();
+        } else {
+            return $this->___callPlugins('isSessionExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getData($key = '', $clear = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $clear);
+        if (!$pluginInfo) {
+            return parent::getData($key, $clear);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getSessionId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionId');
-        return $pluginInfo ? $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo) : parent::getSessionId();
+        if (!$pluginInfo) {
+            return parent::getSessionId();
+        } else {
+            return $this->___callPlugins('getSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function destroy(?array $options = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'destroy');
-        return $pluginInfo ? $this->___callPlugins('destroy', func_get_args(), $pluginInfo) : parent::destroy($options);
+        if (!$pluginInfo) {
+            return parent::destroy($options);
+        } else {
+            return $this->___callPlugins('destroy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function clearStorage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearStorage');
-        return $pluginInfo ? $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo) : parent::clearStorage();
+        if (!$pluginInfo) {
+            return parent::clearStorage();
+        } else {
+            return $this->___callPlugins('clearStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCookieDomain()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieDomain');
-        return $pluginInfo ? $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo) : parent::getCookieDomain();
+        if (!$pluginInfo) {
+            return parent::getCookieDomain();
+        } else {
+            return $this->___callPlugins('getCookieDomain', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCookiePath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookiePath');
-        return $pluginInfo ? $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo) : parent::getCookiePath();
+        if (!$pluginInfo) {
+            return parent::getCookiePath();
+        } else {
+            return $this->___callPlugins('getCookiePath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getCookieLifetime()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCookieLifetime');
-        return $pluginInfo ? $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo) : parent::getCookieLifetime();
+        if (!$pluginInfo) {
+            return parent::getCookieLifetime();
+        } else {
+            return $this->___callPlugins('getCookieLifetime', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function setSessionId($sessionId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSessionId');
-        return $pluginInfo ? $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo) : parent::setSessionId($sessionId);
+        if (!$pluginInfo) {
+            return parent::setSessionId($sessionId);
+        } else {
+            return $this->___callPlugins('setSessionId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function getSessionIdForHost($urlHost)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSessionIdForHost');
-        return $pluginInfo ? $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo) : parent::getSessionIdForHost($urlHost);
+        if (!$pluginInfo) {
+            return parent::getSessionIdForHost($urlHost);
+        } else {
+            return $this->___callPlugins('getSessionIdForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function isValidForHost($host)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForHost');
-        return $pluginInfo ? $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo) : parent::isValidForHost($host);
+        if (!$pluginInfo) {
+            return parent::isValidForHost($host);
+        } else {
+            return $this->___callPlugins('isValidForHost', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function isValidForPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isValidForPath');
-        return $pluginInfo ? $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo) : parent::isValidForPath($path);
+        if (!$pluginInfo) {
+            return parent::isValidForPath($path);
+        } else {
+            return $this->___callPlugins('isValidForPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,6 +540,10 @@ class Interceptor extends \Magento\Customer\Model\Session implements \Magento\Fr
     public function expireSessionCookie()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'expireSessionCookie');
-        return $pluginInfo ? $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo) : parent::expireSessionCookie();
+        if (!$pluginInfo) {
+            return parent::expireSessionCookie();
+        } else {
+            return $this->___callPlugins('expireSessionCookie', func_get_args(), $pluginInfo);
+        }
     }
 }

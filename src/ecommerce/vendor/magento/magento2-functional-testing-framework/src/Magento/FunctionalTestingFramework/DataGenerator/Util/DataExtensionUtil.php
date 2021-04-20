@@ -52,8 +52,8 @@ class DataExtensionUtil
                 PHP_EOL
             );
         }
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()
-            && MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
+        if (MftfApplicationConfig::getConfig()->verboseEnabled() &&
+            MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
             print("Extending Data: " . $parentEntity->getName() . " => " . $entityObject->getName() . PHP_EOL);
         }
 
@@ -62,7 +62,7 @@ class DataExtensionUtil
 
         // Get all data for both parent and child and merge
         $referencedData = $parentEntity->getAllData();
-        $newData = array_extend($referencedData, $entityObject->getAllData());
+        $newData = array_merge($referencedData, $entityObject->getAllData());
 
         // Get all linked references for both parent and child and merge
         $referencedLinks = $parentEntity->getLinkedEntities();

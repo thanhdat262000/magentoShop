@@ -28,7 +28,6 @@ class Shopcart extends \Magento\Backend\Block\Widget\Grid\Extended
 
     /**
      * StoreIds setter
-     *
      * @codeCoverageIgnore
      *
      * @param array $storeIds
@@ -47,10 +46,6 @@ class Shopcart extends \Magento\Backend\Block\Widget\Grid\Extended
      */
     public function getCurrentCurrencyCode()
     {
-        if (empty($this->_storeIds)) {
-            $this->setStoreIds(array_keys($this->_storeManager->getStores()));
-        }
-
         if ($this->_currentCurrencyCode === null) {
             reset($this->_storeIds);
             $this->_currentCurrencyCode = count(

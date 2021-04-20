@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function setActiveMenu($itemId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setActiveMenu');
-        return $pluginInfo ? $this->___callPlugins('setActiveMenu', func_get_args(), $pluginInfo) : parent::setActiveMenu($itemId);
+        if (!$pluginInfo) {
+            return parent::setActiveMenu($itemId);
+        } else {
+            return $this->___callPlugins('setActiveMenu', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addBreadcrumb($label, $title, $link = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addBreadcrumb');
-        return $pluginInfo ? $this->___callPlugins('addBreadcrumb', func_get_args(), $pluginInfo) : parent::addBreadcrumb($label, $title, $link);
+        if (!$pluginInfo) {
+            return parent::addBreadcrumb($label, $title, $link);
+        } else {
+            return $this->___callPlugins('addBreadcrumb', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addContent(\Magento\Framework\View\Element\AbstractBlock $block)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addContent');
-        return $pluginInfo ? $this->___callPlugins('addContent', func_get_args(), $pluginInfo) : parent::addContent($block);
+        if (!$pluginInfo) {
+            return parent::addContent($block);
+        } else {
+            return $this->___callPlugins('addContent', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addLeft(\Magento\Framework\View\Element\AbstractBlock $block)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addLeft');
-        return $pluginInfo ? $this->___callPlugins('addLeft', func_get_args(), $pluginInfo) : parent::addLeft($block);
+        if (!$pluginInfo) {
+            return parent::addLeft($block);
+        } else {
+            return $this->___callPlugins('addLeft', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addJs(\Magento\Framework\View\Element\AbstractBlock $block)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addJs');
-        return $pluginInfo ? $this->___callPlugins('addJs', func_get_args(), $pluginInfo) : parent::addJs($block);
+        if (!$pluginInfo) {
+            return parent::addJs($block);
+        } else {
+            return $this->___callPlugins('addJs', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function initLayout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'initLayout');
-        return $pluginInfo ? $this->___callPlugins('initLayout', func_get_args(), $pluginInfo) : parent::initLayout();
+        if (!$pluginInfo) {
+            return parent::initLayout();
+        } else {
+            return $this->___callPlugins('initLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addDefaultHandle()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addDefaultHandle');
-        return $pluginInfo ? $this->___callPlugins('addDefaultHandle', func_get_args(), $pluginInfo) : parent::addDefaultHandle();
+        if (!$pluginInfo) {
+            return parent::addDefaultHandle();
+        } else {
+            return $this->___callPlugins('addDefaultHandle', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function getConfig()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfig');
-        return $pluginInfo ? $this->___callPlugins('getConfig', func_get_args(), $pluginInfo) : parent::getConfig();
+        if (!$pluginInfo) {
+            return parent::getConfig();
+        } else {
+            return $this->___callPlugins('getConfig', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addPageLayoutHandles(array $parameters = [], $defaultHandle = null, $entitySpecific = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addPageLayoutHandles');
-        return $pluginInfo ? $this->___callPlugins('addPageLayoutHandles', func_get_args(), $pluginInfo) : parent::addPageLayoutHandles($parameters, $defaultHandle, $entitySpecific);
+        if (!$pluginInfo) {
+            return parent::addPageLayoutHandles($parameters, $defaultHandle, $entitySpecific);
+        } else {
+            return $this->___callPlugins('addPageLayoutHandles', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function getLayout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLayout');
-        return $pluginInfo ? $this->___callPlugins('getLayout', func_get_args(), $pluginInfo) : parent::getLayout();
+        if (!$pluginInfo) {
+            return parent::getLayout();
+        } else {
+            return $this->___callPlugins('getLayout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function getDefaultLayoutHandle()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultLayoutHandle');
-        return $pluginInfo ? $this->___callPlugins('getDefaultLayoutHandle', func_get_args(), $pluginInfo) : parent::getDefaultLayoutHandle();
+        if (!$pluginInfo) {
+            return parent::getDefaultLayoutHandle();
+        } else {
+            return $this->___callPlugins('getDefaultLayoutHandle', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addHandle($handleName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addHandle');
-        return $pluginInfo ? $this->___callPlugins('addHandle', func_get_args(), $pluginInfo) : parent::addHandle($handleName);
+        if (!$pluginInfo) {
+            return parent::addHandle($handleName);
+        } else {
+            return $this->___callPlugins('addHandle', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function addUpdate($update)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addUpdate');
-        return $pluginInfo ? $this->___callPlugins('addUpdate', func_get_args(), $pluginInfo) : parent::addUpdate($update);
+        if (!$pluginInfo) {
+            return parent::addUpdate($update);
+        } else {
+            return $this->___callPlugins('addUpdate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function renderResult(\Magento\Framework\App\ResponseInterface $httpResponse)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderResult');
-        return $pluginInfo ? $this->___callPlugins('renderResult', func_get_args(), $pluginInfo) : parent::renderResult($httpResponse);
+        if (!$pluginInfo) {
+            return parent::renderResult($httpResponse);
+        } else {
+            return $this->___callPlugins('renderResult', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function setHttpResponseCode($httpCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHttpResponseCode');
-        return $pluginInfo ? $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo) : parent::setHttpResponseCode($httpCode);
+        if (!$pluginInfo) {
+            return parent::setHttpResponseCode($httpCode);
+        } else {
+            return $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function setHeader($name, $value, $replace = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeader');
-        return $pluginInfo ? $this->___callPlugins('setHeader', func_get_args(), $pluginInfo) : parent::setHeader($name, $value, $replace);
+        if (!$pluginInfo) {
+            return parent::setHeader($name, $value, $replace);
+        } else {
+            return $this->___callPlugins('setHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,6 +228,10 @@ class Interceptor extends \Magento\Backend\Model\View\Result\Page implements \Ma
     public function setStatusHeader($httpCode, $version = null, $phrase = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatusHeader');
-        return $pluginInfo ? $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo) : parent::setStatusHeader($httpCode, $version, $phrase);
+        if (!$pluginInfo) {
+            return parent::setStatusHeader($httpCode, $version, $phrase);
+        } else {
+            return $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo);
+        }
     }
 }

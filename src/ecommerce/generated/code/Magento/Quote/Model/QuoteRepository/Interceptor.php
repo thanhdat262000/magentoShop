@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function get($cartId, array $sharedStoreIds = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'get');
-        return $pluginInfo ? $this->___callPlugins('get', func_get_args(), $pluginInfo) : parent::get($cartId, $sharedStoreIds);
+        if (!$pluginInfo) {
+            return parent::get($cartId, $sharedStoreIds);
+        } else {
+            return $this->___callPlugins('get', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function getForCustomer($customerId, array $sharedStoreIds = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getForCustomer');
-        return $pluginInfo ? $this->___callPlugins('getForCustomer', func_get_args(), $pluginInfo) : parent::getForCustomer($customerId, $sharedStoreIds);
+        if (!$pluginInfo) {
+            return parent::getForCustomer($customerId, $sharedStoreIds);
+        } else {
+            return $this->___callPlugins('getForCustomer', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function getActive($cartId, array $sharedStoreIds = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActive');
-        return $pluginInfo ? $this->___callPlugins('getActive', func_get_args(), $pluginInfo) : parent::getActive($cartId, $sharedStoreIds);
+        if (!$pluginInfo) {
+            return parent::getActive($cartId, $sharedStoreIds);
+        } else {
+            return $this->___callPlugins('getActive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function getActiveForCustomer($customerId, array $sharedStoreIds = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActiveForCustomer');
-        return $pluginInfo ? $this->___callPlugins('getActiveForCustomer', func_get_args(), $pluginInfo) : parent::getActiveForCustomer($customerId, $sharedStoreIds);
+        if (!$pluginInfo) {
+            return parent::getActiveForCustomer($customerId, $sharedStoreIds);
+        } else {
+            return $this->___callPlugins('getActiveForCustomer', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function save(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save($quote);
+        if (!$pluginInfo) {
+            return parent::save($quote);
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function delete(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete($quote);
+        if (!$pluginInfo) {
+            return parent::delete($quote);
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,6 +98,10 @@ class Interceptor extends \Magento\Quote\Model\QuoteRepository implements \Magen
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getList');
-        return $pluginInfo ? $this->___callPlugins('getList', func_get_args(), $pluginInfo) : parent::getList($searchCriteria);
+        if (!$pluginInfo) {
+            return parent::getList($searchCriteria);
+        } else {
+            return $this->___callPlugins('getList', func_get_args(), $pluginInfo);
+        }
     }
 }

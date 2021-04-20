@@ -421,7 +421,7 @@ class Option extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
 
         $this->_initMessageTemplates();
 
-        $this->_initProductsSku();
+        $this->_initProductsSku()->_initOldCustomOptions();
     }
 
     /**
@@ -606,29 +606,12 @@ class Option extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
                     'option_title.store_id = ?',
                     $storeId
                 );
-                if (!empty($this->_newOptionsOldData)) {
-                    $this->_optionCollection->addProductToFilter(array_keys($this->_newOptionsOldData));
-                }
 
                 $this->_byPagesIterator->iterate($this->_optionCollection, $this->_pageSize, [$addCustomOptions]);
             }
             $this->_oldCustomOptions = $oldCustomOptions;
         }
         return $this;
-    }
-
-    /**
-     * Get existing custom options data
-     *
-     * @return array
-     */
-    private function getOldCustomOptions(): array
-    {
-        if ($this->_oldCustomOptions === null) {
-            $this->_initOldCustomOptions();
-        }
-
-        return $this->_oldCustomOptions;
     }
 
     /**
@@ -734,9 +717,9 @@ class Option extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         $errorRows = [];
         foreach ($this->_newOptionsOldData as $productId => $options) {
             foreach ($options as $outerData) {
-                if (isset($this->getOldCustomOptions()[$productId])) {
+                if (isset($this->_oldCustomOptions[$productId])) {
                     $optionsCount = 0;
-                    foreach ($this->getOldCustomOptions()[$productId] as $innerData) {
+                    foreach ($this->_oldCustomOptions[$productId] as $innerData) {
                         if (count($outerData['titles']) == count($innerData['titles'])) {
                             $outerTitles = $outerData['titles'];
                             $innerTitles = $innerData['titles'];
@@ -770,8 +753,8 @@ class Option extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         $errorRows = [];
         foreach ($this->_newOptionsOldData as $productId => $options) {
             foreach ($options as $outerData) {
-                if (isset($this->getOldCustomOptions()[$productId])) {
-                    foreach ($this->getOldCustomOptions()[$productId] as $innerData) {
+                if (isset($this->_oldCustomOptions[$productId])) {
+                    foreach ($this->_oldCustomOptions[$productId] as $innerData) {
                         if (count($outerData['titles']) == count($innerData['titles'])) {
                             $outerTitles = $outerData['titles'];
                             $innerTitles = $innerData['titles'];
@@ -801,9 +784,9 @@ class Option extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
     protected function _findExistingOptionId(array $newOptionData, array $newOptionTitles)
     {
         $productId = $newOptionData['product_id'];
-        if (isset($this->getOldCustomOptions()[$productId])) {
+        if (isset($this->_oldCustomOptions[$productId])) {
             ksort($newOptionTitles);
-            $existingOptions = $this->getOldCustomOptions()[$productId];
+            $existingOptions = $this->_oldCustomOptions[$productId];
             foreach ($existingOptions as $optionId => $optionData) {
                 if ($optionData['type'] == $newOptionData['type']
                     && $optionData['titles'][Store::DEFAULT_STORE_ID] == $newOptionTitles[Store::DEFAULT_STORE_ID]

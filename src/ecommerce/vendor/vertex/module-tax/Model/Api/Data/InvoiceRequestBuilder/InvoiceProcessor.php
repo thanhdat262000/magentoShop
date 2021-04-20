@@ -86,6 +86,11 @@ class InvoiceProcessor
      */
     public function process(InvoiceInterface $invoice)
     {
+        // If an invoice is virtual, it simply won't have a shipping address.
+        /** @var OrderAddressInterface $address */
+        $address = $invoice->getExtensionAttributes()->getVertexTaxCalculationShippingAddress()
+            ?: $invoice->getExtensionAttributes()->getVertexTaxCalculationBillingAddress();
+
         /** @var OrderInterface $order */
         $order = $invoice->getExtensionAttributes()->getVertexTaxCalculationOrder();
 
@@ -96,7 +101,12 @@ class InvoiceProcessor
             ->setScopeCode($scopeCode)
             ->build();
 
-        $customer = $this->customerBuilder->buildFromOrder($order);
+        $customer = $this->customerBuilder->buildFromOrderAddress(
+            $address,
+            $order->getCustomerId(),
+            $order->getCustomerGroupId(),
+            $scopeCode
+        );
 
         $invoiceMapper = $this->mapperFactory->getForClass(RequestInterface::class, $scopeCode);
 
@@ -113,11 +123,7 @@ class InvoiceProcessor
         $configLocationCode = $this->config->getLocationCode($scopeCode);
 
         if ($configLocationCode) {
-            $locationCode = $this->stringUtilities->substr(
-                $configLocationCode,
-                0,
-                $invoiceMapper->getLocationCodeMaxLength()
-            );
+            $locationCode = $this->stringUtilities->substr($configLocationCode, 0, $invoiceMapper->getLocationCodeMaxLength());
             $request->setLocationCode($locationCode);
         }
 

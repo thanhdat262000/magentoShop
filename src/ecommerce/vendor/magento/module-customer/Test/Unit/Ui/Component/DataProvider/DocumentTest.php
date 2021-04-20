@@ -3,8 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Customer\Test\Unit\Ui\Component\DataProvider;
 
 use Magento\Customer\Api\CustomerMetadataInterface;
@@ -19,14 +17,14 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Phrase;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
+ * Class DocumentTest
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class DocumentTest extends TestCase
+class DocumentTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var GroupRepositoryInterface|MockObject
@@ -58,7 +56,7 @@ class DocumentTest extends TestCase
      */
     private $document;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->initAttributeValueFactoryMock();
 
@@ -80,16 +78,11 @@ class DocumentTest extends TestCase
     }
 
     /**
-     * @dataProvider getGenderAttributeDataProvider
-     * @covers       \Magento\Customer\Ui\Component\DataProvider\Document::getCustomAttribute
-     * @param int $genderId
-     * @param string $attributeValue
-     * @param string $attributeLabel
+     * @covers \Magento\Customer\Ui\Component\DataProvider\Document::getCustomAttribute
      */
-    public function testGetGenderAttribute(int $genderId, string $attributeValue, string $attributeLabel): void
+    public function testGetGenderAttribute()
     {
-        $expectedResult = !empty($attributeValue) ? $attributeLabel : $genderId;
-
+        $genderId = 1;
         $this->document->setData('gender', $genderId);
 
         $this->groupRepository->expects(static::never())
@@ -111,37 +104,11 @@ class DocumentTest extends TestCase
             ->willReturn([$genderId => $option]);
 
         $option->expects(static::once())
-            ->method('getValue')
-            ->willReturn($attributeValue);
-
-        $option->expects(static::any())
             ->method('getLabel')
-            ->willReturn($attributeLabel);
+            ->willReturn('Male');
 
         $attribute = $this->document->getCustomAttribute('gender');
-        static::assertEquals($expectedResult, $attribute->getValue());
-    }
-
-    /**
-     * Data provider for testGetGenderAttribute
-     * @return array
-     */
-    public function getGenderAttributeDataProvider()
-    {
-        return [
-            'with valid gender label and value' => [
-                1, '1', 'Male'
-            ],
-            'with empty gender label' => [
-                2, '2', ''
-            ],
-            'with empty gender value' => [
-                3, '', 'test'
-            ],
-            'with empty gender label and value' => [
-                4, '', ''
-            ]
-        ];
+        static::assertEquals('Male', $attribute->getValue());
     }
 
     /**

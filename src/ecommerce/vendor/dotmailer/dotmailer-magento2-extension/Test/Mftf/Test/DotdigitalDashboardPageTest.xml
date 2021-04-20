@@ -7,16 +7,17 @@
             <stories value="Dashboard Page Test"/>
             <title value="Dashboard Page Test"/>
             <description value="The dotdigital Dashboard can be viewed."/>
-            <severity value="MINOR"/>
+            <severity value="MAJOR"/>
+            <group value="FS/106771-mftf"/>
             <group value="dotmailer"/>
         </annotations>
 
         <before>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
 
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
 
         <click selector="li#menu-magento-reports-report" stepKey="clickReportsButton"/>
@@ -25,7 +26,7 @@
 
         <click selector="li.item-dashboards" stepKey="clickOnDashBoard"/>
 
-        <seeInCurrentUrl url="{{DotdigitalDashboardPage.url}}" stepKey="confirmThatImOnDashboard"/>
-        <seeElement selector="div.ddg-dashboard-container" stepKey="seeDDGDescription"/>
+        <seeInCurrentUrl url="{{AdminDashboardPage.url}}" stepKey="confirmThatImOnDashboard"/>
+        <seeElement selector="div.dashboard-container" stepKey="seeDDGDescription"/>
     </test>
 </tests>

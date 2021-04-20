@@ -24,11 +24,11 @@
             <createData entity="Msi_US_Customer" stepKey="customer"/>
             <createData entity="VirtualProduct" stepKey="product"/>
 
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginToAdminArea"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginToAdminArea"/>
             <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
         </before>
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logoutFromAdminArea"/>
+            <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="product" stepKey="deleteProduct"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
@@ -44,7 +44,7 @@
 
         <searchAndMultiSelectOption selector="{{AdminProductFormSection.categoriesDropdown}}" parameterArray="[$$category.name$$]" requiredAction="true" stepKey="searchAndSelectCategory"/>
 
-        <actionGroup ref="AdminFormSaveAndCloseActionGroup" stepKey="saveAndCloseCreatedVirtualProduct"/>
+        <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Login and buy fifty pieces of virtual product on storefront." stepKey="buyVirtualProductComment"/>
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
@@ -59,9 +59,7 @@
         </actionGroup>
         <conditionalClick selector="{{StorefrontMinicartSection.showCart}}" dependentSelector="{{StorefrontMinicartSection.miniCartOpened}}" visible="false" stepKey="openMiniCart"/>
         <waitForPageLoad stepKey="waitForPageLoad2"/>
-        <doubleClick selector="{{StorefrontMinicartSection.cartItemQty}}" stepKey="doubleClickOnQty"/>
-        <pressKey selector="{{StorefrontMinicartSection.cartItemQty}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::DELETE]" stepKey="clearQty"/>
-        <fillField selector="{{StorefrontMinicartSection.cartItemQty}}" userInput="50" stepKey="fillQty"/>
+        <fillField selector=".cart-item-qty" userInput="50" stepKey="setProductQtyToFiftyInMiniCart"/>
         <click selector=".update-cart-item" stepKey="updateQtyInMiniCart"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad3"/>
         <click selector="{{StorefrontMinicartSection.goToCheckout}}" stepKey="goToCheckout"/>

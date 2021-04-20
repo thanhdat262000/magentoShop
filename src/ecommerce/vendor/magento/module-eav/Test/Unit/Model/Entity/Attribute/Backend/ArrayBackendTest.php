@@ -3,123 +3,48 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Eav\Test\Unit\Model\Entity\Attribute\Backend;
 
-use Magento\Eav\Model\Entity\Attribute;
-use Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend;
-use Magento\Framework\DataObject;
-use PHPUnit\Framework\TestCase;
-
-class ArrayBackendTest extends TestCase
+class ArrayBackendTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ArrayBackend
+     * @var \Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend
      */
-    private $_model;
+    protected $_model;
 
     /**
-     * @var Attribute
+     * @var \Magento\Eav\Model\Entity\Attribute
      */
-    private $_attribute;
+    protected $_attribute;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_attribute = $this->createPartialMock(
-            Attribute::class,
-            ['getAttributeCode', 'getDefaultValue', '__wakeup']
+            \Magento\Eav\Model\Entity\Attribute::class,
+            ['getAttributeCode', '__wakeup']
         );
-        $this->_model = new ArrayBackend();
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $this->_model = new \Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend($logger);
         $this->_model->setAttribute($this->_attribute);
     }
 
     /**
-     * @dataProvider validateDataProvider
-     * @param array $productData
-     * @param bool $hasData
-     * @param string|int|float|null $expectedValue
+     * @dataProvider attributeValueDataProvider
      */
-    public function testValidate(array $productData, bool $hasData, $expectedValue)
+    public function testValidate($data)
     {
-        $this->_attribute->expects($this->atLeastOnce())
-            ->method('getAttributeCode')
-            ->willReturn('attr');
-
-        $product = new DataObject($productData);
+        $this->_attribute->expects($this->atLeastOnce())->method('getAttributeCode')->will($this->returnValue('code'));
+        $product = new \Magento\Framework\DataObject(['code' => $data, 'empty' => '']);
         $this->_model->validate($product);
-        $this->assertEquals($hasData, $product->hasData('attr'));
-        $this->assertEquals($expectedValue, $product->getAttr());
+        $this->assertEquals('1,2,3', $product->getCode());
+        $this->assertEquals(null, $product->getEmpty());
     }
 
     /**
      * @return array
      */
-    public static function validateDataProvider(): array
+    public static function attributeValueDataProvider()
     {
-        return [
-            [
-                ['sku' => 'test1', 'attr' => [1, 2, 3]],
-                true,
-                '1,2,3',
-            ],
-            [
-                ['sku' => 'test1', 'attr' => '1,2,3'],
-                true,
-                '1,2,3',
-            ],
-            [
-                ['sku' => 'test1', 'attr' => null],
-                true,
-                null,
-            ],
-            [
-                ['sku' => 'test1'],
-                false,
-                null,
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider beforeSaveDataProvider
-     * @param array $productData
-     * @param string $defaultValue
-     * @param string $expectedValue
-     */
-    public function testBeforeSave(
-        array $productData,
-        string $defaultValue,
-        string $expectedValue
-    ) {
-        $this->_attribute->expects($this->atLeastOnce())
-            ->method('getAttributeCode')
-            ->willReturn('attr');
-        $this->_attribute->expects($this->any())
-            ->method('getDefaultValue')
-            ->willReturn($defaultValue);
-
-        $product = new DataObject($productData);
-        $this->_model->beforeSave($product);
-        $this->assertEquals($expectedValue, $product->getAttr());
-    }
-
-    /**
-     * @return array
-     */
-    public function beforeSaveDataProvider(): array
-    {
-        return [
-            [
-                ['sku' => 'test1', 'attr' => 'Value 2'],
-                'Default value 1',
-                'Value 2',
-            ],
-            [
-                ['sku' => 'test1'],
-                'Default value 1',
-                'Default value 1',
-            ],
-        ];
+        return [[[1, 2, 3]], ['1,2,3']];
     }
 }

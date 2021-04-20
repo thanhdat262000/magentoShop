@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Customer\Model\ResourceModel\GroupRepository 
     public function save(\Magento\Customer\Api\Data\GroupInterface $group)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save($group);
+        if (!$pluginInfo) {
+            return parent::save($group);
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Customer\Model\ResourceModel\GroupRepository 
     public function getById($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getById');
-        return $pluginInfo ? $this->___callPlugins('getById', func_get_args(), $pluginInfo) : parent::getById($id);
+        if (!$pluginInfo) {
+            return parent::getById($id);
+        } else {
+            return $this->___callPlugins('getById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Customer\Model\ResourceModel\GroupRepository 
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getList');
-        return $pluginInfo ? $this->___callPlugins('getList', func_get_args(), $pluginInfo) : parent::getList($searchCriteria);
+        if (!$pluginInfo) {
+            return parent::getList($searchCriteria);
+        } else {
+            return $this->___callPlugins('getList', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Customer\Model\ResourceModel\GroupRepository 
     public function delete(\Magento\Customer\Api\Data\GroupInterface $group)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete($group);
+        if (!$pluginInfo) {
+            return parent::delete($group);
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,6 +72,10 @@ class Interceptor extends \Magento\Customer\Model\ResourceModel\GroupRepository 
     public function deleteById($id)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'deleteById');
-        return $pluginInfo ? $this->___callPlugins('deleteById', func_get_args(), $pluginInfo) : parent::deleteById($id);
+        if (!$pluginInfo) {
+            return parent::deleteById($id);
+        } else {
+            return $this->___callPlugins('deleteById', func_get_args(), $pluginInfo);
+        }
     }
 }

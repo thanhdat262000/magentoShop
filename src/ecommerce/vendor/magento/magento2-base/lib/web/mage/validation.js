@@ -6,11 +6,10 @@
 define([
     'jquery',
     'moment',
-    'mageUtils',
     'jquery-ui-modules/widget',
     'jquery/validate',
     'mage/translate'
-], function ($, moment, utils) {
+], function ($, moment) {
     'use strict';
 
     var creditCartTypes, rules, showLabel, originValidateDelegate;
@@ -204,24 +203,12 @@ define([
      * @returns {float}
      */
     function resolveModulo(qty, qtyIncrements) {
-        var divideEpsilon = 10000,
-            epsilon,
-            remainder;
-
         while (qtyIncrements < 1) {
             qty *= 10;
             qtyIncrements *= 10;
         }
 
-        epsilon = qtyIncrements / divideEpsilon;
-        remainder = qty % qtyIncrements;
-
-        if (Math.abs(remainder - qtyIncrements) < epsilon ||
-            Math.abs(remainder) < epsilon) {
-            remainder = 0;
-        }
-
-        return remainder;
+        return qty % qtyIncrements;
     }
 
     /**
@@ -1045,7 +1032,7 @@ define([
         ],
         'validate-date': [
             function (value, params, additionalParams) {
-                var test = moment(value, utils.convertToMomentFormat(additionalParams.dateFormat));
+                var test = moment(value, additionalParams.dateFormat);
 
                 return $.mage.isEmptyNoTrim(value) || test.isValid();
             },
@@ -1142,7 +1129,7 @@ define([
         ],
         'validate-state': [
             function (v) {
-                return v !== 0;
+                return v !== 0 || v === '';
             },
             $.mage.__('Please select State/Province.')
         ],
@@ -1983,8 +1970,8 @@ define([
             }
 
             if (firstActive.length) {
-                $('html, body').stop().animate({
-                    scrollTop: firstActive.parent().offset().top - windowHeight / 2
+                $('body').stop().animate({
+                    scrollTop: firstActive.offset().top - windowHeight / 2
                 });
                 firstActive.focus();
             }

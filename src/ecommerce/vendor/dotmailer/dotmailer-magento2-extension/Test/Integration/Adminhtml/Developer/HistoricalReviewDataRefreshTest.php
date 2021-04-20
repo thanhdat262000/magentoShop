@@ -25,7 +25,7 @@ class HistoricalReviewDataRefreshTest extends \Magento\TestFramework\TestCase\Ab
     /**
      * @return void
      */
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
 
@@ -243,6 +243,6 @@ class HistoricalReviewDataRefreshTest extends \Magento\TestFramework\TestCase\Ab
     public function emptyTable()
     {
         $resourceModel = $this->objectManager->create(\Dotdigitalgroup\Email\Model\ResourceModel\Review::class);
-        $resourceModel->getConnection()->delete($resourceModel->getMainTable());
+        $resourceModel->getConnection()->truncateTable($resourceModel->getMainTable());
     }
 }

@@ -292,16 +292,19 @@ class Structure implements \Magento\Config\Model\Config\Structure\SearchInterfac
             foreach ($section['children'] as $group) {
                 if (isset($group['children'])) {
                     $path = $section['id'] . '/' . $group['id'];
-                    $result[] = $this->_getGroupFieldPathsByAttribute(
-                        $group['children'],
-                        $path,
-                        $attributeName,
-                        $attributeValue
+                    $result = array_merge(
+                        $result,
+                        $this->_getGroupFieldPathsByAttribute(
+                            $group['children'],
+                            $path,
+                            $attributeName,
+                            $attributeValue
+                        )
                     );
                 }
             }
         }
-        return array_merge([], ...$result);
+        return $result;
     }
 
     /**
@@ -395,7 +398,7 @@ class Structure implements \Magento\Config\Model\Config\Structure\SearchInterfac
                     $this->getFieldsRecursively($element['children'])
                 );
             } else {
-                if ($element['_elementType'] === 'field') {
+                if ($element['_elementType'] === 'field' && isset($element['label'])) {
                     $structurePath = (isset($element['path']) ? $element['path'] . '/' : '') . $element['id'];
                     $configPath = isset($element['config_path']) ? $element['config_path'] : $structurePath;
 

@@ -13,7 +13,6 @@ namespace Magento\Sales\Block\Order\Invoice;
 
 /**
  * Sales order invoice items block
- *
  * @api
  * @since 100.0.2
  */
@@ -100,7 +99,7 @@ class Items extends \Magento\Sales\Block\Items\AbstractItems
         $html = '';
         $comments = $this->getChildBlock('invoice_comments');
         if ($comments) {
-            $comments->setEntity($invoice)->setTitle($this->escapeHtmlAttr(__('About Your Invoice')));
+            $comments->setEntity($invoice)->setTitle($this->escapeHtml(__('About Your Invoice')));
             $html = $comments->toHtml();
         }
         return $html;

@@ -49,10 +49,10 @@ class CustomerDataFieldProvider extends DataObject
     public function getCustomerDataFields()
     {
         //customer mapped data
-        $website = $this->getWebsite();
+        $store = $this->getWebsite()->getDefaultStore();
         $mappedData = $this->helper
             ->getScopeConfig()
-            ->getValue('connector_data_mapping/customer_data', ScopeInterface::SCOPE_WEBSITE, $website->getId())
+            ->getValue('connector_data_mapping/customer_data', ScopeInterface::SCOPE_STORE, $store->getId())
             ?: [];
 
         return array_filter($mappedData += $this->getAdditionalDataFields(), function ($value, $key) {

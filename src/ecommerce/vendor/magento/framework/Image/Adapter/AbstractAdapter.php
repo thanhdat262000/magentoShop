@@ -24,9 +24,8 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     public $imageBackgroundColor = 0;
 
-    /**#@+
-     * Position constants.
-     * Used mainly for watermarks
+    /**
+     * Position constants
      */
     const POSITION_TOP_LEFT = 'top-left';
 
@@ -41,10 +40,9 @@ abstract class AbstractAdapter implements AdapterInterface
     const POSITION_TILE = 'tile';
 
     const POSITION_CENTER = 'center';
-    /**#@-*/
 
     /**
-     * The size of the font to use as default
+     * Default font size
      */
     const DEFAULT_FONT_SIZE = 15;
 
@@ -675,10 +673,12 @@ abstract class AbstractAdapter implements AdapterInterface
     {
         if (empty($destination)) {
             $destination = $this->_fileSrcPath;
-        } elseif (empty($newName)) {
-            $info = pathinfo((string) $destination);
-            $newName = $info['basename'];
-            $destination = $info['dirname'];
+        } else {
+            if (empty($newName)) {
+                $info = pathinfo((string) $destination);
+                $newName = $info['basename'];
+                $destination = $info['dirname'];
+            }
         }
 
         if (empty($newName)) {
@@ -748,25 +748,5 @@ abstract class AbstractAdapter implements AdapterInterface
         $this->open($filePath);
 
         return $this->getImageType() !== null;
-    }
-
-    /**
-     * Get file source path
-     *
-     * @return string
-     */
-    public function getFileSrcPath(): string
-    {
-        return $this->_fileSrcPath ?? '';
-    }
-
-    /**
-     *  Get file source name
-     *
-     * @return string
-     */
-    public function getFileSrcName(): string
-    {
-        return $this->_fileSrcName ?? '';
     }
 }

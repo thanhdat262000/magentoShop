@@ -8,8 +8,6 @@ namespace Magento\Usps\Model;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Async\CallbackDeferred;
-use Magento\Framework\DataObject;
-use Magento\Framework\HTTP\AsyncClient\HttpException;
 use Magento\Framework\HTTP\AsyncClient\Request;
 use Magento\Framework\HTTP\AsyncClientInterface;
 use Magento\Framework\Xml\Security;
@@ -27,19 +25,19 @@ use Magento\Usps\Helper\Data as DataHelper;
  */
 class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\Carrier\CarrierInterface
 {
-    /** @deprecated Redundant dependency */
+    /** @deprecated */
     const CONTAINER_VARIABLE = 'VARIABLE';
 
-    /** @deprecated Redundant dependency */
+    /** @deprecated */
     const CONTAINER_FLAT_RATE_BOX = 'FLAT RATE BOX';
 
-    /** @deprecated Redundant dependency */
+    /** @deprecated */
     const CONTAINER_FLAT_RATE_ENVELOPE = 'FLAT RATE ENVELOPE';
 
-    /** @deprecated Redundant dependency */
+    /** @deprecated */
     const CONTAINER_RECTANGULAR = 'RECTANGULAR';
 
-    /** @deprecated Redundant dependency */
+    /** @deprecated */
     const CONTAINER_NONRECTANGULAR = 'NONRECTANGULAR';
 
     /**
@@ -150,11 +148,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @var ProxyDeferredFactory
      */
     private $proxyDeferredFactory;
-
-    /**
-     * @var DataObject
-     */
-    private $_rawTrackRequest;
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -567,13 +560,7 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                 [
                     'deferred' => new CallbackDeferred(
                         function () use ($deferredResponse, $request, $debugData) {
-                            $responseResult = null;
-                            try {
-                                $responseResult = $deferredResponse->get();
-                            } catch (HttpException $exception) {
-                                $this->_logger->critical($exception);
-                            }
-                            $responseBody = $responseResult ? $responseResult->getBody() : '';
+                            $responseBody = $deferredResponse->get()->getBody();
                             $debugData['result'] = $responseBody;
                             $this->_setCachedQuotes($request, $responseBody);
                             $this->_debug($debugData);

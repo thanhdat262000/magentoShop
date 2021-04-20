@@ -8,18 +8,18 @@ declare(strict_types=1);
 
 namespace Magento\AdobeStockAdminUi\Controller\Adminhtml\System\Config;
 
-use Magento\AdobeImsApi\Api\ConfigInterface;
 use Magento\AdobeStockClientApi\Api\ClientInterface;
+use Magento\AdobeImsApi\Api\ConfigInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\ResultInterface;
 
 /**
  * Controller used for testing connection to Adobe Stock API from stores configuration
  */
-class TestConnection extends Action implements HttpPostActionInterface
+class TestConnection extends Action
 {
     /**
      * Authorization level of a basic admin session.
@@ -31,7 +31,7 @@ class TestConnection extends Action implements HttpPostActionInterface
     /**
      * Constant for value of an obscured API key
      */
-    private const OBSCURED_KEY = '******';
+    public const OBSCURED_KEY = '******';
 
     /**
      * @var JsonFactory
@@ -73,7 +73,7 @@ class TestConnection extends Action implements HttpPostActionInterface
      *
      * @return ResultInterface
      */
-    public function execute(): ResultInterface
+    public function execute() : ResultInterface
     {
         try {
             $params = $this->getRequest()->getParams();
@@ -87,8 +87,9 @@ class TestConnection extends Action implements HttpPostActionInterface
             $message = __('An error occurred during test Adobe Stock API connection');
             $isConnectionEstablished = false;
         }
-
-        return $this->resultJsonFactory->create()->setData(
+        /** @var Json $resultJson */
+        $resultJson = $this->resultJsonFactory->create();
+        return $resultJson->setData(
             [
                 'success' => $isConnectionEstablished,
                 'message' => $message->render(),

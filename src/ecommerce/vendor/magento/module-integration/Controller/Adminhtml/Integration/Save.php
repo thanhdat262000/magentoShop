@@ -69,19 +69,19 @@ class Save extends \Magento\Integration\Controller\Adminhtml\Integration impleme
             );
             $this->_redirect('*');
         } catch (\Magento\Framework\Exception\AuthenticationException $e) {
-            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->messageManager->addError($e->getMessage());
             $this->_getSession()->setIntegrationData($this->getRequest()->getPostValue());
             $this->_redirectOnSaveError();
         } catch (IntegrationException $e) {
-            $this->messageManager->addErrorMessage($this->escaper->escapeHtml($e->getMessage()));
-            $this->_getSession()->setIntegrationData($this->getRequest()->getPostValue());
+            $this->messageManager->addError($this->escaper->escapeHtml($e->getMessage()));
+            $this->_getSession()->setIntegrationData($integrationData);
             $this->_redirectOnSaveError();
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            $this->messageManager->addErrorMessage($this->escaper->escapeHtml($e->getMessage()));
+            $this->messageManager->addError($this->escaper->escapeHtml($e->getMessage()));
             $this->_redirectOnSaveError();
         } catch (\Exception $e) {
             $this->_logger->critical($e);
-            $this->messageManager->addErrorMessage($this->escaper->escapeHtml($e->getMessage()));
+            $this->messageManager->addError($this->escaper->escapeHtml($e->getMessage()));
             $this->_redirectOnSaveError();
         }
     }

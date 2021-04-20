@@ -95,7 +95,6 @@ class CacheCleaner
         $identities = $this->cacheContext->getIdentities();
         if (!empty($identities)) {
             $this->appCache->clean($identities);
-            $this->cacheContext->flush();
         }
     }
 }

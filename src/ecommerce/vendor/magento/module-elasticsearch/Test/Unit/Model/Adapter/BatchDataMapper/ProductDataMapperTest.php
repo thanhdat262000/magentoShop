@@ -3,29 +3,24 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Elasticsearch\Test\Unit\Model\Adapter\BatchDataMapper;
 
 use Magento\AdvancedSearch\Model\Adapter\DataMapper\AdditionalFieldsProviderInterface;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\DataProvider;
 use Magento\Eav\Api\Data\AttributeOptionInterface;
-use Magento\Eav\Model\Entity\Attribute\Source\SourceInterface;
 use Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper;
 use Magento\Elasticsearch\Model\Adapter\Document\Builder;
 use Magento\Elasticsearch\Model\Adapter\FieldMapperInterface;
 use Magento\Elasticsearch\Model\Adapter\FieldType\Date;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests for \Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper class.
+ * Class ProductDataMapperTest
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ProductDataMapperTest extends TestCase
+class ProductDataMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ProductDataMapper
@@ -33,51 +28,46 @@ class ProductDataMapperTest extends TestCase
     private $model;
 
     /**
-     * @var Builder|MockObject
+     * @var Builder|\PHPUnit_Framework_MockObject_MockObject
      */
     private $builderMock;
 
     /**
-     * @var Attribute|MockObject
+     * @var Attribute|\PHPUnit_Framework_MockObject_MockObject
      */
     private $attribute;
 
     /**
-     * @var FieldMapperInterface|MockObject
+     * @var FieldMapperInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $fieldMapperMock;
 
     /**
-     * @var Date|MockObject
+     * @var Date|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dateFieldTypeMock;
 
     /**
-     * @var AdditionalFieldsProviderInterface|MockObject
+     * @var AdditionalFieldsProviderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $additionalFieldsProvider;
 
     /**
-     * @var DataProvider|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $dataProvider;
 
     /**
-     * @inheritdoc
+     * Set up test environment.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->builderMock = $this->createTestProxy(Builder::class);
-        $this->fieldMapperMock = $this->getMockForAbstractClass(FieldMapperInterface::class);
+        $this->fieldMapperMock = $this->createMock(FieldMapperInterface::class);
         $this->dataProvider = $this->createMock(DataProvider::class);
         $this->attribute = $this->createMock(Attribute::class);
-        $this->additionalFieldsProvider = $this->getMockForAbstractClass(AdditionalFieldsProviderInterface::class);
+        $this->additionalFieldsProvider = $this->createMock(AdditionalFieldsProviderInterface::class);
         $this->dateFieldTypeMock = $this->createMock(Date::class);
-        $filterableAttributeTypes = [
-            'boolean' => 'boolean',
-            'multiselect' => 'multiselect',
-            'select' => 'select',
-        ];
 
         $objectManager = new ObjectManagerHelper($this);
         $this->model = $objectManager->getObject(
@@ -88,7 +78,6 @@ class ProductDataMapperTest extends TestCase
                 'dateFieldType' => $this->dateFieldTypeMock,
                 'dataProvider' => $this->dataProvider,
                 'additionalFieldsProvider' => $this->additionalFieldsProvider,
-                'filterableAttributeTypes' => $filterableAttributeTypes,
             ]
         );
     }
@@ -108,10 +97,10 @@ class ProductDataMapperTest extends TestCase
         $this->builderMock->expects($this->any())
             ->method('addFields')
             ->withConsecutive([$additionalFields])
-            ->willReturnSelf();
+            ->will($this->returnSelf());
         $this->builderMock->expects($this->any())
             ->method('build')
-            ->willReturn([]);
+            ->will($this->returnValue([]));
         $this->additionalFieldsProvider->expects($this->once())
             ->method('getFields')
             ->with([$productId], $storeId)
@@ -167,8 +156,8 @@ class ProductDataMapperTest extends TestCase
             $productId => [$attributeId => $attributeValue],
         ];
         $documents = $this->model->map($documentData, $storeId, $context);
-        $returnAttributeData = ['store_id' => $storeId] + $returnAttributeData;
-        $this->assertSame($returnAttributeData, $documents[$productId]);
+        $returnAttributeData['store_id'] = $storeId;
+        $this->assertEquals($returnAttributeData, $documents[$productId]);
     }
 
     /**
@@ -204,31 +193,23 @@ class ProductDataMapperTest extends TestCase
      * Return attribute mock
      *
      * @param array attributeData
-     * @return MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getAttribute(array $attributeData): MockObject
+    private function getAttribute(array $attributeData): \PHPUnit_Framework_MockObject_MockObject
     {
-        $attributeMock = $this->createPartialMock(
-            Attribute::class,
-            [
-                'getSource',
-                'getOptions',
-            ]
-        );
-
-        $sourceMock = $this->createMock(SourceInterface::class);
-        $attributeMock->method('getSource')->willReturn($sourceMock);
-        $sourceMock->method('getAllOptions')->willReturn($attributeData['options'] ?? []);
+        $attributeMock = $this->createMock(Attribute::class);
+        $attributeMock->method('getAttributeCode')->willReturn($attributeData['code']);
+        $attributeMock->method('getBackendType')->willReturn($attributeData['backendType']);
+        $attributeMock->method('getFrontendInput')->willReturn($attributeData['frontendInput']);
+        $attributeMock->method('getIsSearchable')->willReturn($attributeData['is_searchable']);
         $options = [];
         foreach ($attributeData['options'] as $option) {
-            $optionMock = $this->getMockForAbstractClass(AttributeOptionInterface::class);
+            $optionMock = $this->createMock(AttributeOptionInterface::class);
             $optionMock->method('getValue')->willReturn($option['value']);
             $optionMock->method('getLabel')->willReturn($option['label']);
             $options[] = $optionMock;
         }
         $attributeMock->method('getOptions')->willReturn($options);
-        unset($attributeData['options']);
-        $attributeMock->setData($attributeData);
 
         return $attributeMock;
     }
@@ -243,9 +224,9 @@ class ProductDataMapperTest extends TestCase
             'text' => [
                 10,
                 [
-                    'attribute_code' => 'description',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'text',
+                    'code' => 'description',
+                    'backendType' => 'text',
+                    'frontendInput' => 'text',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -255,9 +236,9 @@ class ProductDataMapperTest extends TestCase
             'datetime' => [
                 10,
                 [
-                    'attribute_code' => 'created_at',
-                    'backend_type' => 'datetime',
-                    'frontend_input' => 'date',
+                    'code' => 'created_at',
+                    'backendType' => 'datetime',
+                    'frontendInput' => 'date',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -268,9 +249,9 @@ class ProductDataMapperTest extends TestCase
             'array single value' => [
                 10,
                 [
-                    'attribute_code' => 'attribute_array',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'text',
+                    'code' => 'attribute_array',
+                    'backendType' => 'text',
+                    'frontendInput' => 'text',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -280,9 +261,9 @@ class ProductDataMapperTest extends TestCase
             'array multiple value' => [
                 10,
                 [
-                    'attribute_code' => 'attribute_array',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'text',
+                    'code' => 'attribute_array',
+                    'backendType' => 'text',
+                    'frontendInput' => 'text',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -292,9 +273,9 @@ class ProductDataMapperTest extends TestCase
             'array multiple decimal value' => [
                 10,
                 [
-                    'attribute_code' => 'decimal_array',
-                    'backend_type' => 'decimal',
-                    'frontend_input' => 'text',
+                    'code' => 'decimal_array',
+                    'backendType' => 'decimal',
+                    'frontendInput' => 'text',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -304,36 +285,36 @@ class ProductDataMapperTest extends TestCase
             'array excluded from merge' => [
                 10,
                 [
-                    'attribute_code' => 'status',
-                    'backend_type' => 'int',
-                    'frontend_input' => 'select',
+                    'code' => 'status',
+                    'backendType' => 'int',
+                    'frontendInput' => 'select',
                     'is_searchable' => false,
                     'options' => [
                         ['value' => '1', 'label' => 'Enabled'],
                         ['value' => '2', 'label' => 'Disabled'],
                     ],
                 ],
-                [10 => '1', 11 => '2'],
-                ['status' => 1],
+                [10  => '1', 11 => '2'],
+                ['status' => '1'],
             ],
             'select without options' => [
                 10,
                 [
-                    'attribute_code' => 'color',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'select',
+                    'code' => 'color',
+                    'backendType' => 'text',
+                    'frontendInput' => 'select',
                     'is_searchable' => false,
                     'options' => [],
                 ],
                 '44',
-                ['color' => 44],
+                ['color' => '44'],
             ],
             'unsearchable select with options' => [
                 10,
                 [
-                    'attribute_code' => 'color',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'select',
+                    'code' => 'color',
+                    'backendType' => 'text',
+                    'frontendInput' => 'select',
                     'is_searchable' => false,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -341,14 +322,14 @@ class ProductDataMapperTest extends TestCase
                     ],
                 ],
                 '44',
-                ['color' => 44],
+                ['color' => '44'],
             ],
             'searchable select with options' => [
                 10,
                 [
-                    'attribute_code' => 'color',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'select',
+                    'code' => 'color',
+                    'backendType' => 'text',
+                    'frontendInput' => 'select',
                     'is_searchable' => true,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -356,14 +337,14 @@ class ProductDataMapperTest extends TestCase
                     ],
                 ],
                 '44',
-                ['color' => 44, 'color_value' => 'red'],
+                ['color' => '44', 'color_value' => 'red'],
             ],
             'composite select with options' => [
                 10,
                 [
-                    'attribute_code' => 'color',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'select',
+                    'code' => 'color',
+                    'backendType' => 'text',
+                    'frontendInput' => 'select',
                     'is_searchable' => true,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -371,14 +352,14 @@ class ProductDataMapperTest extends TestCase
                     ],
                 ],
                 [10 => '44', 11 => '45'],
-                ['color' => [44, 45], 'color_value' => ['red', 'black']],
+                ['color' => ['44', '45'], 'color_value' => ['red', 'black']],
             ],
             'multiselect without options' => [
                 10,
                 [
-                    'attribute_code' => 'multicolor',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'multiselect',
+                    'code' => 'multicolor',
+                    'backendType' => 'text',
+                    'frontendInput' => 'multiselect',
                     'is_searchable' => false,
                     'options' => [],
                 ],
@@ -388,9 +369,9 @@ class ProductDataMapperTest extends TestCase
             'unsearchable multiselect with options' => [
                 10,
                 [
-                    'attribute_code' => 'multicolor',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'multiselect',
+                    'code' => 'multicolor',
+                    'backendType' => 'text',
+                    'frontendInput' => 'multiselect',
                     'is_searchable' => false,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -403,9 +384,9 @@ class ProductDataMapperTest extends TestCase
             'searchable multiselect with options' => [
                 10,
                 [
-                    'attribute_code' => 'multicolor',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'multiselect',
+                    'code' => 'multicolor',
+                    'backendType' => 'text',
+                    'frontendInput' => 'multiselect',
                     'is_searchable' => true,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -418,9 +399,9 @@ class ProductDataMapperTest extends TestCase
             'composite multiselect with options' => [
                 10,
                 [
-                    'attribute_code' => 'multicolor',
-                    'backend_type' => 'text',
-                    'frontend_input' => 'multiselect',
+                    'code' => 'multicolor',
+                    'backendType' => 'text',
+                    'frontendInput' => 'multiselect',
                     'is_searchable' => true,
                     'options' => [
                         ['value' => '44', 'label' => 'red'],
@@ -434,14 +415,14 @@ class ProductDataMapperTest extends TestCase
             'excluded attribute' => [
                 10,
                 [
-                    'attribute_code' => 'price',
-                    'backend_type' => 'int',
-                    'frontend_input' => 'int',
+                    'code' => 'price',
+                    'backendType' => 'int',
+                    'frontendInput' => 'int',
                     'is_searchable' => false,
-                    'options' => [],
+                    'options' => []
                 ],
                 15,
-                [],
+                []
             ],
         ];
     }

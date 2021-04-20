@@ -18,9 +18,4 @@
         <data key="scope_id">0</data>
         <data key="value">1</data>
     </entity>
-    <entity name="EnableShareableDownloadableItems">
-        <data key="path">catalog/downloadable/shareable</data>
-        <data key="scope_id">0</data>
-        <data key="value">1</data>
-    </entity>
 </entities>

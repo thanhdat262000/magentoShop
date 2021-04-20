@@ -76,8 +76,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_DATE = 'connector_data_mapping/customer_data/last_order_date';
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_ID = 'connector_data_mapping/customer_data/last_order_id';
     const XML_PATH_CONNECTOR_CUSTOMER_TOTAL_REFUND = 'connector_data_mapping/customer_data/total_refund';
-    const XML_PATH_CONNECTOR_CUSTOMER_STORE_NAME_ADDITIONAL
-        = 'connector_data_mapping/customer_data/store_name_additional';
     const XML_PATH_CONNECTOR_CUSTOMER_LAST_ORDER_INCREMENT_ID =
         'connector_data_mapping/customer_data/last_increment_id';
     const XML_PATH_CONNECTOR_CUSTOMER_MOST_PURCHASED_CATEGORY =
@@ -114,14 +112,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_STATUS = 'connector_configuration/data_fields/order_status';
     const XML_PATH_CONNECTOR_SYNC_DATA_FIELDS_BRAND_ATTRIBUTE = 'connector_configuration/data_fields/brand_attribute';
-
-    /**
-     * IMAGE TYPES SECTION
-     */
-    const XML_PATH_CONNECTOR_IMAGE_TYPES_CATALOG_SYNC = 'connector_configuration/image_types/catalog_sync';
-    const XML_PATH_CONNECTOR_IMAGE_TYPES_ABANDONED_CART = 'connector_configuration/image_types/abandoned_cart';
-    const XML_PATH_CONNECTOR_IMAGE_TYPES_ABANDONED_BROWSE = 'connector_configuration/image_types/abandoned_browse';
-    const XML_PATH_CONNECTOR_IMAGE_TYPES_DYNAMIC_CONTENT = 'connector_configuration/image_types/dynamic_content';
 
     //Transactional Data
     const XML_PATH_CONNECTOR_SYNC_ORDER_STATUS = 'connector_configuration/transactional_data/order_statuses';
@@ -275,14 +265,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     const XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA =
         'connector_developer_settings/import_settings/subscriber_sales_data_enabled';
     const XML_PATH_CONNECTOR_STRIP_PUB = 'connector_developer_settings/import_settings/strip_pub_from_media_paths';
-    const XML_PATH_CONNECTOR_SYSTEM_ALERTS_SYSTEM_MESSAGES =
-        'connector_developer_settings/system_alerts/system_messages';
-    const XML_PATH_CONNECTOR_SYSTEM_ALERTS_EMAIL_NOTIFICATIONS =
-        'connector_developer_settings/system_alerts/email_notifications';
-    const XML_PATH_CONNECTOR_SYSTEM_ALERTS_USER_ROLES = 'connector_developer_settings/system_alerts/user_roles';
-    const XML_PATH_CONNECTOR_SYSTEM_ALERTS_FREQUENCY = 'connector_developer_settings/system_alerts/frequency';
-    const XML_PATH_CONNECTOR_SYSTEM_ALERTS_EMAIL_NOTIFICATION_TEMPLATE =
-        'connector_developer_settings/system_alerts/email_notification_template';
 
     /*
      * Cron schedules
@@ -433,10 +415,10 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
 
         //replace the api with the app prefix from the domain name
         return $this->regionAwarePortalUrl = str_replace(
-            ['api', 'dotmailer'],
-            [$appSubDomain, 'dotdigital'],
-            $apiEndpoint
-        ) . '/';
+                ['api', 'dotmailer'],
+                [$appSubDomain, 'dotdigital'],
+                $apiEndpoint
+            ) . '/';
     }
 
     /**

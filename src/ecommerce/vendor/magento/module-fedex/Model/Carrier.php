@@ -8,7 +8,6 @@ namespace Magento\Fedex\Model;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\Dir;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Webapi\Soap\ClientFactory;
@@ -22,7 +21,6 @@ use Magento\Shipping\Model\Rate\Result;
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\Carrier\CarrierInterface
 {
@@ -150,16 +148,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
      * @var ClientFactory
      */
     private $soapClientFactory;
-
-    /**
-     * @var array
-     */
-    private $baseCurrencyRate;
-
-    /**
-     * @var DataObject
-     */
-    private $_rawTrackingRequest;
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -641,13 +629,12 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
     protected function _getRateAmountOriginBased($rate)
     {
         $amount = null;
-        $currencyCode = '';
         $rateTypeAmounts = [];
+
         if (is_object($rate)) {
             // The "RATED..." rates are expressed in the currency of the origin country
             foreach ($rate->RatedShipmentDetails as $ratedShipmentDetail) {
                 $netAmount = (string)$ratedShipmentDetail->ShipmentRateDetail->TotalNetCharge->Amount;
-                $currencyCode = (string)$ratedShipmentDetail->ShipmentRateDetail->TotalNetCharge->Currency;
                 $rateType = (string)$ratedShipmentDetail->ShipmentRateDetail->RateType;
                 $rateTypeAmounts[$rateType] = $netAmount;
             }
@@ -662,40 +649,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             if ($amount === null) {
                 $amount = (string)$rate->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount;
             }
-
-            $amount = (float)$amount * $this->getBaseCurrencyRate($currencyCode);
         }
 
         return $amount;
-    }
-
-    /**
-     * Returns base currency rate.
-     *
-     * @param string $currencyCode
-     * @return float
-     * @throws LocalizedException
-     */
-    private function getBaseCurrencyRate(string $currencyCode): float
-    {
-        if (!isset($this->baseCurrencyRate[$currencyCode])) {
-            $baseCurrencyCode = $this->_request->getBaseCurrency()->getCode();
-            $rate = $this->_currencyFactory->create()
-                ->load($currencyCode)
-                ->getAnyRate($baseCurrencyCode);
-            if ($rate === false) {
-                $errorMessage = __(
-                    'Can\'t convert a shipping cost from "%1-%2" for FedEx carrier.',
-                    $currencyCode,
-                    $baseCurrencyCode
-                );
-                $this->_logger->critical($errorMessage);
-                throw new LocalizedException($errorMessage);
-            }
-            $this->baseCurrencyRate[$currencyCode] = (float)$rate;
-        }
-
-        return $this->baseCurrencyRate[$currencyCode];
     }
 
     /**
@@ -770,8 +726,9 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
             $debugData = ['request' => $this->filterDebugData($request)];
             try {
                 $url = $this->getConfigData('gateway_url');
-
-                // phpcs:disable Magento2.Functions.DiscouragedFunction
+                if (!$url) {
+                    $url = $this->_defaultGatewayUrl;
+                }
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -780,7 +737,6 @@ class Carrier extends AbstractCarrierOnline implements \Magento\Shipping\Model\C
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
                 $responseBody = curl_exec($ch);
                 curl_close($ch);
-                // phpcs:enable
 
                 $debugData['result'] = $this->filterDebugData($responseBody);
                 $this->_setCachedQuotes($request, $responseBody);

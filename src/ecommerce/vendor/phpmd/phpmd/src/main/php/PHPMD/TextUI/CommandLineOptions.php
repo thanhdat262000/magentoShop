@@ -17,7 +17,6 @@
 
 namespace PHPMD\TextUI;
 
-use PHPMD\Renderer\AnsiRenderer;
 use PHPMD\Renderer\HTMLRenderer;
 use PHPMD\Renderer\JSONRenderer;
 use PHPMD\Renderer\TextRenderer;
@@ -27,8 +26,6 @@ use PHPMD\Rule;
 /**
  * This is a helper class that collects the specified cli arguments and puts them
  * into accessible properties.
- *
- * @SuppressWarnings(PHPMD.LongVariable)
  */
 class CommandLineOptions
 {
@@ -103,8 +100,6 @@ class CommandLineOptions
     /**
      * A string of comma-separated pattern that is used to exclude directories.
      *
-     * Use asterisks to exclude by pattern. For example *src/foo/*.php or *src/foo/*
-     *
      * @var string
      */
     protected $ignore;
@@ -141,8 +136,8 @@ class CommandLineOptions
     /**
      * Constructs a new command line options instance.
      *
-     * @param string[] $args
-     * @param string[] $availableRuleSets
+     * @param array $args
+     * @param array $availableRuleSets
      * @throws \InvalidArgumentException
      */
     public function __construct(array $args, array $availableRuleSets = array())
@@ -322,7 +317,7 @@ class CommandLineOptions
     }
 
     /**
-     * Returns string of comma-separated pattern that is used to exclude
+     * Returns  string of comma-separated pattern that is used to exclude
      * directories or <b>null</b> when this argument was not set.
      *
      * @return string
@@ -392,8 +387,6 @@ class CommandLineOptions
                 return $this->createTextRenderer();
             case 'json':
                 return $this->createJsonRenderer();
-            case 'ansi':
-                return $this->createAnsiRenderer();
             default:
                 return $this->createCustomRenderer();
         }
@@ -413,14 +406,6 @@ class CommandLineOptions
     protected function createTextRenderer()
     {
         return new TextRenderer();
-    }
-
-    /**
-     * @return \PHPMD\Renderer\AnsiRenderer
-     */
-    protected function createAnsiRenderer()
-    {
-        return new AnsiRenderer();
     }
 
     /**
@@ -503,8 +488,7 @@ class CommandLineOptions
             '--suffixes: comma-separated string of valid source code ' .
             'filename extensions, e.g. php,phtml' . \PHP_EOL .
             '--exclude: comma-separated string of patterns that are used to ' .
-            'ignore directories. Use asterisks to exclude by pattern. ' .
-            'For example *src/foo/*.php or *src/foo/*' . \PHP_EOL .
+            'ignore directories' . \PHP_EOL .
             '--strict: also report those nodes with a @SuppressWarnings ' .
             'annotation' . \PHP_EOL .
             '--ignore-violations-on-exit: will exit with a zero code, ' .
@@ -518,12 +502,12 @@ class CommandLineOptions
      */
     protected function getListOfAvailableRenderers()
     {
-        $renderersDirPathName = __DIR__ . '/../Renderer';
+        $renderersDirPathName=__DIR__.'/../Renderer';
         $renderers = array();
 
         foreach (scandir($renderersDirPathName) as $rendererFileName) {
             if (preg_match('/^(\w+)Renderer.php$/i', $rendererFileName, $rendererName)) {
-                $renderers[] = strtolower($rendererName[1]);
+                $renderers[] =  strtolower($rendererName[1]);
             }
         }
 
@@ -568,7 +552,7 @@ class CommandLineOptions
     protected function readInputFile($inputFile)
     {
         if (file_exists($inputFile)) {
-            return implode(',', array_map('trim', file($inputFile)));
+            return join(',', array_map('trim', file($inputFile)));
         }
         throw new \InvalidArgumentException("Input file '{$inputFile}' not exists.");
     }

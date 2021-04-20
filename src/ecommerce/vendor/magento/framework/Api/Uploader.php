@@ -13,8 +13,6 @@ class Uploader extends \Magento\Framework\File\Uploader
 {
     /**
      * Avoid running the default constructor specific to FILE upload
-     *
-     * phpcs:disable Magento2.CodeAnalysis.EmptyBlock
      */
     public function __construct()
     {
@@ -32,8 +30,6 @@ class Uploader extends \Magento\Framework\File\Uploader
         $this->_file = $fileAttributes;
         if (!file_exists($this->_file['tmp_name'])) {
             $code = empty($this->_file['tmp_name']) ? self::TMP_NAME_EMPTY : 0;
-
-            // phpcs:ignore Magento2.Exceptions.DirectThrow.FoundDirectThrow
             throw new \Exception('File was not processed correctly.', $code);
         } else {
             $this->_fileExists = true;

@@ -1,0 +1,1 @@
+/var/www/html/ecommerce/vendor/magento/module-adobe-stock-image-admin-ui/view/adminhtml/web/js/media-gallery.js

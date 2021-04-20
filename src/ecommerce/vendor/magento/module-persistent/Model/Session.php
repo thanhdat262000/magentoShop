@@ -12,7 +12,6 @@ namespace Magento\Persistent\Model;
  * @method int getCustomerId()
  * @method Session setCustomerId()
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  * @since 100.0.2
  */
 class Session extends \Magento\Framework\Model\AbstractModel
@@ -392,8 +391,7 @@ class Session extends \Magento\Framework\Model\AbstractModel
             ->setDuration($duration)
             ->setPath($path)
             ->setSecure($this->getRequest()->isSecure())
-            ->setHttpOnly(true)
-            ->setSameSite('Lax');
+            ->setHttpOnly(true);
         $this->_cookieManager->setPublicCookie(
             self::COOKIE_NAME,
             $value,

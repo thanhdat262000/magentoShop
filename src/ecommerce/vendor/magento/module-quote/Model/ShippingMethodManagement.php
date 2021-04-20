@@ -3,27 +3,20 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\Quote\Model;
 
-use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\EstimateAddressInterface;
-use Magento\Quote\Api\Data\ShippingMethodInterface;
 use Magento\Quote\Api\ShipmentEstimationInterface;
-use Magento\Quote\Model\Cart\ShippingMethodConverter;
-use Magento\Quote\Model\Quote\Address;
-use Magento\Quote\Model\Quote\Address\Rate;
-use Magento\Quote\Model\Quote\TotalsCollector;
 use Magento\Quote\Model\ResourceModel\Quote\Address as QuoteAddressResource;
 
 /**
@@ -40,21 +33,21 @@ class ShippingMethodManagement implements
     /**
      * Quote repository.
      *
-     * @var CartRepositoryInterface
+     * @var \Magento\Quote\Api\CartRepositoryInterface
      */
     protected $quoteRepository;
 
     /**
      * Shipping method converter
      *
-     * @var ShippingMethodConverter
+     * @var \Magento\Quote\Model\Cart\ShippingMethodConverter
      */
     protected $converter;
 
     /**
      * Customer Address repository
      *
-     * @var AddressRepositoryInterface
+     * @var \Magento\Customer\Api\AddressRepositoryInterface
      */
     protected $addressRepository;
 
@@ -64,7 +57,7 @@ class ShippingMethodManagement implements
     protected $totalsCollector;
 
     /**
-     * @var DataObjectProcessor $dataProcessor
+     * @var \Magento\Framework\Reflection\DataObjectProcessor $dataProcessor
      */
     private $dataProcessor;
 
@@ -86,19 +79,19 @@ class ShippingMethodManagement implements
     /**
      * Constructor
      *
-     * @param CartRepositoryInterface $quoteRepository
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
      * @param Cart\ShippingMethodConverter $converter
-     * @param AddressRepositoryInterface $addressRepository
+     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
      * @param Quote\TotalsCollector $totalsCollector
      * @param AddressInterfaceFactory|null $addressFactory
      * @param QuoteAddressResource|null $quoteAddressResource
      * @param CustomerSession|null $customerSession
      */
     public function __construct(
-        CartRepositoryInterface $quoteRepository,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         Cart\ShippingMethodConverter $converter,
-        AddressRepositoryInterface $addressRepository,
-        TotalsCollector $totalsCollector,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
+        \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector,
         AddressInterfaceFactory $addressFactory = null,
         QuoteAddressResource $quoteAddressResource = null,
         CustomerSession $customerSession = null
@@ -119,10 +112,10 @@ class ShippingMethodManagement implements
      */
     public function get($cartId)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
 
-        /** @var Address $shippingAddress */
+        /** @var \Magento\Quote\Model\Quote\Address $shippingAddress */
         $shippingAddress = $quote->getShippingAddress();
         if (!$shippingAddress->getCountryId()) {
             throw new StateException(__('The shipping address is missing. Set the address and try again.'));
@@ -134,7 +127,7 @@ class ShippingMethodManagement implements
         }
 
         $shippingAddress->collectShippingRates();
-        /** @var Rate $shippingRate */
+        /** @var \Magento\Quote\Model\Quote\Address\Rate $shippingRate */
         $shippingRate = $shippingAddress->getShippingRateByCode($shippingMethod);
         if (!$shippingRate) {
             return null;
@@ -149,7 +142,7 @@ class ShippingMethodManagement implements
     {
         $output = [];
 
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
 
         // no methods applicable for empty carts or carts with virtual products
@@ -176,7 +169,7 @@ class ShippingMethodManagement implements
      */
     public function set($cartId, $carrierCode, $methodCode)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
         try {
             $this->apply($cartId, $carrierCode, $methodCode);
@@ -206,7 +199,7 @@ class ShippingMethodManagement implements
      */
     public function apply($cartId, $carrierCode, $methodCode)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
         if (0 == $quote->getItemsCount()) {
             throw new InputException(
@@ -230,9 +223,9 @@ class ShippingMethodManagement implements
     /**
      * @inheritDoc
      */
-    public function estimateByAddress($cartId, EstimateAddressInterface $address)
+    public function estimateByAddress($cartId, \Magento\Quote\Api\Data\EstimateAddressInterface $address)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
 
         // no methods applicable for empty carts or carts with virtual products
@@ -248,7 +241,7 @@ class ShippingMethodManagement implements
      */
     public function estimateByExtendedAddress($cartId, AddressInterface $address)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
 
         // no methods applicable for empty carts or carts with virtual products
@@ -263,7 +256,7 @@ class ShippingMethodManagement implements
      */
     public function estimateByAddressId($cartId, $addressId)
     {
-        /** @var Quote $quote */
+        /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->quoteRepository->getActive($cartId);
 
         // no methods applicable for empty carts or carts with virtual products
@@ -283,13 +276,13 @@ class ShippingMethodManagement implements
      * @param string $postcode
      * @param int $regionId
      * @param string $region
-     * @param ExtensibleDataInterface|null $address
-     * @return ShippingMethodInterface[] An array of shipping methods.
+     * @param \Magento\Framework\Api\ExtensibleDataInterface|null $address
+     * @return \Magento\Quote\Api\Data\ShippingMethodInterface[] An array of shipping methods.
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @deprecated 100.1.6
      */
     protected function getEstimatedRates(
-        Quote $quote,
+        \Magento\Quote\Model\Quote $quote,
         $country,
         $postcode,
         $regionId,
@@ -308,9 +301,9 @@ class ShippingMethodManagement implements
     /**
      * Get list of available shipping methods
      *
-     * @param Quote $quote
-     * @param ExtensibleDataInterface $address
-     * @return ShippingMethodInterface[]
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Framework\Api\ExtensibleDataInterface $address
+     * @return \Magento\Quote\Api\Data\ShippingMethodInterface[]
      */
     private function getShippingMethods(Quote $quote, $address)
     {
@@ -341,31 +334,27 @@ class ShippingMethodManagement implements
     /**
      * Get transform address interface into Array
      *
-     * @param ExtensibleDataInterface $address
+     * @param \Magento\Framework\Api\ExtensibleDataInterface  $address
      * @return array
      */
     private function extractAddressData($address)
     {
         $className = \Magento\Customer\Api\Data\AddressInterface::class;
-        if ($address instanceof AddressInterface) {
-            $className = AddressInterface::class;
+        if ($address instanceof \Magento\Quote\Api\Data\AddressInterface) {
+            $className = \Magento\Quote\Api\Data\AddressInterface::class;
         } elseif ($address instanceof EstimateAddressInterface) {
             $className = EstimateAddressInterface::class;
         }
-
-        $addressData = $this->getDataObjectProcessor()->buildOutputDataArray(
+        return $this->getDataObjectProcessor()->buildOutputDataArray(
             $address,
             $className
         );
-        unset($addressData[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]);
-
-        return $addressData;
     }
 
     /**
      * Gets the data object processor
      *
-     * @return DataObjectProcessor
+     * @return \Magento\Framework\Reflection\DataObjectProcessor
      * @deprecated 101.0.0
      */
     private function getDataObjectProcessor()

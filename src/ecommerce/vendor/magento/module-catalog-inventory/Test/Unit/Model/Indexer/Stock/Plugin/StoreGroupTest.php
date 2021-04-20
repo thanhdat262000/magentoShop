@@ -1,69 +1,61 @@
 <?php
 /**
+ * @category    Magento
+ * @package     Magento_CatalogInventory
+ * @subpackage  unit_tests
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\CatalogInventory\Test\Unit\Model\Indexer\Stock\Plugin;
 
-use Magento\CatalogInventory\Model\Indexer\Stock\Plugin\StoreGroup;
-use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
-use Magento\Framework\Model\AbstractModel;
-use Magento\Store\Model\ResourceModel\Group;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-
-class StoreGroupTest extends TestCase
+class StoreGroupTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var StoreGroup
+     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Plugin\StoreGroup
      */
-    private $model;
+    protected $_model;
 
     /**
-     * @var Processor|MockObject
+     * @var \Magento\Framework\Indexer\IndexerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $indexerProcessorMock;
+    protected $_indexerMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->indexerProcessorMock = $this->createMock(Processor::class);
-        $this->model = new StoreGroup($this->indexerProcessorMock);
+        $this->_indexerMock = $this->createMock(\Magento\CatalogInventory\Model\Indexer\Stock\Processor::class);
+        $this->_model = new \Magento\CatalogInventory\Model\Indexer\Stock\Plugin\StoreGroup($this->_indexerMock);
     }
 
     /**
      * @param array $data
-     * @dataProvider afterSaveDataProvider
+     * @dataProvider beforeSaveDataProvider
      */
-    public function testAfterSave(array $data): void
+    public function testBeforeSave(array $data)
     {
-        $subjectMock = $this->createMock(Group::class);
+        $subjectMock = $this->createMock(\Magento\Store\Model\ResourceModel\Group::class);
         $objectMock = $this->createPartialMock(
-            AbstractModel::class,
+            \Magento\Framework\Model\AbstractModel::class,
             ['getId', 'dataHasChangedFor', '__wakeup']
         );
         $objectMock->expects($this->once())
             ->method('getId')
-            ->willReturn($data['object_id']);
+            ->will($this->returnValue($data['object_id']));
         $objectMock->expects($this->any())
             ->method('dataHasChangedFor')
             ->with('website_id')
-            ->willReturn($data['has_website_id_changed']);
+            ->will($this->returnValue($data['has_website_id_changed']));
 
-        $this->indexerProcessorMock->expects($this->once())
+        $this->_indexerMock->expects($this->once())
             ->method('markIndexerAsInvalid');
 
-        $this->assertSame(
-            $subjectMock,
-            $this->model->afterSave($subjectMock, $subjectMock, $objectMock)
-        );
+        $this->_model->beforeSave($subjectMock, $objectMock);
     }
 
     /**
      * @return array
      */
-    public function afterSaveDataProvider(): array
+    public function beforeSaveDataProvider()
     {
         return [
             [

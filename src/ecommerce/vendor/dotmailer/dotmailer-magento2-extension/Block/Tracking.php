@@ -16,11 +16,6 @@ class Tracking extends \Magento\Framework\View\Element\Template
     private $helper;
 
     /**
-     * @var int
-     */
-    private $websiteId;
-
-    /**
      * Tracking constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
@@ -33,8 +28,6 @@ class Tracking extends \Magento\Framework\View\Element\Template
     ) {
         $this->helper = $helper;
         parent::__construct($context, $data);
-
-        $this->websiteId = $this->_storeManager->getWebsite()->getId();
     }
 
     /**
@@ -52,7 +45,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     private function isNotDisplayingRoiSpecificScript()
     {
-        return $this->isNotInCheckoutPage() || ! $this->helper->isRoiTrackingEnabled($this->websiteId);
+        return $this->isNotInCheckoutPage() || ! $this->helper->isRoiTrackingEnabled();
     }
 
     /**
@@ -61,7 +54,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     private function isApiAndPageTrackingEnabled()
     {
-        return $this->helper->isEnabled($this->websiteId) && $this->helper->isPageTrackingEnabled($this->websiteId);
+        return $this->helper->isEnabled() && $this->helper->isPageTrackingEnabled();
     }
 
     /**

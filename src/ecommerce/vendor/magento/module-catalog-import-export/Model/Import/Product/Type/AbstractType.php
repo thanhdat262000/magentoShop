@@ -533,7 +533,6 @@ abstract class AbstractType
             if ($attrParams['is_static']) {
                 continue;
             }
-            $attrCode = mb_strtolower($attrCode);
             if (isset($rowData[$attrCode]) && strlen(trim($rowData[$attrCode]))) {
                 if (in_array($attrParams['type'], ['select', 'boolean'])) {
                     $resultAttrs[$attrCode] = $attrParams['options'][strtolower($rowData[$attrCode])];

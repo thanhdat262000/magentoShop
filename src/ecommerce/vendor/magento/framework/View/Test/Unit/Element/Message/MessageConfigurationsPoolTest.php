@@ -3,14 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Framework\View\Test\Unit\Element\Message;
 
 use Magento\Framework\View\Element\Message\MessageConfigurationsPool;
-use PHPUnit\Framework\TestCase;
 
-class MessageConfigurationsPoolTest extends TestCase
+class MessageConfigurationsPoolTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetMessageConfiguration()
     {
@@ -41,8 +38,10 @@ class MessageConfigurationsPoolTest extends TestCase
      */
     public function testConstructNoRendererException(array $configuration)
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Renderer should be defined.');
+        static::expectException(
+            '\InvalidArgumentException',
+            'Renderer should be defined.'
+        );
 
         new MessageConfigurationsPool($configuration);
     }
@@ -55,7 +54,7 @@ class MessageConfigurationsPoolTest extends TestCase
         return [
             [['message_identifier' => []]],
             [['message_identifier' => ['renderer' => 5]]],
-            [['message_identifier' => ['renderer' => new \StdClass()]]],
+            [['message_identifier' => ['renderer' => new \StdClass]]],
         ];
     }
 
@@ -65,8 +64,10 @@ class MessageConfigurationsPoolTest extends TestCase
      */
     public function testConstructWrongDataException(array $configuration)
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Data should be of array type.');
+        static::expectException(
+            '\InvalidArgumentException',
+            'Data should be of array type.'
+        );
 
         new MessageConfigurationsPool($configuration);
     }
@@ -79,12 +80,14 @@ class MessageConfigurationsPoolTest extends TestCase
         return [
             [
                 [
-                    'message_identifier' => ['renderer' => 'RendererCode', 'data' => 5]
+                    'message_identifier' =>
+                        ['renderer' => 'RendererCode', 'data' => 5]
                 ]
             ],
             [
                 [
-                    'message_identifier' => ['renderer' => 'RendererCode', 'data' => new \StdClass()]
+                    'message_identifier' =>
+                        ['renderer' => 'RendererCode', 'data' => new \StdClass]
                 ]
             ],
         ];

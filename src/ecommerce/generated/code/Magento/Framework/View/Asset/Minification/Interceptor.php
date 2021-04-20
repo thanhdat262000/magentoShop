@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function isEnabled($contentType)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEnabled');
-        return $pluginInfo ? $this->___callPlugins('isEnabled', func_get_args(), $pluginInfo) : parent::isEnabled($contentType);
+        if (!$pluginInfo) {
+            return parent::isEnabled($contentType);
+        } else {
+            return $this->___callPlugins('isEnabled', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function addMinifiedSign($filename)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addMinifiedSign');
-        return $pluginInfo ? $this->___callPlugins('addMinifiedSign', func_get_args(), $pluginInfo) : parent::addMinifiedSign($filename);
+        if (!$pluginInfo) {
+            return parent::addMinifiedSign($filename);
+        } else {
+            return $this->___callPlugins('addMinifiedSign', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function removeMinifiedSign($filename)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeMinifiedSign');
-        return $pluginInfo ? $this->___callPlugins('removeMinifiedSign', func_get_args(), $pluginInfo) : parent::removeMinifiedSign($filename);
+        if (!$pluginInfo) {
+            return parent::removeMinifiedSign($filename);
+        } else {
+            return $this->___callPlugins('removeMinifiedSign', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function isMinifiedFilename($filename)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isMinifiedFilename');
-        return $pluginInfo ? $this->___callPlugins('isMinifiedFilename', func_get_args(), $pluginInfo) : parent::isMinifiedFilename($filename);
+        if (!$pluginInfo) {
+            return parent::isMinifiedFilename($filename);
+        } else {
+            return $this->___callPlugins('isMinifiedFilename', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function isExcluded($filename)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isExcluded');
-        return $pluginInfo ? $this->___callPlugins('isExcluded', func_get_args(), $pluginInfo) : parent::isExcluded($filename);
+        if (!$pluginInfo) {
+            return parent::isExcluded($filename);
+        } else {
+            return $this->___callPlugins('isExcluded', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,6 +85,10 @@ class Interceptor extends \Magento\Framework\View\Asset\Minification implements 
     public function getExcludes($contentType)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getExcludes');
-        return $pluginInfo ? $this->___callPlugins('getExcludes', func_get_args(), $pluginInfo) : parent::getExcludes($contentType);
+        if (!$pluginInfo) {
+            return parent::getExcludes($contentType);
+        } else {
+            return $this->___callPlugins('getExcludes', func_get_args(), $pluginInfo);
+        }
     }
 }

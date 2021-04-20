@@ -17,14 +17,6 @@ namespace Amazon\Core\Domain;
 
 use Amazon\Core\Api\Data\AmazonAddressInterface;
 
-/**
- * @deprecated As of February 2021, this Legacy Amazon Pay plugin has been
- * deprecated, in favor of a newer Amazon Pay version available through GitHub
- * and Magento Marketplace. Please download the new plugin for automatic
- * updates and to continue providing your customers with a seamless checkout
- * experience. Please see https://pay.amazon.com/help/E32AAQBC2FY42HS for details
- * and installation instructions.
- */
 class AmazonAddressDecoratorJp implements AmazonAddressInterface
 {
     /**
@@ -46,7 +38,13 @@ class AmazonAddressDecoratorJp implements AmazonAddressInterface
      */
     public function getLines()
     {
-        return $this->amazonAddress->getLines();
+        $city = $this->amazonAddress->getCity();
+
+        /*
+         * AmazonAddressDecoratorJp->getCity() returns address line 1 when city is empty.
+         * Omit line 1 from the street address in this case.
+         */
+        return array_slice($this->amazonAddress->getLines(), empty($city) ? 1 : 0);
     }
 
     /**
@@ -78,7 +76,7 @@ class AmazonAddressDecoratorJp implements AmazonAddressInterface
      */
     public function getCity()
     {
-        return $this->amazonAddress->getCity() ?? '-';
+        return $this->amazonAddress->getCity() ?? $this->amazonAddress->getLine(1);
     }
 
     /**
@@ -123,21 +121,5 @@ class AmazonAddressDecoratorJp implements AmazonAddressInterface
             return $lines[$lineNumber-1];
         }
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function shiftLines($times)
-    {
-        return $this->amazonAddress->shiftLines($times);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCompany($company)
-    {
-        return $this->amazonAddress->setCompany($company);
     }
 }

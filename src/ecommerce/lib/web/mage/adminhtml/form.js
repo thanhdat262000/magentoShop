@@ -133,7 +133,6 @@ define([
             this.config = regions.config;
             delete regions.config;
             this.regions = regions;
-            this.sortedRegions = this.getSortedRegions();
             this.disableAction = typeof disableAction === 'undefined' ? 'hide' : disableAction;
             this.clearRegionValueOnDisable = typeof clearRegionValueOnDisable === 'undefined' ?
                 false : clearRegionValueOnDisable;
@@ -247,13 +246,11 @@ define([
          * Update.
          */
         update: function () {
-            var option, selectElement, def, regionId, region;
+            var option, region, def, regionId;
 
-            selectElement = this.regionSelectEl;
-
-            if (this.sortedRegions[this.countryEl.value]) {
+            if (this.regions[this.countryEl.value]) {
                 if (this.lastCountryId != this.countryEl.value) { //eslint-disable-line eqeqeq
-                    def = selectElement.getAttribute('defaultValue');
+                    def = this.regionSelectEl.getAttribute('defaultValue');
 
                     if (this.regionTextEl) {
                         if (!def) {
@@ -262,27 +259,26 @@ define([
                         this.regionTextEl.value = '';
                     }
 
-                    selectElement.options.length = 1;
+                    this.regionSelectEl.options.length = 1;
 
-                    this.sortedRegions[this.countryEl.value].forEach(function (item) {
-                        regionId = item[0];
-                        region = item[1];
+                    for (regionId in this.regions[this.countryEl.value]) { //eslint-disable-line guard-for-in
+                        region = this.regions[this.countryEl.value][regionId];
 
                         option = document.createElement('OPTION');
                         option.value = regionId;
                         option.text = region.name.stripTags();
                         option.title = region.name;
 
-                        if (selectElement.options.add) {
-                            selectElement.options.add(option);
+                        if (this.regionSelectEl.options.add) {
+                            this.regionSelectEl.options.add(option);
                         } else {
-                            selectElement.appendChild(option);
+                            this.regionSelectEl.appendChild(option);
                         }
 
                         if (regionId == def || region.name.toLowerCase() == def || region.code.toLowerCase() == def) { //eslint-disable-line
-                            selectElement.value = regionId;
+                            this.regionSelectEl.value = regionId;
                         }
-                    });
+                    }
                 }
 
                 if (this.disableAction == 'hide') { //eslint-disable-line eqeqeq
@@ -344,28 +340,6 @@ define([
                     display ? marks[0].show() : marks[0].hide();
                 }
             }
-        },
-
-        /**
-         * Sort regions from JSON by name
-         *
-         * @returns {*[]}
-         */
-        getSortedRegions: function () {
-            var country, regionsEntries, regionsByCountry;
-
-            regionsByCountry = [];
-
-            for (country in this.regions) { //eslint-disable-line guard-for-in
-                regionsEntries = Object.entries(this.regions[country]);
-                regionsEntries.sort(function (a, b) {
-                    return a[1].name > b[1].name ? 1 : -1;
-                });
-
-                regionsByCountry[country] = regionsEntries;
-            }
-
-            return regionsByCountry;
         }
     };
 
@@ -465,7 +439,7 @@ define([
             // define whether the target should show up
             var shouldShowUp = true,
                 idFrom, from, values, isInArray, isNegative, headElement, isInheritCheckboxChecked, target, inputs,
-                isAnInputOrSelect, currentConfig, rowElement, fromId, radioFrom, targetArray, isChooser;
+                isAnInputOrSelect, currentConfig, rowElement, fromId, radioFrom;
 
             for (idFrom in valuesFrom) { //eslint-disable-line guard-for-in
                 from = $(idFrom);
@@ -496,20 +470,9 @@ define([
             }
 
             // toggle target row
-            headElement = jQuery('#' + idTo + '-head');
+            headElement = $(idTo + '-head');
             isInheritCheckboxChecked = $(idTo + '_inherit') && $(idTo + '_inherit').checked;
             target = $(idTo);
-
-            // Account for the chooser style parameters.
-            if (target === null && headElement.length === 0 && idTo.substring(0, 16) === 'options_fieldset') {
-                targetArray = $$('input[id*="' + idTo + '"]');
-                isChooser = true;
-
-                if (targetArray !== null && targetArray.length > 0) {
-                    target = targetArray[0];
-                }
-                headElement = jQuery('.field-' + idTo).add('.field-chooser' + idTo);
-            }
 
             // Target won't always exist (for example, if field type is "label")
             if (target) {
@@ -532,7 +495,7 @@ define([
                         // don't touch hidden inputs (and Use Default inputs too), bc they may have custom logic
                         if ((!item.type || item.type != 'hidden') && !($(item.id + '_inherit') && $(item.id + '_inherit').checked) && //eslint-disable-line
                             !(currentConfig['can_edit_price'] != undefined && !currentConfig['can_edit_price']) && //eslint-disable-line
-                            !item.getAttribute('readonly') || isChooser //eslint-disable-line
+                            !item.getAttribute('readonly') //eslint-disable-line
                         ) {
                             item.disabled = false;
                             jQuery(item).removeClass('ignore-validate');
@@ -540,10 +503,10 @@ define([
                     });
                 }
 
-                if (headElement.length > 0) {
+                if (headElement) {
                     headElement.show();
 
-                    if (headElement.hasClass('open') && target) {
+                    if (headElement.hasClassName('open') && target) {
                         target.show();
                     } else if (target) {
                         target.hide();
@@ -578,7 +541,7 @@ define([
                     });
                 }
 
-                if (headElement.length > 0) {
+                if (headElement) {
                     headElement.hide();
                 }
 

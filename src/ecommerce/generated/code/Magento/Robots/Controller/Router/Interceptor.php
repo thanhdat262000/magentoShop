@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Robots\Controller\Router implements \Magento\
     public function match(\Magento\Framework\App\RequestInterface $request)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'match');
-        return $pluginInfo ? $this->___callPlugins('match', func_get_args(), $pluginInfo) : parent::match($request);
+        if (!$pluginInfo) {
+            return parent::match($request);
+        } else {
+            return $this->___callPlugins('match', func_get_args(), $pluginInfo);
+        }
     }
 }

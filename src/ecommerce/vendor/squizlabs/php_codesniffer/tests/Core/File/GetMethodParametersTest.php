@@ -9,10 +9,54 @@
 
 namespace PHP_CodeSniffer\Tests\Core\File;
 
-use PHP_CodeSniffer\Tests\Core\AbstractMethodUnitTest;
+use PHP_CodeSniffer\Config;
+use PHP_CodeSniffer\Ruleset;
+use PHP_CodeSniffer\Files\DummyFile;
+use PHPUnit\Framework\TestCase;
 
-class GetMethodParametersTest extends AbstractMethodUnitTest
+class GetMethodParametersTest extends TestCase
 {
+
+    /**
+     * The PHP_CodeSniffer_File object containing parsed contents of the test case file.
+     *
+     * @var \PHP_CodeSniffer\Files\File
+     */
+    private $phpcsFile;
+
+
+    /**
+     * Initialize & tokenize PHP_CodeSniffer_File with code from the test case file.
+     *
+     * Methods used for these tests can be found in a test case file in the same
+     * directory and with the same name, using the .inc extension.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $config            = new Config();
+        $config->standards = ['Generic'];
+
+        $ruleset = new Ruleset($config);
+
+        $pathToTestFile  = dirname(__FILE__).'/'.basename(__FILE__, '.php').'.inc';
+        $this->phpcsFile = new DummyFile(file_get_contents($pathToTestFile), $ruleset, $config);
+        $this->phpcsFile->process();
+
+    }//end setUp()
+
+
+    /**
+     * Clean up after finished test.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->phpcsFile);
+
+    }//end tearDown()
 
 
     /**
@@ -32,7 +76,19 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testPassByReference */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testPassByReference()
 
@@ -54,7 +110,19 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testArrayHint */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testArrayHint()
 
@@ -85,7 +153,21 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testTypeHint */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[1]['token']);
+        unset($found[0]['type_hint_token']);
+        unset($found[1]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testTypeHint()
 
@@ -107,7 +189,19 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testSelfTypeHint */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testSelfTypeHint()
 
@@ -138,7 +232,21 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => true,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testNullableTypeHint */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[1]['token']);
+        unset($found[0]['type_hint_token']);
+        unset($found[1]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testNullableTypeHint()
 
@@ -160,7 +268,19 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testVariable */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testVariable()
 
@@ -183,7 +303,19 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testSingleDefaultValue */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testSingleDefaultValue()
 
@@ -215,7 +347,21 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testDefaultValues */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[1]['token']);
+        unset($found[0]['type_hint_token']);
+        unset($found[1]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testDefaultValues()
 
@@ -238,124 +384,21 @@ class GetMethodParametersTest extends AbstractMethodUnitTest
             'nullable_type'     => false,
         ];
 
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
+        $start    = ($this->phpcsFile->numTokens - 1);
+        $function = $this->phpcsFile->findPrevious(
+            T_COMMENT,
+            $start,
+            null,
+            false,
+            '/* testBitwiseAndConstantExpressionDefaultValue */'
+        );
+
+        $found = $this->phpcsFile->getMethodParameters(($function + 2));
+        unset($found[0]['token']);
+        unset($found[0]['type_hint_token']);
+        $this->assertSame($expected, $found);
 
     }//end testBitwiseAndConstantExpressionDefaultValue()
-
-
-    /**
-     * Verify that arrow functions are supported.
-     *
-     * @return void
-     */
-    public function testArrowFunction()
-    {
-        $expected    = [];
-        $expected[0] = [
-            'name'              => '$a',
-            'content'           => 'int $a',
-            'pass_by_reference' => false,
-            'variable_length'   => false,
-            'type_hint'         => 'int',
-            'nullable_type'     => false,
-        ];
-
-        $expected[1] = [
-            'name'              => '$b',
-            'content'           => '...$b',
-            'pass_by_reference' => false,
-            'variable_length'   => true,
-            'type_hint'         => '',
-            'nullable_type'     => false,
-        ];
-
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
-
-    }//end testArrowFunction()
-
-
-    /**
-     * Verify recognition of PHP8 mixed type declaration.
-     *
-     * @return void
-     */
-    public function testPHP8MixedTypeHint()
-    {
-        $expected    = [];
-        $expected[0] = [
-            'name'              => '$var1',
-            'content'           => 'mixed &...$var1',
-            'pass_by_reference' => true,
-            'variable_length'   => true,
-            'type_hint'         => 'mixed',
-            'nullable_type'     => false,
-        ];
-
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
-
-    }//end testPHP8MixedTypeHint()
-
-
-    /**
-     * Verify recognition of PHP8 mixed type declaration with nullability.
-     *
-     * @return void
-     */
-    public function testPHP8MixedTypeHintNullable()
-    {
-        $expected    = [];
-        $expected[0] = [
-            'name'              => '$var1',
-            'content'           => '?Mixed $var1',
-            'pass_by_reference' => false,
-            'variable_length'   => false,
-            'type_hint'         => '?Mixed',
-            'nullable_type'     => true,
-        ];
-
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
-
-    }//end testPHP8MixedTypeHintNullable()
-
-
-    /**
-     * Verify recognition of type declarations using the namespace operator.
-     *
-     * @return void
-     */
-    public function testNamespaceOperatorTypeHint()
-    {
-        $expected    = [];
-        $expected[0] = [
-            'name'              => '$var1',
-            'content'           => '?namespace\Name $var1',
-            'pass_by_reference' => false,
-            'variable_length'   => false,
-            'type_hint'         => '?namespace\Name',
-            'nullable_type'     => true,
-        ];
-
-        $this->getMethodParametersTestHelper('/* '.__FUNCTION__.' */', $expected);
-
-    }//end testNamespaceOperatorTypeHint()
-
-
-    /**
-     * Test helper.
-     *
-     * @param string $commentString The comment which preceeds the test.
-     * @param array  $expected      The expected function output.
-     *
-     * @return void
-     */
-    private function getMethodParametersTestHelper($commentString, $expected)
-    {
-        $function = $this->getTargetToken($commentString, [T_FUNCTION, T_FN]);
-        $found    = self::$phpcsFile->getMethodParameters($function);
-
-        $this->assertArraySubset($expected, $found, true);
-
-    }//end getMethodParametersTestHelper()
 
 
 }//end class

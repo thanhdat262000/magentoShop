@@ -17,6 +17,7 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\Tokenizer\Analyzer\Analysis\TypeAnalysis;
 use PhpCsFixer\Tokenizer\Analyzer\FunctionsAnalyzer;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
@@ -43,10 +44,6 @@ final class FunctionTypehintSpaceFixer extends AbstractFixer
      */
     public function isCandidate(Tokens $tokens)
     {
-        if (\PHP_VERSION_ID >= 70400 && $tokens->isTokenKindFound(T_FN)) {
-            return true;
-        }
-
         return $tokens->isTokenKindFound(T_FUNCTION);
     }
 
@@ -60,10 +57,7 @@ final class FunctionTypehintSpaceFixer extends AbstractFixer
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
             $token = $tokens[$index];
 
-            if (
-                !$token->isGivenKind(T_FUNCTION)
-                && (\PHP_VERSION_ID < 70400 || !$token->isGivenKind(T_FN))
-            ) {
+            if (!$token->isGivenKind(T_FUNCTION)) {
                 continue;
             }
 
@@ -76,7 +70,17 @@ final class FunctionTypehintSpaceFixer extends AbstractFixer
                     continue;
                 }
 
-                $tokens->ensureWhitespaceAtIndex($type->getEndIndex() + 1, 0, ' ');
+                $whitespaceTokenIndex = $type->getEndIndex() + 1;
+
+                if ($tokens[$whitespaceTokenIndex]->equals([T_WHITESPACE])) {
+                    if (' ' === $tokens[$whitespaceTokenIndex]->getContent()) {
+                        continue;
+                    }
+
+                    $tokens->clearAt($whitespaceTokenIndex);
+                }
+
+                $tokens->insertAt($whitespaceTokenIndex, new Token([T_WHITESPACE, ' ']));
             }
         }
     }

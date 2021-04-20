@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Magento\Catalog\Model\ResourceModel;
 
-use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Indexer\Category\Product\Processor;
-use Magento\Catalog\Setup\CategorySetup;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\EntityManager\EntityManager;
+use Magento\Catalog\Setup\CategorySetup;
 use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
  * Resource model for category entity
@@ -284,6 +284,9 @@ class Category extends AbstractResource
         $object->setAttributeSetId(
             $object->getAttributeSetId() ?: $this->getEntityType()->getDefaultAttributeSetId()
         );
+
+        $this->castPathIdsToInt($object);
+
         if ($object->isObjectNew()) {
             if ($object->getPosition() === null) {
                 $object->setPosition($this->_getMaxPosition($object->getPath()) + 1);
@@ -469,6 +472,10 @@ class Category extends AbstractResource
 
         if (!empty($insert) || !empty($delete)) {
             $productIds = array_unique(array_merge(array_keys($insert), array_keys($delete)));
+            $this->_eventManager->dispatch(
+                'catalog_category_change_products',
+                ['category' => $category, 'product_ids' => $productIds]
+            );
 
             $category->setChangedProductIds($productIds);
         }
@@ -480,10 +487,6 @@ class Category extends AbstractResource
              * Setting affected products to category for third party engine index refresh
              */
             $productIds = array_keys($insert + $delete + $update);
-            $this->_eventManager->dispatch(
-                'catalog_category_change_products',
-                ['category' => $category, 'product_ids' => $productIds]
-            );
             $category->setAffectedProductIds($productIds);
         }
         return $this;
@@ -666,8 +669,7 @@ class Category extends AbstractResource
                 'ci.value = :value'
             )->where(
                 'ce.entity_id IN (?)',
-                $entityIdsFilter,
-                \Zend_Db::INT_TYPE
+                $entityIdsFilter
             );
             $this->entitiesWhereAttributesIs[$entityIdsFilterHash][$attribute->getId()][$expectedValue] =
                 $this->getConnection()->fetchCol($selectEntities, $bind);
@@ -1172,11 +1174,11 @@ class Category extends AbstractResource
             return [];
         }
 
-        $linkField = $this->metadataPool->getMetadata(CategoryInterface::class)->getLinkField();
+        $linkField = $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField();
         $select = $connection->select()
             ->from(
                 ['cce' => $this->getTable('catalog_category_entity')],
-                [$linkField, 'entity_id', 'parent_id', 'path']
+                [$linkField, 'parent_id', 'path']
             )->join(
                 ['cce_int' => $this->getTable('catalog_category_entity_int')],
                 'cce.' . $linkField . ' = cce_int.' . $linkField,
@@ -1189,5 +1191,26 @@ class Category extends AbstractResource
             )->order('path');
 
         return $connection->fetchAll($select);
+    }
+
+    /**
+     * Cast category path ids to int.
+     *
+     * @param DataObject $object
+     * @return void
+     */
+    private function castPathIdsToInt(DataObject $object): void
+    {
+        if (is_string($object->getPath())) {
+            $pathIds = explode('/', $object->getPath());
+
+            array_walk(
+                $pathIds,
+                function (&$pathId) {
+                    $pathId = (int)$pathId;
+                }
+            );
+            $object->setPath(implode('/', $pathIds));
+        }
     }
 }

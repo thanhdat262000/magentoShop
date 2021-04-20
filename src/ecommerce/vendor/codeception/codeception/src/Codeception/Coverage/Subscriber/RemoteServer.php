@@ -35,9 +35,6 @@ class RemoteServer extends LocalServer
         if ($this->options['coverage-crap4j']) {
             $this->retrieveAndPrintCrap4j($suite);
         }
-        if ($this->options['coverage-cobertura']) {
-            $this->retrieveAndPrintCobertura($suite);
-        }
         if ($this->options['coverage-phpunit']) {
             $this->retrieveAndPrintPHPUnit($suite);
         }
@@ -71,12 +68,6 @@ class RemoteServer extends LocalServer
     {
         $destFile = Configuration::outputDir() . $suite . '.remote.crap4j.xml';
         file_put_contents($destFile, $this->c3Request('crap4j'));
-    }
-
-    protected function retrieveAndPrintCobertura($suite)
-    {
-        $destFile = Configuration::outputDir() . $suite . '.remote.cobertura.xml';
-        file_put_contents($destFile, $this->c3Request('cobertura'));
     }
 
     protected function retrieveAndPrintPHPUnit($suite)

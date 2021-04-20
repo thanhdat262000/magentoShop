@@ -294,7 +294,7 @@ class Filesystem extends AbstractBackup
             }
 
             mkdir($backupsDir);
-            chmod($backupsDir, 0755);
+            chmod($backupsDir);
         }
 
         if (!is_writable($backupsDir)) {
@@ -316,8 +316,6 @@ class Filesystem extends AbstractBackup
     }
 
     /**
-     * Get rollback FTP
-     *
      * @return Ftp
      * @deprecated 101.0.0
      */
@@ -334,8 +332,6 @@ class Filesystem extends AbstractBackup
     }
 
     /**
-     * Get rollback FS
-     *
      * @return Fs
      * @deprecated 101.0.0
      */

@@ -79,17 +79,6 @@ final class FileHandler implements FileHandlerInterface
                 );
             }
         } else {
-            $dir = \dirname($this->file);
-
-            if (!is_dir($dir)) {
-                throw new IOException(
-                    sprintf('Directory of cache file "%s" does not exists.', $this->file),
-                    0,
-                    null,
-                    $this->file
-                );
-            }
-
             @touch($this->file);
             @chmod($this->file, 0666);
         }

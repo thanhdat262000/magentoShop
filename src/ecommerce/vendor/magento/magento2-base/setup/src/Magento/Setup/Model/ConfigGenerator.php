@@ -140,7 +140,7 @@ class ConfigGenerator
      * Creates definitions config data
      *
      * @param array $data
-     * @return ConfigData|null
+     * @return ConfigData
      * @deprecated 2.2.0
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

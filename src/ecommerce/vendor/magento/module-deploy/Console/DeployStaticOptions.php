@@ -7,8 +7,8 @@
 namespace Magento\Deploy\Console;
 
 use Magento\Deploy\Process\Queue;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Static Content Deployment Options helper
@@ -126,11 +126,6 @@ class DeployStaticOptions
      * @deprecated since 2.2.0
      */
     const NO_LESS = 'no-less';
-
-    /**
-     * Key for not compiling parent themes
-     */
-    const NO_PARENT = 'no-parent';
 
     const DEFAULT_JOBS_AMOUNT = 0;
 
@@ -329,13 +324,7 @@ class DeployStaticOptions
                 null,
                 InputOption::VALUE_NONE,
                 'Do not minify HTML files.'
-            ),
-            new InputOption(
-                self::NO_PARENT,
-                null,
-                InputOption::VALUE_NONE,
-                'Do not compile parent themes. Supported only in quick and standard strategies.'
-            ),
+            )
         ];
     }
 }

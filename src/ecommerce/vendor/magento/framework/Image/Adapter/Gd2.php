@@ -6,15 +6,12 @@
 
 namespace Magento\Framework\Image\Adapter;
 
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Phrase;
-
 /**
  * Gd2 adapter.
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class Gd2 extends AbstractAdapter
+class Gd2 extends \Magento\Framework\Image\Adapter\AbstractAdapter
 {
     /**
      * Required extensions
@@ -59,15 +56,10 @@ class Gd2 extends AbstractAdapter
      *
      * @param string $filename
      * @return void
-     * @throws \OverflowException|FileSystemException
+     * @throws \OverflowException
      */
     public function open($filename)
     {
-        if (!file_exists($filename)) {
-            throw new FileSystemException(
-                new Phrase('File "%1" does not exist.', [$this->_fileName])
-            );
-        }
         if (!$filename || filesize($filename) === 0 || !$this->validateURLScheme($filename)) {
             throw new \InvalidArgumentException('Wrong file');
         }
@@ -83,6 +75,16 @@ class Gd2 extends AbstractAdapter
             $this->_getCallback('create', null, sprintf('Unsupported image format. File: %s', $this->_fileName)),
             $this->_fileName
         );
+        $fileType = $this->getImageType();
+        if (in_array($fileType, [IMAGETYPE_PNG, IMAGETYPE_GIF])) {
+            $this->_keepTransparency = true;
+            if ($this->_imageHandler) {
+                $isAlpha = $this->checkAlpha($this->_fileName);
+                if ($isAlpha) {
+                    $this->_fillBackgroundColor($this->_imageHandler);
+                }
+            }
+        }
     }
 
     /**
@@ -444,6 +446,8 @@ class Gd2 extends AbstractAdapter
      * @param int $opacity
      * @param bool $tile
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -458,42 +462,53 @@ class Gd2 extends AbstractAdapter
 
         $merged = false;
 
-        $watermark = $this->createWatermarkBasedOnPosition($watermark, $positionX, $positionY, $merged, $tile);
-
-        imagedestroy($watermark);
-        $this->refreshImageDimensions();
-    }
-
-    /**
-     * Create watermark based on it's image position.
-     *
-     * @param resource $watermark
-     * @param int $positionX
-     * @param int $positionY
-     * @param bool $merged
-     * @param bool $tile
-     * @return false|resource
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function createWatermarkBasedOnPosition(
-        $watermark,
-        int $positionX,
-        int $positionY,
-        bool $merged,
-        bool $tile
-    ) {
         if ($this->getWatermarkWidth() &&
             $this->getWatermarkHeight() &&
             $this->getWatermarkPosition() != self::POSITION_STRETCH
         ) {
-            $watermark = $this->createWaterMark($watermark, $this->getWatermarkWidth(), $this->getWatermarkHeight());
+            $newWatermark = imagecreatetruecolor($this->getWatermarkWidth(), $this->getWatermarkHeight());
+            imagealphablending($newWatermark, false);
+            $col = imagecolorallocate($newWatermark, 255, 255, 255);
+            imagecolortransparent($newWatermark, $col);
+            imagefilledrectangle($newWatermark, 0, 0, $this->getWatermarkWidth(), $this->getWatermarkHeight(), $col);
+            imagesavealpha($newWatermark, true);
+            imagecopyresampled(
+                $newWatermark,
+                $watermark,
+                0,
+                0,
+                0,
+                0,
+                $this->getWatermarkWidth(),
+                $this->getWatermarkHeight(),
+                imagesx($watermark),
+                imagesy($watermark)
+            );
+            $watermark = $newWatermark;
         }
 
         if ($this->getWatermarkPosition() == self::POSITION_TILE) {
             $tile = true;
         } elseif ($this->getWatermarkPosition() == self::POSITION_STRETCH) {
-            $watermark = $this->createWaterMark($watermark, $this->_imageSrcWidth, $this->_imageSrcHeight);
+            $newWatermark = imagecreatetruecolor($this->_imageSrcWidth, $this->_imageSrcHeight);
+            imagealphablending($newWatermark, false);
+            $col = imagecolorallocate($newWatermark, 255, 255, 255);
+            imagecolortransparent($newWatermark, $col);
+            imagefilledrectangle($newWatermark, 0, 0, $this->_imageSrcWidth, $this->_imageSrcHeight, $col);
+            imagesavealpha($newWatermark, true);
+            imagecopyresampled(
+                $newWatermark,
+                $watermark,
+                0,
+                0,
+                0,
+                0,
+                $this->_imageSrcWidth,
+                $this->_imageSrcHeight,
+                imagesx($watermark),
+                imagesy($watermark)
+            );
+            $watermark = $newWatermark;
         } elseif ($this->getWatermarkPosition() == self::POSITION_CENTER) {
             $positionX = $this->_imageSrcWidth / 2 - imagesx($watermark) / 2;
             $positionY = $this->_imageSrcHeight / 2 - imagesy($watermark) / 2;
@@ -597,39 +612,8 @@ class Gd2 extends AbstractAdapter
             }
         }
 
-        return $watermark;
-    }
-
-    /**
-     * Create watermark.
-     *
-     * @param resource $watermark
-     * @param string $width
-     * @param string $height
-     * @return false|resource
-     */
-    private function createWaterMark($watermark, string $width, string $height)
-    {
-        $newWatermark = imagecreatetruecolor($width, $height);
-        imagealphablending($newWatermark, false);
-        $col = imagecolorallocate($newWatermark, 255, 255, 255);
-        imagecolortransparent($newWatermark, $col);
-        imagefilledrectangle($newWatermark, 0, 0, $width, $height, $col);
-        imagesavealpha($newWatermark, true);
-        imagecopyresampled(
-            $newWatermark,
-            $watermark,
-            0,
-            0,
-            0,
-            0,
-            $width,
-            $height,
-            imagesx($watermark),
-            imagesy($watermark)
-        );
-
-        return $newWatermark;
+        imagedestroy($watermark);
+        $this->refreshImageDimensions();
     }
 
     /**

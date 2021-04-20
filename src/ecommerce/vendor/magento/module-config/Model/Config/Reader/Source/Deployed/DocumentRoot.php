@@ -3,50 +3,57 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\Config\Model\Config\Reader\Source\Deployed;
 
-use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\DeploymentConfig;
 
 /**
- * Document root detector.
- *
+ * Class DocumentRoot
+ * @package Magento\Config\Model\Config\Reader\Source\Deployed
  * @api
  * @since 101.0.0
- *
- * @deprecated Magento always uses the pub directory
- * @see DirectoryList::PUB
  */
 class DocumentRoot
 {
     /**
+     * @var DeploymentConfig
+     */
+    private $config;
+
+    /**
+     * DocumentRoot constructor.
      * @param DeploymentConfig $config
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(DeploymentConfig $config)
     {
+        $this->config = $config;
     }
 
     /**
-     * A shortcut to load the document root path from the DirectoryList.
+     * A shortcut to load the document root path from the DirectoryList based on the
+     * deployment configuration.
      *
      * @return string
      * @since 101.0.0
      */
     public function getPath()
     {
-        return DirectoryList::PUB;
+        return $this->isPub() ? DirectoryList::PUB : DirectoryList::ROOT;
     }
 
     /**
-     * Checks if root folder is /pub.
+     * Returns whether the deployment configuration specifies that the document root is
+     * in the pub/ folder. This affects ares such as sitemaps and robots.txt (and will
+     * likely be extended to control other areas).
      *
      * @return bool
      * @since 101.0.0
      */
     public function isPub()
     {
-        return true;
+        return (bool)$this->config->get(ConfigOptionsListConstants::CONFIG_PATH_DOCUMENT_ROOT_IS_PUB);
     }
 }

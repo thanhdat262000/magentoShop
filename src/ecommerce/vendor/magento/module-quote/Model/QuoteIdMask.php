@@ -10,7 +10,7 @@ namespace Magento\Quote\Model;
  * QuoteIdMask model
  *
  * @method string getMaskedId()
- * @method QuoteIdMask setMaskedId(string $id)
+ * @method QuoteIdMask setMaskedId()
  */
 class QuoteIdMask extends \Magento\Framework\Model\AbstractModel
 {

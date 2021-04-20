@@ -2,7 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Model\ResourceModel;
 
-use Dotdigitalgroup\Email\Model\Product\AttributeFactory;
 use Dotdigitalgroup\Email\Setup\SchemaInterface as Schema;
 
 /**
@@ -25,7 +24,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      * @var \Magento\Catalog\Model\Config
      */
     private $config;
-
     /**
      * @var \Magento\Catalog\Model\ProductFactory
      */
@@ -62,11 +60,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     private $categoryResource;
 
     /**
-     * @var AttributeFactory $attributeHandler
-     */
-    private $attributeHandler;
-
-    /**
      * Initialize resource.
      *
      * @return null
@@ -89,7 +82,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      * @param \Magento\Reports\Model\ResourceModel\Product\CollectionFactory $reportProductCollection
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
      * @param \Magento\Reports\Model\ResourceModel\Product\Sold\CollectionFactory $productSoldFactory
-     * @param AttributeFactory $attributeHandler
      * @param null $connectionName
      */
     public function __construct(
@@ -103,7 +95,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         \Magento\Reports\Model\ResourceModel\Product\CollectionFactory $reportProductCollection,
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Reports\Model\ResourceModel\Product\Sold\CollectionFactory $productSoldFactory,
-        AttributeFactory $attributeHandler,
         $connectionName = null
     ) {
         $this->helper                   = $helper;
@@ -115,7 +106,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         $this->reportProductCollection  = $reportProductCollection;
         $this->productSoldFactory       = $productSoldFactory;
         $this->categoryResource         = $categoryResource;
-        $this->attributeHandler = $attributeHandler;
         parent::__construct(
             $context,
             $connectionName
@@ -224,23 +214,11 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         $productCollection = [];
 
         if (! empty($ids)) {
-            $collectionAttributes = [
-                'product_url',
-                'name',
-                'store_id',
-                'price'
-            ];
-            $mediaAttributes = $this->attributeHandler->create()
-                ->getMediaImageAttributes();
-            foreach ($mediaAttributes->getItems() as $item) {
-                $collectionAttributes[] = $item->getAttributeCode();
-            }
-
             $productCollection = $this->productFactory->create()
                 ->getCollection()
                 ->addIdFilter($ids)
                 ->addAttributeToSelect(
-                    $collectionAttributes
+                    ['product_url', 'name', 'store_id', 'small_image', 'price']
                 );
 
             if ($limit) {
@@ -279,48 +257,6 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
-     * Get product collection from sku.
-     * Collection includes all media_image attributes.
-     *
-     * @param array $productsSku
-     * @param int|bool $limit
-     *
-     * @return array|\Magento\Catalog\Model\ResourceModel\Product\Collection
-     */
-    public function getProductsCollectionBySkuWithMedia($productsSku, $limit = false)
-    {
-        $productCollection = [];
-
-        if (! empty($productsSku)) {
-            $collectionAttributes = [
-                'product_url',
-                'name',
-                'store_id',
-                'price',
-                'visibility'
-            ];
-            $mediaAttributes = $this->attributeHandler->create()
-                ->getMediaImageAttributes();
-            foreach ($mediaAttributes->getItems() as $item) {
-                $collectionAttributes[] = $item->getAttributeCode();
-            }
-
-            $productCollection = $this->productFactory->create()
-                ->getCollection()
-                ->addFieldToFilter('sku', ['in' => $productsSku])
-                ->addAttributeToSelect(
-                    $collectionAttributes
-                );
-
-            if ($limit) {
-                $productCollection->getSelect()->limit($limit);
-            }
-        }
-
-        return $productCollection;
-    }
-
-    /**
      * Get bestseller collection.
      *
      * @param string $from
@@ -341,7 +277,7 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         $productsSku = $reportProductCollection->getColumnValues('order_items_sku');
 
-        return $this->getProductsCollectionBySkuWithMedia($productsSku);
+        return $this->getProductsCollectionBySku($productsSku);
     }
 
     /**
@@ -461,37 +397,27 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     {
         $write = $this->getConnection();
         $catalogTable = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
+        $select = $write->select();
+        $select->reset()
+            ->from(
+                ['c' => $catalogTable],
+                ['c.product_id']
+            )
+            ->joinLeft(
+                [
+                    'e' => $this->getTable(
+                        'catalog_product_entity'
+                    ),
+                ],
+                'c.product_id = e.entity_id'
+            )
+            ->where('e.entity_id is NULL');
 
-        $batchSize = 500;
-        $startPoint = 0;
-        $endPoint = $startPoint + $batchSize;
+        //delete sql statement
+        $deleteSql = $select->deleteFromSelect('c');
 
-        do {
-            $select = $write->select();
-            $batching = $select->reset()
-                ->from(
-                    ['c' => $catalogTable],
-                    ['c.product_id']
-                )
-                ->joinLeft(
-                    [
-                        'e' => $this->getTable(
-                            'catalog_product_entity'
-                        ),
-                    ],
-                    'c.product_id = e.entity_id'
-                )
-                ->where('c.id >= ?', $startPoint)
-                ->where('c.id < ?', $endPoint);
-
-            $rowCount = $write->query($batching)->rowCount();
-            $select = $batching->where('e.entity_id is NULL');
-            $deleteSql = $select->deleteFromSelect('c');
-            $write->query($deleteSql);
-
-            $startPoint += $batchSize;
-            $endPoint += $batchSize;
-        } while ($rowCount > 0);
+        //run query
+        $write->query($deleteSql);
     }
 
     /**

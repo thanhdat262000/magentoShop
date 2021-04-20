@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function setAuthStorage($storage)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAuthStorage');
-        return $pluginInfo ? $this->___callPlugins('setAuthStorage', func_get_args(), $pluginInfo) : parent::setAuthStorage($storage);
+        if (!$pluginInfo) {
+            return parent::setAuthStorage($storage);
+        } else {
+            return $this->___callPlugins('setAuthStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function getAuthStorage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAuthStorage');
-        return $pluginInfo ? $this->___callPlugins('getAuthStorage', func_get_args(), $pluginInfo) : parent::getAuthStorage();
+        if (!$pluginInfo) {
+            return parent::getAuthStorage();
+        } else {
+            return $this->___callPlugins('getAuthStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function getUser()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUser');
-        return $pluginInfo ? $this->___callPlugins('getUser', func_get_args(), $pluginInfo) : parent::getUser();
+        if (!$pluginInfo) {
+            return parent::getUser();
+        } else {
+            return $this->___callPlugins('getUser', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function getCredentialStorage()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCredentialStorage');
-        return $pluginInfo ? $this->___callPlugins('getCredentialStorage', func_get_args(), $pluginInfo) : parent::getCredentialStorage();
+        if (!$pluginInfo) {
+            return parent::getCredentialStorage();
+        } else {
+            return $this->___callPlugins('getCredentialStorage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function login($username, $password)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'login');
-        return $pluginInfo ? $this->___callPlugins('login', func_get_args(), $pluginInfo) : parent::login($username, $password);
+        if (!$pluginInfo) {
+            return parent::login($username, $password);
+        } else {
+            return $this->___callPlugins('login', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function logout()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'logout');
-        return $pluginInfo ? $this->___callPlugins('logout', func_get_args(), $pluginInfo) : parent::logout();
+        if (!$pluginInfo) {
+            return parent::logout();
+        } else {
+            return $this->___callPlugins('logout', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,6 +98,10 @@ class Interceptor extends \Magento\Backend\Model\Auth implements \Magento\Framew
     public function isLoggedIn()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isLoggedIn');
-        return $pluginInfo ? $this->___callPlugins('isLoggedIn', func_get_args(), $pluginInfo) : parent::isLoggedIn();
+        if (!$pluginInfo) {
+            return parent::isLoggedIn();
+        } else {
+            return $this->___callPlugins('isLoggedIn', func_get_args(), $pluginInfo);
+        }
     }
 }

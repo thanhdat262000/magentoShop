@@ -7,9 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\InventoryReservationCli\Model\ResourceModel;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryConfigurationApi\Model\GetAllowedProductTypesForSourceItemManagementInterface;
 use Magento\InventoryReservationCli\Model\GetCompleteOrderStateList;
 
 /**
@@ -28,24 +26,15 @@ class GetOrderItemsDataForOrdersInNotFinalState
     private $getCompleteOrderStateList;
 
     /**
-     * @var GetAllowedProductTypesForSourceItemManagementInterface|null
-     */
-    private $allowedProductTypesForSourceItemManagement;
-
-    /**
      * @param ResourceConnection $resourceConnection
      * @param GetCompleteOrderStateList $getCompleteOrderStateList
-     * @param GetAllowedProductTypesForSourceItemManagementInterface|null $allowedProductTypesForSourceItemManagement
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        GetCompleteOrderStateList $getCompleteOrderStateList,
-        GetAllowedProductTypesForSourceItemManagementInterface $allowedProductTypesForSourceItemManagement = null
+        GetCompleteOrderStateList $getCompleteOrderStateList
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->getCompleteOrderStateList = $getCompleteOrderStateList;
-        $this->allowedProductTypesForSourceItemManagement = $allowedProductTypesForSourceItemManagement
-            ?: ObjectManager::getInstance()->get(GetAllowedProductTypesForSourceItemManagementInterface::class);
     }
 
     /**
@@ -57,9 +46,10 @@ class GetOrderItemsDataForOrdersInNotFinalState
      */
     public function execute(int $bunchSize = 50, int $page = 1): array
     {
-        $connection = $this->resourceConnection->getConnection('sales');
-        $orderTableName = $this->resourceConnection->getTableName('sales_order', 'sales');
-        $orderItemTableName = $this->resourceConnection->getTableName('sales_order_item', 'sales');
+        $connection = $this->resourceConnection->getConnection();
+        $orderTableName = $this->resourceConnection->getTableName('sales_order');
+        $orderItemTableName = $this->resourceConnection->getTableName('sales_order_item');
+        $storeTableName = $this->resourceConnection->getTableName('store');
 
         $orderEntityIdSelectQuery = $connection
             ->select()
@@ -78,9 +68,13 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 [
                     'main_table.entity_id',
                     'main_table.increment_id',
-                    'main_table.status',
-                    'main_table.store_id'
+                    'main_table.status'
                 ]
+            )
+            ->join(
+                ['store' => $storeTableName],
+                'store.store_id = main_table.store_id',
+                ['store.website_id']
             )
             ->join(
                 ['item' => $orderItemTableName],
@@ -88,35 +82,7 @@ class GetOrderItemsDataForOrdersInNotFinalState
                 ['item.sku', 'item.qty_ordered']
             )
             ->where('main_table.entity_id IN (?)', $entityIds)
-            ->where('item.product_type IN (?)', $this->allowedProductTypesForSourceItemManagement->execute());
-        $orderItems = $connection->fetchAll($query);
-        $storeWebsiteIds = $this->getStoreWebsiteIds();
-        foreach ($orderItems as $key => $orderItem) {
-            $orderItem['website_id'] = $storeWebsiteIds[$orderItem['store_id']];
-            $orderItems[$key] = $orderItem;
-        }
-        return $orderItems;
-    }
-
-    /**
-     * Get storeIds with their websiteIds
-     *
-     * @return array
-     */
-    private function getStoreWebsiteIds(): array
-    {
-        $storeWebsiteIds = [];
-        $connection = $this->resourceConnection->getConnection();
-        $storeTableName = $this->resourceConnection->getTableName('store');
-        $query = $connection
-            ->select()
-            ->from(
-                ['main_table' => $storeTableName],
-                ['store_id', 'website_id']
-            );
-        foreach ($connection->fetchAll($query) as $store) {
-            $storeWebsiteIds[$store['store_id']] = $store['website_id'];
-        }
-        return $storeWebsiteIds;
+            ->where('item.product_type IN (?)', ['simple']);
+        return $connection->fetchAll($query);
     }
 }

@@ -153,12 +153,3 @@ class DoNotCareHandler
 {
 
 }
-
-/**
- * @deprecated
- * @see Magento\Framework\NewHandler
- */
-class OldHandler
-{
-
-}

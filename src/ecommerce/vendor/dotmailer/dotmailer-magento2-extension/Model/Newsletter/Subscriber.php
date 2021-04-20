@@ -2,8 +2,8 @@
 
 namespace Dotdigitalgroup\Email\Model\Newsletter;
 
-use Dotdigitalgroup\Email\Model\ResourceModel\Contact\CollectionFactory as ContactCollectionFactory;
 use Dotdigitalgroup\Email\Model\Sync\SyncInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Sync subscribers.
@@ -33,9 +33,9 @@ class Subscriber implements SyncInterface
     private $helper;
 
     /**
-     * @var ContactCollectionFactory
+     * @var \Dotdigitalgroup\Email\Model\ContactFactory
      */
-    private $contactCollectionFactory;
+    private $contactFactory;
 
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Order\CollectionFactory
@@ -70,6 +70,7 @@ class Subscriber implements SyncInterface
     /**
      * Subscriber constructor.
      *
+     * @param \Dotdigitalgroup\Email\Model\ContactFactory $contactFactory
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Order\CollectionFactory $orderCollection
      * @param SubscriberExporter $subscriberExporter
@@ -79,7 +80,7 @@ class Subscriber implements SyncInterface
      * @param \Dotdigitalgroup\Email\Model\DateIntervalFactory $dateIntervalFactory
      */
     public function __construct(
-        ContactCollectionFactory $contactCollectionFactory,
+        \Dotdigitalgroup\Email\Model\ContactFactory $contactFactory,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Dotdigitalgroup\Email\Model\ResourceModel\Order\CollectionFactory $orderCollection,
         \Dotdigitalgroup\Email\Model\Newsletter\SubscriberExporter $subscriberExporter,
@@ -90,7 +91,7 @@ class Subscriber implements SyncInterface
     ) {
         $this->dateIntervalFactory = $dateIntervalFactory;
         $this->helper            = $helper;
-        $this->contactCollectionFactory = $contactCollectionFactory;
+        $this->contactFactory    = $contactFactory;
         $this->orderCollection   = $orderCollection;
         $this->subscriberExporter = $subscriberExporter;
         $this->subscriberWithSalesExporter = $subscriberWithSalesExporter;
@@ -133,8 +134,6 @@ class Subscriber implements SyncInterface
                 if ($numUpdated) {
                     $storesSummary .= $store->getName() . ' (' . $numUpdated . ') --';
                 }
-
-                $this->countSubscribers += $numUpdated;
             }
         }
 
@@ -153,50 +152,59 @@ class Subscriber implements SyncInterface
      * Export subscribers per store.
      *
      * @param \Magento\Store\Api\Data\StoreInterface $store
+     *
      * @return int
+     *
+     * @throws LocalizedException
      */
     public function exportSubscribersPerStore($store)
     {
-        $updated = 0;
+        /** @var \Magento\Store\Model\Website $website */
         $website = $store->getWebsite();
         $storeId = $store->getId();
-        $limit = $this->helper->getSyncLimit($website->getId());
         $isSubscriberSalesDataEnabled = $this->helper->getWebsiteConfig(
             \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_ENABLE_SUBSCRIBER_SALES_DATA,
             $website
         );
 
-        $subscribersAreCustomers = $this->contactCollectionFactory->create()
-            ->getSubscribersToImport($storeId, $limit);
-        $subscribersAreGuest = $this->contactCollectionFactory->create()
-            ->getSubscribersToImport($storeId, $limit, false);
-
+        $updated = 0;
+        $limit = $this->helper->getSyncLimit($website->getId());
+        //subscriber collection to import
+        $emailContactModel = $this->contactFactory->create();
+        //Customer Subscribers
+        $subscribersAreCustomers = $emailContactModel->getSubscribersToImport($storeId, $limit);
+        //Guest Subscribers
+        $subscribersAreGuest = $emailContactModel->getSubscribersToImport($storeId, $limit, false);
         $subscribersGuestEmails = $subscribersAreGuest->getColumnValues('email');
-        $subscribersCustomerEmails = $subscribersAreCustomers->getColumnValues('email');
 
-        $guestsWithOrders = [];
+        $existInSales = [];
+        //Only if subscriber with sales data enabled
         if ($isSubscriberSalesDataEnabled && ! empty($subscribersGuestEmails)) {
-            $guestsWithOrders = $this->checkInSales($subscribersGuestEmails);
+            $existInSales = $this->checkInSales($subscribersGuestEmails);
         }
-        $guestsWithoutOrders = array_diff($subscribersGuestEmails, $guestsWithOrders);
-        $emailsWithNoSaleData = array_merge($guestsWithoutOrders, $subscribersCustomerEmails);
 
+        $emailsNotInSales = array_diff($subscribersGuestEmails, $existInSales);
+        $customerSubscribers = $subscribersAreCustomers->getColumnValues('email');
+        $emailsWithNoSaleData = array_merge($emailsNotInSales, $customerSubscribers);
+
+        //subscriber that are customer or/and the one that do not exist in sales order table.
         $subscribersWithNoSaleData = [];
         if (! empty($emailsWithNoSaleData)) {
-            $subscribersWithNoSaleData = $this->contactCollectionFactory->create()
-                ->getSubscribersToImportFromEmails($emailsWithNoSaleData, $storeId);
+            $subscribersWithNoSaleData = $emailContactModel
+                ->getSubscribersToImportFromEmails($emailsWithNoSaleData);
         }
         if (! empty($subscribersWithNoSaleData)) {
             $updated += $this->subscriberExporter->exportSubscribers(
                 $store,
                 $subscribersWithNoSaleData
             );
+            //add updated number for the website
+            $this->countSubscribers += $updated;
         }
-
+        //subscriber that are guest and also exist in sales order table.
         $subscribersWithSaleData = [];
-        if (! empty($guestsWithOrders)) {
-            $subscribersWithSaleData = $this->contactCollectionFactory->create()
-                ->getSubscribersToImportFromEmails($guestsWithOrders, $storeId);
+        if (! empty($existInSales)) {
+            $subscribersWithSaleData = $emailContactModel->getSubscribersToImportFromEmails($existInSales);
         }
 
         if (! empty($subscribersWithSaleData)) {
@@ -204,6 +212,8 @@ class Subscriber implements SyncInterface
                 $store,
                 $subscribersWithSaleData
             );
+            //add updated number for the website
+            $this->countSubscribers += $updated;
         }
         return $updated;
     }

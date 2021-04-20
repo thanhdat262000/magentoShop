@@ -565,7 +565,6 @@ class MagentoStyle extends OutputStyle implements MagentoStyleInterface
     ) {
         $indentLength = 0;
         $prefixLength = Helper::strlenWithoutDecoration($this->getFormatter(), $prefix);
-        $lineIndentation = '';
         if (null !== $type) {
             $type = sprintf('[%s] ', $type);
             $indentLength = strlen($type);
@@ -606,7 +605,7 @@ class MagentoStyle extends OutputStyle implements MagentoStyleInterface
         int $prefixLength,
         int $indentLength
     ) {
-        $lines = [];
+        $lines = [[]];
         foreach ($messages as $key => $message) {
             $message = OutputFormatter::escape($message);
             $wordwrap = wordwrap($message, $this->lineLength - $prefixLength - $indentLength, PHP_EOL, true);
@@ -615,7 +614,7 @@ class MagentoStyle extends OutputStyle implements MagentoStyleInterface
                 $lines[][] = '';
             }
         }
-        $lines = array_merge([], ...$lines);
+        $lines = array_merge(...$lines);
 
         return $lines;
     }

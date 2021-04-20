@@ -20,7 +20,11 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function storeAddressSet($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'storeAddressSet');
-        return $pluginInfo ? $this->___callPlugins('storeAddressSet', func_get_args(), $pluginInfo) : parent::storeAddressSet($store);
+        if (!$pluginInfo) {
+            return parent::storeAddressSet($store);
+        } else {
+            return $this->___callPlugins('storeAddressSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function debugModeWhileLive($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debugModeWhileLive');
-        return $pluginInfo ? $this->___callPlugins('debugModeWhileLive', func_get_args(), $pluginInfo) : parent::debugModeWhileLive($store);
+        if (!$pluginInfo) {
+            return parent::debugModeWhileLive($store);
+        } else {
+            return $this->___callPlugins('debugModeWhileLive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function testMode($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'testMode');
-        return $pluginInfo ? $this->___callPlugins('testMode', func_get_args(), $pluginInfo) : parent::testMode($store);
+        if (!$pluginInfo) {
+            return parent::testMode($store);
+        } else {
+            return $this->___callPlugins('testMode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function debugMode($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debugMode');
-        return $pluginInfo ? $this->___callPlugins('debugMode', func_get_args(), $pluginInfo) : parent::debugMode($store);
+        if (!$pluginInfo) {
+            return parent::debugMode($store);
+        } else {
+            return $this->___callPlugins('debugMode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function requiredRegions()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'requiredRegions');
-        return $pluginInfo ? $this->___callPlugins('requiredRegions', func_get_args(), $pluginInfo) : parent::requiredRegions();
+        if (!$pluginInfo) {
+            return parent::requiredRegions();
+        } else {
+            return $this->___callPlugins('requiredRegions', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,6 +85,10 @@ class Interceptor extends \Klarna\Core\Model\Config implements \Magento\Framewor
     public function klarnaEnabled($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'klarnaEnabled');
-        return $pluginInfo ? $this->___callPlugins('klarnaEnabled', func_get_args(), $pluginInfo) : parent::klarnaEnabled($store);
+        if (!$pluginInfo) {
+            return parent::klarnaEnabled($store);
+        } else {
+            return $this->___callPlugins('klarnaEnabled', func_get_args(), $pluginInfo);
+        }
     }
 }

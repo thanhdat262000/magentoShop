@@ -48,13 +48,6 @@ class ReportUrlProvider
     private $urlReportConfigPath = 'analytics/url/report';
 
     /**
-     * Path to Advanced Reporting documentation URL.
-     *
-     * @var string
-     */
-    private $urlReportDocConfigPath = 'analytics/url/documentation';
-
-    /**
      * @param AnalyticsToken $analyticsToken
      * @param OTPRequest $otpRequest
      * @param ScopeConfigInterface $config
@@ -87,15 +80,13 @@ class ReportUrlProvider
             ));
         }
 
+        $url = $this->config->getValue($this->urlReportConfigPath);
         if ($this->analyticsToken->isTokenExist()) {
-            $url = $this->config->getValue($this->urlReportConfigPath);
             $otp = $this->otpRequest->call();
             if ($otp) {
                 $query = http_build_query(['otp' => $otp], '', '&');
                 $url .= '?' . $query;
             }
-        } else {
-            $url = $this->config->getValue($this->urlReportDocConfigPath);
         }
 
         return $url;

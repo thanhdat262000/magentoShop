@@ -6,21 +6,13 @@
 
 namespace Magento\CatalogInventory\Model\ResourceModel;
 
-use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
-use Magento\CatalogInventory\Model\Configuration;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\DB\Select;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Stock resource model
  */
-class Stock extends AbstractDb implements QtyCounterInterface
+class Stock extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb implements QtyCounterInterface
 {
     /**
      * @var StockConfigurationInterface
@@ -72,12 +64,12 @@ class Stock extends AbstractDb implements QtyCounterInterface
     /**
      * Core store config
      *
-     * @var ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $_scopeConfig;
 
     /**
-     * @var DateTime
+     * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
     protected $dateTime;
 
@@ -88,17 +80,17 @@ class Stock extends AbstractDb implements QtyCounterInterface
     protected $storeManager;
 
     /**
-     * @param Context $context
-     * @param ScopeConfigInterface $scopeConfig
-     * @param DateTime $dateTime
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param StockConfigurationInterface $stockConfiguration
      * @param StoreManagerInterface $storeManager
      * @param string $connectionName
      */
     public function __construct(
-        Context $context,
-        ScopeConfigInterface $scopeConfig,
-        DateTime $dateTime,
+        \Magento\Framework\Model\ResourceModel\Db\Context $context,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         StockConfigurationInterface $stockConfiguration,
         StoreManagerInterface $storeManager,
         $connectionName = null
@@ -133,23 +125,14 @@ class Stock extends AbstractDb implements QtyCounterInterface
             return [];
         }
         $itemTable = $this->getTable('cataloginventory_stock_item');
-
-        //get indexed entries for row level lock instead of table lock
-        $itemIds = [];
-        $preSelect = $this->getConnection()->select()->from($itemTable, 'item_id')
-            ->where('website_id = ?', $websiteId)
-            ->where('product_id IN(?)', $productIds, \Zend_Db::INT_TYPE);
-        foreach ($this->getConnection()->query($preSelect)->fetchAll() as $item) {
-            $itemIds[] = (int)$item['item_id'];
-        }
-
         $select = $this->getConnection()->select()->from(['si' => $itemTable])
-            ->where('item_id IN (?)', $itemIds, \Zend_Db::INT_TYPE)
+            ->where('website_id = ?', $websiteId)
+            ->where('product_id IN(?)', $productIds)
             ->forUpdate(true);
 
         $productTable = $this->getTable('catalog_product_entity');
         $selectProducts = $this->getConnection()->select()->from(['p' => $productTable], [])
-            ->where('entity_id IN (?)', $productIds, \Zend_Db::INT_TYPE)
+            ->where('entity_id IN (?)', $productIds)
             ->columns(
                 [
                     'product_id' => 'entity_id',
@@ -164,12 +147,12 @@ class Stock extends AbstractDb implements QtyCounterInterface
         foreach ($this->getConnection()->fetchAll($selectProducts) as $p) {
             $items[$p['product_id']]['type_id'] = $p['type_id'];
         }
-
+        
         return $items;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function correctItemsQty(array $items, $websiteId, $operator)
     {
@@ -202,16 +185,16 @@ class Stock extends AbstractDb implements QtyCounterInterface
     {
         if (!$this->_isConfig) {
             $configMap = [
-                '_isConfigManageStock' => Configuration::XML_PATH_MANAGE_STOCK,
-                '_isConfigBackorders' => Configuration::XML_PATH_BACKORDERS,
-                '_configMinQty' => Configuration::XML_PATH_MIN_QTY,
-                '_configNotifyStockQty' => Configuration::XML_PATH_NOTIFY_STOCK_QTY,
+                '_isConfigManageStock' => \Magento\CatalogInventory\Model\Configuration::XML_PATH_MANAGE_STOCK,
+                '_isConfigBackorders' => \Magento\CatalogInventory\Model\Configuration::XML_PATH_BACKORDERS,
+                '_configMinQty' => \Magento\CatalogInventory\Model\Configuration::XML_PATH_MIN_QTY,
+                '_configNotifyStockQty' => \Magento\CatalogInventory\Model\Configuration::XML_PATH_NOTIFY_STOCK_QTY,
             ];
 
             foreach ($configMap as $field => $const) {
                 $this->{$field} = (int) $this->_scopeConfig->getValue(
                     $const,
-                    ScopeInterface::SCOPE_STORE
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
                 );
             }
 
@@ -334,11 +317,11 @@ class Stock extends AbstractDb implements QtyCounterInterface
     /**
      * Add low stock filter to product collection
      *
-     * @param Collection $collection
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
      * @param array $fields
      * @return $this
      */
-    public function addLowStockFilter(Collection $collection, $fields)
+    public function addLowStockFilter(\Magento\Catalog\Model\ResourceModel\Product\Collection $collection, $fields)
     {
         $this->_initConfig();
         $connection = $collection->getSelect()->getConnection();
@@ -361,14 +344,14 @@ class Stock extends AbstractDb implements QtyCounterInterface
 
         $where = [];
         foreach ($conditions as $k => $part) {
-            $where[$k] = join(' ' . Select::SQL_AND . ' ', $part);
+            $where[$k] = join(' ' . \Magento\Framework\DB\Select::SQL_AND . ' ', $part);
         }
 
         $where = $connection->prepareSqlCondition(
             'invtr.low_stock_date',
             ['notnull' => true]
-        ) . ' ' . Select::SQL_AND . ' ((' . join(
-            ') ' . Select::SQL_OR . ' (',
+        ) . ' ' . \Magento\Framework\DB\Select::SQL_AND . ' ((' . join(
+            ') ' . \Magento\Framework\DB\Select::SQL_OR . ' (',
             $where
         ) . '))';
 

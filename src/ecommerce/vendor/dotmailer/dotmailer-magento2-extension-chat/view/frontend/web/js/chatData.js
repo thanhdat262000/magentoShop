@@ -8,11 +8,10 @@ define([
     /**
      * Enable the chat widget
      *
-     * @param {Object} chatData
+     * @param chatData
      */
     function startChat(chatData) {
         var storageKey = chatData().cookieName;
-
         window.comapiConfig = {
             apiSpace: chatData().apiSpaceId,
             launchTimeout: 2000
@@ -20,17 +19,14 @@ define([
 
         (function (d, s, id) {
             var js, cjs = d.getElementsByTagName(s)[0];
-
-            if (d.getElementById(id)) {
-                return;
-            }
+            if (d.getElementById(id)) { return; }
             js = d.createElement(s); js.id = id;
             js.src = '//cdn.dnky.co/widget/bootstrap.js';
             cjs.parentNode.insertBefore(js, cjs);
         }(document, 'script', 'comapi-widget'));
 
         // listen for widget message events
-        window.addEventListener('message', function (event) {
+        window.addEventListener("message", function (event) {
             if (event.data.type !== 'SetWidgetState') {
                 return;
             }
@@ -45,9 +41,9 @@ define([
                     .then(function (profile) {
                         $.ajax({
                             url: chatData().profileEndpoint,
-                            type: 'POST',
-                            data: 'profileId=' + profile.id,
-                            success: function () {
+                            type: "POST",
+                            data: "profileId=" + profile.id,
+                            success: function (result) {
                                 // store profile ID in session to flag interaction
                                 sessionStorage.setItem(storageKey, profile.id);
                                 // store profile ID in cookie for server-side reference
@@ -60,19 +56,18 @@ define([
     }
 
     return function () {
-        var sectionName = 'chatData',
-            chatData = customerData.get(sectionName);
+        var sectionName = 'chatData';
+        var chatData = customerData.get(sectionName);
 
         // check we have API space ID, that chat is enabled, and the API space ID was refreshed under 6 hours ago
         if (
             typeof chatData().apiSpaceId === 'undefined'
-            || chatData().data_id < Math.floor(new Date().getTime() / 1000 - 60 * 60)
+            || chatData().data_id < Math.floor((new Date().getTime() / 1000) - (60 * 60))
         ) {
             customerData.invalidate([sectionName]);
             customerData.reload([sectionName], true)
                 .done(function () {
-                    chatData = customerData.get(sectionName);
-
+                    var chatData = customerData.get(sectionName);
                     if (chatData().isEnabled) {
                         startChat(chatData);
                     }
@@ -80,5 +75,5 @@ define([
         } else if (chatData().isEnabled) {
             startChat(chatData);
         }
-    };
+    }
 });

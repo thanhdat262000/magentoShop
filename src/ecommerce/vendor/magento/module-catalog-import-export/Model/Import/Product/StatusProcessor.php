@@ -101,8 +101,7 @@ class StatusProcessor
         $select = $connection->select()
             ->from($this->getAttribute()->getBackend()->getTable())
             ->columns([$linkId, 'store_id', 'value'])
-            ->where(sprintf('%s IN (?)', $linkId), array_values($linkIdBySku))
-            ->where('attribute_id = ?', $this->getAttribute()->getId());
+            ->where(sprintf('%s IN (?)', $linkId), array_values($linkIdBySku));
         $skuByLinkId = array_flip($linkIdBySku);
 
         foreach ($connection->fetchAll($select) as $item) {

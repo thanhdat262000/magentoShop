@@ -196,10 +196,6 @@ class View extends AbstractProduct implements \Magento\Framework\DataObject\Iden
             'productId'   => (int)$product->getId(),
             'priceFormat' => $this->_localeFormat->getPriceFormat(),
             'prices'      => [
-                'baseOldPrice' => [
-                    'amount'      => $priceInfo->getPrice('regular_price')->getAmount()->getBaseAmount() * 1,
-                    'adjustments' => []
-                ],
                 'oldPrice'   => [
                     'amount'      => $priceInfo->getPrice('regular_price')->getAmount()->getValue() * 1,
                     'adjustments' => []
@@ -327,9 +323,9 @@ class View extends AbstractProduct implements \Magento\Framework\DataObject\Iden
      */
     public function getIdentities()
     {
-        $product = $this->getProduct();
+        $identities = $this->getProduct()->getIdentities();
 
-        return $product ? $product->getIdentities() : [];
+        return $identities;
     }
 
     /**

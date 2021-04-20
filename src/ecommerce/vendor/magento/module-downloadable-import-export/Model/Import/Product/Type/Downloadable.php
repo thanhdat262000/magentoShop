@@ -17,7 +17,6 @@ use \Magento\Store\Model\Store;
  *
  * phpcs:disable Magento2.Commenting.ConstantsPHPDocFormatting
  * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Downloadable extends \Magento\CatalogImportExport\Model\Import\Product\Type\AbstractType
 {
@@ -333,7 +332,7 @@ class Downloadable extends \Magento\CatalogImportExport\Model\Import\Product\Typ
     {
         $this->rowNum = $rowNum;
         $error = false;
-        if (!$this->downloadableHelper->isRowDownloadableNoValid($rowData) && $isNewProduct) {
+        if (!$this->downloadableHelper->isRowDownloadableNoValid($rowData)) {
             $this->_entityModel->addRowError(self::ERROR_OPTIONS_NOT_FOUND, $this->rowNum);
             $error = true;
         }
@@ -370,12 +369,12 @@ class Downloadable extends \Magento\CatalogImportExport\Model\Import\Product\Typ
 
         foreach ($sampleData as $link) {
             if ($this->hasDomainNotInWhitelist($link, 'link_type', 'link_url')) {
-                $this->_entityModel->addRowError(self::ERROR_LINK_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
+                $this->_entityModel->addRowError(static::ERROR_LINK_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
                 $result = true;
             }
 
             if ($this->hasDomainNotInWhitelist($link, 'sample_type', 'sample_url')) {
-                $this->_entityModel->addRowError(self::ERROR_SAMPLE_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
+                $this->_entityModel->addRowError(static::ERROR_SAMPLE_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
                 $result = true;
             }
         }
@@ -406,12 +405,12 @@ class Downloadable extends \Magento\CatalogImportExport\Model\Import\Product\Typ
 
         foreach ($linkData as $link) {
             if ($this->hasDomainNotInWhitelist($link, 'link_type', 'link_url')) {
-                $this->_entityModel->addRowError(self::ERROR_LINK_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
+                $this->_entityModel->addRowError(static::ERROR_LINK_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
                 $result = true;
             }
 
             if ($this->hasDomainNotInWhitelist($link, 'sample_type', 'sample_url')) {
-                $this->_entityModel->addRowError(self::ERROR_SAMPLE_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
+                $this->_entityModel->addRowError(static::ERROR_SAMPLE_URL_NOT_IN_DOMAIN_WHITELIST, $this->rowNum);
                 $result = true;
             }
         }
@@ -889,8 +888,8 @@ class Downloadable extends \Magento\CatalogImportExport\Model\Import\Product\Typ
         try {
             $uploader = $this->uploaderHelper->getUploader($type, $this->parameters);
             if (!$this->uploaderHelper->isFileExist($fileName)) {
-                $res = $uploader->move($fileName, $renameFileOff);
-                $fileName = $res['file'];
+                $uploader->move($fileName, $renameFileOff);
+                $fileName = $uploader['file'];
             }
         } catch (\Exception $e) {
             $this->_entityModel->addRowError(self::ERROR_MOVE_FILE, $this->rowNum);

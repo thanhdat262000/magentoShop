@@ -580,13 +580,7 @@ define([
          * @private
          */
         _onImageLoaded: function (result, file, oldFile, callback) {
-            var data;
-
-            try {
-                data = JSON.parse(result);
-            } catch (e) {
-                data = result;
-            }
+            var data = JSON.parse(result);
 
             if (this.element.find('#video_url').parent().find('.image-upload-error').length > 0) {
                 this.element.find('.image-upload-error').remove();

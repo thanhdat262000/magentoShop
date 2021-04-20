@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\Util\Logger;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class LoggingUtil
 {
@@ -62,12 +63,12 @@ class LoggingUtil
      *
      * @param string $className
      * @return MftfLogger
-     * @throws TestFrameworkException
+     * @throws \Exception
      */
     public function getLogger($className): MftfLogger
     {
         if ($className == null) {
-            throw new TestFrameworkException("You must pass a class name to receive a logger");
+            throw new \Exception("You must pass a class name to receive a logger");
         }
 
         if (!array_key_exists($className, $this->loggers)) {

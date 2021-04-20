@@ -3,20 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\CatalogSearch\Test\Unit\Model\Indexer\Fulltext\Plugin\Store;
 
 use Magento\CatalogSearch\Model\Indexer\Fulltext as FulltextIndexer;
 use Magento\CatalogSearch\Model\Indexer\Fulltext\Plugin\Store\Group as StoreGroupIndexerPlugin;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use Magento\Store\Model\Group as StoreGroup;
 use Magento\Store\Model\ResourceModel\Group as StoreGroupResourceModel;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class GroupTest extends TestCase
+class GroupTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StoreGroupIndexerPlugin
@@ -24,26 +21,31 @@ class GroupTest extends TestCase
     private $plugin;
 
     /**
-     * @var IndexerRegistry|MockObject
+     * @var ObjectManagerHelper
+     */
+    private $objectManagerHelper;
+
+    /**
+     * @var IndexerRegistry|\PHPUnit_Framework_MockObject_MockObject
      */
     private $indexerRegistryMock;
 
     /**
-     * @var IndexerInterface|MockObject
+     * @var IndexerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $indexerMock;
 
     /**
-     * @var StoreGroupResourceModel|MockObject
+     * @var StoreGroupResourceModel|\PHPUnit_Framework_MockObject_MockObject
      */
     private $subjectMock;
 
     /**
-     * @var StoreGroup|MockObject
+     * @var StoreGroup|\PHPUnit_Framework_MockObject_MockObject
      */
     private $storeGroupMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->indexerRegistryMock = $this->getMockBuilder(IndexerRegistry::class)
             ->disableOriginalConstructor()
@@ -58,7 +60,11 @@ class GroupTest extends TestCase
             ->setMethods(['dataHasChangedFor', 'isObjectNew'])
             ->getMock();
 
-        $this->plugin = new StoreGroupIndexerPlugin($this->indexerRegistryMock);
+        $this->objectManagerHelper = new ObjectManagerHelper($this);
+        $this->plugin = $this->objectManagerHelper->getObject(
+            StoreGroupIndexerPlugin::class,
+            ['indexerRegistry' => $this->indexerRegistryMock]
+        );
     }
 
     /**
@@ -66,9 +72,9 @@ class GroupTest extends TestCase
      * @param bool $websiteChanged
      * @param int $invalidateCounter
      * @return void
-     * @dataProvider afterSaveDataProvider
+     * @dataProvider beforeAfterSaveDataProvider
      */
-    public function testAfterSave(bool $isObjectNew, bool $websiteChanged, int $invalidateCounter): void
+    public function testBeforeAfterSave($isObjectNew, $websiteChanged, $invalidateCounter)
     {
         $this->prepareIndexer($invalidateCounter);
         $this->storeGroupMock->expects(static::any())
@@ -81,16 +87,14 @@ class GroupTest extends TestCase
         $this->indexerMock->expects(static::exactly($invalidateCounter))
             ->method('invalidate');
 
-        $this->assertSame(
-            $this->subjectMock,
-            $this->plugin->afterSave($this->subjectMock, $this->subjectMock, $this->storeGroupMock)
-        );
+        $this->plugin->beforeSave($this->subjectMock, $this->storeGroupMock);
+        $this->assertSame($this->subjectMock, $this->plugin->afterSave($this->subjectMock, $this->subjectMock));
     }
 
     /**
      * @return array
      */
-    public function afterSaveDataProvider(): array
+    public function beforeAfterSaveDataProvider()
     {
         return [
             [false, false, 0],
@@ -100,16 +104,13 @@ class GroupTest extends TestCase
         ];
     }
 
-    public function testAfterDelete(): void
+    public function testAfterDelete()
     {
         $this->prepareIndexer(1);
         $this->indexerMock->expects(static::once())
             ->method('invalidate');
 
-        $this->assertSame(
-            $this->subjectMock,
-            $this->plugin->afterDelete($this->subjectMock, $this->subjectMock)
-        );
+        $this->assertSame($this->subjectMock, $this->plugin->afterDelete($this->subjectMock, $this->subjectMock));
     }
 
     /**
@@ -118,7 +119,7 @@ class GroupTest extends TestCase
      * @param int $invalidateCounter
      * @return void
      */
-    private function prepareIndexer(int $invalidateCounter): void
+    private function prepareIndexer($invalidateCounter)
     {
         $this->indexerRegistryMock->expects(static::exactly($invalidateCounter))
             ->method('get')

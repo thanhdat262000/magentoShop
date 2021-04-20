@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function setStoreId($storeId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStoreId');
-        return $pluginInfo ? $this->___callPlugins('setStoreId', func_get_args(), $pluginInfo) : parent::setStoreId($storeId);
+        if (!$pluginInfo) {
+            return parent::setStoreId($storeId);
+        } else {
+            return $this->___callPlugins('setStoreId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getStoreId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreId');
-        return $pluginInfo ? $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo) : parent::getStoreId();
+        if (!$pluginInfo) {
+            return parent::getStoreId();
+        } else {
+            return $this->___callPlugins('getStoreId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getEntityTypeId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityTypeId');
-        return $pluginInfo ? $this->___callPlugins('getEntityTypeId', func_get_args(), $pluginInfo) : parent::getEntityTypeId();
+        if (!$pluginInfo) {
+            return parent::getEntityTypeId();
+        } else {
+            return $this->___callPlugins('getEntityTypeId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getAttributesUsedInListing()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributesUsedInListing');
-        return $pluginInfo ? $this->___callPlugins('getAttributesUsedInListing', func_get_args(), $pluginInfo) : parent::getAttributesUsedInListing();
+        if (!$pluginInfo) {
+            return parent::getAttributesUsedInListing();
+        } else {
+            return $this->___callPlugins('getAttributesUsedInListing', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getAttributesUsedForSortBy()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttributesUsedForSortBy');
-        return $pluginInfo ? $this->___callPlugins('getAttributesUsedForSortBy', func_get_args(), $pluginInfo) : parent::getAttributesUsedForSortBy();
+        if (!$pluginInfo) {
+            return parent::getAttributesUsedForSortBy();
+        } else {
+            return $this->___callPlugins('getAttributesUsedForSortBy', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getIdFieldName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo) : parent::getIdFieldName();
+        if (!$pluginInfo) {
+            return parent::getIdFieldName();
+        } else {
+            return $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getMainTable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMainTable');
-        return $pluginInfo ? $this->___callPlugins('getMainTable', func_get_args(), $pluginInfo) : parent::getMainTable();
+        if (!$pluginInfo) {
+            return parent::getMainTable();
+        } else {
+            return $this->___callPlugins('getMainTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getTable($tableName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTable');
-        return $pluginInfo ? $this->___callPlugins('getTable', func_get_args(), $pluginInfo) : parent::getTable($tableName);
+        if (!$pluginInfo) {
+            return parent::getTable($tableName);
+        } else {
+            return $this->___callPlugins('getTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getConnection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConnection');
-        return $pluginInfo ? $this->___callPlugins('getConnection', func_get_args(), $pluginInfo) : parent::getConnection();
+        if (!$pluginInfo) {
+            return parent::getConnection();
+        } else {
+            return $this->___callPlugins('getConnection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function load(\Magento\Framework\Model\AbstractModel $object, $value, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'load');
-        return $pluginInfo ? $this->___callPlugins('load', func_get_args(), $pluginInfo) : parent::load($object, $value, $field);
+        if (!$pluginInfo) {
+            return parent::load($object, $value, $field);
+        } else {
+            return $this->___callPlugins('load', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function save(\Magento\Framework\Model\AbstractModel $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save($object);
+        if (!$pluginInfo) {
+            return parent::save($object);
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function delete(\Magento\Framework\Model\AbstractModel $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete($object);
+        if (!$pluginInfo) {
+            return parent::delete($object);
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function addUniqueField($field)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addUniqueField');
-        return $pluginInfo ? $this->___callPlugins('addUniqueField', func_get_args(), $pluginInfo) : parent::addUniqueField($field);
+        if (!$pluginInfo) {
+            return parent::addUniqueField($field);
+        } else {
+            return $this->___callPlugins('addUniqueField', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function resetUniqueField()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetUniqueField');
-        return $pluginInfo ? $this->___callPlugins('resetUniqueField', func_get_args(), $pluginInfo) : parent::resetUniqueField();
+        if (!$pluginInfo) {
+            return parent::resetUniqueField();
+        } else {
+            return $this->___callPlugins('resetUniqueField', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function unserializeFields(\Magento\Framework\Model\AbstractModel $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unserializeFields');
-        return $pluginInfo ? $this->___callPlugins('unserializeFields', func_get_args(), $pluginInfo) : parent::unserializeFields($object);
+        if (!$pluginInfo) {
+            return parent::unserializeFields($object);
+        } else {
+            return $this->___callPlugins('unserializeFields', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getUniqueFields()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUniqueFields');
-        return $pluginInfo ? $this->___callPlugins('getUniqueFields', func_get_args(), $pluginInfo) : parent::getUniqueFields();
+        if (!$pluginInfo) {
+            return parent::getUniqueFields();
+        } else {
+            return $this->___callPlugins('getUniqueFields', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function hasDataChanged($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasDataChanged');
-        return $pluginInfo ? $this->___callPlugins('hasDataChanged', func_get_args(), $pluginInfo) : parent::hasDataChanged($object);
+        if (!$pluginInfo) {
+            return parent::hasDataChanged($object);
+        } else {
+            return $this->___callPlugins('hasDataChanged', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getChecksum($table)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getChecksum');
-        return $pluginInfo ? $this->___callPlugins('getChecksum', func_get_args(), $pluginInfo) : parent::getChecksum($table);
+        if (!$pluginInfo) {
+            return parent::getChecksum($table);
+        } else {
+            return $this->___callPlugins('getChecksum', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function afterLoad(\Magento\Framework\DataObject $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterLoad');
-        return $pluginInfo ? $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo) : parent::afterLoad($object);
+        if (!$pluginInfo) {
+            return parent::afterLoad($object);
+        } else {
+            return $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function beforeSave(\Magento\Framework\DataObject $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeSave');
-        return $pluginInfo ? $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo) : parent::beforeSave($object);
+        if (!$pluginInfo) {
+            return parent::beforeSave($object);
+        } else {
+            return $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function afterSave(\Magento\Framework\DataObject $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterSave');
-        return $pluginInfo ? $this->___callPlugins('afterSave', func_get_args(), $pluginInfo) : parent::afterSave($object);
+        if (!$pluginInfo) {
+            return parent::afterSave($object);
+        } else {
+            return $this->___callPlugins('afterSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function beforeDelete(\Magento\Framework\DataObject $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeDelete');
-        return $pluginInfo ? $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo) : parent::beforeDelete($object);
+        if (!$pluginInfo) {
+            return parent::beforeDelete($object);
+        } else {
+            return $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function afterDelete(\Magento\Framework\DataObject $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDelete');
-        return $pluginInfo ? $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo) : parent::afterDelete($object);
+        if (!$pluginInfo) {
+            return parent::afterDelete($object);
+        } else {
+            return $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function serializeFields(\Magento\Framework\Model\AbstractModel $object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serializeFields');
-        return $pluginInfo ? $this->___callPlugins('serializeFields', func_get_args(), $pluginInfo) : parent::serializeFields($object);
+        if (!$pluginInfo) {
+            return parent::serializeFields($object);
+        } else {
+            return $this->___callPlugins('serializeFields', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function beginTransaction()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beginTransaction');
-        return $pluginInfo ? $this->___callPlugins('beginTransaction', func_get_args(), $pluginInfo) : parent::beginTransaction();
+        if (!$pluginInfo) {
+            return parent::beginTransaction();
+        } else {
+            return $this->___callPlugins('beginTransaction', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function addCommitCallback($callback)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addCommitCallback');
-        return $pluginInfo ? $this->___callPlugins('addCommitCallback', func_get_args(), $pluginInfo) : parent::addCommitCallback($callback);
+        if (!$pluginInfo) {
+            return parent::addCommitCallback($callback);
+        } else {
+            return $this->___callPlugins('addCommitCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function commit()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'commit');
-        return $pluginInfo ? $this->___callPlugins('commit', func_get_args(), $pluginInfo) : parent::commit();
+        if (!$pluginInfo) {
+            return parent::commit();
+        } else {
+            return $this->___callPlugins('commit', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function rollBack()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'rollBack');
-        return $pluginInfo ? $this->___callPlugins('rollBack', func_get_args(), $pluginInfo) : parent::rollBack();
+        if (!$pluginInfo) {
+            return parent::rollBack();
+        } else {
+            return $this->___callPlugins('rollBack', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,6 +384,10 @@ class Interceptor extends \Magento\Catalog\Model\ResourceModel\Config implements
     public function getValidationRulesBeforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValidationRulesBeforeSave');
-        return $pluginInfo ? $this->___callPlugins('getValidationRulesBeforeSave', func_get_args(), $pluginInfo) : parent::getValidationRulesBeforeSave();
+        if (!$pluginInfo) {
+            return parent::getValidationRulesBeforeSave();
+        } else {
+            return $this->___callPlugins('getValidationRulesBeforeSave', func_get_args(), $pluginInfo);
+        }
     }
 }

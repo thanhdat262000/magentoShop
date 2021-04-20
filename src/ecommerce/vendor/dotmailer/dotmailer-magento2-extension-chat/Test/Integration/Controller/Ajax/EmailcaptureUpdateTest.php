@@ -14,7 +14,7 @@ class EmailcaptureUpdateTest extends AbstractController
      */
     private $updateChatProfileMock;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
 

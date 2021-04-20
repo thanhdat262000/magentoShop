@@ -3,14 +3,8 @@ return [
     'backend' => [
         'frontName' => 'admin'
     ],
-    'remote_storage' => [
-        'driver' => 'file'
-    ],
-    'queue' => [
-        'consumers_wait_for_messages' => 1
-    ],
     'crypt' => [
-        'key' => 'ae998fbf529e5229b619f55121430a18'
+        'key' => 'f269f9d6964b182b18079ff9a41bac0e'
     ],
     'db' => [
         'table_prefix' => '',
@@ -18,14 +12,11 @@ return [
             'default' => [
                 'host' => 'mysql',
                 'dbname' => 'ecommerce',
-                'username' => 'user',
+                'username' => 'root',
                 'password' => 'user',
-                'model' => 'mysql4',
-                'engine' => 'innodb',
-                'initStatements' => 'SET NAMES utf8;',
                 'active' => '1',
                 'driver_options' => [
-                    1014 => false
+
                 ]
             ]
         ]
@@ -43,22 +34,18 @@ return [
     'cache' => [
         'frontend' => [
             'default' => [
-                'id_prefix' => '626_'
+                'id_prefix' => 'bcf_'
             ],
             'page_cache' => [
-                'id_prefix' => '626_'
+                'id_prefix' => 'bcf_'
             ]
-        ],
-        'allow_parallel_generation' => false
+        ]
     ],
     'lock' => [
         'provider' => 'db',
         'config' => [
-            'prefix' => ''
+            'prefix' => null
         ]
-    ],
-    'directories' => [
-        'document_root_is_pub' => true
     ],
     'cache_types' => [
         'config' => 1,
@@ -72,15 +59,13 @@ return [
         'customer_notification' => 1,
         'config_integration' => 1,
         'config_integration_api' => 1,
+        'google_product' => 1,
         'full_page' => 1,
         'config_webservice' => 1,
         'translate' => 1,
         'vertex' => 1
     ],
-    'downloadable_domains' => [
-
-    ],
     'install' => [
-        'date' => 'Wed, 31 Mar 2021 07:43:24 +0000'
+        'date' => 'Thu, 08 Apr 2021 10:50:38 +0000'
     ]
 ];

@@ -6,7 +6,6 @@
 namespace Magento\CatalogUrlRewrite\Model;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
-use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogUrlRewrite\Model\Product\AnchorUrlRewriteGenerator;
@@ -16,14 +15,12 @@ use Magento\CatalogUrlRewrite\Model\Product\CurrentUrlRewritesRegenerator;
 use Magento\CatalogUrlRewrite\Service\V1\StoreViewService;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\UrlRewrite\Model\MergeDataProviderFactory;
 
 /**
- * Generates Product/Category URLs for different scopes
- *
+ * Class ProductScopeRewriteGenerator
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductScopeRewriteGenerator
@@ -177,6 +174,7 @@ class ProductScopeRewriteGenerator
                 continue;
             }
 
+            // category should be loaded per appropriate store if category's URL key has been changed
             $categories[] = $this->getCategoryWithOverriddenUrlKey($storeId, $category);
         }
 
@@ -242,15 +240,9 @@ class ProductScopeRewriteGenerator
      * Checks if URL key has been changed for provided category and returns reloaded category,
      * in other case - returns provided category.
      *
-     * Category should be loaded per appropriate store at all times. This is because whilst the URL key on the
-     * category in focus might be unchanged, parent category URL keys might be. If the category store ID
-     * and passed store ID are the same then return current category as it is correct but may have changed in memory
-     *
      * @param int $storeId
      * @param Category $category
-     *
-     * @return CategoryInterface
-     * @throws NoSuchEntityException
+     * @return Category
      */
     private function getCategoryWithOverriddenUrlKey($storeId, Category $category)
     {
@@ -260,10 +252,9 @@ class ProductScopeRewriteGenerator
             Category::ENTITY
         );
 
-        if (!$isUrlKeyOverridden && $storeId === $category->getStoreId()) {
+        if (!$isUrlKeyOverridden) {
             return $category;
         }
-
         return $this->categoryRepository->get($category->getEntityId(), $storeId);
     }
 

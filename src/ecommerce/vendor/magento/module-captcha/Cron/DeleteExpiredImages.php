@@ -6,7 +6,6 @@
 namespace Magento\Captcha\Cron;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem\DriverPool;
 
 /**
  * Captcha cron actions
@@ -49,7 +48,7 @@ class DeleteExpiredImages
     ) {
         $this->_helper = $helper;
         $this->_adminHelper = $adminHelper;
-        $this->_mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA, DriverPool::FILE);
+        $this->_mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->_storeManager = $storeManager;
     }
 

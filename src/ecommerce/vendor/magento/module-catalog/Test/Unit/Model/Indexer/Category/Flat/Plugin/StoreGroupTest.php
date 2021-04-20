@@ -3,52 +3,49 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Catalog\Test\Unit\Model\Indexer\Category\Flat\Plugin;
 
 use Magento\Catalog\Model\Indexer\Category\Flat\Plugin\StoreGroup;
 use Magento\Catalog\Model\Indexer\Category\Flat\State;
 use Magento\Framework\Indexer\IndexerInterface;
 use Magento\Framework\Indexer\IndexerRegistry;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Store\Model\Group as GroupModel;
 use Magento\Store\Model\ResourceModel\Group;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class StoreGroupTest extends TestCase
+class StoreGroupTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var MockObject|IndexerInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|IndexerInterface
      */
-    private $indexerMock;
+    protected $indexerMock;
 
     /**
-     * @var MockObject|State
+     * @var \PHPUnit_Framework_MockObject_MockObject|State
      */
-    private $stateMock;
+    protected $stateMock;
 
     /**
      * @var StoreGroup
      */
-    private $model;
+    protected $model;
 
     /**
-     * @var MockObject|Group
+     * @var \PHPUnit_Framework_MockObject_MockObject|Group
      */
-    private $subjectMock;
+    protected $subjectMock;
 
     /**
-     * @var IndexerRegistry|MockObject
+     * @var IndexerRegistry|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $indexerRegistryMock;
+    protected $indexerRegistryMock;
 
     /**
-     * @var MockObject|GroupModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|GroupModel
      */
-    private $groupMock;
+    protected $groupMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->indexerMock = $this->getMockForAbstractClass(
             IndexerInterface::class,
@@ -57,22 +54,26 @@ class StoreGroupTest extends TestCase
             false,
             false,
             true,
-            ['getId', 'getState']
+            ['getId', 'getState', '__wakeup']
         );
         $this->stateMock = $this->createPartialMock(State::class, ['isFlatEnabled']);
         $this->subjectMock = $this->createMock(Group::class);
 
         $this->groupMock = $this->createPartialMock(
             GroupModel::class,
-            ['dataHasChangedFor', 'isObjectNew']
+            ['dataHasChangedFor', 'isObjectNew', '__wakeup']
         );
 
         $this->indexerRegistryMock = $this->createPartialMock(IndexerRegistry::class, ['get']);
 
-        $this->model = new StoreGroup($this->indexerRegistryMock, $this->stateMock);
+        $this->model = (new ObjectManager($this))
+            ->getObject(
+                StoreGroup::class,
+                ['indexerRegistry' => $this->indexerRegistryMock, 'state' => $this->stateMock]
+            );
     }
 
-    public function testAfterSave(): void
+    public function testBeforeAndAfterSave()
     {
         $this->stateMock->expects($this->once())->method('isFlatEnabled')->willReturn(true);
         $this->indexerMock->expects($this->once())->method('invalidate');
@@ -85,14 +86,14 @@ class StoreGroupTest extends TestCase
             ->with('root_category_id')
             ->willReturn(true);
         $this->groupMock->expects($this->once())->method('isObjectNew')->willReturn(false);
-
+        $this->model->beforeSave($this->subjectMock, $this->groupMock);
         $this->assertSame(
             $this->subjectMock,
             $this->model->afterSave($this->subjectMock, $this->subjectMock, $this->groupMock)
         );
     }
 
-    public function testAfterSaveNotNew(): void
+    public function testBeforeAndAfterSaveNotNew()
     {
         $this->stateMock->expects($this->never())->method('isFlatEnabled');
         $this->groupMock->expects($this->once())
@@ -100,7 +101,7 @@ class StoreGroupTest extends TestCase
             ->with('root_category_id')
             ->willReturn(true);
         $this->groupMock->expects($this->once())->method('isObjectNew')->willReturn(true);
-
+        $this->model->beforeSave($this->subjectMock, $this->groupMock);
         $this->assertSame(
             $this->subjectMock,
             $this->model->afterSave($this->subjectMock, $this->subjectMock, $this->groupMock)

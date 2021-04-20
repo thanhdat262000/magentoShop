@@ -14,7 +14,6 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Catalog\Api\Data\ProductSearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product\CollectionProcessorInterface;
-use Magento\GraphQl\Model\Query\ContextInterface;
 
 /**
  * Product field data provider, used for GraphQL resolver processing.
@@ -74,20 +73,18 @@ class Product
      * @param string[] $attributes
      * @param bool $isSearch
      * @param bool $isChildSearch
-     * @param ContextInterface|null $context
      * @return SearchResultsInterface
      */
     public function getList(
         SearchCriteriaInterface $searchCriteria,
         array $attributes = [],
         bool $isSearch = false,
-        bool $isChildSearch = false,
-        ContextInterface $context = null
+        bool $isChildSearch = false
     ): SearchResultsInterface {
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
         $collection = $this->collectionFactory->create();
 
-        $this->collectionPreProcessor->process($collection, $searchCriteria, $attributes, $context);
+        $this->collectionPreProcessor->process($collection, $searchCriteria, $attributes);
 
         if (!$isChildSearch) {
             $visibilityIds = $isSearch

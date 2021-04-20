@@ -11,7 +11,6 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface as SearchCriteriaApplier;
-use Magento\GraphQl\Model\Query\ContextInterface;
 
 /**
  * Apply search criteria data to passed in collection.
@@ -34,20 +33,12 @@ class SearchCriteriaProcessor implements CollectionProcessorInterface
     }
 
     /**
-     * Process collection to add additional joins, attributes, and clauses to a product collection.
-     *
-     * @param Collection $collection
-     * @param SearchCriteriaInterface $searchCriteria
-     * @param array $attributeNames
-     * @param ContextInterface|null $context
-     * @return Collection
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritdoc}
      */
     public function process(
         Collection $collection,
         SearchCriteriaInterface $searchCriteria,
-        array $attributeNames,
-        ContextInterface $context = null
+        array $attributeNames
     ): Collection {
         $this->searchCriteriaApplier->process($searchCriteria, $collection);
 

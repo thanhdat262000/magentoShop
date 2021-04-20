@@ -11,7 +11,6 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\Config\ConfigOptionsListConstants;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\Debug;
-use Magento\Framework\Filesystem\Driver\File;
 
 /**
  * Entry point for retrieving static resources like JS, CSS, images by requested public path
@@ -76,11 +75,6 @@ class StaticResource implements \Magento\Framework\AppInterface
     private $logger;
 
     /**
-     * @var File
-     */
-    private $driver;
-
-    /**
      * @param State $state
      * @param Response\FileInterface $response
      * @param Request\Http $request
@@ -90,9 +84,6 @@ class StaticResource implements \Magento\Framework\AppInterface
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param ConfigLoaderInterface $configLoader
      * @param DeploymentConfig|null $deploymentConfig
-     * @param File|null $driver
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         State $state,
@@ -103,8 +94,7 @@ class StaticResource implements \Magento\Framework\AppInterface
         \Magento\Framework\Module\ModuleList $moduleList,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         ConfigLoaderInterface $configLoader,
-        DeploymentConfig $deploymentConfig = null,
-        File $driver = null
+        DeploymentConfig $deploymentConfig = null
     ) {
         $this->state = $state;
         $this->response = $response;
@@ -115,7 +105,6 @@ class StaticResource implements \Magento\Framework\AppInterface
         $this->objectManager = $objectManager;
         $this->configLoader = $configLoader;
         $this->deploymentConfig = $deploymentConfig ?: ObjectManager::getInstance()->get(DeploymentConfig::class);
-        $this->driver = $driver ?: ObjectManager::getInstance()->get(File::class);
     }
 
     /**
@@ -135,28 +124,17 @@ class StaticResource implements \Magento\Framework\AppInterface
             )
         ) {
             $this->response->setHttpResponseCode(404);
-            return $this->response;
-        }
-
-        $path = $this->request->get('resource');
-        try {
+        } else {
+            $path = $this->request->get('resource');
             $params = $this->parsePath($path);
-        } catch (\InvalidArgumentException $e) {
-            if ($appMode == \Magento\Framework\App\State::MODE_PRODUCTION) {
-                $this->response->setHttpResponseCode(404);
-                return $this->response;
-            }
-            throw $e;
+            $this->state->setAreaCode($params['area']);
+            $this->objectManager->configure($this->configLoader->load($params['area']));
+            $file = $params['file'];
+            unset($params['file']);
+            $asset = $this->assetRepo->createAsset($file, $params);
+            $this->response->setFilePath($asset->getSourceFile());
+            $this->publisher->publish($asset);
         }
-
-        $this->state->setAreaCode($params['area']);
-        $this->objectManager->configure($this->configLoader->load($params['area']));
-        $file = $params['file'];
-        unset($params['file']);
-        $asset = $this->assetRepo->createAsset($file, $params);
-        $this->response->setFilePath($asset->getSourceFile());
-        $this->publisher->publish($asset);
-
         return $this->response;
     }
 
@@ -194,9 +172,9 @@ class StaticResource implements \Magento\Framework\AppInterface
      */
     protected function parsePath($path)
     {
-        $safePath = $this->driver->getRealPathSafety(ltrim($path, '/'));
-        $parts = explode('/', $safePath, 6);
-        if (count($parts) < 5) {
+        $path = ltrim($path, '/');
+        $parts = explode('/', $path, 6);
+        if (count($parts) < 5 || preg_match('/\.\.(\\\|\/)/', $path)) {
             //Checking that path contains all required parts and is not above static folder.
             throw new \InvalidArgumentException("Requested path '$path' is wrong.");
         }

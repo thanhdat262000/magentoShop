@@ -3,59 +3,54 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Cron\Test\Unit\Model;
 
-use Magento\Cron\Model\ResourceModel\Schedule as SchoduleResourceModel;
 use Magento\Cron\Model\Schedule;
 use Magento\Cron\Model\DeadlockRetrierInterface;
-use Magento\Framework\Exception\CronException;
 use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 
 /**
+ * Class \Magento\Cron\Test\Unit\Model\ObserverTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ScheduleTest extends TestCase
+class ScheduleTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ObjectManagerHelper
+     * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
      */
-    private $objectManagerHelper;
+    protected $helper;
 
     /**
-     * @var SchoduleResourceModel|MockObject
+     * @var \Magento\Cron\Model\ResourceModel\Schedule|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $resourceJobMock;
+    protected $resourceJobMock;
 
     /**
-     * @var TimezoneInterface|MockObject
+     * @var TimezoneInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $timezoneConverterMock;
+    private $timezoneConverter;
 
     /**
-     * @var DateTimeFactory|MockObject
+     * @var DateTimeFactory|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $dateTimeFactoryMock;
+    private $dateTimeFactory;
 
     /**
-     * @var DeadlockRetrierInterface|MockObject
+     * @var DeadlockRetrierInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $retrierMock;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->objectManagerHelper = new ObjectManagerHelper($this);
+        $this->helper = new ObjectManager($this);
 
-        $this->resourceJobMock = $this->getMockBuilder(SchoduleResourceModel::class)
+        $this->resourceJobMock = $this->getMockBuilder(\Magento\Cron\Model\ResourceModel\Schedule::class)
             ->disableOriginalConstructor()
             ->setMethods(
                 [
@@ -73,15 +68,15 @@ class ScheduleTest extends TestCase
             ->method('getIdFieldName')
             ->willReturn('id');
 
-        $this->timezoneConverterMock = $this->getMockBuilder(TimezoneInterface::class)
+        $this->timezoneConverter = $this->getMockBuilder(TimezoneInterface::class)
             ->setMethods(['date'])
             ->getMockForAbstractClass();
 
-        $this->dateTimeFactoryMock = $this->getMockBuilder(DateTimeFactory::class)
+        $this->dateTimeFactory = $this->getMockBuilder(DateTimeFactory::class)
             ->setMethods(['create'])
             ->getMock();
 
-        $this->retrierMock = $this->getMockForAbstractClass(DeadlockRetrierInterface::class);
+        $this->retrierMock = $this->createMock(DeadlockRetrierInterface::class);
     }
 
     /**
@@ -97,7 +92,7 @@ class ScheduleTest extends TestCase
     {
         // 1. Create mocks
         /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(Schedule::class);
+        $model = $this->helper->getObject(Schedule::class);
 
         // 2. Run tested method
         $model->setCronExpr($cronExpression);
@@ -128,28 +123,24 @@ class ScheduleTest extends TestCase
             [', * * * *', [',', '*', '*', '*', '*']],
             ['1-2 * * * *', ['1-2', '*', '*', '*', '*']],
             ['0/5 * * * *', ['0/5', '*', '*', '*', '*']],
-            ['3/5 * * * *', ['3/5', '*', '*', '*', '*']],
 
             ['* 0 * * *', ['*', '0', '*', '*', '*']],
             ['* 59 * * *', ['*', '59', '*', '*', '*']],
             ['* , * * *', ['*', ',', '*', '*', '*']],
             ['* 1-2 * * *', ['*', '1-2', '*', '*', '*']],
             ['* 0/5 * * *', ['*', '0/5', '*', '*', '*']],
-            ['* 3/5 * * *', ['*', '3/5', '*', '*', '*']],
 
             ['* * 0 * *', ['*', '*', '0', '*', '*']],
             ['* * 23 * *', ['*', '*', '23', '*', '*']],
             ['* * , * *', ['*', '*', ',', '*', '*']],
             ['* * 1-2 * *', ['*', '*', '1-2', '*', '*']],
             ['* * 0/5 * *', ['*', '*', '0/5', '*', '*']],
-            ['* * 3/5 * *', ['*', '*', '3/5', '*', '*']],
 
             ['* * * 1 *', ['*', '*', '*', '1', '*']],
             ['* * * 31 *', ['*', '*', '*', '31', '*']],
             ['* * * , *', ['*', '*', '*', ',', '*']],
             ['* * * 1-2 *', ['*', '*', '*', '1-2', '*']],
             ['* * * 0/5 *', ['*', '*', '*', '0/5', '*']],
-            ['* * * 3/5 *', ['*', '*', '*', '3/5', '*']],
             ['* * * ? *', ['*', '*', '*', '?', '*']],
             ['* * * L *', ['*', '*', '*', 'L', '*']],
             ['* * * W *', ['*', '*', '*', 'W', '*']],
@@ -160,7 +151,6 @@ class ScheduleTest extends TestCase
             ['* * * * ,', ['*', '*', '*', '*', ',']],
             ['* * * * 1-2', ['*', '*', '*', '*', '1-2']],
             ['* * * * 0/5', ['*', '*', '*', '*', '0/5']],
-            ['* * * * 3/5', ['*', '*', '*', '*', '3/5']],
             ['* * * * JAN', ['*', '*', '*', '*', 'JAN']],
             ['* * * * DEC', ['*', '*', '*', '*', 'DEC']],
             ['* * * * JAN-DEC', ['*', '*', '*', '*', 'JAN-DEC']],
@@ -170,7 +160,6 @@ class ScheduleTest extends TestCase
             ['* * * * * ,', ['*', '*', '*', '*', '*', ',']],
             ['* * * * * 1-2', ['*', '*', '*', '*', '*', '1-2']],
             ['* * * * * 0/5', ['*', '*', '*', '*', '*', '0/5']],
-            ['* * * * * 3/5', ['*', '*', '*', '*', '*', '3/5']],
             ['* * * * * ?', ['*', '*', '*', '*', '*', '?']],
             ['* * * * * L', ['*', '*', '*', '*', '*', 'L']],
             ['* * * * * 6#3', ['*', '*', '*', '*', '*', '6#3']],
@@ -186,15 +175,14 @@ class ScheduleTest extends TestCase
      * @param string $cronExpression
      *
      * @return void
+     * @expectedException \Magento\Framework\Exception\CronException
      * @dataProvider setCronExprExceptionDataProvider
      */
     public function testSetCronExprException($cronExpression): void
     {
-        $this->expectException(CronException::class);
-
         // 1. Create mocks
         /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(Schedule::class);
+        $model = $this->helper->getObject(Schedule::class);
 
         // 2. Run tested method
         $model->setCronExpr($cronExpression);
@@ -232,18 +220,18 @@ class ScheduleTest extends TestCase
     public function testTrySchedule($scheduledAt, $cronExprArr, $expected): void
     {
         // 1. Create mocks
-        $this->timezoneConverterMock->method('getConfigTimezone')
+        $this->timezoneConverter->method('getConfigTimezone')
             ->willReturn('UTC');
 
-        $this->dateTimeFactoryMock->method('create')
+        $this->dateTimeFactory->method('create')
             ->willReturn(new \DateTime());
 
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(
-            Schedule::class,
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(
+            \Magento\Cron\Model\Schedule::class,
             [
-                'timezoneConverter' => $this->timezoneConverterMock,
-                'dateTimeFactory' => $this->dateTimeFactoryMock,
+                'timezoneConverter' => $this->timezoneConverter,
+                'dateTimeFactory' => $this->dateTimeFactory,
             ]
         );
 
@@ -268,18 +256,18 @@ class ScheduleTest extends TestCase
         $scheduledAt = '2011-12-13 14:15:16';
         $cronExprArr = ['*', '*', '*', '*', '*'];
 
-        $this->timezoneConverterMock->method('getConfigTimezone')
+        $this->timezoneConverter->method('getConfigTimezone')
             ->willReturn('UTC');
 
-        $this->dateTimeFactoryMock->method('create')
+        $this->dateTimeFactory->method('create')
             ->willReturn(new \DateTime());
 
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(
-            Schedule::class,
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(
+            \Magento\Cron\Model\Schedule::class,
             [
-                'timezoneConverter' => $this->timezoneConverterMock,
-                'dateTimeFactory' => $this->dateTimeFactoryMock,
+                'timezoneConverter' => $this->timezoneConverter,
+                'dateTimeFactory' => $this->dateTimeFactory,
             ]
         );
 
@@ -333,8 +321,8 @@ class ScheduleTest extends TestCase
     public function testMatchCronExpression($cronExpressionPart, $dateTimePart, $expectedResult): void
     {
         // 1. Create mocks
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(Schedule::class);
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(\Magento\Cron\Model\Schedule::class);
 
         // 2. Run tested method
         $result = $model->matchCronExpression($cronExpressionPart, $dateTimePart);
@@ -378,19 +366,9 @@ class ScheduleTest extends TestCase
             ['0-20/5', 21, false],
             ['0-20/5', 25, false],
 
-            ['3-20/5', 3, true],
-            ['3-20/5', 8, true],
-            ['3-20/5', 13, true],
-            ['3-20/5', 24, false],
-            ['3-20/5', 28, false],
-
             ['1/5', 5, false],
             ['5/5', 5, true],
             ['10/5', 10, true],
-
-            ['4/5', 8, false],
-            ['8/5', 8, true],
-            ['13/5', 13, true],
         ];
     }
 
@@ -400,16 +378,16 @@ class ScheduleTest extends TestCase
      * @param string $cronExpressionPart
      *
      * @return void
+     * @expectedException \Magento\Framework\Exception\CronException
      * @dataProvider matchCronExpressionExceptionDataProvider
      */
     public function testMatchCronExpressionException($cronExpressionPart): void
     {
-        $this->expectException(CronException::class);
         $dateTimePart = 10;
 
         // 1 Create mocks
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(Schedule::class);
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(\Magento\Cron\Model\Schedule::class);
 
         // 2. Run tested method
         $model->matchCronExpression($cronExpressionPart, $dateTimePart);
@@ -433,7 +411,7 @@ class ScheduleTest extends TestCase
     /**
      * Test for GetNumeric
      *
-     * @param int|string|null $param
+     * @param mixed $param
      * @param int $expectedResult
      *
      * @return void
@@ -442,8 +420,8 @@ class ScheduleTest extends TestCase
     public function testGetNumeric($param, $expectedResult): void
     {
         // 1. Create mocks
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(Schedule::class);
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(\Magento\Cron\Model\Schedule::class);
 
         // 2. Run tested method
         $result = $model->getNumeric($param);
@@ -493,7 +471,7 @@ class ScheduleTest extends TestCase
         $jobCode = 'test_job';
         $tableName = 'cron_schedule';
 
-        $connectionMock = $this->getMockForAbstractClass(AdapterInterface::class);
+        $connectionMock = $this->createMock(AdapterInterface::class);
         $connectionMock->expects($this->once())
             ->method('update')
             ->with(
@@ -524,7 +502,7 @@ class ScheduleTest extends TestCase
             );
 
         /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(
+        $model = $this->helper->getObject(
             Schedule::class,
             [
                 'resource' => $this->resourceJobMock,
@@ -551,7 +529,7 @@ class ScheduleTest extends TestCase
         $jobCode = 'test_job';
         $tableName = 'cron_schedule';
 
-        $connectionMock = $this->getMockForAbstractClass(AdapterInterface::class);
+        $connectionMock = $this->createMock(AdapterInterface::class);
         $connectionMock->expects($this->once())
             ->method('update')
             ->with(
@@ -581,9 +559,9 @@ class ScheduleTest extends TestCase
                 }
             );
 
-        /** @var Schedule $model */
-        $model = $this->objectManagerHelper->getObject(
-            Schedule::class,
+        /** @var \Magento\Cron\Model\Schedule $model */
+        $model = $this->helper->getObject(
+            \Magento\Cron\Model\Schedule::class,
             [
                 'resource' => $this->resourceJobMock,
                 'retrier' => $this->retrierMock,

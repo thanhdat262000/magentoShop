@@ -29,6 +29,14 @@ final class ClassConstantTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
+    public function getCustomTokens()
+    {
+        return [CT::T_CLASS_CONSTANT];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredPhpVersionId()
     {
         return 50500;
@@ -52,13 +60,5 @@ final class ClassConstantTransformer extends AbstractTransformer
         if ($prevToken->isGivenKind(T_DOUBLE_COLON)) {
             $tokens[$index] = new Token([CT::T_CLASS_CONSTANT, $token->getContent()]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDeprecatedCustomTokens()
-    {
-        return [CT::T_CLASS_CONSTANT];
     }
 }

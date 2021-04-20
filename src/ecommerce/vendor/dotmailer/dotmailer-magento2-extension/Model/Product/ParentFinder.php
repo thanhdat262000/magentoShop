@@ -2,8 +2,7 @@
 
 namespace Dotdigitalgroup\Email\Model\Product;
 
-use Dotdigitalgroup\Email\Logger\Logger;
-use Magento\Catalog\Model\Product;
+use Dotdigitalgroup\Email\Helper\Data;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class ParentFinder
@@ -14,9 +13,9 @@ class ParentFinder
     private $productRepository;
 
     /**
-     * @var Logger
+     * @var Data
      */
-    private $logger;
+    private $helper;
 
     /**
      * @var \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable
@@ -36,20 +35,20 @@ class ParentFinder
     /**
      * ParentFinder constructor.
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
-     * @param Logger $logger
+     * @param Data $helper
      * @param \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable $configurableType
      * @param \Magento\GroupedProduct\Model\Product\Type\Grouped $groupedType
      * @param \Magento\Bundle\Model\ResourceModel\Selection $bundleSelection
      */
     public function __construct(
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        Logger $logger,
+        Data $helper,
         \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable $configurableType,
         \Magento\GroupedProduct\Model\Product\Type\Grouped $groupedType,
         \Magento\Bundle\Model\ResourceModel\Selection $bundleSelection
     ) {
         $this->productRepository = $productRepository;
-        $this->logger = $logger;
+        $this->helper = $helper;
         $this->configurableType = $configurableType;
         $this->groupedType = $groupedType;
         $this->bundleSelection = $bundleSelection;
@@ -57,51 +56,23 @@ class ParentFinder
 
     /**
      * @param $product
-     * @param string $type
      * @return \Magento\Catalog\Api\Data\ProductInterface|null
      */
-    public function getParentProduct($product, $type = 'first_parent_id')
+    public function getParentProduct($product)
     {
-        switch ($type) {
-            case 'grouped':
-                $parentId = $this->getGroupedFirstParentId($product);
-                break;
-            default:
-                $parentId = $this->getFirstParentId($product);
-        }
-
-        if ($parentId) {
-            try {
+        try {
+            if ($parentId = $this->getFirstParentId($product)) {
                 return $this->productRepository->getById($parentId, false, $product->getStoreId());
-            } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                $this->logger->debug(
-                    $e->getMessage() .
-                    ' Parent Product: ' . $parentId .
-                    ', Child Product: ' . $product->getId()
-                );
             }
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            $this->helper->debug(
+                $e->getMessage() . ' Parent Product: ' .
+                $parentId . ', 
+                Child Product: ' . $product->getId()
+            );
         }
 
         return null;
-    }
-
-    /**
-     * @param Product $product
-     * @param string $imageRole
-     * @return \Magento\Catalog\Api\Data\ProductInterface|Product|null
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getParentProductForNoImageSelection(Product $product, $imageRole = 'small_image')
-    {
-        $imageRole = $imageRole ?? 'small_image';
-        if ($product->getTypeId() == \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE
-            && (empty($product->getData($imageRole)) || $product->getData($imageRole) == 'no_selection')
-            && $parentProduct = $this->getParentProduct($product)
-        ) {
-            return $parentProduct;
-        }
-
-        return $product;
     }
 
     /**
@@ -117,37 +88,6 @@ class ParentFinder
         }
 
         return null;
-    }
-
-    /**
-     * @param array $products
-     * @return array
-     */
-    public function getConfigurableParentsFromBunchOfProducts($products)
-    {
-        $configurableParents = [];
-
-        foreach ($products as $product) {
-            if (is_array($product) && isset($product['sku'])) {
-                try {
-                    $product = $this->productRepository->get($product['sku']);
-                } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                    $this->logger->debug(
-                        $e->getMessage() .
-                        ' SKU not found: ' . $product['sku']
-                    );
-                    continue;
-                }
-            }
-            if ($product instanceof Product) {
-                $parentProduct = $this->getParentProduct($product);
-                if (isset($parentProduct) && $parentProduct->getTypeId() === 'configurable') {
-                    $configurableParents[] = $parentProduct->getData();
-                }
-            }
-        }
-
-        return array_unique($configurableParents, SORT_REGULAR);
     }
 
     /**
@@ -169,20 +109,6 @@ class ParentFinder
         $bundleProducts = $this->bundleSelection->getParentIdsByChild($product->getId());
         if (isset($bundleProducts[0])) {
             return $bundleProducts[0];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $product
-     * @return string|null
-     */
-    private function getGroupedFirstParentId($product)
-    {
-        $groupedProducts = $this->groupedType->getParentIdsByChild($product->getId());
-        if (isset($groupedProducts[0])) {
-            return $groupedProducts[0];
         }
 
         return null;

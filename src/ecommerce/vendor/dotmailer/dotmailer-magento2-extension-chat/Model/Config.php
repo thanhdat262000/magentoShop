@@ -3,17 +3,22 @@
 namespace Dotdigitalgroup\Chat\Model;
 
 use Dotdigitalgroup\Email\Helper\Config as EmailConfig;
-use Dotdigitalgroup\Email\Helper\Data;
 use Magento\Checkout\Model\Session;
 use Magento\Checkout\Model\SessionFactory;
 use Magento\Framework\App\Config\ReinitableConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
-use Magento\Framework\App\State;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Website;
 
+/**
+ * Class Config
+ * Before use this class you need to call setScopeAndWebsiteId(int $websiteId)
+ * in order to enable scope view and store data.
+ * Set to Default scope by default
+ */
 class Config
 {
     const XML_PATH_LIVECHAT_ENABLED = 'chat_api_credentials/settings/enabled';
@@ -96,16 +101,6 @@ class Config
     private $emailConfig;
 
     /**
-     * @var Data
-     */
-    private $helper;
-
-    /**
-     * @var State
-     */
-    private $state;
-
-    /**
      * Config constructor
      *
      * @param EncryptorInterface $encryptor
@@ -115,8 +110,6 @@ class Config
      * @param SessionFactory $sessionFactory
      * @param UrlInterface $urlBuilder
      * @param EmailConfig $emailConfig
-     * @param Data $helper
-     * @param State $state
      */
     public function __construct(
         EncryptorInterface $encryptor,
@@ -125,9 +118,7 @@ class Config
         WriterInterface $configWriter,
         SessionFactory $sessionFactory,
         UrlInterface $urlBuilder,
-        EmailConfig $emailConfig,
-        Data $helper,
-        State $state
+        EmailConfig $emailConfig
     ) {
         $this->encryptor = $encryptor;
         $this->scopeConfig = $scopeConfig;
@@ -136,10 +127,18 @@ class Config
         $this->sessionFactory = $sessionFactory;
         $this->urlBuilder = $urlBuilder;
         $this->emailConfig = $emailConfig;
-        $this->helper = $helper;
-        $this->state = $state;
+    }
 
-        $this->setScopeAndWebsiteId();
+    /**
+     * Sets the Scope level
+     * @param Website|null
+     */
+    public function setScopeAndWebsiteId($website)
+    {
+        $this->scopeInterface = $website->getId()
+            ? ScopeInterface::SCOPE_WEBSITES
+            : ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+        $this->websiteId = $website->getId();
     }
 
     /**
@@ -153,25 +152,18 @@ class Config
             (string) $this->websiteId
         );
     }
-
     /**
-     * @return mixed
+     *
+     * @return string|null
      */
     public function getApiToken()
     {
-        return $this->scopeConfig->getValue(
+        $value = $this->scopeConfig->getValue(
             self::XML_PATH_LIVECHAT_API_TOKEN,
             $this->scopeInterface,
             (string) $this->websiteId
         );
-    }
-
-    /**
-     * @return \Dotdigitalgroup\Email\Model\Apiconnector\Client
-     */
-    public function getApiClient()
-    {
-        return $this->helper->getWebsiteApiClient($this->websiteId);
+        return $this->encryptor->decrypt($value);
     }
 
     /**
@@ -200,12 +192,29 @@ class Config
     }
 
     /**
-     * Save chat API space ID
+     * @return string
+     */
+    public function getConfigureChatTeamButtonUrl()
+    {
+        return $this->urlBuilder->getUrl('dotdigitalgroup_chat/studio/team');
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigureChatWidgetButtonUrl()
+    {
+        return $this->urlBuilder->getUrl('dotdigitalgroup_chat/studio/widget');
+    }
+
+    /**
+     * Save chat API space ID and token
      *
      * @param string $apiSpaceId
+     * @param string $token
      * @return $this
      */
-    public function saveChatApiSpaceId(string $apiSpaceId)
+    public function saveChatApiSpaceIdAndToken(string $apiSpaceId, string $token)
     {
         $this->configWriter->save(
             self::XML_PATH_LIVECHAT_API_SPACE_ID,
@@ -213,17 +222,6 @@ class Config
             $this->scopeInterface,
             $this->websiteId
         );
-        return $this;
-    }
-
-    /**
-     * Save chat API token
-     *
-     * @param string $token
-     * @return $this
-     */
-    public function saveChatApiToken(string $token)
-    {
         $this->configWriter->save(
             self::XML_PATH_LIVECHAT_API_TOKEN,
             $this->encryptor->encrypt($token),
@@ -300,22 +298,5 @@ class Config
             $this->configWriter->delete(self::XML_PATH_LIVECHAT_API_SPACE_ID, $this->scopeInterface, $this->websiteId);
             $this->configWriter->delete(self::XML_PATH_LIVECHAT_API_TOKEN, $this->scopeInterface, $this->websiteId);
         }
-    }
-
-    /**
-     * Sets the Scope level
-     */
-    private function setScopeAndWebsiteId()
-    {
-        if ($this->state->getAreaCode() === \Magento\Framework\App\Area::AREA_ADMINHTML) {
-            $website = $this->helper->getWebsiteForSelectedScopeInAdmin();
-        } else {
-            $website = $this->helper->getWebsite();
-        }
-
-        $this->scopeInterface = $website->getId()
-            ? ScopeInterface::SCOPE_WEBSITES
-            : ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-        $this->websiteId = $website->getId();
     }
 }

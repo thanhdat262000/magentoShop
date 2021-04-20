@@ -10,7 +10,6 @@ namespace Magento\Elasticsearch\Model\Adapter\FieldMapper\Product;
 use Magento\Eav\Model\Config;
 use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\AttributeAdapter\DummyAttribute;
-use Magento\Framework\ObjectManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -21,7 +20,7 @@ class AttributeProvider
     /**
      * Object Manager instance
      *
-     * @var ObjectManagerInterface
+     * @var \Magento\Framework\ObjectManagerInterface
      */
     private $objectManager;
 
@@ -50,13 +49,13 @@ class AttributeProvider
     /**
      * Factory constructor
      *
-     * @param ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param Config $eavConfig
      * @param LoggerInterface $logger
      * @param string $instanceName
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
         Config $eavConfig,
         LoggerInterface $logger,
         $instanceName = AttributeAdapter::class
@@ -87,18 +86,5 @@ class AttributeProvider
         }
 
         return $this->cachedPool[$attributeCode];
-    }
-
-    /**
-     * Remove attribute from cache by code.
-     *
-     * @param string $attributeCode
-     * @return void
-     */
-    public function removeAttributeCacheByCode(string $attributeCode): void
-    {
-        if (isset($this->cachedPool[$attributeCode])) {
-            unset($this->cachedPool[$attributeCode]);
-        }
     }
 }

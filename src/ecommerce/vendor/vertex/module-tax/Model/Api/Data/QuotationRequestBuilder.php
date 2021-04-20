@@ -12,20 +12,29 @@ use Magento\Framework\Stdlib\StringUtils;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Api\Data\QuoteDetailsInterface;
+use Magento\Tax\Api\Data\QuoteDetailsItemInterface;
+use Magento\Tax\Api\Data\TaxClassKeyInterface;
+use Vertex\Data\CustomerInterface;
 use Vertex\Data\LineItemInterface;
 use Vertex\Exception\ConfigurationException;
 use Vertex\Services\Quote\RequestInterface;
 use Vertex\Services\Quote\RequestInterfaceFactory;
+use Vertex\Tax\Model\AddressDeterminer;
+use Vertex\Tax\Model\Api\Data\QuotationDeliveryTermProcessor;
 use Vertex\Tax\Model\Api\Utility\MapperFactoryProxy;
 use Vertex\Tax\Model\Config;
 use Vertex\Tax\Model\DateTimeImmutableFactory;
+use Vertex\Tax\Model\IncompleteAddressDeterminer;
 
 /**
  * Builds a Quotation Request for the Vertex SDK
  */
 class QuotationRequestBuilder
 {
-    public const TRANSACTION_TYPE = 'SALE';
+    const TRANSACTION_TYPE = 'SALE';
+
+    /** @var AddressDeterminer */
+    private $addressDeterminer;
 
     /** @var Config */
     private $config;
@@ -39,11 +48,11 @@ class QuotationRequestBuilder
     /** @var OrderDeliveryTermProcessor */
     private $deliveryTerm;
 
+    /** @var IncompleteAddressDeterminer */
+    private $incompleteAddressDeterminer;
+
     /** @var LineItemBuilder */
     private $lineItemBuilder;
-
-    /** @var MapperFactoryProxy */
-    private $mapperFactory;
 
     /** @var RequestInterfaceFactory */
     private $requestFactory;
@@ -57,6 +66,22 @@ class QuotationRequestBuilder
     /** @var StringUtils */
     private $stringUtilities;
 
+    /** @var MapperFactoryProxy */
+    private $mapperFactory;
+
+    /**
+     * @param LineItemBuilder $lineItemBuilder
+     * @param RequestInterfaceFactory $requestFactory
+     * @param CustomerBuilder $customerBuilder
+     * @param SellerBuilder $sellerBuilder
+     * @param Config $config
+     * @param OrderDeliveryTermProcessor $deliveryTerm
+     * @param DateTimeImmutableFactory $dateTimeFactory
+     * @param AddressDeterminer $addressDeterminer
+     * @param StoreManagerInterface $storeManager
+     * @param StringUtils $stringUtils
+     * @param MapperFactoryProxy $mapperFactory
+     */
     public function __construct(
         LineItemBuilder $lineItemBuilder,
         RequestInterfaceFactory $requestFactory,
@@ -65,9 +90,11 @@ class QuotationRequestBuilder
         Config $config,
         QuotationDeliveryTermProcessor $deliveryTerm,
         DateTimeImmutableFactory $dateTimeFactory,
+        AddressDeterminer $addressDeterminer,
         StoreManagerInterface $storeManager,
         StringUtils $stringUtils,
-        MapperFactoryProxy $mapperFactory
+        MapperFactoryProxy $mapperFactory,
+        IncompleteAddressDeterminer $incompleteAddressDeterminer
     ) {
         $this->lineItemBuilder = $lineItemBuilder;
         $this->requestFactory = $requestFactory;
@@ -76,9 +103,11 @@ class QuotationRequestBuilder
         $this->config = $config;
         $this->deliveryTerm = $deliveryTerm;
         $this->dateTimeFactory = $dateTimeFactory;
+        $this->addressDeterminer = $addressDeterminer;
         $this->storeManager = $storeManager;
         $this->stringUtilities = $stringUtils;
         $this->mapperFactory = $mapperFactory;
+        $this->incompleteAddressDeterminer = $incompleteAddressDeterminer;
     }
 
     /**
@@ -95,6 +124,7 @@ class QuotationRequestBuilder
     {
         $quoteMapper = $this->mapperFactory->getForClass(RequestInterface::class, $scopeCode);
 
+        /** @var RequestInterface $request */
         $request = $this->requestFactory->create();
         $request->setShouldReturnAssistedParameters(true);
         $request->setDocumentDate($this->dateTimeFactory->create());
@@ -104,6 +134,14 @@ class QuotationRequestBuilder
         $taxLineItems = $this->getLineItemData($quoteDetails, $scopeCode);
         $request->setLineItems($taxLineItems);
 
+        $address = $this->addressDeterminer->determineAddress(
+            $this->incompleteAddressDeterminer->isIncompleteAddress($quoteDetails->getShippingAddress()) ?
+                $quoteDetails->getBillingAddress() :
+                $quoteDetails->getShippingAddress(),
+            $quoteDetails->getCustomerId(),
+            $this->isVirtual($quoteDetails)
+        );
+
         $seller = $this->sellerBuilder
             ->setScopeCode($scopeCode)
             ->setScopeType(ScopeInterface::SCOPE_STORE)
@@ -111,9 +149,18 @@ class QuotationRequestBuilder
 
         $request->setSeller($seller);
 
+        $taxClassKey = $quoteDetails->getCustomerTaxClassKey();
+        if ($taxClassKey && $taxClassKey->getType() === TaxClassKeyInterface::TYPE_ID) {
+            $customerTaxClassId = $taxClassKey->getValue();
+        } else {
+            $customerTaxClassId = $quoteDetails->getCustomerTaxClassId();
+        }
+
         $request->setCustomer(
-            $this->customerBuilder->buildFromQuoteDetails(
-                $quoteDetails,
+            $this->customerBuilder->buildFromCustomerAddress(
+                $address,
+                $quoteDetails->getCustomerId(),
+                $customerTaxClassId,
                 $scopeCode
             )
         );
@@ -138,6 +185,7 @@ class QuotationRequestBuilder
      * Build Line Items for the Request
      *
      * @param QuoteDetailsInterface $quoteDetails
+     * @param CustomerInterface|null $customer
      * @param null $scopeCode
      * @return LineItemInterface[]
      * @throws ConfigurationException
@@ -164,6 +212,9 @@ class QuotationRequestBuilder
             }
         }
 
+        /** @var CustomerInterface|null $billingCustomer */
+        $billingCustomer = null;
+
         $itemsToCheck = array_merge($parentCodes, $processedItems);
         foreach ($items as $item) {
             if (in_array($item->getCode(), $itemsToCheck, true)) {
@@ -175,11 +226,44 @@ class QuotationRequestBuilder
                 ? $item->getQuantity() * $itemMap[$item->getParentCode()]->getQuantity()
                 : $item->getQuantity();
 
-            $taxLineItems[] = $this->lineItemBuilder->buildFromQuoteDetailsItem($item, $qty, $scopeCode);
+            $customer = null;
+            $isVirtual = $item->getExtensionAttributes()->getIsVirtual();
+
+            if ($isVirtual) {
+                // Use billing address for tax calculation on virtual line items
+                if (!$billingCustomer) {
+                    $address = $this->addressDeterminer->determineAddress(
+                        $quoteDetails->getBillingAddress(),
+                        $quoteDetails->getCustomerId(),
+                        $isVirtual
+                    );
+                    $billingCustomer = $this->customerBuilder->buildFromCustomerAddress($address);
+                }
+                $customer = $billingCustomer;
+            }
+
+            $taxLineItems[] = $this->lineItemBuilder->buildFromQuoteDetailsItem($item, $qty, $scopeCode, $customer);
             $processedItems[] = $item->getCode();
             $itemsToCheck[] = $item->getCode();
         }
 
         return $taxLineItems;
+    }
+
+    /**
+     * Determine if the Quote is virtual
+     *
+     * @param QuoteDetailsInterface $quoteDetails
+     * @return bool
+     */
+    private function isVirtual(QuoteDetailsInterface $quoteDetails)
+    {
+        foreach ($quoteDetails->getItems() as $item) {
+            if ($item->getType() === 'shipping') {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

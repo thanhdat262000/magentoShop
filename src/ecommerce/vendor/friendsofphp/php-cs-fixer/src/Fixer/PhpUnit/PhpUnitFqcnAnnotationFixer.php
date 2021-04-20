@@ -12,9 +12,10 @@
 
 namespace PhpCsFixer\Fixer\PhpUnit;
 
-use PhpCsFixer\Fixer\AbstractPhpUnitFixer;
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
+use PhpCsFixer\Indicator\PhpUnitTestCaseIndicator;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
@@ -22,7 +23,7 @@ use PhpCsFixer\Tokenizer\Tokens;
 /**
  * @author Roland Franssen <franssen.roland@gmail.com>
  */
-final class PhpUnitFqcnAnnotationFixer extends AbstractPhpUnitFixer
+final class PhpUnitFqcnAnnotationFixer extends AbstractFixer
 {
     /**
      * {@inheritdoc}
@@ -52,31 +53,41 @@ final class MyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before NoUnusedImportsFixer, PhpUnitOrderedCoversFixer.
      */
     public function getPriority()
     {
+        // should be run before NoUnusedImportsFixer
         return -9;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function applyPhpUnitClassFix(Tokens $tokens, $startIndex, $endIndex)
+    public function isCandidate(Tokens $tokens)
     {
-        $prevDocCommentIndex = $tokens->getPrevTokenOfKind($startIndex, [[T_DOC_COMMENT]]);
-
-        if (null !== $prevDocCommentIndex) {
-            $startIndex = $prevDocCommentIndex;
-        }
-
-        $this->fixPhpUnitClass($tokens, $startIndex, $endIndex);
+        return $tokens->isAllTokenKindsFound([T_CLASS, T_DOC_COMMENT]);
     }
 
     /**
-     * @param int $startIndex
-     * @param int $endIndex
+     * {@inheritdoc}
+     */
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    {
+        $phpUnitTestCaseIndicator = new PhpUnitTestCaseIndicator();
+        foreach ($phpUnitTestCaseIndicator->findPhpUnitClasses($tokens) as $indexes) {
+            $startIndex = $indexes[0];
+            $prevDocCommentIndex = $tokens->getPrevTokenOfKind($startIndex, [[T_DOC_COMMENT]]);
+            if (null !== $prevDocCommentIndex) {
+                $startIndex = $prevDocCommentIndex;
+            }
+            $this->fixPhpUnitClass($tokens, $startIndex, $indexes[1]);
+        }
+    }
+
+    /**
+     * @param Tokens $tokens
+     * @param int    $startIndex
+     * @param int    $endIndex
      */
     private function fixPhpUnitClass(Tokens $tokens, $startIndex, $endIndex)
     {

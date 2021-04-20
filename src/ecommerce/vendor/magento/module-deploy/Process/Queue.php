@@ -29,7 +29,7 @@ class Queue
     /**
      * Default max execution time
      */
-    const DEFAULT_MAX_EXEC_TIME = 900;
+    const DEFAULT_MAX_EXEC_TIME = 400;
 
     /**
      * @var array
@@ -97,11 +97,6 @@ class Queue
     private $lastJobStarted = 0;
 
     /**
-     * @var int
-     */
-    private $logDelay;
-
-    /**
      * @param AppState $appState
      * @param LocaleResolver $localeResolver
      * @param ResourceConnection $resourceConnection
@@ -162,12 +157,11 @@ class Queue
      * Process jobs
      *
      * @return int
-     * @throws TimeoutException
      */
     public function process()
     {
         $returnStatus = 0;
-        $this->logDelay = 10;
+        $logDelay = 10;
         $this->start = $this->lastJobStarted = time();
         $packages = $this->packages;
         while (count($packages) && $this->checkTimeout()) {
@@ -176,7 +170,13 @@ class Queue
                 $this->assertAndExecute($name, $packages, $packageJob);
             }
 
-            $this->refreshStatus();
+            // refresh current status in console once in 10 iterations (once in 5 sec)
+            if ($logDelay >= 10) {
+                $this->logger->info('.');
+                $logDelay = 0;
+            } else {
+                $logDelay++;
+            }
 
             if ($this->isCanBeParalleled()) {
                 // in parallel mode sleep before trying to check status and run new jobs
@@ -193,26 +193,7 @@ class Queue
 
         $this->awaitForAllProcesses();
 
-        if (!empty($packages)) {
-            throw new TimeoutException('Not all packages are deployed.');
-        }
-
         return $returnStatus;
-    }
-
-    /**
-     * Refresh current status in console once in 10 iterations (once in 5 sec)
-     *
-     * @return void
-     */
-    private function refreshStatus(): void
-    {
-        if ($this->logDelay >= 10) {
-            $this->logger->info('.');
-            $this->logDelay = 0;
-        } else {
-            $this->logDelay++;
-        }
     }
 
     /**
@@ -223,7 +204,7 @@ class Queue
      * @param array $packageJob
      * @return void
      */
-    private function assertAndExecute($name, array &$packages, array $packageJob)
+    private function assertAndExecute($name, array & $packages, array $packageJob)
     {
         /** @var Package $package */
         $package = $packageJob['package'];
@@ -275,6 +256,7 @@ class Queue
      */
     private function awaitForAllProcesses()
     {
+        $logDelay = 10;
         while ($this->inProgress && $this->checkTimeout()) {
             foreach ($this->inProgress as $name => $package) {
                 if ($this->isDeployed($package)) {
@@ -282,7 +264,13 @@ class Queue
                 }
             }
 
-            $this->refreshStatus();
+            // refresh current status in console once in 10 iterations (once in 5 sec)
+            if ($logDelay >= 10) {
+                $this->logger->info('.');
+                $logDelay = 0;
+            } else {
+                $logDelay++;
+            }
 
             // sleep before checking parallel jobs status
             // phpcs:ignore Magento2.Functions.DiscouragedFunction

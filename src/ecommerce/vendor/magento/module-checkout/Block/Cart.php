@@ -6,6 +6,7 @@
 namespace Magento\Checkout\Block;
 
 use Magento\Customer\Model\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 
 /**
@@ -221,13 +222,7 @@ class Cart extends \Magento\Checkout\Block\Cart\AbstractCart
     {
         $block = $this->getLayout()->getBlock($name);
         if (!$block) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                new Phrase(
-                    $this->escapeHtml(
-                        __('Invalid method: %1', $name)
-                    )
-                )
-            );
+            throw new LocalizedException(new Phrase($this->escapeHtml(__('Invalid method: %1', $name))));
         }
         return $block->toHtml();
     }
@@ -247,7 +242,7 @@ class Cart extends \Magento\Checkout\Block\Cart\AbstractCart
     }
 
     /**
-     * Get Item Count
+     * Get Items Count
      *
      * @codeCoverageIgnore
      * @return int

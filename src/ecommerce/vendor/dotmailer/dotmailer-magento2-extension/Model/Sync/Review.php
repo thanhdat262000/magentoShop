@@ -2,9 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Model\Sync;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Dotdigitalgroup\Email\Model\Sales\OrderFactory;
-
 /**
  * Sync Reviews.
  */
@@ -66,16 +63,6 @@ class Review implements SyncInterface
     private $reviewResourceFactory;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @var OrderFactory
-     */
-    private $orderFactory;
-
-    /**
      * Review constructor.
      *
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Review\CollectionFactory $reviewCollection
@@ -85,8 +72,6 @@ class Review implements SyncInterface
      * @param \Dotdigitalgroup\Email\Model\ImporterFactory                        $importerFactory
      * @param \Dotdigitalgroup\Email\Helper\Data                                  $data
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\ReviewFactory            $reviewResourceFactory
-     * @param ScopeConfigInterface $scopeConfig
-     * @param OrderFactory $orderFactory
      */
     public function __construct(
         \Dotdigitalgroup\Email\Model\ResourceModel\Review\CollectionFactory $reviewCollection,
@@ -95,9 +80,7 @@ class Review implements SyncInterface
         \Dotdigitalgroup\Email\Model\Customer\ReviewFactory $connectorFactory,
         \Dotdigitalgroup\Email\Model\ImporterFactory $importerFactory,
         \Dotdigitalgroup\Email\Helper\Data $data,
-        \Dotdigitalgroup\Email\Model\ResourceModel\ReviewFactory $reviewResourceFactory,
-        ScopeConfigInterface $scopeConfig,
-        OrderFactory $orderFactory
+        \Dotdigitalgroup\Email\Model\ResourceModel\ReviewFactory $reviewResourceFactory
     ) {
         $this->coreDate               = $coreDate;
         $this->reviewCollection       = $reviewCollection;
@@ -106,38 +89,17 @@ class Review implements SyncInterface
         $this->importerFactory        = $importerFactory;
         $this->helper                 = $data;
         $this->reviewResourceFactory  = $reviewResourceFactory;
-        $this->scopeConfig = $scopeConfig;
-        $this->orderFactory = $orderFactory;
     }
 
     /**
-     * Sync
-     * - Create campaigns for review automations
-     * - Sync reviews to Engagement Cloud
+     * Sync reviews.
      *
      * @param \DateTime|null $from
      * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function sync(\DateTime $from = null)
     {
-        $this->orderFactory->create()
-            ->createReviewCampaigns();
-
-        return $this->syncReviews();
-    }
-
-    /**
-     * @return array
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function syncReviews()
-    {
         $response = ['success' => true, 'message' => 'Done.'];
-
-        $limit = $this->scopeConfig->getValue(
-            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT
-        );
 
         $this->countReviews = 0;
         $this->reviews      = [];
@@ -151,7 +113,7 @@ class Review implements SyncInterface
             );
             $storeIds = $website->getStoreIds();
             if ($apiEnabled && $reviewEnabled && !empty($storeIds)) {
-                $this->_exportReviewsForWebsite($website, $limit);
+                $this->_exportReviewsForWebsite($website);
             }
 
             if (isset($this->reviews[$website->getId()])) {
@@ -188,11 +150,15 @@ class Review implements SyncInterface
      * Export reviews for website.
      *
      * @param \Magento\Store\Model\Website $website
-     * @param string|int $limit
+     *
      * @return null
      */
-    public function _exportReviewsForWebsite(\Magento\Store\Model\Website $website, $limit)
+    public function _exportReviewsForWebsite(\Magento\Store\Model\Website $website)
     {
+        $limit           = $this->helper->getWebsiteConfig(
+            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_TRANSACTIONAL_DATA_SYNC_LIMIT,
+            $website
+        );
         $emailReviews    = $this->_getReviewsToExport($website, $limit);
         $this->reviewIds = [];
 

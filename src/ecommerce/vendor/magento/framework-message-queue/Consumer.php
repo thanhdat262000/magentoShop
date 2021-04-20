@@ -108,18 +108,11 @@ class Consumer implements ConsumerInterface
     public function process($maxNumberOfMessages = null)
     {
         $queue = $this->configuration->getQueue();
-        $maxIdleTime = $this->configuration->getMaxIdleTime();
-        $sleep = $this->configuration->getSleep();
+
         if (!isset($maxNumberOfMessages)) {
             $queue->subscribe($this->getTransactionCallback($queue));
         } else {
-            $this->invoker->invoke(
-                $queue,
-                $maxNumberOfMessages,
-                $this->getTransactionCallback($queue),
-                $maxIdleTime,
-                $sleep
-            );
+            $this->invoker->invoke($queue, $maxNumberOfMessages, $this->getTransactionCallback($queue));
         }
     }
 
@@ -247,7 +240,7 @@ class Consumer implements ConsumerInterface
      *
      * @return ConsumerConfig
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getConsumerConfig()
     {
@@ -262,7 +255,7 @@ class Consumer implements ConsumerInterface
      *
      * @return CommunicationConfig
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getCommunicationConfig()
     {
@@ -278,7 +271,7 @@ class Consumer implements ConsumerInterface
      *
      * @return QueueRepository
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getQueueRepository()
     {
@@ -293,7 +286,7 @@ class Consumer implements ConsumerInterface
      *
      * @return MessageController
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getMessageController()
     {
@@ -309,7 +302,7 @@ class Consumer implements ConsumerInterface
      *
      * @return MessageValidator
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getMessageValidator()
     {
@@ -325,7 +318,7 @@ class Consumer implements ConsumerInterface
      *
      * @return EnvelopeFactory
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getEnvelopeFactory()
     {

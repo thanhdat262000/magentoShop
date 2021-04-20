@@ -17,7 +17,6 @@ use Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\Query\JoinAttribut
 use Magento\Customer\Model\Indexer\CustomerGroupDimensionProvider;
 use Magento\Store\Model\Indexer\WebsiteDimensionProvider;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\CatalogInventory\Model\Stock;
 
 /**
  * Bundle products Price indexer resource model
@@ -378,7 +377,8 @@ class Price implements DimensionalIndexerInterface
             ]
         );
 
-        $this->tableMaintainer->insertFromSelect($select, $this->getBundlePriceTable(), []);
+        $query = $select->insertFromSelect($this->getBundlePriceTable());
+        $connection->query($query);
     }
 
     /**
@@ -418,7 +418,8 @@ class Price implements DimensionalIndexerInterface
             ]
         );
 
-        $this->tableMaintainer->insertFromSelect($select, $this->getBundleOptionTable(), []);
+        $query = $select->insertFromSelect($this->getBundleOptionTable());
+        $connection->query($query);
 
         $this->getConnection()->delete($priceTable->getTableName());
         $this->applyBundlePrice($priceTable);
@@ -574,7 +575,8 @@ class Price implements DimensionalIndexerInterface
                 'tier_price' => $tierExpr,
             ]
         );
-        $this->tableMaintainer->insertFromSelect($select, $this->getBundleSelectionTable(), []);
+        $query = $select->insertFromSelect($this->getBundleSelectionTable());
+        $connection->query($query);
 
         $this->applyFixedBundleSelectionPrice();
     }
@@ -625,14 +627,8 @@ class Price implements DimensionalIndexerInterface
                 'tier_price' => $tierExpr,
             ]
         );
-        $select->join(
-            ['si' => $this->getTable('cataloginventory_stock_status')],
-            'si.product_id = bs.product_id',
-            []
-        );
-        $select->where('si.stock_status = ?', Stock::STOCK_IN_STOCK);
-
-        $this->tableMaintainer->insertFromSelect($select, $this->getBundleSelectionTable(), []);
+        $query = $select->insertFromSelect($this->getBundleSelectionTable());
+        $connection->query($query);
     }
 
     /**
@@ -701,7 +697,8 @@ class Price implements DimensionalIndexerInterface
             $select->where($this->dimensionToFieldMapper[$dimension->getName()] . ' = ?', $dimension->getValue());
         }
 
-        $this->tableMaintainer->insertFromSelect($select, $this->getTable('catalog_product_index_tier_price'), []);
+        $query = $select->insertFromSelect($this->getTable('catalog_product_index_tier_price'));
+        $connection->query($query);
     }
 
     /**
@@ -728,7 +725,8 @@ class Price implements DimensionalIndexerInterface
             ]
         );
 
-        $this->tableMaintainer->insertFromSelect($select, $priceTable->getTableName(), []);
+        $query = $select->insertFromSelect($priceTable->getTableName());
+        $this->getConnection()->query($query);
     }
 
     /**
@@ -787,7 +785,7 @@ class Price implements DimensionalIndexerInterface
         if ($this->fullReindexAction) {
             return $this->tableMaintainer->getMainReplicaTable($dimensions);
         }
-        return $this->tableMaintainer->getMainTableByDimensions($dimensions);
+        return $this->tableMaintainer->getMainTable($dimensions);
     }
 
     /**

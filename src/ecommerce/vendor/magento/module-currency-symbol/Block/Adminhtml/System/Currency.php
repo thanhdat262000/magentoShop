@@ -41,14 +41,7 @@ class Currency extends \Magento\Backend\Block\Template
             ]
         );
 
-        $currencyOptionPath = $this->getUrl(
-            'adminhtml/system_config/edit',
-            [
-                'section' => 'currency',
-                '_fragment' => 'currency_options-link'
-            ]
-        );
-        $onClick = "setLocation('$currencyOptionPath')";
+        $onClick = "setLocation('" . $this->getUrl('adminhtml/system_config/edit/section/currency') . "')";
 
         $this->getToolbar()->addChild(
             'options_button',

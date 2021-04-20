@@ -56,7 +56,7 @@ abstract class AbstractModel extends \Magento\Framework\DataObject
         array $data = []
     ) {
         $this->_logger = $logger;
-        $this->_varDirectory = $filesystem->getDirectoryWrite(DirectoryList::VAR_IMPORT_EXPORT);
+        $this->_varDirectory = $filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         parent::__construct($data);
     }
 

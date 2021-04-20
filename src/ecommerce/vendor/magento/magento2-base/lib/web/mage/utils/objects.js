@@ -5,9 +5,8 @@
 define([
     'ko',
     'jquery',
-    'underscore',
-    'mage/utils/strings'
-], function (ko, $, _, stringUtils) {
+    'underscore'
+], function (ko, $, _) {
     'use strict';
 
     var primitives = [
@@ -218,7 +217,7 @@ define([
             data = this.flatten(data);
 
             _.each(data, function (value, keys) {
-                keys = stringUtils.serializeName(keys);
+                keys = this.serializeName(keys);
                 value = _.isUndefined(value) ? '' : value;
 
                 result[keys] = value;

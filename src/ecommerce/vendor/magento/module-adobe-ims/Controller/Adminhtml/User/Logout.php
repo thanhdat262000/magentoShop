@@ -10,14 +10,13 @@ namespace Magento\AdobeIms\Controller\Adminhtml\User;
 use Magento\AdobeImsApi\Api\LogOutInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Logout action from the Adobe account
  */
-class Logout extends Action implements HttpPostActionInterface
+class Logout extends Action
 {
     private const HTTP_INTERNAL_SUCCESS = 200;
     private const HTTP_INTERNAL_ERROR = 500;
@@ -49,7 +48,8 @@ class Logout extends Action implements HttpPostActionInterface
      */
     public function execute()
     {
-        if ($this->logout->execute()) {
+        $logout = $this->logout->execute();
+        if ($logout) {
             $responseCode = self::HTTP_INTERNAL_SUCCESS;
             $response = [
                 'success' => true,

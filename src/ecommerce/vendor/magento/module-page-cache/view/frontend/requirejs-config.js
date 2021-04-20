@@ -8,6 +8,5 @@ var config = {
         '*': {
             pageCache:  'Magento_PageCache/js/page-cache'
         }
-    },
-    deps: ['Magento_PageCache/js/form-key-provider']
+    }
 };

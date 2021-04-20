@@ -60,8 +60,6 @@ class AddUserInfoToContext implements ContextParametersProcessorInterface
      */
     private function isCustomer(?int $customerId, ?int $customerType): bool
     {
-        return !empty($customerId)
-            && !empty($customerType)
-            && $customerType === UserContextInterface::USER_TYPE_CUSTOMER;
+        return !empty($customerId) && !empty($customerType) && $customerType !== UserContextInterface::USER_TYPE_GUEST;
     }
 }

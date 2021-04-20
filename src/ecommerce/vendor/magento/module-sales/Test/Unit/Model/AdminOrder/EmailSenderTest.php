@@ -3,89 +3,58 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Sales\Test\Unit\Model\AdminOrder;
 
-use Magento\Framework\Exception\MailException;
-use Magento\Framework\Message\Manager;
-use Magento\Sales\Model\AdminOrder\EmailSender;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
-use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\ResourceModel\Order\Invoice\Collection as InvoiceCollection;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
+use \Magento\Sales\Model\AdminOrder\EmailSender;
 
-/**
- * Tests to sent order emails
- */
-class EmailSenderTest extends TestCase
+class EmailSenderTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var LoggerInterface|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $loggerMock;
+    protected $orderMock;
 
     /**
-     * @var Manager|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $messageManagerMock;
+    protected $loggerMock;
 
     /**
-     * @var OrderSender|MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $orderSenderMock;
-
-    /**
-     * @var InvoiceSender|MockObject
-     */
-    private $invoiceSenderMock;
+    protected $messageManagerMock;
 
     /**
      * @var EmailSender
      */
-    private $emailSender;
+    protected $emailSender;
 
     /**
-     * @inheritdoc
+     * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
-    protected function setUp(): void
-    {
-        $this->messageManagerMock = $this->createMock(Manager::class);
-        $this->loggerMock = $this->getMockForAbstractClass(LoggerInterface::class);
-        $this->orderSenderMock = $this->createMock(OrderSender::class);
-        $this->invoiceSenderMock = $this->createMock(InvoiceSender::class);
+    protected $orderSenderMock;
 
-        $this->emailSender = new EmailSender(
-            $this->messageManagerMock,
-            $this->loggerMock,
-            $this->orderSenderMock,
-            $this->invoiceSenderMock
-        );
+    /**
+     * Test setup
+     */
+    protected function setUp()
+    {
+        $this->messageManagerMock = $this->createMock(\Magento\Framework\Message\Manager::class);
+        $this->loggerMock = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $this->orderMock = $this->createMock(\Magento\Sales\Model\Order::class);
+        $this->orderSenderMock = $this->createMock(\Magento\Sales\Model\Order\Email\Sender\OrderSender::class);
+
+        $this->emailSender = new EmailSender($this->messageManagerMock, $this->loggerMock, $this->orderSenderMock);
     }
 
     /**
-     * Test to send order emails
+     * testSendSuccess
      */
     public function testSendSuccess()
     {
-        $invoicePaid = $this->createMock(Invoice::class);
-        $invoicePaid->method('getState')->willReturn(Invoice::STATE_PAID);
-        $invoiceOpen = $this->createMock(Invoice::class);
-        $invoiceOpen->method('getState')->willReturn(Invoice::STATE_OPEN);
-        $order = $this->createOrderMock([$invoiceOpen, $invoicePaid]);
-
         $this->orderSenderMock->expects($this->once())
-            ->method('send')
-            ->with($order);
-        $this->invoiceSenderMock->expects($this->once())
-            ->method('send')
-            ->with($invoicePaid);
-
-        $this->assertTrue($this->emailSender->send($order));
+            ->method('send');
+        $this->assertTrue($this->emailSender->send($this->orderMock));
     }
 
     /**
@@ -93,31 +62,14 @@ class EmailSenderTest extends TestCase
      */
     public function testSendFailure()
     {
-        $orderMock = $this->createOrderMock();
         $this->orderSenderMock->expects($this->once())
             ->method('send')
-            ->willThrowException(new MailException(__('test message')));
+            ->willThrowException(new \Magento\Framework\Exception\MailException(__('test message')));
         $this->messageManagerMock->expects($this->once())
             ->method('addWarningMessage');
         $this->loggerMock->expects($this->once())
             ->method('critical');
 
-        $this->assertFalse($this->emailSender->send($orderMock));
-    }
-
-    /**
-     * Create order mock
-     *
-     * @param array $invoiceCollection
-     * @return MockObject|Order
-     */
-    private function createOrderMock(array $invoiceCollection = []): MockObject
-    {
-        $collection = $this->createMock(InvoiceCollection::class);
-        $collection->method('getItems')->willReturn($invoiceCollection);
-        $order = $this->createMock(Order::class);
-        $order->method('getInvoiceCollection')->willReturn($collection);
-
-        return $order;
+        $this->assertFalse($this->emailSender->send($this->orderMock));
     }
 }

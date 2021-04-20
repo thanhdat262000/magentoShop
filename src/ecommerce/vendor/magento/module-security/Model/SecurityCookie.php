@@ -10,7 +10,6 @@ use Magento\Framework\Stdlib\Cookie\CookieReaderInterface;
 /**
  * Manager for a cookie with logout reason
  *
- * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  * @api
  * @since 100.1.0
  */
@@ -81,7 +80,6 @@ class SecurityCookie
     {
         $metaData = $this->createCookieMetaData();
         $metaData->setPath('/' . $this->backendData->getAreaFrontName());
-        $metaData->setSameSite('Strict');
 
         $this->phpCookieManager->setPublicCookie(
             self::LOGOUT_REASON_CODE_COOKIE_NAME,

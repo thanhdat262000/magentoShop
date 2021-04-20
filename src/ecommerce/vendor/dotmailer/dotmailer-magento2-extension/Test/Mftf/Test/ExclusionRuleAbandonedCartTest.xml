@@ -7,16 +7,17 @@
             <stories value="Test exclusion rules"/>
             <title value="Test abandoned cart exclusion rules"/>
             <description value="An exclusion rule for abandoned carts can be created with conditions."/>
-            <severity value="AVERAGE"/>
+            <severity value="MAJOR"/>
+            <group value="AM/109294-mftf"/>
             <group value="dotmailer"/>
         </annotations>
 
         <before>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="AdminLoginActionGroup1"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
 
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
 
         <!-- Create an exclusion rule for abandoned carts -->

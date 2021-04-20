@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getMethodInstance($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMethodInstance');
-        return $pluginInfo ? $this->___callPlugins('getMethodInstance', func_get_args(), $pluginInfo) : parent::getMethodInstance($code);
+        if (!$pluginInfo) {
+            return parent::getMethodInstance($code);
+        } else {
+            return $this->___callPlugins('getMethodInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getStoreMethods($store = null, $quote = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreMethods');
-        return $pluginInfo ? $this->___callPlugins('getStoreMethods', func_get_args(), $pluginInfo) : parent::getStoreMethods($store, $quote);
+        if (!$pluginInfo) {
+            return parent::getStoreMethods($store, $quote);
+        } else {
+            return $this->___callPlugins('getStoreMethods', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getMethodFormBlock(\Magento\Payment\Model\MethodInterface $method, \Magento\Framework\View\LayoutInterface $layout)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMethodFormBlock');
-        return $pluginInfo ? $this->___callPlugins('getMethodFormBlock', func_get_args(), $pluginInfo) : parent::getMethodFormBlock($method, $layout);
+        if (!$pluginInfo) {
+            return parent::getMethodFormBlock($method, $layout);
+        } else {
+            return $this->___callPlugins('getMethodFormBlock', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getInfoBlock(\Magento\Payment\Model\InfoInterface $info, ?\Magento\Framework\View\LayoutInterface $layout = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getInfoBlock');
-        return $pluginInfo ? $this->___callPlugins('getInfoBlock', func_get_args(), $pluginInfo) : parent::getInfoBlock($info, $layout);
+        if (!$pluginInfo) {
+            return parent::getInfoBlock($info, $layout);
+        } else {
+            return $this->___callPlugins('getInfoBlock', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getInfoBlockHtml(\Magento\Payment\Model\InfoInterface $info, $storeId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getInfoBlockHtml');
-        return $pluginInfo ? $this->___callPlugins('getInfoBlockHtml', func_get_args(), $pluginInfo) : parent::getInfoBlockHtml($info, $storeId);
+        if (!$pluginInfo) {
+            return parent::getInfoBlockHtml($info, $storeId);
+        } else {
+            return $this->___callPlugins('getInfoBlockHtml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getPaymentMethods()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPaymentMethods');
-        return $pluginInfo ? $this->___callPlugins('getPaymentMethods', func_get_args(), $pluginInfo) : parent::getPaymentMethods();
+        if (!$pluginInfo) {
+            return parent::getPaymentMethods();
+        } else {
+            return $this->___callPlugins('getPaymentMethods', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getPaymentMethodList($sorted = true, $asLabelValue = false, $withGroups = false, $store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPaymentMethodList');
-        return $pluginInfo ? $this->___callPlugins('getPaymentMethodList', func_get_args(), $pluginInfo) : parent::getPaymentMethodList($sorted, $asLabelValue, $withGroups, $store);
+        if (!$pluginInfo) {
+            return parent::getPaymentMethodList($sorted, $asLabelValue, $withGroups, $store);
+        } else {
+            return $this->___callPlugins('getPaymentMethodList', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function isZeroSubTotal($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isZeroSubTotal');
-        return $pluginInfo ? $this->___callPlugins('isZeroSubTotal', func_get_args(), $pluginInfo) : parent::isZeroSubTotal($store);
+        if (!$pluginInfo) {
+            return parent::isZeroSubTotal($store);
+        } else {
+            return $this->___callPlugins('isZeroSubTotal', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getZeroSubTotalOrderStatus($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getZeroSubTotalOrderStatus');
-        return $pluginInfo ? $this->___callPlugins('getZeroSubTotalOrderStatus', func_get_args(), $pluginInfo) : parent::getZeroSubTotalOrderStatus($store);
+        if (!$pluginInfo) {
+            return parent::getZeroSubTotalOrderStatus($store);
+        } else {
+            return $this->___callPlugins('getZeroSubTotalOrderStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function getZeroSubTotalPaymentAutomaticInvoice($store = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getZeroSubTotalPaymentAutomaticInvoice');
-        return $pluginInfo ? $this->___callPlugins('getZeroSubTotalPaymentAutomaticInvoice', func_get_args(), $pluginInfo) : parent::getZeroSubTotalPaymentAutomaticInvoice($store);
+        if (!$pluginInfo) {
+            return parent::getZeroSubTotalPaymentAutomaticInvoice($store);
+        } else {
+            return $this->___callPlugins('getZeroSubTotalPaymentAutomaticInvoice', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,6 +150,10 @@ class Interceptor extends \Magento\Payment\Helper\Data implements \Magento\Frame
     public function isModuleOutputEnabled($moduleName = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isModuleOutputEnabled');
-        return $pluginInfo ? $this->___callPlugins('isModuleOutputEnabled', func_get_args(), $pluginInfo) : parent::isModuleOutputEnabled($moduleName);
+        if (!$pluginInfo) {
+            return parent::isModuleOutputEnabled($moduleName);
+        } else {
+            return $this->___callPlugins('isModuleOutputEnabled', func_get_args(), $pluginInfo);
+        }
     }
 }

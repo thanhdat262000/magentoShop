@@ -19,7 +19,11 @@ class Interceptor extends \Magento\Framework\Controller\Result\Raw implements \M
     public function setContents($contents)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setContents');
-        return $pluginInfo ? $this->___callPlugins('setContents', func_get_args(), $pluginInfo) : parent::setContents($contents);
+        if (!$pluginInfo) {
+            return parent::setContents($contents);
+        } else {
+            return $this->___callPlugins('setContents', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -28,7 +32,11 @@ class Interceptor extends \Magento\Framework\Controller\Result\Raw implements \M
     public function setHttpResponseCode($httpCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHttpResponseCode');
-        return $pluginInfo ? $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo) : parent::setHttpResponseCode($httpCode);
+        if (!$pluginInfo) {
+            return parent::setHttpResponseCode($httpCode);
+        } else {
+            return $this->___callPlugins('setHttpResponseCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -37,7 +45,11 @@ class Interceptor extends \Magento\Framework\Controller\Result\Raw implements \M
     public function setHeader($name, $value, $replace = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHeader');
-        return $pluginInfo ? $this->___callPlugins('setHeader', func_get_args(), $pluginInfo) : parent::setHeader($name, $value, $replace);
+        if (!$pluginInfo) {
+            return parent::setHeader($name, $value, $replace);
+        } else {
+            return $this->___callPlugins('setHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -46,7 +58,11 @@ class Interceptor extends \Magento\Framework\Controller\Result\Raw implements \M
     public function setStatusHeader($httpCode, $version = null, $phrase = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStatusHeader');
-        return $pluginInfo ? $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo) : parent::setStatusHeader($httpCode, $version, $phrase);
+        if (!$pluginInfo) {
+            return parent::setStatusHeader($httpCode, $version, $phrase);
+        } else {
+            return $this->___callPlugins('setStatusHeader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -55,6 +71,10 @@ class Interceptor extends \Magento\Framework\Controller\Result\Raw implements \M
     public function renderResult(\Magento\Framework\App\ResponseInterface $response)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderResult');
-        return $pluginInfo ? $this->___callPlugins('renderResult', func_get_args(), $pluginInfo) : parent::renderResult($response);
+        if (!$pluginInfo) {
+            return parent::renderResult($response);
+        } else {
+            return $this->___callPlugins('renderResult', func_get_args(), $pluginInfo);
+        }
     }
 }

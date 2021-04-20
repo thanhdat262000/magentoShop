@@ -10,8 +10,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Observer to remove persistent session if guest empties persistent cart previously created and added to by customer.
- *
- * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class RemoveGuestPersistenceOnEmptyCartObserver implements ObserverInterface
 {
@@ -98,8 +96,6 @@ class RemoveGuestPersistenceOnEmptyCartObserver implements ObserverInterface
         }
 
         if (!$cart || $cart->getItemsCount() == 0) {
-            $this->customerSession->setCustomerId(null)
-                ->setCustomerGroupId(null);
             $this->quoteManager->setGuest();
         }
     }

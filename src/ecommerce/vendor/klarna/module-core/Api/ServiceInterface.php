@@ -41,12 +41,12 @@ interface ServiceInterface
      * Make API call
      *
      * @param string $url
-     * @param array $body
+     * @param string $body
      * @param string $method HTTP request type
-     * @param null|string $klarnaId
+     * @param string $klarnaId
      * @return array Response body from API call
      */
-    public function makeRequest($url, $body = [], $method = self::POST, $klarnaId = null);
+    public function makeRequest($url, $body = '', $method = self::POST, $klarnaId = null);
 
     /**
      * Connect to API

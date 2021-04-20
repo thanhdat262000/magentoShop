@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\InventoryIndexer\Indexer\IndexStructure;
 use Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface;
 
 /**
@@ -19,21 +20,14 @@ class AddIsInStockFieldToCollection
      * @var StockIndexTableNameResolverInterface
      */
     private $stockIndexTableProvider;
-    /**
-     * @var StockStatusFilter
-     */
-    private $stockStatusFilter;
 
     /**
      * @param StockIndexTableNameResolverInterface $stockIndexTableProvider
-     * @param StockStatusFilter $stockStatusFilter
      */
     public function __construct(
-        StockIndexTableNameResolverInterface $stockIndexTableProvider,
-        StockStatusFilter $stockStatusFilter
+        StockIndexTableNameResolverInterface $stockIndexTableProvider
     ) {
         $this->stockIndexTableProvider = $stockIndexTableProvider;
-        $this->stockStatusFilter = $stockStatusFilter;
     }
 
     /**
@@ -45,11 +39,12 @@ class AddIsInStockFieldToCollection
      */
     public function execute($collection, int $stockId)
     {
-        $this->stockStatusFilter->execute(
-            $collection->getSelect(),
-            'e',
-            'inventory_in_stock',
-            $stockId
-        );
+        $tableName = $this->stockIndexTableProvider->execute($stockId);
+
+        $collection->getSelect()->join(
+            ['inventory_in_stock' => $tableName],
+            'e.sku = inventory_in_stock.sku',
+            []
+        )->where('inventory_in_stock.' . IndexStructure::IS_SALABLE . ' = ?', 1);
     }
 }

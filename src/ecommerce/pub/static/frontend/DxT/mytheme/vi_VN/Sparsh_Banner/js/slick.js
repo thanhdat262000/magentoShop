@@ -1,0 +1,1 @@
+/var/www/html/ecommerce/app/code/Sparsh/Banner/view/frontend/web/js/slick.js

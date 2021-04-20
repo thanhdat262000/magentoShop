@@ -3,165 +3,196 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Sitemap\Test\Unit\Block;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\DataObject;
-use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use Magento\Framework\View\Element\Context;
-use Magento\Robots\Model\Config\Value;
-use Magento\Sitemap\Block\Robots;
-use Magento\Sitemap\Model\ResourceModel\Sitemap\Collection;
-use Magento\Sitemap\Model\ResourceModel\Sitemap\CollectionFactory;
-use Magento\Sitemap\Model\Sitemap;
-use Magento\Sitemap\Model\SitemapConfigReader;
-use Magento\Store\Api\Data\StoreInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Store\Model\Website;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Test for \Magento\Sitemap\Block\Robots.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class RobotsTest extends TestCase
+class RobotsTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var CollectionFactory|MockObject
+     * @var \Magento\Framework\View\Element\Context|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $context;
+
+    /**
+     * @var \Magento\Store\Model\StoreResolver|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $storeResolver;
+
+    /**
+     * @var \Magento\Sitemap\Model\ResourceModel\Sitemap\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $sitemapCollectionFactory;
 
     /**
-     * @var Robots
+     * @var \Magento\Sitemap\Helper\Data|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $model;
+    private $sitemapHelper;
 
     /**
-     * @var ManagerInterface|MockObject
+     * @var \Magento\Sitemap\Block\Robots
+     */
+    private $block;
+
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $eventManagerMock;
 
     /**
-     * @var ScopeConfigInterface|MockObject
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $scopeConfigMock;
 
     /**
-     * @var StoreManagerInterface|MockObject
+     * @var \Magento\Store\Model\StoreManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $storeManager;
 
-    /**
-     * @var SitemapConfigReader|MockObject
-     */
-    private $siteMapConfigReader;
-
-    /**
-     * @inheritDoc
-     */
-    protected function setUp(): void
+    protected function setUp()
     {
-        $objectManager = new ObjectManager($this);
+        $this->eventManagerMock = $this->getMockBuilder(\Magento\Framework\Event\ManagerInterface::class)
+            ->getMockForAbstractClass();
 
-        $this->eventManagerMock = $this->getMockForAbstractClass(ManagerInterface::class);
-        $this->scopeConfigMock = $this->getMockForAbstractClass(ScopeConfigInterface::class);
+        $this->scopeConfigMock = $this->getMockBuilder(\Magento\Framework\App\Config\ScopeConfigInterface::class)
+            ->getMockForAbstractClass();
 
-        $context = $this->createMock(Context::class);
-        $context->expects($this->any())
+        $this->context = $this->getMockBuilder(\Magento\Framework\View\Element\Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->context->expects($this->any())
             ->method('getEventManager')
             ->willReturn($this->eventManagerMock);
-        $context->expects($this->any())
+
+        $this->context->expects($this->any())
             ->method('getScopeConfig')
             ->willReturn($this->scopeConfigMock);
 
-        $this->sitemapCollectionFactory = $this->createMock(CollectionFactory::class);
-        $this->storeManager = $this->getMockForAbstractClass(StoreManagerInterface::class);
-        $this->siteMapConfigReader = $this->createMock(SitemapConfigReader::class);
+        $this->storeResolver = $this->getMockBuilder(\Magento\Store\Model\StoreResolver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->model = $objectManager->getObject(
-            Robots::class,
-            [
-                'context' => $context,
-                'sitemapCollectionFactory' => $this->sitemapCollectionFactory,
-                'storeManager' => $this->storeManager,
-                'sitemapConfigReader' => $this->siteMapConfigReader
-            ]
+        $this->sitemapCollectionFactory = $this->getMockBuilder(
+            \Magento\Sitemap\Model\ResourceModel\Sitemap\CollectionFactory::class
+        )
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->sitemapHelper = $this->getMockBuilder(\Magento\Sitemap\Helper\Data::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->storeManager = $this->getMockBuilder(\Magento\Store\Model\StoreManagerInterface::class)
+            ->getMockForAbstractClass();
+
+        $this->block = new \Magento\Sitemap\Block\Robots(
+            $this->context,
+            $this->storeResolver,
+            $this->sitemapCollectionFactory,
+            $this->sitemapHelper,
+            $this->storeManager
         );
     }
 
     /**
      * Check toHtml() method in case when robots submission is disabled
-     *
-     * @return void
      */
-    public function testToHtmlRobotsSubmissionIsDisabled(): void
+    public function testToHtmlRobotsSubmissionIsDisabled()
     {
         $defaultStoreId = 1;
+        $defaultWebsiteId = 1;
+
         $expected = '';
 
         $this->initEventManagerMock($expected);
-        $this->scopeConfigMock->expects($this->once())
-            ->method('getValue')
-            ->willReturn(false);
+        $this->scopeConfigMock->expects($this->once())->method('getValue')->willReturn(false);
 
-        $websiteMock = $this->createMock(Website::class);
-        $websiteMock->expects($this->once())
+        $storeMock = $this->getMockBuilder(\Magento\Store\Api\Data\StoreInterface::class)
+            ->getMockForAbstractClass();
+
+        $storeMock->expects($this->once())
+            ->method('getWebsiteId')
+            ->willReturn($defaultWebsiteId);
+
+        $this->storeManager->expects($this->once())
+            ->method('getDefaultStoreView')
+            ->willReturn($storeMock);
+
+        $storeMock->expects($this->any())
+            ->method('getWebsiteId')
+            ->willReturn($defaultWebsiteId);
+
+        $websiteMock = $this->getMockBuilder(\Magento\Store\Model\Website::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $websiteMock->expects($this->any())
             ->method('getStoreIds')
             ->willReturn([$defaultStoreId]);
 
         $this->storeManager->expects($this->once())
             ->method('getWebsite')
-            ->with(null)
+            ->with($defaultWebsiteId)
             ->willReturn($websiteMock);
 
-        $this->siteMapConfigReader->expects($this->once())
+        $this->sitemapHelper->expects($this->once())
             ->method('getEnableSubmissionRobots')
             ->with($defaultStoreId)
             ->willReturn(false);
 
-        $this->assertEquals($expected, $this->model->toHtml());
+        $this->assertEquals($expected, $this->block->toHtml());
     }
 
     /**
      * Check toHtml() method in case when robots submission is enabled
-     *
-     * @return void
      */
-    public function testAfterGetDataRobotsSubmissionIsEnabled(): void
+    public function testAfterGetDataRobotsSubmissionIsEnabled()
     {
         $defaultStoreId = 1;
         $secondStoreId = 2;
+        $defaultWebsiteId = 1;
 
         $sitemapPath = '/';
         $sitemapFilenameOne = 'sitemap.xml';
         $sitemapFilenameTwo = 'sitemap_custom.xml';
         $sitemapFilenameThree = 'sitemap.xml';
 
-        $expected = 'Sitemap: ' . $sitemapFilenameOne . PHP_EOL . 'Sitemap: ' . $sitemapFilenameTwo . PHP_EOL;
+        $expected = 'Sitemap: ' . $sitemapFilenameOne
+            . PHP_EOL
+            . 'Sitemap: ' . $sitemapFilenameTwo
+            . PHP_EOL;
 
         $this->initEventManagerMock($expected);
-        $this->scopeConfigMock->expects($this->once())
-            ->method('getValue')
-            ->willReturn(false);
+        $this->scopeConfigMock->expects($this->once())->method('getValue')->willReturn(false);
 
-        $websiteMock = $this->getMockBuilder(Website::class)
+        $storeMock = $this->getMockBuilder(\Magento\Store\Api\Data\StoreInterface::class)
+            ->getMockForAbstractClass();
+
+        $this->storeManager->expects($this->once())
+            ->method('getDefaultStoreView')
+            ->willReturn($storeMock);
+
+        $storeMock->expects($this->any())
+            ->method('getWebsiteId')
+            ->willReturn($defaultWebsiteId);
+
+        $websiteMock = $this->getMockBuilder(\Magento\Store\Model\Website::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $websiteMock->expects($this->once())
+        $websiteMock->expects($this->any())
             ->method('getStoreIds')
             ->willReturn([$defaultStoreId, $secondStoreId]);
 
         $this->storeManager->expects($this->once())
             ->method('getWebsite')
-            ->with(null)
+            ->with($defaultWebsiteId)
             ->willReturn($websiteMock);
 
-        $this->siteMapConfigReader->expects($this->atLeastOnce())
+        $this->sitemapHelper->expects($this->any())
             ->method('getEnableSubmissionRobots')
             ->willReturnMap([
                 [$defaultStoreId, true],
@@ -172,15 +203,15 @@ class RobotsTest extends TestCase
         $sitemapMockTwo = $this->getSitemapMock($sitemapPath, $sitemapFilenameTwo);
         $sitemapMockThree = $this->getSitemapMock($sitemapPath, $sitemapFilenameThree);
 
-        $sitemapCollectionMock = $this->getMockBuilder(Collection::class)
+        $sitemapCollectionMock = $this->getMockBuilder(\Magento\Sitemap\Model\ResourceModel\Sitemap\Collection::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $sitemapCollectionMock->expects($this->once())
+        $sitemapCollectionMock->expects($this->any())
             ->method('addStoreFilter')
             ->with([$defaultStoreId])
             ->willReturnSelf();
 
-        $sitemapCollectionMock->expects($this->once())
+        $sitemapCollectionMock->expects($this->any())
             ->method('getIterator')
             ->willReturn(new \ArrayIterator([$sitemapMockOne, $sitemapMockTwo, $sitemapMockThree]));
 
@@ -188,19 +219,17 @@ class RobotsTest extends TestCase
             ->method('create')
             ->willReturn($sitemapCollectionMock);
 
-        $this->assertEquals($expected, $this->model->toHtml());
+        $this->assertEquals($expected, $this->block->toHtml());
     }
 
     /**
      * Check that getIdentities() method returns specified cache tag
-     *
-     * @return void
      */
-    public function testGetIdentities(): void
+    public function testGetIdentities()
     {
         $storeId = 1;
 
-        $storeMock = $this->getMockForAbstractClass(StoreInterface::class);
+        $storeMock = $this->getMockBuilder(\Magento\Store\Api\Data\StoreInterface::class)->getMockForAbstractClass();
 
         $this->storeManager->expects($this->once())
             ->method('getDefaultStoreView')
@@ -210,8 +239,10 @@ class RobotsTest extends TestCase
             ->method('getId')
             ->willReturn($storeId);
 
-        $expected = [Value::CACHE_TAG . '_' . $storeId];
-        $this->assertEquals($expected, $this->model->getIdentities());
+        $expected = [
+            \Magento\Robots\Model\Config\Value::CACHE_TAG . '_' . $storeId,
+        ];
+        $this->assertEquals($expected, $this->block->getIdentities());
     }
 
     /**
@@ -220,18 +251,23 @@ class RobotsTest extends TestCase
      * @param string $data
      * @return void
      */
-    protected function initEventManagerMock($data): void
+    protected function initEventManagerMock($data)
     {
         $this->eventManagerMock->expects($this->any())
             ->method('dispatch')
             ->willReturnMap([
                 [
                     'view_block_abstract_to_html_before',
-                    ['block' => $this->model],
+                    [
+                        'block' => $this->block,
+                    ],
                 ],
                 [
                     'view_block_abstract_to_html_after',
-                    ['block' => $this->model, 'transport' => new DataObject(['html' => $data])],
+                    [
+                        'block' => $this->block,
+                        'transport' => new \Magento\Framework\DataObject(['html' => $data]),
+                    ],
                 ],
             ]);
     }
@@ -241,14 +277,17 @@ class RobotsTest extends TestCase
      *
      * @param string $sitemapPath
      * @param string $sitemapFilename
-     * @return MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getSitemapMock($sitemapPath, $sitemapFilename): MockObject
+    protected function getSitemapMock($sitemapPath, $sitemapFilename)
     {
-        $sitemapMock = $this->getMockBuilder(Sitemap::class)
+        $sitemapMock = $this->getMockBuilder(\Magento\Sitemap\Model\Sitemap::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getSitemapUrl'])
-            ->addMethods(['getSitemapFilename', 'getSitemapPath'])
+            ->setMethods([
+                'getSitemapFilename',
+                'getSitemapPath',
+                'getSitemapUrl',
+            ])
             ->getMock();
 
         $sitemapMock->expects($this->any())

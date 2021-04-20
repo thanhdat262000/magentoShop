@@ -1,0 +1,1 @@
+/var/www/html/ecommerce/app/code/Meetanshi/FacebookChat/view/adminhtml/web/js/jscolor.js

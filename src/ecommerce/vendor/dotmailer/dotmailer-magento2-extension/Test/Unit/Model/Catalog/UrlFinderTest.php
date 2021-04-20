@@ -8,6 +8,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Block\Product\ImageBuilder;
 use Magento\Catalog\Block\Product\ImageBuilderFactory;
 use Magento\Catalog\Model\Product;
+use Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website;
@@ -19,6 +20,11 @@ class UrlFinderTest extends TestCase
      * @var ProductRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productRepositoryMock;
+
+    /**
+     * @var Configurable|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $configurableTypeMock;
 
     /**
      * @var Product|\PHPUnit_Framework_MockObject_MockObject
@@ -46,6 +52,11 @@ class UrlFinderTest extends TestCase
     private $imageBuilderMock;
 
     /**
+     * @var Product\Media\Config
+     */
+    private $mediaConfigMock;
+
+    /**
      * @var
      */
     private $scopeConfigInterfaceMock;
@@ -55,14 +66,23 @@ class UrlFinderTest extends TestCase
      */
     private $parentFinderMock;
 
-    protected function setUp() :void
+    protected function setUp()
     {
         $this->productRepositoryMock = $this->createMock(ProductRepositoryInterface::class);
         $this->productMock = $this->createMock(Product::class);
         $this->storeManagerMock = $this->createMock(StoreManagerInterface::class);
         $this->websiteMock = $this->createMock(Website::class);
         $this->imageBuilderMock = $this->createMock(ImageBuilder::class);
+        $this->mediaConfigMock = $this->createMock(Product\Media\Config::class);
         $this->parentFinderMock = $this->createMock(ParentFinder::class);
+
+        $mediaConfigFactory = $this->getMockBuilder(Product\Media\ConfigFactory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $mediaConfigFactory->expects($this->once())
+            ->method('create')
+            ->willReturn($this->mediaConfigMock);
 
         $imageBuilderFactory = $this->getMockBuilder(ImageBuilderFactory::class)
             ->disableOriginalConstructor()
@@ -78,6 +98,7 @@ class UrlFinderTest extends TestCase
             $this->productRepositoryMock,
             $this->storeManagerMock,
             $imageBuilderFactory,
+            $mediaConfigFactory,
             $this->scopeConfigInterfaceMock,
             $this->parentFinderMock
         );
@@ -174,15 +195,11 @@ class UrlFinderTest extends TestCase
 
         $this->productMock = $this->getInScopeProduct($this->productMock);
 
-        $this->parentFinderMock->expects($this->once())
-            ->method('getParentProductForNoImageSelection')
-            ->with($this->productMock)
-            ->willReturn($this->productMock);
-
         $this->imageBuilderMock->expects($this->once())
             ->method('setProduct')
             ->with($this->productMock)
-            ->willReturn(new class($imageId, $imagePath) {
+            ->willReturn(new class($imageId, $imagePath)
+            {
                 private $imageId;
                 private $imagePath;
 

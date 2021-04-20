@@ -7,7 +7,6 @@ namespace Magento\Sales\Model;
 
 use Magento\Config\Model\Config\Source\Nooptreq;
 use Magento\Directory\Model\Currency;
-use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -43,17 +42,17 @@ use Magento\Store\Model\ScopeInterface;
  *
  * @api
  * @method int getGiftMessageId()
- * @method Order setGiftMessageId(int $value)
+ * @method \Magento\Sales\Model\Order setGiftMessageId(int $value)
  * @method bool hasBillingAddressId()
- * @method Order unsBillingAddressId()
+ * @method \Magento\Sales\Model\Order unsBillingAddressId()
  * @method bool hasShippingAddressId()
- * @method Order unsShippingAddressId()
+ * @method \Magento\Sales\Model\Order unsShippingAddressId()
  * @method int getShippigAddressId()
  * @method bool hasCustomerNoteNotify()
  * @method bool hasForcedCanCreditmemo()
  * @method bool getIsInProcess()
- * @method \Magento\Customer\Model\Customer|null getCustomer()
- * @method Order setSendEmail(bool $value)
+ * @method \Magento\Customer\Model\Customer getCustomer()
+ * @method \Magento\Sales\Model\Order setSendEmail(bool $value)
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -309,16 +308,6 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     private $scopeConfig;
 
     /**
-     * @var RegionFactory
-     */
-    private $regionFactory;
-
-    /**
-     * @var array
-     */
-    private $regionItems;
-
-    /**
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
@@ -351,7 +340,6 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      * @param OrderItemRepositoryInterface $itemRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param ScopeConfigInterface $scopeConfig
-     * @param RegionFactory $regionFactory
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -386,8 +374,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         ProductOption $productOption = null,
         OrderItemRepositoryInterface $itemRepository = null,
         SearchCriteriaBuilder $searchCriteriaBuilder = null,
-        ScopeConfigInterface $scopeConfig = null,
-        RegionFactory $regionFactory = null
+        ScopeConfigInterface $scopeConfig = null
     ) {
         $this->_storeManager = $storeManager;
         $this->_orderConfig = $orderConfig;
@@ -416,8 +403,6 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder ?: ObjectManager::getInstance()
             ->get(SearchCriteriaBuilder::class);
         $this->scopeConfig = $scopeConfig ?: ObjectManager::getInstance()->get(ScopeConfigInterface::class);
-        $this->regionFactory = $regionFactory ?: ObjectManager::getInstance()->get(RegionFactory::class);
-        $this->regionItems = [];
 
         parent::__construct(
             $context,
@@ -509,7 +494,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      * Load order by system increment identifier
      *
      * @param string $incrementId
-     * @return Order
+     * @return \Magento\Sales\Model\Order
      */
     public function loadByIncrementId($incrementId)
     {
@@ -521,7 +506,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      *
      * @param string $incrementId
      * @param string $storeId
-     * @return Order
+     * @return \Magento\Sales\Model\Order
      */
     public function loadByIncrementIdAndStoreId($incrementId, $storeId)
     {
@@ -731,7 +716,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
         $hasDueAmount = $this->canInvoice() && ($checkAmtTotalPaid);
         //case when paid amount is refunded and order has creditmemo created
         $creditmemos = ($this->getCreditmemosCollection() === false) ?
-             true : ($this->_memoCollectionFactory->create()->setOrderFilter($this)->getTotalCount() > 0);
+             true : (count($this->getCreditmemosCollection()) > 0);
         $paidAmtIsRefunded = $this->getTotalRefunded() == $totalPaid && $creditmemos;
         if (($hasDueAmount || $paidAmtIsRefunded) ||
             (!$checkAmtTotalPaid &&
@@ -873,7 +858,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      */
     public function canReorder()
     {
-        return $this->_canReorder();
+        return $this->_canReorder(false);
     }
 
     /**
@@ -1343,7 +1328,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      */
     public function getShippingMethod($asObject = false)
     {
-        $shippingMethod = $this->getData('shipping_method');
+        $shippingMethod = parent::getShippingMethod();
         if (!$asObject || !$shippingMethod) {
             return $shippingMethod;
         } else {
@@ -1361,21 +1346,9 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      */
     public function getAddressesCollection()
     {
-        $region = $this->regionFactory->create();
         $collection = $this->_addressCollectionFactory->create()->setOrderFilter($this);
         if ($this->getId()) {
             foreach ($collection as $address) {
-                if (isset($this->regionItems[$address->getCountryId()][$address->getRegion()])) {
-                    if ($this->regionItems[$address->getCountryId()][$address->getRegion()]) {
-                        $address->setRegion($this->regionItems[$address->getCountryId()][$address->getRegion()]);
-                    }
-                } else {
-                    $region->loadByName($address->getRegion(), $address->getCountryId());
-                    $this->regionItems[$address->getCountryId()][$address->getRegion()] = $region->getName();
-                    if ($region->getName()) {
-                        $address->setRegion($region->getName());
-                    }
-                }
                 $address->setOrder($this);
             }
         }
@@ -2079,7 +2052,7 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
     {
         $storeId = $this->getStoreId();
         if ($storeId === null) {
-            return $this->getStoreName();
+            return $this->getStoreName(1);
         }
         return $this->getStore()->getGroup()->getName();
     }

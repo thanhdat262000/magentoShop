@@ -38,16 +38,6 @@ define([
     }
 
     /**
-     * Checks if provided module had path fallback triggered.
-     *
-     * @param {Object} module - Module to be checked.
-     * @return {Boolean}
-     */
-    function isPathFallback(module) {
-        return registry[module.id] && registry[module.id].events.error;
-    }
-
-    /**
      * Checks if provided module has unresolved dependencies.
      *
      * @param {Object} module - Module to be checked.
@@ -58,8 +48,7 @@ define([
             return false;
         }
 
-        return module.depCount >
-            _.filter(module.depMaps, isRejected).length + _.filter(module.depMaps, isPathFallback).length;
+        return module.depCount > _.filter(module.depMaps, isRejected).length;
     }
 
     /**

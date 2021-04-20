@@ -2,7 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Model\Connector;
 
-use Dotdigitalgroup\Email\Logger\Logger;
 use Dotdigitalgroup\Email\Model\Product\AttributeFactory;
 
 /**
@@ -139,11 +138,6 @@ class Order
     private $attributeHandler;
 
     /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
      * Order constructor.
      *
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
@@ -152,7 +146,6 @@ class Order
      * @param \Magento\Store\Model\StoreManagerInterface $storeManagerInterface
      * @param KeyValidator $validator
      * @param AttributeFactory $attributeHandler
-     * @param Logger $logger
      */
     public function __construct(
         \Magento\Catalog\Model\ProductFactory $productFactory,
@@ -160,8 +153,7 @@ class Order
         \Dotdigitalgroup\Email\Helper\Data $helperData,
         \Magento\Store\Model\StoreManagerInterface $storeManagerInterface,
         KeyValidator $validator,
-        AttributeFactory $attributeHandler,
-        Logger $logger
+        AttributeFactory $attributeHandler
     ) {
         $this->productFactory      = $productFactory;
         $this->customerFactory     = $customerFactory;
@@ -169,7 +161,6 @@ class Order
         $this->storeManager = $storeManagerInterface;
         $this->validator = $validator;
         $this->attributeHandler = $attributeHandler;
-        $this->logger = $logger;
     }
 
     /**
@@ -193,7 +184,7 @@ class Order
             '.',
             ''
         );
-        $this->currency = $orderData->getOrderCurrencyCode();
+        $this->currency = $orderData->getStoreCurrencyCode();
         $payment = $orderData->getPayment();
 
         if ($payment) {
@@ -252,15 +243,7 @@ class Order
         /*
          * Order items.
          */
-        try {
-            $this->processOrderItems($orderData, $syncCustomOption);
-        } catch (\InvalidArgumentException $e) {
-            $this->logger->debug(
-                'Could not process order items for order id ' . $orderData->getRealOrderId(),
-                [(string) $e]
-            );
-            $this->products = [];
-        }
+        $this->processOrderItems($orderData, $syncCustomOption);
 
         $this->orderSubtotal = (float)number_format(
             $orderData->getData('subtotal'),
@@ -280,7 +263,7 @@ class Order
         $this->orderTotal = (float)number_format($orderTotal, 2, '.', '');
         $this->orderStatus = $orderData->getStatus();
 
-        unset($this->storeManager, $this->logger);
+        unset($this->storeManager);
 
         return $this;
     }
@@ -342,8 +325,7 @@ class Order
      * @param \Magento\Sales\Model\Order $orderData
      * @param boolean $syncCustomOption
      *
-     * @return void
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return null
      */
     private function processOrderItems($orderData, $syncCustomOption)
     {
@@ -351,15 +333,8 @@ class Order
             if ($productItem->getProduct() === null) {
                 continue;
             }
-
-            $isBundle = $isChildOfBundle = false;
-
-            /**
-             * We store data for configurable and bundle products, to be output alongside their children.
-             * Configurable parents are not output in schema,
-             * but bundle parents are.
-             */
             if (in_array($productItem->getProduct()->getTypeId(), ['configurable', 'bundle'])) {
+                // We store data for configurable and bundle products, to be output alongside their children
                 unset($parentProductModel, $parentLineItem);
                 $parentProductModel = $productItem->getProduct();
                 $parentLineItem = $productItem;
@@ -367,13 +342,7 @@ class Order
                 // Custom options stored against parent order items
                 $customOptions = ($syncCustomOption) ? $this->_getOrderItemOptions($productItem) : [];
 
-                // Define parent types for easy reference
-                $isBundle = $productItem->getProduct()->getTypeId() === 'bundle';
-                $isConfigurable = $productItem->getProduct()->getTypeId() === 'configurable';
-
-                if ($isConfigurable) {
-                    continue;
-                }
+                continue;
             }
 
             if (empty($customOptions)) {
@@ -383,7 +352,6 @@ class Order
             if (isset($parentProductModel) &&
                 isset($parentLineItem) &&
                 $parentLineItem->getId() === $productItem->getParentItemId()) {
-                $isChildOfBundle = $parentProductModel->getTypeId() === 'bundle';
                 $productModel = $parentProductModel;
                 $childProductModel = $productItem->getProduct();
             } else {
@@ -433,8 +401,8 @@ class Order
                  */
                 $productData = [
                     'name' => $productItem->getName(),
-                    'parent_name' => $isBundle ? '' : $productModel->getName(),
-                    'sku' => $isBundle ? $productModel->getSku() : $productItem->getSku(),
+                    'parent_name' => $productModel->getName(),
+                    'sku' => $productItem->getSku(),
                     'qty' => (int)number_format(
                         $productItem->getData('qty_ordered'),
                         2
@@ -457,15 +425,7 @@ class Order
                 if ($customOptions) {
                     $productData['custom-options'] = $customOptions;
                 }
-
-                if ($isChildOfBundle) {
-                    end($this->products);
-                    $lastKey = key($this->products);
-                    $this->products[$lastKey]['sub_items'][] = $productData;
-                } else {
-                    $this->products[] = $productData;
-                }
-
+                $this->products[] = $productData;
             } else {
                 // when no product information is available limit to this data
                 $productData = [

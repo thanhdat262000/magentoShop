@@ -5,9 +5,6 @@
  */
 namespace Magento\FunctionalTestingFramework\Suite\Handlers;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\ObjectManager\ObjectHandlerInterface;
@@ -16,8 +13,6 @@ use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
 use Magento\FunctionalTestingFramework\Suite\Parsers\SuiteDataParser;
 use Magento\FunctionalTestingFramework\Suite\Util\SuiteObjectExtractor;
 use Magento\FunctionalTestingFramework\Test\Util\ObjectExtractor;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 /**
  * Class SuiteObjectHandler
@@ -58,7 +53,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Function to enforce singleton design pattern
      *
      * @return ObjectHandlerInterface
-     * @throws FastFailException
+     * @throws XmlException
      */
     public static function getInstance(): ObjectHandlerInterface
     {
@@ -79,9 +74,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     public function getObject($objectName): SuiteObject
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
-            throw new TestReferenceException(
-                "Suite ${objectName} is not defined in xml or is invalid."
-            );
+            throw new TestReferenceException("Suite ${objectName} is not defined in xml.");
         }
         return $this->suiteObjects[$objectName];
     }
@@ -100,7 +93,6 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      * Function which return all tests referenced by suites.
      *
      * @return array
-     * @throws TestFrameworkException
      */
     public function getAllTestReferences(): array
     {
@@ -122,16 +114,11 @@ class SuiteObjectHandler implements ObjectHandlerInterface
      *
      * @return void
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @throws FastFailException
+     * @throws XmlException
      */
     private function initSuiteData()
     {
-        try {
-            $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
-        } catch (\Exception $e) {
-            throw new FastFailException("Suite Data Parser Error: " . $e->getMessage());
-        }
-
+        $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
         $suiteObjectExtractor = new SuiteObjectExtractor();
         $this->suiteObjects = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
     }

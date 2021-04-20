@@ -33,10 +33,8 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
             'Properties should be set to `null` instead of using `unset`.',
             [new CodeSample("<?php\nunset(\$this->a);\n")],
             null,
-            'Risky when relying on attributes to be removed using `unset` rather than be set to `null`.'.
-            ' Changing variables to `null` instead of unsetting means these still show up when looping over class variables'.
-            ' and reference properties remain unbroken.'.
-            ' With PHP 7.4, this rule might introduce `null` assignments to properties whose type declaration does not allow it.'
+            'Changing variables to `null` instead of unsetting them will mean they still show up '.
+            'when looping over class variables.'
         );
     }
 
@@ -59,11 +57,10 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before CombineConsecutiveUnsetsFixer.
      */
     public function getPriority()
     {
+        // should be run before CombineConsecutiveUnsetsFixer
         return 25;
     }
 
@@ -89,7 +86,8 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      *
      * @return array<array<string, bool|int>>
      */
@@ -118,8 +116,9 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
     }
 
     /**
-     * @param int $index
-     * @param int $endIndex
+     * @param Tokens $tokens
+     * @param int    $index
+     * @param int    $endIndex
      *
      * @return bool
      */
@@ -140,7 +139,7 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
         }
 
         if ($tokens[$index]->isGivenKind([T_NS_SEPARATOR, T_STRING])) {
-            $nextIndex = $tokens->getTokenNotOfKindsSibling($index, 1, [T_DOUBLE_COLON, T_NS_SEPARATOR, T_STRING]);
+            $nextIndex = $tokens->getTokenNotOfKindSibling($index, 1, [[T_DOUBLE_COLON], [T_NS_SEPARATOR], [T_STRING]]);
             $nextNextIndex = $tokens->getNextMeaningfulToken($nextIndex);
             if (null !== $nextNextIndex && $nextNextIndex < $endIndex) {
                 return false;
@@ -169,6 +168,7 @@ final class NoUnsetOnPropertyFixer extends AbstractFixer
     }
 
     /**
+     * @param Tokens                  $tokens
      * @param array<string, bool|int> $unsetInfo
      * @param bool                    $isLastUnset
      */

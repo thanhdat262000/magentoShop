@@ -17,8 +17,6 @@ namespace PhpCsFixer\DocBlock;
  * together, or kept apart.
  *
  * @author Graham Campbell <graham@alt-three.com>
- *
- * @final
  */
 class TagComparator
 {
@@ -36,6 +34,9 @@ class TagComparator
 
     /**
      * Should the given tags be kept together, or kept apart?
+     *
+     * @param Tag $first
+     * @param Tag $second
      *
      * @return bool
      */

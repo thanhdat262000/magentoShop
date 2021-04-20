@@ -5,9 +5,8 @@
  */
 namespace Magento\Setup\Console\Command;
 
-use Magento\Framework\App\ObjectManager;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Filesystem\DriverInterface;
-use Magento\Framework\Filesystem\Io\File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\Filesystem;
@@ -74,11 +73,6 @@ class DiCompileCommand extends Command
     private $componentRegistrar;
 
     /**
-     * @var File
-     */
-    private $file;
-
-    /**
      * Constructor
      *
      * @param DeploymentConfig $deploymentConfig
@@ -88,8 +82,6 @@ class DiCompileCommand extends Command
      * @param Filesystem $filesystem
      * @param DriverInterface $fileDriver
      * @param \Magento\Framework\Component\ComponentRegistrar $componentRegistrar
-     * @param File|null $file
-     * @throws \Magento\Setup\Exception
      */
     public function __construct(
         DeploymentConfig $deploymentConfig,
@@ -98,8 +90,7 @@ class DiCompileCommand extends Command
         ObjectManagerProvider $objectManagerProvider,
         Filesystem $filesystem,
         DriverInterface $fileDriver,
-        ComponentRegistrar $componentRegistrar,
-        File $file = null
+        ComponentRegistrar $componentRegistrar
     ) {
         $this->deploymentConfig = $deploymentConfig;
         $this->directoryList    = $directoryList;
@@ -108,7 +99,6 @@ class DiCompileCommand extends Command
         $this->filesystem       = $filesystem;
         $this->fileDriver       = $fileDriver;
         $this->componentRegistrar  = $componentRegistrar;
-        $this->file = $file ?: ObjectManager::getInstance()->get(File::class);
         parent::__construct();
     }
 
@@ -237,10 +227,10 @@ class DiCompileCommand extends Command
     {
         $modulesByBasePath = [];
         foreach ($modulePaths as $modulePath) {
-            $moduleDir = $this->file->getPathInfo($modulePath)['basename'];
-            $vendorPath = $this->fileDriver->getParentDirectory($modulePath);
-            $vendorDir = $this->file->getPathInfo($vendorPath)['basename'];
-            $basePath = $this->fileDriver->getParentDirectory($vendorPath);
+            $moduleDir = basename($modulePath);
+            $vendorPath = dirname($modulePath);
+            $vendorDir = basename($vendorPath);
+            $basePath = dirname($vendorPath);
             $modulesByBasePath[$basePath][$vendorDir][] = $moduleDir;
         }
 
@@ -370,9 +360,12 @@ class DiCompileCommand extends Command
     private function getOperationsConfiguration(
         array $compiledPathsList
     ) {
-        $excludePatterns = array_merge([], ...array_values($this->excludedPathsList));
+        $excludePatterns = [];
+        foreach ($this->excludedPathsList as $excludedPaths) {
+            $excludePatterns = array_merge($excludedPaths, $excludePatterns);
+        }
 
-        return [
+        $operations = [
             OperationFactory::PROXY_GENERATOR => [],
             OperationFactory::REPOSITORY_GENERATOR => [
                 'paths' => $compiledPathsList['application'],
@@ -407,7 +400,8 @@ class DiCompileCommand extends Command
                 $compiledPathsList['generated_helpers'],
             ],
             OperationFactory::APPLICATION_ACTION_LIST_GENERATOR => [],
-            OperationFactory::PLUGIN_LIST_GENERATOR => [],
         ];
+
+        return $operations;
     }
 }

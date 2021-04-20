@@ -7,9 +7,6 @@ namespace Magento\Framework\Filesystem\Directory;
 
 use Magento\Framework\Filesystem\DriverPool;
 
-/**
- * The factory of the filesystem directory instances for write operations.
- */
 class WriteFactory
 {
     /**

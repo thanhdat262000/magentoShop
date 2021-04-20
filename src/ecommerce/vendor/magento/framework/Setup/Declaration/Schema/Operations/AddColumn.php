@@ -25,7 +25,7 @@ use Magento\Framework\Setup\Declaration\Schema\OperationInterface;
 class AddColumn implements OperationInterface
 {
     /**
-     * The name of the operation.
+     * Operation name.
      */
     const OPERATION_NAME = 'add_column';
 
@@ -196,7 +196,7 @@ class AddColumn implements OperationInterface
          */
         $element = $elementHistory->getNew();
         $definition = $this->definitionAggregator->toDefinition($element);
-
+        
         $statement = $this->dbSchemaWriter->addElement(
             $element->getName(),
             $element->getTable()->getResource(),
@@ -207,7 +207,7 @@ class AddColumn implements OperationInterface
         $statements = $this->setupTriggersIfExists($statement, $elementHistory);
 
         if ($this->columnIsAutoIncrement($element)) {
-            /** We need to reset auto_increment to the current maximum value + one */
+            /** We need to reset auto_increment as new field should goes from 1 */
             $statements[] = $this->dbSchemaWriter->resetAutoIncrement(
                 $element->getTable()->getName(),
                 $element->getTable()->getResource()

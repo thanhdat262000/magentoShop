@@ -25,7 +25,28 @@ namespace Magento\Authorization\Model;
 class Rules extends \Magento\Framework\Model\AbstractModel
 {
     /**
-     * @inheritdoc
+     * Class constructor
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Authorization\Model\ResourceModel\Rules $resource
+     * @param \Magento\Authorization\Model\ResourceModel\Rules\Collection $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Authorization\Model\ResourceModel\Rules $resource,
+        \Magento\Authorization\Model\ResourceModel\Rules\Collection $resourceCollection,
+        array $data = []
+    ) {
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+    }
+
+    /**
+     * Class constructor
+     *
+     * @return void
      */
     protected function _construct()
     {
@@ -33,22 +54,15 @@ class Rules extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Obsolete method of update
-     *
      * @return $this
-     * @deprecated Method was never implemented and used.
      */
     public function update()
     {
-        // phpcs:disable Magento2.Functions.DiscouragedFunction
-        trigger_error('Method was never implemented and used.', E_USER_DEPRECATED);
-
+        $this->getResource()->update($this);
         return $this;
     }
 
     /**
-     * Save authorization rule relation
-     *
      * @return $this
      */
     public function saveRel()

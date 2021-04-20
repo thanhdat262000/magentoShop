@@ -9,8 +9,6 @@ namespace Magento\QuoteGraphQl\Model\CartItem\DataProvider\CustomizableOptionVal
 
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Model\Product\Option\Type\Text as TextOptionType;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 use Magento\Quote\Model\Quote\Item\Option as SelectedOption;
 use Magento\QuoteGraphQl\Model\CartItem\DataProvider\CustomizableOptionValueInterface;
@@ -21,29 +19,17 @@ use Magento\QuoteGraphQl\Model\CartItem\DataProvider\CustomizableOptionValueInte
 class Text implements CustomizableOptionValueInterface
 {
     /**
-     * Option type name
-     */
-    private const OPTION_TYPE = 'custom-option';
-
-    /**
      * @var PriceUnitLabel
      */
     private $priceUnitLabel;
 
-    /** @var Uid */
-    private $uidEncoder;
-
     /**
      * @param PriceUnitLabel $priceUnitLabel
-     * @param Uid|null $uidEncoder
      */
     public function __construct(
-        PriceUnitLabel $priceUnitLabel,
-        Uid $uidEncoder = null
+        PriceUnitLabel $priceUnitLabel
     ) {
         $this->priceUnitLabel = $priceUnitLabel;
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
     }
 
     /**
@@ -61,9 +47,6 @@ class Text implements CustomizableOptionValueInterface
 
         $selectedOptionValueData = [
             'id' => $selectedOption->getId(),
-            'customizable_option_value_uid' => $this->uidEncoder->encode(
-                self::OPTION_TYPE . '/' . $option->getOptionId()
-            ),
             'label' => '',
             'value' => $optionTypeRenderer->getFormattedOptionValue($selectedOption->getValue()),
             'price' => [

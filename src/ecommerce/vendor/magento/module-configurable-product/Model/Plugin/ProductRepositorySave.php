@@ -3,22 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\ConfigurableProduct\Model\Plugin;
 
+use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\ConfigurableProduct\Api\Data\OptionInterface;
 use Magento\Catalog\Api\ProductAttributeRepositoryInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\Framework\Exception\NoSuchEntityException;
 
-/**
- * Plugin to validate product links of configurable product and reset configurable attributes
- */
 class ProductRepositorySave
 {
     /**
@@ -27,45 +22,46 @@ class ProductRepositorySave
     private $productAttributeRepository;
 
     /**
-     * @var ProductRepositoryInterface
+     * @var ProductFactory
      */
-    private $productRepository;
+    private $productFactory;
 
     /**
      * @param ProductAttributeRepositoryInterface $productAttributeRepository
-     * @param ProductRepositoryInterface $productRepository
+     * @param ProductFactory $productFactory
      */
     public function __construct(
         ProductAttributeRepositoryInterface $productAttributeRepository,
-        ProductRepositoryInterface $productRepository
+        ProductFactory $productFactory
     ) {
         $this->productAttributeRepository = $productAttributeRepository;
-        $this->productRepository = $productRepository;
+        $this->productFactory = $productFactory;
     }
 
     /**
-     * Validate product links of configurable product
+     * Validate product links and reset configurable attributes to configurable product
      *
      * @param ProductRepositoryInterface $subject
+     * @param ProductInterface $result
      * @param ProductInterface $product
      * @param bool $saveOptions
-     * @return array
+     * @return ProductInterface
+     * @throws CouldNotSaveException
      * @throws InputException
-     * @throws NoSuchEntityException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeSave(
+    public function afterSave(
         ProductRepositoryInterface $subject,
+        ProductInterface $result,
         ProductInterface $product,
         $saveOptions = false
-    ): array {
-        $result[] = $product;
+    ) {
         if ($product->getTypeId() !== Configurable::TYPE_CODE) {
             return $result;
         }
 
-        $extensionAttributes = $product->getExtensionAttributes();
+        $extensionAttributes = $result->getExtensionAttributes();
         if ($extensionAttributes === null) {
             return $result;
         }
@@ -85,61 +81,31 @@ class ProductRepositorySave
             $attributeCodes[] = $attributeCode;
         }
         $this->validateProductLinks($attributeCodes, $configurableLinks);
-
-        return $result;
-    }
-
-    /**
-     * Reset configurable attributes to configurable product
-     *
-     * @param ProductRepositoryInterface $subject
-     * @param ProductInterface $result
-     * @param ProductInterface $product
-     * @param bool $saveOptions
-     * @return ProductInterface
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function afterSave(
-        ProductRepositoryInterface $subject,
-        ProductInterface $result,
-        ProductInterface $product,
-        $saveOptions = false
-    ): ProductInterface {
-        if ($product->getTypeId() !== Configurable::TYPE_CODE) {
-            return $result;
-        }
         $result->getTypeInstance()->resetConfigurableAttributes($product);
 
         return $result;
     }
 
     /**
-     * Validate product links
-     *
      * @param array $attributeCodes
      * @param array $linkIds
-     * @return void
+     * @return $this
      * @throws InputException
-     * @throws NoSuchEntityException
      */
-    private function validateProductLinks(array $attributeCodes, array $linkIds): void
+    private function validateProductLinks(array $attributeCodes, array $linkIds)
     {
         $valueMap = [];
+
         foreach ($linkIds as $productId) {
-            $variation = $this->productRepository->getById($productId);
+            $variation = $this->productFactory->create()->load($productId);
             $valueKey = '';
             foreach ($attributeCodes as $attributeCode) {
-                if ($variation->getData($attributeCode) === null) {
+                if (!$variation->getData($attributeCode)) {
                     throw new InputException(
-                        __(
-                            'Product with id "%1" does not contain required attribute "%2".',
-                            $productId,
-                            $attributeCode
-                        )
+                        __('Product with id "%1" does not contain required attribute "%2".', $productId, $attributeCode)
                     );
                 }
-                $valueKey .= $attributeCode . ':' . $variation->getData($attributeCode) . ';';
+                $valueKey = $valueKey . $attributeCode . ':' . $variation->getData($attributeCode) . ';';
             }
             if (isset($valueMap[$valueKey])) {
                 throw new InputException(

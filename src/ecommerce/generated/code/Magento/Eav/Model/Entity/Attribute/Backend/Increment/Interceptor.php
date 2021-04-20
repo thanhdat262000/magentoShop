@@ -19,7 +19,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function beforeSave($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeSave');
-        return $pluginInfo ? $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo) : parent::beforeSave($object);
+        if (!$pluginInfo) {
+            return parent::beforeSave($object);
+        } else {
+            return $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -28,7 +32,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function setAttribute($attribute)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAttribute');
-        return $pluginInfo ? $this->___callPlugins('setAttribute', func_get_args(), $pluginInfo) : parent::setAttribute($attribute);
+        if (!$pluginInfo) {
+            return parent::setAttribute($attribute);
+        } else {
+            return $this->___callPlugins('setAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -37,7 +45,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getAttribute()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAttribute');
-        return $pluginInfo ? $this->___callPlugins('getAttribute', func_get_args(), $pluginInfo) : parent::getAttribute();
+        if (!$pluginInfo) {
+            return parent::getAttribute();
+        } else {
+            return $this->___callPlugins('getAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -46,7 +58,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getType');
-        return $pluginInfo ? $this->___callPlugins('getType', func_get_args(), $pluginInfo) : parent::getType();
+        if (!$pluginInfo) {
+            return parent::getType();
+        } else {
+            return $this->___callPlugins('getType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -55,7 +71,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function isStatic()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isStatic');
-        return $pluginInfo ? $this->___callPlugins('isStatic', func_get_args(), $pluginInfo) : parent::isStatic();
+        if (!$pluginInfo) {
+            return parent::isStatic();
+        } else {
+            return $this->___callPlugins('isStatic', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -64,7 +84,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getTable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTable');
-        return $pluginInfo ? $this->___callPlugins('getTable', func_get_args(), $pluginInfo) : parent::getTable();
+        if (!$pluginInfo) {
+            return parent::getTable();
+        } else {
+            return $this->___callPlugins('getTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -73,7 +97,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getEntityIdField()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityIdField');
-        return $pluginInfo ? $this->___callPlugins('getEntityIdField', func_get_args(), $pluginInfo) : parent::getEntityIdField();
+        if (!$pluginInfo) {
+            return parent::getEntityIdField();
+        } else {
+            return $this->___callPlugins('getEntityIdField', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -82,7 +110,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function setValueId($valueId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setValueId');
-        return $pluginInfo ? $this->___callPlugins('setValueId', func_get_args(), $pluginInfo) : parent::setValueId($valueId);
+        if (!$pluginInfo) {
+            return parent::setValueId($valueId);
+        } else {
+            return $this->___callPlugins('setValueId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -91,7 +123,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function setEntityValueId($entity, $valueId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityValueId');
-        return $pluginInfo ? $this->___callPlugins('setEntityValueId', func_get_args(), $pluginInfo) : parent::setEntityValueId($entity, $valueId);
+        if (!$pluginInfo) {
+            return parent::setEntityValueId($entity, $valueId);
+        } else {
+            return $this->___callPlugins('setEntityValueId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -100,7 +136,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getValueId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getValueId');
-        return $pluginInfo ? $this->___callPlugins('getValueId', func_get_args(), $pluginInfo) : parent::getValueId();
+        if (!$pluginInfo) {
+            return parent::getValueId();
+        } else {
+            return $this->___callPlugins('getValueId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -109,7 +149,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getEntityValueId($entity)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityValueId');
-        return $pluginInfo ? $this->___callPlugins('getEntityValueId', func_get_args(), $pluginInfo) : parent::getEntityValueId($entity);
+        if (!$pluginInfo) {
+            return parent::getEntityValueId($entity);
+        } else {
+            return $this->___callPlugins('getEntityValueId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -118,7 +162,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getDefaultValue()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultValue');
-        return $pluginInfo ? $this->___callPlugins('getDefaultValue', func_get_args(), $pluginInfo) : parent::getDefaultValue();
+        if (!$pluginInfo) {
+            return parent::getDefaultValue();
+        } else {
+            return $this->___callPlugins('getDefaultValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -127,7 +175,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function validate($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validate');
-        return $pluginInfo ? $this->___callPlugins('validate', func_get_args(), $pluginInfo) : parent::validate($object);
+        if (!$pluginInfo) {
+            return parent::validate($object);
+        } else {
+            return $this->___callPlugins('validate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -136,7 +188,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function afterLoad($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterLoad');
-        return $pluginInfo ? $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo) : parent::afterLoad($object);
+        if (!$pluginInfo) {
+            return parent::afterLoad($object);
+        } else {
+            return $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -145,7 +201,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function afterSave($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterSave');
-        return $pluginInfo ? $this->___callPlugins('afterSave', func_get_args(), $pluginInfo) : parent::afterSave($object);
+        if (!$pluginInfo) {
+            return parent::afterSave($object);
+        } else {
+            return $this->___callPlugins('afterSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -154,7 +214,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function beforeDelete($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeDelete');
-        return $pluginInfo ? $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo) : parent::beforeDelete($object);
+        if (!$pluginInfo) {
+            return parent::beforeDelete($object);
+        } else {
+            return $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -163,7 +227,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function afterDelete($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDelete');
-        return $pluginInfo ? $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo) : parent::afterDelete($object);
+        if (!$pluginInfo) {
+            return parent::afterDelete($object);
+        } else {
+            return $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -172,7 +240,11 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function getAffectedFields($object)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAffectedFields');
-        return $pluginInfo ? $this->___callPlugins('getAffectedFields', func_get_args(), $pluginInfo) : parent::getAffectedFields($object);
+        if (!$pluginInfo) {
+            return parent::getAffectedFields($object);
+        } else {
+            return $this->___callPlugins('getAffectedFields', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -181,6 +253,10 @@ class Interceptor extends \Magento\Eav\Model\Entity\Attribute\Backend\Increment 
     public function isScalar()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isScalar');
-        return $pluginInfo ? $this->___callPlugins('isScalar', func_get_args(), $pluginInfo) : parent::isScalar();
+        if (!$pluginInfo) {
+            return parent::isScalar();
+        } else {
+            return $this->___callPlugins('isScalar', func_get_args(), $pluginInfo);
+        }
     }
 }

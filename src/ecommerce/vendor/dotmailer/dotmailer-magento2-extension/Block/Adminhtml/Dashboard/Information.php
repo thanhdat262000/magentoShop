@@ -2,8 +2,6 @@
 
 namespace Dotdigitalgroup\Email\Block\Adminhtml\Dashboard;
 
-use Dotdigitalgroup\Email\Model\Connector\Module;
-
 /**
  * Dashboard information block
  *
@@ -35,11 +33,6 @@ class Information extends \Magento\Backend\Block\Template
     private $failedAuthCollectionFactory;
 
     /**
-     * @var Module
-     */
-    private $moduleList;
-
-    /**
      * @var int
      */
     private $storeIdFromParam = 1;
@@ -50,7 +43,6 @@ class Information extends \Magento\Backend\Block\Template
      * @param \Dotdigitalgroup\Email\Model\Apiconnector\Test $test
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Magento\Framework\App\ProductMetadataFactory $productMetadata
-     * @param Module $moduleList
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\FailedAuth\CollectionFactory $failedAuthCollectionFactory
      * @param array $data
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -60,7 +52,6 @@ class Information extends \Magento\Backend\Block\Template
         \Dotdigitalgroup\Email\Model\Apiconnector\Test $test,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Magento\Framework\App\ProductMetadataFactory $productMetadata,
-        Module $moduleList,
         \Dotdigitalgroup\Email\Model\ResourceModel\FailedAuth\CollectionFactory $failedAuthCollectionFactory,
         array $data = []
     ) {
@@ -68,7 +59,6 @@ class Information extends \Magento\Backend\Block\Template
         $this->test = $test;
         $this->helper = $helper;
         $this->failedAuthCollectionFactory = $failedAuthCollectionFactory;
-        $this->moduleList = $moduleList;
         parent::__construct($context, $data);
         $this->getStoreIdParam();
     }
@@ -113,71 +103,7 @@ class Information extends \Magento\Backend\Block\Template
      */
     public function getConnectorVersion()
     {
-        return $this->escapeHtml(__('v. %1', $this->moduleList->getConnectorVersion()));
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasChatModule()
-    {
-        return $this->moduleList->hasChatModule();
-    }
-
-    /**
-     * @return string
-     */
-    public function getChatConnectorVersion()
-    {
-        return $this->escapeHtml(__('v. %1', $this->moduleList->getChatConnectorVersion()));
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasEnterpriseModule()
-    {
-        return $this->moduleList->hasEnterpriseModule();
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnterpriseConnectorVersion()
-    {
-        return $this->escapeHtml(__('v. %1', $this->moduleList->getEnterpriseConnectorVersion()));
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasB2bModule()
-    {
-        return $this->moduleList->hasB2bModule();
-    }
-
-    /**
-     * @return string
-     */
-    public function getB2bConnectorVersion()
-    {
-        return $this->escapeHtml(__('v. %1', $this->moduleList->getB2bConnectorVersion()));
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasSmsModule()
-    {
-        return $this->moduleList->hasSmsModule();
-    }
-
-    /**
-     * @return string
-     */
-    public function getSmsConnectorVersion()
-    {
-        return $this->escapeHtml(__('v. %1', $this->moduleList->getSmsConnectorVersion()));
+        return $this->escapeHtml(__('v. %1', $this->helper->getConnectorVersion()));
     }
 
     /**
@@ -191,7 +117,7 @@ class Information extends \Magento\Backend\Block\Template
 
         $result = $this->test->validate($apiUsername, $apiPassword);
 
-        return ($result) ? '<span class="message message-success">Valid</span>' :
+        return ($result)? '<span class="message message-success">Valid</span>' :
             '<span class="message message-error">Not Valid</span>';
     }
 
@@ -202,6 +128,7 @@ class Information extends \Magento\Backend\Block\Template
      */
     public function getCronLastExecution()
     {
+
         $date = $this->escapeHtml($this->helper->getDateLastCronRun('ddg_automation_importer'));
 
         if (! $date) {
@@ -227,7 +154,7 @@ class Information extends \Magento\Backend\Block\Template
      */
     public function getAbandonedCartLimit()
     {
-        return ($this->helper->getAbandonedCartLimit()) ? __('%1 hour', $this->helper->getAbandonedCartLimit()) :
+        return ($this->helper->getAbandonedCartLimit()) ? __('%1 h', $this->helper->getAbandonedCartLimit()) :
             __('No limit');
     }
 
@@ -242,14 +169,14 @@ class Information extends \Magento\Backend\Block\Template
 
         //check if the failed auth is set for the store
         if ($failedAuth->getId()) {
-            return ($failedAuth->isLocked()) ? __('Locked') : __('Not locked');
+            return ($failedAuth->isLocked())? __('Locked.'): __('Not Locked.');
         } else {
-            return __('Not locked');
+            return __('Not Locked.');
         }
     }
 
     /**
-     * @return string|\Magento\Framework\Phrase
+     * @return \Magento\Framework\Phrase
      */
     public function getLastFailedAuth()
     {
@@ -259,8 +186,6 @@ class Information extends \Magento\Backend\Block\Template
 
         if ($failedAuth->getId()) {
             return $this->formatTime($failedAuth->getLastAttemptDate(), \IntlDateFormatter::LONG);
-        } else {
-            return __('None found');
         }
     }
 

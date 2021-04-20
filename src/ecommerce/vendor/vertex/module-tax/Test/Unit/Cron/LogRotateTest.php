@@ -1,12 +1,11 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * @copyright  Vertex. All rights reserved.  https://www.vertexinc.com/
  * @author     Mediotype                     https://www.mediotype.com/
  */
 
-namespace Vertex\Tax\Test\Unit\Cron;
+namespace Vertex\Tax\Test\Cron;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Vertex\Tax\Cron\LogRotate;
 use Vertex\Tax\Model\Config;
 use Vertex\Tax\Model\LogEntryRotator;
@@ -18,19 +17,19 @@ use Vertex\Tax\Test\Unit\TestCase;
  */
 class LogRotateTest extends TestCase
 {
-    /** @var MockObject|Config */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|Config */
     private $configMock;
 
     /** @var LogRotate */
     private $logRotate;
 
-    /** @var MockObject|LogEntryRotatorFactory */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|LogEntryRotatorFactory */
     private $logEntryRotatorFactoryMock;
 
     /**
      * Perform test setup.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

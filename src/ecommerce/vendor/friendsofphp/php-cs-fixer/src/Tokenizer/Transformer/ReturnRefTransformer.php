@@ -29,6 +29,14 @@ final class ReturnRefTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
+    public function getCustomTokens()
+    {
+        return [CT::T_RETURN_REF];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredPhpVersionId()
     {
         return 50000;
@@ -39,24 +47,11 @@ final class ReturnRefTransformer extends AbstractTransformer
      */
     public function process(Tokens $tokens, Token $token, $index)
     {
-        $prevKinds = [T_FUNCTION];
-        if (\PHP_VERSION_ID >= 70400) {
-            $prevKinds[] = T_FN;
-        }
-
         if (
             $token->equals('&')
-            && $tokens[$tokens->getPrevMeaningfulToken($index)]->isGivenKind($prevKinds)
+            && $tokens[$tokens->getPrevMeaningfulToken($index)]->isGivenKind(T_FUNCTION)
         ) {
             $tokens[$index] = new Token([CT::T_RETURN_REF, '&']);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDeprecatedCustomTokens()
-    {
-        return [CT::T_RETURN_REF];
     }
 }

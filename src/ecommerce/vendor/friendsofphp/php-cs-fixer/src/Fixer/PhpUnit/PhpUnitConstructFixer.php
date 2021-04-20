@@ -12,21 +12,20 @@
 
 namespace PhpCsFixer\Fixer\PhpUnit;
 
-use PhpCsFixer\Fixer\AbstractPhpUnitFixer;
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
 use PhpCsFixer\FixerConfiguration\AllowedValueSubset;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverRootless;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
-use PhpCsFixer\Tokenizer\Analyzer\FunctionsAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  */
-final class PhpUnitConstructFixer extends AbstractPhpUnitFixer implements ConfigurationDefinitionFixerInterface
+final class PhpUnitConstructFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface
 {
     private static $assertionFixers = [
         'assertSame' => 'fixAssertPositive',
@@ -34,6 +33,14 @@ final class PhpUnitConstructFixer extends AbstractPhpUnitFixer implements Config
         'assertNotEquals' => 'fixAssertNegative',
         'assertNotSame' => 'fixAssertNegative',
     ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCandidate(Tokens $tokens)
+    {
+        return $tokens->isTokenKindFound(T_STRING);
+    }
 
     /**
      * {@inheritdoc}
@@ -53,26 +60,18 @@ final class PhpUnitConstructFixer extends AbstractPhpUnitFixer implements Config
             [
                 new CodeSample(
                     '<?php
-final class FooTest extends \PHPUnit_Framework_TestCase {
-    public function testSomething() {
-        $this->assertEquals(false, $b);
-        $this->assertSame(true, $a);
-        $this->assertNotEquals(null, $c);
-        $this->assertNotSame(null, $d);
-    }
-}
+$this->assertEquals(false, $b);
+$this->assertSame(true, $a);
+$this->assertNotEquals(null, $c);
+$this->assertNotSame(null, $d);
 '
                 ),
                 new CodeSample(
                     '<?php
-final class FooTest extends \PHPUnit_Framework_TestCase {
-    public function testSomething() {
-        $this->assertEquals(false, $b);
-        $this->assertSame(true, $a);
-        $this->assertNotEquals(null, $c);
-        $this->assertNotSame(null, $d);
-    }
-}
+$this->assertEquals(false, $b);
+$this->assertSame(true, $a);
+$this->assertNotEquals(null, $c);
+$this->assertNotSame(null, $d);
 ',
                     ['assertions' => ['assertSame', 'assertNotSame']]
                 ),
@@ -84,18 +83,17 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before PhpUnitDedicateAssertFixer.
      */
     public function getPriority()
     {
+        // should be run after the PhpUnitStrictFixer and before PhpUnitDedicateAssertFixer.
         return -10;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function applyPhpUnitClassFix(Tokens $tokens, $startIndex, $endIndex)
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
     {
         // no assertions to be fixed - fast return
         if (empty($this->configuration['assertions'])) {
@@ -105,7 +103,7 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
         foreach ($this->configuration['assertions'] as $assertionMethod) {
             $assertionFixer = self::$assertionFixers[$assertionMethod];
 
-            for ($index = $startIndex; $index < $endIndex; ++$index) {
+            for ($index = 0, $limit = $tokens->count(); $index < $limit; ++$index) {
                 $index = $this->{$assertionFixer}($tokens, $index, $assertionMethod);
 
                 if (null === $index) {
@@ -135,6 +133,7 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @param Tokens $tokens
      * @param int    $index
      * @param string $method
      *
@@ -152,6 +151,7 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @param Tokens $tokens
      * @param int    $index
      * @param string $method
      *
@@ -170,6 +170,7 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @param array<string, string> $map
+     * @param Tokens                $tokens
      * @param int                   $index
      * @param string                $method
      *
@@ -177,8 +178,6 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
      */
     private function fixAssert(array $map, Tokens $tokens, $index, $method)
     {
-        $functionsAnalyzer = new FunctionsAnalyzer();
-
         $sequence = $tokens->findSequence(
             [
                 [T_STRING, $method],
@@ -192,7 +191,13 @@ final class FooTest extends \PHPUnit_Framework_TestCase {
         }
 
         $sequenceIndexes = array_keys($sequence);
-        if (!$functionsAnalyzer->isTheSameClassCall($tokens, $sequenceIndexes[0])) {
+        $operatorIndex = $tokens->getPrevMeaningfulToken($sequenceIndexes[0]);
+        $referenceIndex = $tokens->getPrevMeaningfulToken($operatorIndex);
+        if (
+            !($tokens[$operatorIndex]->equals([T_OBJECT_OPERATOR, '->']) && $tokens[$referenceIndex]->equals([T_VARIABLE, '$this']))
+            && !($tokens[$operatorIndex]->equals([T_DOUBLE_COLON, '::']) && $tokens[$referenceIndex]->equals([T_STRING, 'self']))
+            && !($tokens[$operatorIndex]->equals([T_DOUBLE_COLON, '::']) && $tokens[$referenceIndex]->equals([T_STATIC, 'static']))
+        ) {
             return null;
         }
 

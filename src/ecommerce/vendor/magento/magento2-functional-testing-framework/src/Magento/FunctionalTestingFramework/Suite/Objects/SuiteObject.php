@@ -6,7 +6,6 @@
 namespace Magento\FunctionalTestingFramework\Suite\Objects;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Filter\FilterInterface;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
@@ -46,27 +45,18 @@ class SuiteObject
     private $hooks;
 
     /**
-     * Filename of where the suite came from
-     *
-     * @var string
-     */
-    private $filename;
-
-    /**
      * SuiteObject constructor.
      * @param string           $name
      * @param TestObject[]     $includeTests
      * @param TestObject[]     $excludeTests
      * @param TestHookObject[] $hooks
-     * @param string           $filename
      */
-    public function __construct($name, $includeTests, $excludeTests, $hooks, $filename = null)
+    public function __construct($name, $includeTests, $excludeTests, $hooks)
     {
         $this->name = $name;
         $this->includeTests = $includeTests;
         $this->excludeTests = $excludeTests;
         $this->hooks = $hooks;
-        $this->filename = $filename;
     }
 
     /**
@@ -83,7 +73,6 @@ class SuiteObject
      * Returns an array of Test Objects based on specifications in exclude and include arrays.
      *
      * @return array
-     * @throws TestFrameworkException
      */
     public function getTests()
     {
@@ -98,7 +87,7 @@ class SuiteObject
      * @param TestObject[] $includeTests
      * @param TestObject[] $excludeTests
      * @return TestObject[]
-     * @throws TestFrameworkException
+     * @throws \Exception
      */
     private function resolveTests($includeTests, $excludeTests)
     {
@@ -158,15 +147,5 @@ class SuiteObject
     public function getAfterHook()
     {
         return $this->hooks['after'] ?? null;
-    }
-
-    /**
-     * Getter for the Suite Filename
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->filename;
     }
 }

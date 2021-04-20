@@ -6,8 +6,6 @@
 
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
-use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\TestHookObject;
 
@@ -39,8 +37,7 @@ class TestHookObjectExtractor extends BaseObjectExtractor
      * @param string $hookType
      * @param array  $testHook
      * @return TestHookObject
-     * @throws XmlException
-     * @throws TestReferenceException
+     * @throws \Exception
      */
     public function extractHook($parentName, $hookType, $testHook)
     {
@@ -60,26 +57,19 @@ class TestHookObjectExtractor extends BaseObjectExtractor
 
     /**
      * Creates the default failed hook object with a single saveScreenshot action.
-     * And a pause action when ENABLE_PAUSE is set to true.
      *
      * @param string $parentName
      * @return TestHookObject
      */
     public function createDefaultFailedHook($parentName)
     {
-        $defaultSteps['saveScreenshot'] = new ActionObject("saveScreenshot", "saveScreenshot", []);
-        if (getenv('ENABLE_PAUSE') === 'true') {
-            $defaultSteps['pauseWhenFailed'] = new ActionObject(
-                'pauseWhenFailed',
-                'pause',
-                [ActionObject::PAUSE_ACTION_INTERNAL_ATTRIBUTE => true]
-            );
-        }
+
+        $saveScreenshotStep = [new ActionObject("saveScreenshot", "saveScreenshot", [])];
 
         $hook = new TestHookObject(
             TestObjectExtractor::TEST_FAILED_HOOK,
             $parentName,
-            $defaultSteps
+            $saveScreenshotStep
         );
 
         return $hook;

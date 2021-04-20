@@ -3,30 +3,25 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\CatalogUrlRewrite\Test\Unit\Model\Category\Plugin\Store;
 
-use Magento\Catalog\Model\ResourceModel\Category\Collection as CategoryCollection;
-use Magento\Catalog\Model\Category;
-use Magento\Catalog\Model\CategoryFactory;
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\ProductFactory;
-use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\CatalogUrlRewrite\Model\Category\Plugin\Store\View as StoreViewPlugin;
-use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
-use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator;
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\ResourceModel\Store;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
+use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator;
+use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
+use Magento\Catalog\Model\Product;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ViewTest extends TestCase
+class ViewTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager
@@ -39,59 +34,56 @@ class ViewTest extends TestCase
     private $plugin;
 
     /**
-     * @var AbstractModel|MockObject
+     * @var AbstractModel|\PHPUnit_Framework_MockObject_MockObject
      */
     private $abstractModelMock;
 
     /**
-     * @var Store|MockObject
+     * @var Store|\PHPUnit_Framework_MockObject_MockObject
      */
     private $subjectMock;
 
     /**
-     * @var UrlPersistInterface|MockObject
+     * @var UrlPersistInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $urlPersistMock;
 
     /**
-     * @var CategoryFactory|MockObject
+     * @var CategoryFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $categoryFactoryMock;
 
     /**
-     * @var ProductFactory|MockObject
+     * @var ProductFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productFactoryMock;
 
     /**
-     * @var CategoryUrlRewriteGenerator|MockObject
+     * @var CategoryUrlRewriteGenerator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $categoryUrlRewriteGeneratorMock;
 
     /**
-     * @var ProductUrlRewriteGenerator|MockObject
+     * @var ProductUrlRewriteGenerator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productUrlRewriteGeneratorMock;
 
     /**
-     * @var Category|MockObject
+     * @var Category|\PHPUnit_Framework_MockObject_MockObject
      */
     private $categoryMock;
 
     /**
-     * @var ProductCollection|MockObject
+     * @var ProductCollection|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productCollectionMock;
 
     /**
-     * @var Product|MockObject
+     * @var Product|\PHPUnit_Framework_MockObject_MockObject
      */
     private $productMock;
 
-    /**
-     * @inheritdoc
-     */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = new ObjectManager($this);
         $this->abstractModelMock = $this->getMockBuilder(AbstractModel::class)
@@ -125,7 +117,7 @@ class ViewTest extends TestCase
             ->getMock();
         $this->productCollectionMock = $this->getMockBuilder(ProductCollection::class)
             ->disableOriginalConstructor()
-            ->setMethods(['addCategoryIds', 'addAttributeToSelect', 'getIterator', 'addStoreFilter'])
+            ->setMethods(['addCategoryIds', 'addAttributeToSelect', 'addWebsiteFilter', 'getIterator'])
             ->getMock();
         $this->productMock = $this->getMockBuilder(Product::class)
             ->disableOriginalConstructor()
@@ -143,12 +135,7 @@ class ViewTest extends TestCase
         );
     }
 
-    /**
-     * Test after save
-     *
-     * @return void
-     */
-    public function testAfterSave(): void
+    public function testAfterSave()
     {
         $origStoreMock = $this->getMockBuilder(\Magento\Store\Model\Store::class)
             ->disableOriginalConstructor()
@@ -164,16 +151,9 @@ class ViewTest extends TestCase
         $this->abstractModelMock->expects($this->any())
             ->method('isObjectNew')
             ->willReturn(true);
-        $categoryCollection = $this->getMockBuilder(CategoryCollection::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getIterator'])
-            ->getMock();
-        $categoryCollection->expects($this->any())
-            ->method('getIterator')
-            ->willReturn(new \ArrayIterator([]));
         $this->categoryMock->expects($this->once())
             ->method('getCategories')
-            ->willReturn($categoryCollection);
+            ->willReturn([]);
         $this->categoryFactoryMock->expects($this->once())
             ->method('create')
             ->willReturn($this->categoryMock);
@@ -190,7 +170,7 @@ class ViewTest extends TestCase
             ->method('addAttributeToSelect')
             ->willReturn($this->productCollectionMock);
         $this->productCollectionMock->expects($this->once())
-            ->method('addStoreFilter')
+            ->method('addWebsiteFilter')
             ->willReturn($this->productCollectionMock);
         $iterator = new \ArrayIterator([$this->productMock]);
         $this->productCollectionMock->expects($this->once())
@@ -207,12 +187,7 @@ class ViewTest extends TestCase
         );
     }
 
-    /**
-     * Test after delete
-     *
-     * @return void
-     */
-    public function testAfterDelete(): void
+    public function testAfterDelete()
     {
         $this->urlPersistMock->expects($this->once())
             ->method('deleteByData');

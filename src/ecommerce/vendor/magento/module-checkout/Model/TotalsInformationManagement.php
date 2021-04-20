@@ -6,7 +6,7 @@
 namespace Magento\Checkout\Model;
 
 /**
- * Class for management of totals information.
+ * Class TotalsInformationManagement
  */
 class TotalsInformationManagement implements \Magento\Checkout\Api\TotalsInformationManagementInterface
 {
@@ -38,7 +38,7 @@ class TotalsInformationManagement implements \Magento\Checkout\Api\TotalsInforma
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function calculate(
         $cartId,
@@ -52,11 +52,9 @@ class TotalsInformationManagement implements \Magento\Checkout\Api\TotalsInforma
             $quote->setBillingAddress($addressInformation->getAddress());
         } else {
             $quote->setShippingAddress($addressInformation->getAddress());
-            if ($addressInformation->getShippingCarrierCode() && $addressInformation->getShippingMethodCode()) {
-                $quote->getShippingAddress()->setCollectShippingRates(true)->setShippingMethod(
-                    $addressInformation->getShippingCarrierCode().'_'.$addressInformation->getShippingMethodCode()
-                );
-            }
+            $quote->getShippingAddress()->setCollectShippingRates(true)->setShippingMethod(
+                $addressInformation->getShippingCarrierCode() . '_' . $addressInformation->getShippingMethodCode()
+            );
         }
         $quote->collectTotals();
 
@@ -64,8 +62,6 @@ class TotalsInformationManagement implements \Magento\Checkout\Api\TotalsInforma
     }
 
     /**
-     * Check if quote have items.
-     *
      * @param \Magento\Quote\Model\Quote $quote
      * @throws \Magento\Framework\Exception\LocalizedException
      * @return void

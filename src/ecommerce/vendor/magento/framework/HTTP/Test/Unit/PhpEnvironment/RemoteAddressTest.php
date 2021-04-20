@@ -3,34 +3,40 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Framework\HTTP\Test\Unit\PhpEnvironment;
 
-use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Magento\Framework\App\Request\Http as HttpRequest;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 
 /**
+ * Test for
+ *
  * @see RemoteAddress
  */
-class RemoteAddressTest extends TestCase
+class RemoteAddressTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var MockObject|HttpRequest
+     * @var \PHPUnit_Framework_MockObject_MockObject|HttpRequest
      */
-    private $requestMock;
+    protected $_request;
+
+    /**
+     * @var ObjectManager
+     */
+    protected $_objectManager;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->requestMock = $this->getMockBuilder(HttpRequest::class)
+        $this->_request = $this->getMockBuilder(HttpRequest::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getServer'])
+            ->setMethods(['getServer'])
             ->getMock();
+
+        $this->_objectManager = new ObjectManager($this);
     }
 
     /**
@@ -39,7 +45,6 @@ class RemoteAddressTest extends TestCase
      * @param string|bool $expected
      * @param bool $ipToLong
      * @param string[]|null $trustedProxies
-     *
      * @return void
      * @dataProvider getRemoteAddressProvider
      */
@@ -50,16 +55,18 @@ class RemoteAddressTest extends TestCase
         bool $ipToLong,
         array $trustedProxies = null
     ): void {
-        $remoteAddress = new RemoteAddress(
-            $this->requestMock,
-            $alternativeHeaders,
-            $trustedProxies
+        $remoteAddress = $this->_objectManager->getObject(
+            RemoteAddress::class,
+            [
+                'httpRequest' => $this->_request,
+                'alternativeHeaders' => $alternativeHeaders,
+                'trustedProxies' => $trustedProxies,
+            ]
         );
-        $this->requestMock->method('getServer')
-            ->willReturnMap($serverValueMap);
+        $this->_request->expects($this->any())
+            ->method('getServer')
+            ->will($this->returnValueMap($serverValueMap));
 
-        // Check twice to verify if internal variable is cached correctly
-        $this->assertEquals($expected, $remoteAddress->getRemoteAddress($ipToLong));
         $this->assertEquals($expected, $remoteAddress->getRemoteAddress($ipToLong));
     }
 

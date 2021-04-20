@@ -22,7 +22,6 @@ use PhpCsFixer\FixerFactory;
 use PhpCsFixer\Linter\CachingLinter;
 use PhpCsFixer\Linter\Linter;
 use PhpCsFixer\Linter\LinterInterface;
-use PhpCsFixer\Linter\ProcessLinter;
 use PhpCsFixer\Runner\Runner;
 use PhpCsFixer\Tests\TestCase;
 use PhpCsFixer\Tokenizer\Tokens;
@@ -63,21 +62,19 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 abstract class AbstractIntegrationTestCase extends TestCase
 {
-    use IsIdenticalConstraint;
-
     /**
-     * @var null|LinterInterface
+     * @var LinterInterface
      */
     protected $linter;
 
     /**
-     * @var null|FileRemoval
+     * @var FileRemoval
      */
     private static $fileRemoval;
 
-    public static function doSetUpBeforeClass()
+    public static function setUpBeforeClass()
     {
-        parent::doSetUpBeforeClass();
+        parent::setUpBeforeClass();
 
         $tmpFile = static::getTempFile();
         self::$fileRemoval = new FileRemoval();
@@ -93,9 +90,9 @@ abstract class AbstractIntegrationTestCase extends TestCase
         }
     }
 
-    public static function doTearDownAfterClass()
+    public static function tearDownAfterClass()
     {
-        parent::doTearDownAfterClass();
+        parent::tearDownAfterClass();
 
         $tmpFile = static::getTempFile();
 
@@ -103,9 +100,9 @@ abstract class AbstractIntegrationTestCase extends TestCase
         self::$fileRemoval = null;
     }
 
-    protected function doSetUp()
+    protected function setUp()
     {
-        parent::doSetUp();
+        parent::setUp();
 
         $this->linter = $this->getLinter();
 
@@ -115,9 +112,9 @@ abstract class AbstractIntegrationTestCase extends TestCase
         }
     }
 
-    protected function doTearDown()
+    protected function tearDown()
     {
-        parent::doTearDown();
+        parent::tearDown();
 
         $this->linter = null;
 
@@ -129,6 +126,8 @@ abstract class AbstractIntegrationTestCase extends TestCase
      * @dataProvider provideIntegrationCases
      *
      * @see doTest()
+     *
+     * @param IntegrationCase $case
      */
     public function testIntegration(IntegrationCase $case)
     {
@@ -198,6 +197,8 @@ abstract class AbstractIntegrationTestCase extends TestCase
      * It will write the input to a temp file. The file will be fixed by a Fixer instance
      * configured with the given fixers. The result is compared with the expected output.
      * It checks if no errors were reported during the fixing.
+     *
+     * @param IntegrationCase $case
      */
     protected function doTest(IntegrationCase $case)
     {
@@ -312,8 +313,9 @@ abstract class AbstractIntegrationTestCase extends TestCase
     }
 
     /**
-     * @param string $fixedInputCode
-     * @param string $fixedInputCodeWithReversedFixers
+     * @param IntegrationCase $case
+     * @param string          $fixedInputCode
+     * @param string          $fixedInputCodeWithReversedFixers
      */
     protected static function assertRevertedOrderFixing(IntegrationCase $case, $fixedInputCode, $fixedInputCodeWithReversedFixers)
     {
@@ -337,6 +339,8 @@ abstract class AbstractIntegrationTestCase extends TestCase
     }
 
     /**
+     * @param IntegrationCase $case
+     *
      * @return FixerInterface[]
      */
     private static function createFixers(IntegrationCase $case)
@@ -383,12 +387,10 @@ abstract class AbstractIntegrationTestCase extends TestCase
                     ->lintSource(Argument::type('string'))
                     ->willReturn($this->prophesize(\PhpCsFixer\Linter\LintingResultInterface::class)->reveal())
                 ;
-
                 $linterProphecy
                     ->lintFile(Argument::type('string'))
                     ->willReturn($this->prophesize(\PhpCsFixer\Linter\LintingResultInterface::class)->reveal())
                 ;
-
                 $linterProphecy
                     ->isAsync()
                     ->willReturn(false)
@@ -396,12 +398,34 @@ abstract class AbstractIntegrationTestCase extends TestCase
 
                 $linter = $linterProphecy->reveal();
             } else {
-                $linter = new CachingLinter(
-                    getenv('FAST_LINT_TEST_CASES') ? new Linter() : new ProcessLinter()
-                );
+                $linter = new CachingLinter(new Linter());
             }
         }
 
         return $linter;
+    }
+
+    /**
+     * @todo Remove me when this class will end up in dedicated package.
+     *
+     * @param string $expected
+     *
+     * @return PhpCsFixer\PhpunitConstraintIsIdenticalString\Constraint\IsIdenticalString||PHPUnit\Framework\Constraint\IsIdentical|PHPUnit_Framework_Constraint_IsIdentical
+     */
+    private static function createIsIdenticalStringConstraint($expected)
+    {
+        $candidates = array_filter([
+            'PhpCsFixer\PhpunitConstraintIsIdenticalString\Constraint\IsIdenticalString',
+            'PHPUnit\Framework\Constraint\IsIdentical',
+            'PHPUnit_Framework_Constraint_IsIdentical',
+        ], function ($className) { return class_exists($className); });
+
+        if (empty($candidates)) {
+            throw new \RuntimeException('PHPUnit not installed?!');
+        }
+
+        $candidate = array_shift($candidates);
+
+        return new $candidate($expected);
     }
 }

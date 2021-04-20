@@ -7,7 +7,6 @@
 namespace Magento\FunctionalTestingFramework\Test\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
@@ -33,8 +32,7 @@ class ObjectExtensionUtil
      *
      * @param TestObject $testObject
      * @return TestObject
-     * @throws TestFrameworkException
-     * @throws XmlException
+     * @throws TestReferenceException|XmlException
      */
     public function extendTest($testObject)
     {
@@ -42,13 +40,13 @@ class ObjectExtensionUtil
         try {
             $parentTest = TestObjectHandler::getInstance()->getObject($testObject->getParentName());
         } catch (TestReferenceException $error) {
-            $skippedTest = $this->skipTest($testObject, 'ParentTestDoesNotExist');
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
                 LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->debug(
                     "parent test not defined. test will be skipped",
                     ["parent" => $testObject->getParentName(), "test" => $testObject->getName()]
                 );
             }
+            $skippedTest = $this->skipTest($testObject);
             return $skippedTest;
         }
 
@@ -62,11 +60,6 @@ class ObjectExtensionUtil
         if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
             LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)
                 ->debug("extending test", ["parent" => $parentTest->getName(), "test" => $testObject->getName()]);
-        }
-
-        // Skip test if parent is skipped
-        if ($parentTest->isSkipped()) {
-            return $this->skipTest($testObject);
         }
 
         // Get steps for both the parent and the child tests
@@ -212,19 +205,17 @@ class ObjectExtensionUtil
      * This method returns a skipped form of the Test Object
      *
      * @param TestObject $testObject
-     * @param string     $skipReason
      * @return TestObject
      */
-    public function skipTest($testObject, $skipReason = null)
+    public function skipTest($testObject)
     {
         $annotations = $testObject->getAnnotations();
-        $skipReason = $skipReason ?? 'ParentTestIsSkipped';
 
         // Add skip to the group array if it doesn't already exist
         if (array_key_exists('skip', $annotations)) {
             return $testObject;
         } elseif (!array_key_exists('skip', $annotations)) {
-            $annotations['skip'] = ['issueId' => $skipReason];
+            $annotations['skip'] = ['issueId' => "ParentTestDoesNotExist"];
         }
 
         $skippedTest = new TestObject(
@@ -235,12 +226,6 @@ class ObjectExtensionUtil
             $testObject->getFilename(),
             $testObject->getParentName()
         );
-
-        if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-            LoggingUtil::getInstance()->getLogger(ObjectExtensionUtil::class)->debug(
-                "{$testObject->getName()} is skipped due to {$skipReason}"
-            );
-        }
 
         return $skippedTest;
     }

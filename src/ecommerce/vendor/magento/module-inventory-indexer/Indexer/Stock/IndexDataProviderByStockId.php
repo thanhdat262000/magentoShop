@@ -8,9 +8,8 @@ declare(strict_types=1);
 namespace Magento\InventoryIndexer\Indexer\Stock;
 
 use ArrayIterator;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\ResourceConnection;
-use Magento\InventoryIndexer\Indexer\SelectBuilderInterface;
+use Magento\InventoryIndexer\Indexer\SelectBuilder;
 
 /**
  * Returns all data for the index
@@ -23,48 +22,31 @@ class IndexDataProviderByStockId
     private $resourceConnection;
 
     /**
-     * @var SelectBuilderInterface[]
+     * @var SelectBuilder
      */
-    private $selectBuilders;
+    private $selectBuilder;
 
     /**
      * @param ResourceConnection $resourceConnection
-     * @param SelectBuilderInterface[] $selectBuilders
-     * @throws LocalizedException
+     * @param SelectBuilder $selectBuilder
      */
     public function __construct(
         ResourceConnection $resourceConnection,
-        array $selectBuilders
+        SelectBuilder $selectBuilder
     ) {
         $this->resourceConnection = $resourceConnection;
-
-        foreach ($selectBuilders as $selectBuilder) {
-            if (!$selectBuilder instanceof SelectBuilderInterface) {
-                throw new LocalizedException(
-                    __('SelectBuilder must implement SelectBuilderInterface.')
-                );
-            }
-        }
-        $this->selectBuilders = $selectBuilders;
+        $this->selectBuilder = $selectBuilder;
     }
 
     /**
-     * Returns selected data
-     *
      * @param int $stockId
-     * @throws \Exception
      * @return ArrayIterator
      */
     public function execute(int $stockId): ArrayIterator
     {
-        $result = [];
+        $select = $this->selectBuilder->execute($stockId);
+
         $connection = $this->resourceConnection->getConnection();
-
-        foreach ($this->selectBuilders as $selectBuilder) {
-            $select = $selectBuilder->execute($stockId);
-            $result[] = $connection->fetchAll($select);
-        }
-
-        return new ArrayIterator(array_merge([], ...$result));
+        return new ArrayIterator($connection->fetchAll($select));
     }
 }

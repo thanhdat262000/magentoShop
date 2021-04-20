@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Framework\Stdlib\Cookie;
 
@@ -22,7 +21,6 @@ use Psr\Log\LoggerInterface;
  * stores the cookie.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class PhpCookieManager implements CookieManagerInterface
 {
@@ -100,7 +98,7 @@ class PhpCookieManager implements CookieManagerInterface
     public function setSensitiveCookie($name, $value, SensitiveCookieMetadata $metadata = null)
     {
         $metadataArray = $this->scope->getSensitiveCookieMetadata($metadata)->__toArray();
-        $this->setCookie((string)$name, (string)$value, $metadataArray);
+        $this->setCookie($name, $value, $metadataArray);
     }
 
     /**
@@ -120,7 +118,7 @@ class PhpCookieManager implements CookieManagerInterface
     public function setPublicCookie($name, $value, PublicCookieMetadata $metadata = null)
     {
         $metadataArray = $this->scope->getPublicCookieMetadata($metadata)->__toArray();
-        $this->setCookie((string)$name, (string)$value, $metadataArray);
+        $this->setCookie($name, $value, $metadataArray);
     }
 
     /**
@@ -143,14 +141,11 @@ class PhpCookieManager implements CookieManagerInterface
         $phpSetcookieSuccess = setcookie(
             $name,
             $value,
-            [
-                'expires' => $expire,
-                'path' => $this->extractValue(CookieMetadata::KEY_PATH, $metadataArray, ''),
-                'domain' => $this->extractValue(CookieMetadata::KEY_DOMAIN, $metadataArray, ''),
-                'secure' => $this->extractValue(CookieMetadata::KEY_SECURE, $metadataArray, false),
-                'httponly' => $this->extractValue(CookieMetadata::KEY_HTTP_ONLY, $metadataArray, false),
-                'samesite' => $this->extractValue(CookieMetadata::KEY_SAME_SITE, $metadataArray, 'Lax')
-            ]
+            $expire,
+            $this->extractValue(CookieMetadata::KEY_PATH, $metadataArray, ''),
+            $this->extractValue(CookieMetadata::KEY_DOMAIN, $metadataArray, ''),
+            $this->extractValue(CookieMetadata::KEY_SECURE, $metadataArray, false),
+            $this->extractValue(CookieMetadata::KEY_HTTP_ONLY, $metadataArray, false)
         );
 
         if (!$phpSetcookieSuccess) {
@@ -169,7 +164,6 @@ class PhpCookieManager implements CookieManagerInterface
 
     /**
      * Retrieve the size of a cookie.
-     *
      * The size of a cookie is determined by the length of 'name=value' portion of the cookie.
      *
      * @param string $name
@@ -183,7 +177,8 @@ class PhpCookieManager implements CookieManagerInterface
     }
 
     /**
-     * Determines ability to send cookies, based on the number of existing cookies and cookie size
+     * Determines whether or not it is possible to send the cookie, based on the number of cookies that already
+     * exist and the size of the cookie.
      *
      * @param string $name
      * @param string|null $value
@@ -254,7 +249,6 @@ class PhpCookieManager implements CookieManagerInterface
 
     /**
      * Determines the value to be used as a $parameter.
-     *
      * If $metadataArray[$parameter] is not set, returns the $defaultValue.
      *
      * @param string $parameter

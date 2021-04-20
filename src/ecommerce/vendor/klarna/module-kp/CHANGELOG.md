@@ -1,42 +1,4 @@
 
-7.1.1 / 2020-11-24
-==================
-
-  * MAGE-2194 Add MFTF test to verify $0 subtotal virtual product orders
-  * MAGE-2604 Add MFTF test for canceling an order without an invoice
-  * MAGE-2605 Add MFTF test for canceling an order with a virutal product without an invoice
-  * MAGE-2640 Add MFTF test for attempting to cancel an order with an invoice
-  * MAGE-2641 Add MFTF test for canceling an order that is partially invoiced
-
-7.1.0 / 2020-08-10
-==================
-
-  * MAGE-724 Add support for headless commerce (GraphQL)
-  * MAGE-2306 Fix issue with missing required attributes on create_session calls
-  * MAGE-2352 Change [store view] to [Website] for all settings
-
-7.0.0 / 2020-04-28
-==================
-
-  * MAGE-1914 Remove unnecessary API calls when just checking if the Klarna payment method is available
-  * MAGE-1939 Updates for PHP 7.4
-  * MAGE-1942 Add redirect to Klarna to set network cookie
-  * MAGE-1997 Fixes for MFTF on Magento 2.4
-  * MAGE-2015 Update order line code to handle discounts on item level instead of separate line
-  * MAGE-2036 Remove duplicated unit test mocking code
-
-6.5.2 / 2020-07-31
-==================
-
-  * MAGE-2227 Fix "Missing required attribute(s)" errors
-  * MAGE-2351 Fix configuration displaying settings being available at "store view" when they are not
-
-6.5.1 / 2020-05-27
-==================
-
-  * MAGE-1646 Add Full credit MFTF test back
-  * MAGE-2116 Fix issue with displaying non-Klarna payment methods in Admin area
-
 6.5.0 / 2020-02-11
 ==================
 
@@ -77,7 +39,7 @@
 
 6.4.0 / 2019-10-22
 ==================
-
+ 
   * MAGE-2 Add unit tests
   * MAGE-518 Fix issue with placing a reorder
   * MAGE-698 Add switch to allow disabling sharing info during load JS call

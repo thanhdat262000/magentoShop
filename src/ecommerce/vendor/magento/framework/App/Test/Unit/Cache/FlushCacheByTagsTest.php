@@ -13,38 +13,36 @@ use Magento\Framework\App\Cache\Tag\Resolver;
 use Magento\Framework\App\Cache\Type\FrontendPool;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for the \Magento\Framework\App\Cache\FlushCacheByTags class.
  */
-class FlushCacheByTagsTest extends TestCase
+class FlushCacheByTagsTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var MockObject|StateInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Cache\StateInterface
      */
     private $cacheState;
 
     /**
-     * @var MockObject|FrontendPool
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Cache\Type\FrontendPool
      */
     private $frontendPool;
 
     /**
-     * @var MockObject|Resolver
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\Cache\Tag\Resolver
      */
     private $tagResolver;
 
     /**
-     * @var FlushCacheByTags
+     * @var \Magento\Framework\App\Cache\FlushCacheByTags
      */
     private $plugin;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->cacheState = $this->getMockForAbstractClass(StateInterface::class);
         $this->frontendPool = $this->createMock(FrontendPool::class);
@@ -61,7 +59,7 @@ class FlushCacheByTagsTest extends TestCase
     /**
      * @return void
      */
-    public function testAfterSave(): void
+    public function testAroundSave(): void
     {
         $resource = $this->getMockBuilder(AbstractResource::class)
             ->disableOriginalConstructor()
@@ -71,9 +69,11 @@ class FlushCacheByTagsTest extends TestCase
             ->getMockForAbstractClass();
         $this->tagResolver->expects($this->atLeastOnce())->method('getTags')->with($model)->willReturn([]);
 
-        $result = $this->plugin->afterSave(
+        $result = $this->plugin->aroundSave(
             $resource,
-            $resource,
+            function () use ($resource) {
+                return $resource;
+            },
             $model
         );
 
@@ -83,7 +83,7 @@ class FlushCacheByTagsTest extends TestCase
     /**
      * @return void
      */
-    public function testAfterDelete(): void
+    public function testAroundDelete(): void
     {
         $resource = $this->getMockBuilder(AbstractResource::class)
             ->disableOriginalConstructor()
@@ -93,9 +93,11 @@ class FlushCacheByTagsTest extends TestCase
             ->getMockForAbstractClass();
         $this->tagResolver->expects($this->atLeastOnce())->method('getTags')->with($model)->willReturn([]);
 
-        $result = $this->plugin->afterDelete(
+        $result = $this->plugin->aroundDelete(
             $resource,
-            $resource,
+            function () use ($resource) {
+                return $resource;
+            },
             $model
         );
 

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Tax\Model\TaxCalculation implements \Magento\
     public function calculateTax(\Magento\Tax\Api\Data\QuoteDetailsInterface $quoteDetails, $storeId = null, $round = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'calculateTax');
-        return $pluginInfo ? $this->___callPlugins('calculateTax', func_get_args(), $pluginInfo) : parent::calculateTax($quoteDetails, $storeId, $round);
+        if (!$pluginInfo) {
+            return parent::calculateTax($quoteDetails, $storeId, $round);
+        } else {
+            return $this->___callPlugins('calculateTax', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Tax\Model\TaxCalculation implements \Magento\
     public function getDefaultCalculatedRate($productTaxClassID, $customerId = null, $storeId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultCalculatedRate');
-        return $pluginInfo ? $this->___callPlugins('getDefaultCalculatedRate', func_get_args(), $pluginInfo) : parent::getDefaultCalculatedRate($productTaxClassID, $customerId, $storeId);
+        if (!$pluginInfo) {
+            return parent::getDefaultCalculatedRate($productTaxClassID, $customerId, $storeId);
+        } else {
+            return $this->___callPlugins('getDefaultCalculatedRate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,6 +46,10 @@ class Interceptor extends \Magento\Tax\Model\TaxCalculation implements \Magento\
     public function getCalculatedRate($productTaxClassID, $customerId = null, $storeId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCalculatedRate');
-        return $pluginInfo ? $this->___callPlugins('getCalculatedRate', func_get_args(), $pluginInfo) : parent::getCalculatedRate($productTaxClassID, $customerId, $storeId);
+        if (!$pluginInfo) {
+            return parent::getCalculatedRate($productTaxClassID, $customerId, $storeId);
+        } else {
+            return $this->___callPlugins('getCalculatedRate', func_get_args(), $pluginInfo);
+        }
     }
 }

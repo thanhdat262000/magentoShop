@@ -3,29 +3,34 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Setup\Test\Unit\Module\I18n\Parser\Adapter;
 
-use Magento\Setup\Module\I18n\Parser\Adapter\Html;
-use PHPUnit\Framework\TestCase;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magento\Setup\Module\I18n\Dictionary\Phrase;
 
-class HtmlTest extends TestCase
+class HtmlTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var Html
-     */
-    private $model;
-
     /**
      * @var string
      */
-    private $testFile;
+    protected $_testFile;
 
-    protected function setUp(): void
+    /**
+     * @var int
+     */
+    protected $_stringsCount;
+
+    /**
+     * @var \Magento\Setup\Module\I18n\Parser\Adapter\Html
+     */
+    protected $_adapter;
+
+    protected function setUp()
     {
-        $this->testFile = str_replace('\\', '/', realpath(__DIR__)) . '/_files/email.html';
-        $this->model = new Html();
+        $this->_testFile = str_replace('\\', '/', realpath(dirname(__FILE__))) . '/_files/email.html';
+        $this->_stringsCount = count(file($this->_testFile));
+
+        $this->_adapter = (new ObjectManager($this))->getObject(\Magento\Setup\Module\I18n\Parser\Adapter\Html::class);
     }
 
     public function testParse()
@@ -33,80 +38,68 @@ class HtmlTest extends TestCase
         $expectedResult = [
             [
                 'phrase' => 'Phrase 1',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '\'',
             ],
             [
                 'phrase' => 'Phrase 2 with %a_lot of extra info for the brilliant %customer_name.',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '"',
             ],
             [
                 'phrase' => 'This is test data',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => 'This is test data at right side of attr',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => 'This is \\\' test \\\' data',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => 'This is \\" test \\" data',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => 'This is test data with a quote after',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => 'This is test data with space after ',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => '\\\'',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
             [
                 'phrase' => '\\\\\\\\ ',
-                'file' => $this->testFile,
-                'line' => '',
-                'quote' => '',
-            ],
-            [
-                'phrase' => 'This is test content in translate tag',
-                'file' => $this->testFile,
-                'line' => '',
-                'quote' => '',
-            ],
-            [
-                'phrase' => 'This is test content in translate attribute',
-                'file' => $this->testFile,
+                'file' => $this->_testFile,
                 'line' => '',
                 'quote' => '',
             ],
         ];
 
-        $this->model->parse($this->testFile);
+        $this->_adapter->parse($this->_testFile);
 
-        $this->assertEquals($expectedResult, $this->model->getPhrases());
+        $this->assertEquals($expectedResult, $this->_adapter->getPhrases());
     }
 }

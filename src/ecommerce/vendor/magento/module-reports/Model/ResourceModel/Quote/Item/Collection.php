@@ -3,12 +3,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Reports\Model\ResourceModel\Quote\Item;
 
-use Magento\Framework\App\ObjectManager;
-use Magento\Reports\Model\Product\DataRetriever as ProductDataRetriever;
+use Magento\Framework\App\ResourceConnection;
 
 /**
  * Collection of Magento\Quote\Model\Quote\Item
@@ -19,8 +17,6 @@ use Magento\Reports\Model\Product\DataRetriever as ProductDataRetriever;
  */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
-    private const PREPARED_FLAG_NAME = 'reports_collection_prepared';
-
     /**
      * Join fields
      *
@@ -51,11 +47,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected $orderResource;
 
     /**
-     * @var ProductDataRetriever
-     */
-    private $productDataRetriever;
-
-    /**
      * @param \Magento\Framework\Data\Collection\EntityFactory $entityFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
@@ -65,9 +56,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      * @param \Magento\Sales\Model\ResourceModel\Order\Collection $orderResource
      * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
      * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource
-     * @param ProductDataRetriever|null $productDataRetriever
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Data\Collection\EntityFactory $entityFactory,
@@ -78,8 +66,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         \Magento\Customer\Model\ResourceModel\Customer $customerResource,
         \Magento\Sales\Model\ResourceModel\Order\Collection $orderResource,
         \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
-        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null,
-        ?ProductDataRetriever $productDataRetriever = null
+        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     ) {
         parent::__construct(
             $entityFactory,
@@ -92,8 +79,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         $this->productResource = $productResource;
         $this->customerResource = $customerResource;
         $this->orderResource = $orderResource;
-        $this->productDataRetriever = $productDataRetriever
-            ?? ObjectManager::getInstance()->get(ProductDataRetriever::class);
     }
 
     /**
@@ -114,11 +99,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     public function prepareActiveCartItems()
     {
         $quoteItemsSelect = $this->getSelect();
-
-        if ($this->getFlag(self::PREPARED_FLAG_NAME)) {
-            return $quoteItemsSelect;
-        }
-
         $quoteItemsSelect->reset()
             ->from(['main_table' => $this->getTable('quote_item')], '')
             ->columns('main_table.product_id')
@@ -134,7 +114,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             )->group(
                 'main_table.product_id'
             );
-        $this->setFlag(self::PREPARED_FLAG_NAME, true);
 
         return $quoteItemsSelect;
     }
@@ -237,7 +216,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         foreach ($items as $item) {
             $productIds[] = $item->getProductId();
         }
-        $productData = $this->productDataRetriever->execute($productIds);
+        $productData = $this->getProductData($productIds);
         $orderData = $this->getOrdersData($productIds);
         foreach ($items as $item) {
             $item->setId($item->getProductId());

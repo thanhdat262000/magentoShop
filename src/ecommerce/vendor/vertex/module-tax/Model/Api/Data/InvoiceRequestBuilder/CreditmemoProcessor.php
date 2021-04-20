@@ -9,6 +9,7 @@ namespace Vertex\Tax\Model\Api\Data\InvoiceRequestBuilder;
 use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Framework\Stdlib\StringUtils;
 use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\OrderAddressRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\ScopeInterface;
 use Vertex\Exception\ConfigurationException;
@@ -33,8 +34,8 @@ class CreditmemoProcessor
     /** @var DateTimeFactory */
     private $dateTimeFactory;
 
-    /** @var MapperFactoryProxy */
-    private $mapperFactory;
+    /** @var OrderAddressRepositoryInterface */
+    private $orderAddressRepository;
 
     /** @var OrderRepositoryInterface */
     private $orderRepository;
@@ -51,7 +52,23 @@ class CreditmemoProcessor
     /** @var StringUtils */
     private $stringUtilities;
 
+    /** @var MapperFactoryProxy */
+    private $mapperFactory;
+
+    /**
+     * @param OrderAddressRepositoryInterface $orderAddressRepository
+     * @param SellerBuilder $sellerBuilder
+     * @param CustomerBuilder $customerBuilder
+     * @param RequestInterfaceFactory $requestFactory
+     * @param Config $config
+     * @param DateTimeFactory $dateTimeFactory
+     * @param CreditmemoProcessorInterface $processorPool
+     * @param OrderRepositoryInterface $orderRepository
+     * @param StringUtils $stringUtils
+     * @param MapperFactoryProxy $mapperFactory
+     */
     public function __construct(
+        OrderAddressRepositoryInterface $orderAddressRepository,
         SellerBuilder $sellerBuilder,
         CustomerBuilder $customerBuilder,
         RequestInterfaceFactory $requestFactory,
@@ -62,6 +79,7 @@ class CreditmemoProcessor
         StringUtils $stringUtils,
         MapperFactoryProxy $mapperFactory
     ) {
+        $this->orderAddressRepository = $orderAddressRepository;
         $this->sellerBuilder = $sellerBuilder;
         $this->customerBuilder = $customerBuilder;
         $this->requestFactory = $requestFactory;
@@ -82,6 +100,10 @@ class CreditmemoProcessor
      */
     public function process(CreditmemoInterface $creditmemo)
     {
+        $address = $creditmemo->getShippingAddressId()
+            ? $this->orderAddressRepository->get($creditmemo->getShippingAddressId())
+            : $this->orderAddressRepository->get($creditmemo->getBillingAddressId());
+
         $order = $this->orderRepository->get($creditmemo->getOrderId());
 
         $scopeCode = $creditmemo->getStoreId();
@@ -91,7 +113,12 @@ class CreditmemoProcessor
             ->setScopeCode($scopeCode)
             ->build();
 
-        $customer = $this->customerBuilder->buildFromOrder($order);
+        $customer = $this->customerBuilder->buildFromOrderAddress(
+            $address,
+            $order->getCustomerId(),
+            $order->getCustomerGroupId(),
+            $scopeCode
+        );
 
         $invoiceMapper = $this->mapperFactory->getForClass(RequestInterface::class, $scopeCode);
 
@@ -108,11 +135,7 @@ class CreditmemoProcessor
         $configLocationCode = $this->config->getLocationCode($scopeCode);
 
         if ($configLocationCode) {
-            $locationCode = $this->stringUtilities->substr(
-                $configLocationCode,
-                0,
-                $invoiceMapper->getLocationCodeMaxLength()
-            );
+            $locationCode = $this->stringUtilities->substr($configLocationCode, 0, $invoiceMapper->getLocationCodeMaxLength());
             $request->setLocationCode($locationCode);
         }
 

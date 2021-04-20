@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\Webapi\ErrorProcessor implements \M
     public function maskException(\Exception $exception)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'maskException');
-        return $pluginInfo ? $this->___callPlugins('maskException', func_get_args(), $pluginInfo) : parent::maskException($exception);
+        if (!$pluginInfo) {
+            return parent::maskException($exception);
+        } else {
+            return $this->___callPlugins('maskException', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\Webapi\ErrorProcessor implements \M
     public function renderException(\Exception $exception, $httpCode = 500)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderException');
-        return $pluginInfo ? $this->___callPlugins('renderException', func_get_args(), $pluginInfo) : parent::renderException($exception, $httpCode);
+        if (!$pluginInfo) {
+            return parent::renderException($exception, $httpCode);
+        } else {
+            return $this->___callPlugins('renderException', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\Webapi\ErrorProcessor implements \M
     public function renderErrorMessage($errorMessage, $trace = 'Trace is not available.', $httpCode = 500)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'renderErrorMessage');
-        return $pluginInfo ? $this->___callPlugins('renderErrorMessage', func_get_args(), $pluginInfo) : parent::renderErrorMessage($errorMessage, $trace, $httpCode);
+        if (!$pluginInfo) {
+            return parent::renderErrorMessage($errorMessage, $trace, $httpCode);
+        } else {
+            return $this->___callPlugins('renderErrorMessage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\Webapi\ErrorProcessor implements \M
     public function registerShutdownFunction()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'registerShutdownFunction');
-        return $pluginInfo ? $this->___callPlugins('registerShutdownFunction', func_get_args(), $pluginInfo) : parent::registerShutdownFunction();
+        if (!$pluginInfo) {
+            return parent::registerShutdownFunction();
+        } else {
+            return $this->___callPlugins('registerShutdownFunction', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,6 +72,10 @@ class Interceptor extends \Magento\Framework\Webapi\ErrorProcessor implements \M
     public function apiShutdownFunction()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'apiShutdownFunction');
-        return $pluginInfo ? $this->___callPlugins('apiShutdownFunction', func_get_args(), $pluginInfo) : parent::apiShutdownFunction();
+        if (!$pluginInfo) {
+            return parent::apiShutdownFunction();
+        } else {
+            return $this->___callPlugins('apiShutdownFunction', func_get_args(), $pluginInfo);
+        }
     }
 }

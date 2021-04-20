@@ -33,8 +33,7 @@ class Configuration
      * Braintree API version to use
      * @access public
      */
-    const API_VERSION =  6;
-    const GRAPHQL_API_VERSION = '2018-09-10';
+     const API_VERSION =  4;
 
     public function __construct($attribs = [])
     {
@@ -52,26 +51,8 @@ class Configuration
             if ($kind == 'privateKey') {
                 $this->_privateKey = $value;
             }
-            if ($kind == 'proxyHost') {
-                $this->_proxyHost = $value;
-            }
-            if ($kind == 'proxyPort') {
-                $this->_proxyPort = $value;
-            }
-            if ($kind == 'proxyType') {
-                $this->_proxyType = $value;
-            }
-            if ($kind == 'proxyUser') {
-                $this->_proxyUser = $value;
-            }
-            if ($kind == 'proxyPassword') {
-                $this->_proxyPassword = $value;
-            }
             if ($kind == 'timeout') {
                 $this->_timeout = $value;
-            }
-            if ($kind == 'sslVersion') {
-                $this->_sslVersion = $value;
             }
             if ($kind == 'acceptGzipEncoding') {
                 $this->_acceptGzipEncoding = $value;
@@ -213,15 +194,12 @@ class Configuration
     }
 
     /**
-     * @deprecated Use isUsingInstanceProxy instead.
      * Specifies whether or not a proxy is properly configured
      *
      * @return bool true if a proxy is configured properly, false if not
      */
     public static function isUsingProxy()
     {
-        // NEXT_MAJOR_VERSION Remove this method and rename isUsingInstanceProxy to isUsingProxy
-        trigger_error('DEPRECATED: Use isUsingInstanceProxy instead.', E_USER_DEPRECATED);
         $proxyHost = self::$global->getProxyHost();
         $proxyPort = self::$global->getProxyPort();
         return !empty($proxyHost) && !empty($proxyPort);
@@ -244,7 +222,6 @@ class Configuration
     }
 
     /**
-     * @deprecated Use isAuthenticatedInstanceProxy instead.
      * Specified whether or not a username and password have been provided for
      * use with an authenticated proxy
      *
@@ -252,8 +229,6 @@ class Configuration
      */
     public static function isAuthenticatedProxy()
     {
-        // NEXT_MAJOR_VERSION Remove this method and rename isAuthenticatedInstanceProxy to isAuthenticatedProxy
-        trigger_error('DEPRECATED: Use isAuthenticatedInstanceProxy instead.', E_USER_DEPRECATED);
         $proxyUser = self::$global->getProxyUser();
         $proxyPwd = self::$global->getProxyPassword();
         return !empty($proxyUser) && !empty($proxyPwd);
@@ -440,7 +415,7 @@ class Configuration
         $this->_sslVersion = $value;
     }
 
-    public function getSslVersion()
+    private function getSslVersion()
     {
         return $this->_sslVersion;
     }
@@ -480,18 +455,6 @@ class Configuration
     {
         return sprintf('%s://%s:%d', $this->protocol(), $this->serverName(), $this->portNumber());
     }
-
-    /**
-     * returns the base URL for Braintree's GraphQL endpoint based on config values
-     *
-     * @access public
-     * @param none
-     * @return string Braintree GraphQL URL
-     */
-     public function graphQLBaseUrl()
-     {
-        return sprintf('%s://%s:%d/graphql', $this->protocol(), $this->graphQLServerName(), $this->graphQLPortNumber());
-     }
 
     /**
      * sets the merchant path based on merchant ID
@@ -542,35 +505,6 @@ class Configuration
     }
 
     /**
-     * returns the graphql port number depending on environment
-     *
-     * @access public
-     * @param none
-     * @return int graphql portnumber
-     */
-    public function graphQLPortNumber()
-    {
-        if ($this->sslOn()) {
-            return 443;
-        }
-        return getenv("GRAPHQL_PORT") ?: 8080;
-    }
-
-    public function isUsingInstanceProxy()
-    {
-        $proxyHost = $this->getProxyHost();
-        $proxyPort = $this->getProxyPort();
-        return !empty($proxyHost) && !empty($proxyPort);
-    }
-
-    public function isAuthenticatedInstanceProxy()
-    {
-        $proxyUser = $this->getProxyUser();
-        $proxyPwd = $this->getProxyPassword();
-        return !empty($proxyUser) && !empty($proxyPwd);
-    }
-
-    /**
      * returns http protocol depending on environment
      *
      * @access public
@@ -611,33 +545,26 @@ class Configuration
         return $serverName;
     }
 
-    /**
-     * returns Braintree GraphQL server name depending on environment
-     *
-     * @access public
-     * @param none
-     * @return string graphql domain name
-     */
-    public function graphQLServerName()
+    public function authUrl()
     {
         switch($this->_environment) {
          case 'production':
-             $graphQLServerName = 'payments.braintree-api.com';
+             $serverName = 'https://auth.venmo.com';
              break;
          case 'qa':
-             $graphQLServerName = 'payments-qa.dev.braintree-api.com';
+             $serverName = 'https://auth.qa.venmo.com';
              break;
          case 'sandbox':
-             $graphQLServerName = 'payments.sandbox.braintree-api.com';
+             $serverName = 'https://auth.sandbox.venmo.com';
              break;
          case 'development':
          case 'integration':
          default:
-             $graphQLServerName = 'graphql.bt.local';
+             $serverName = 'http://auth.venmo.dev:9292';
              break;
         }
 
-        return $graphQLServerName;
+        return $serverName;
     }
 
     /**
@@ -678,3 +605,4 @@ class Configuration
     }
 }
 Configuration::reset();
+class_alias('Braintree\Configuration', 'Braintree_Configuration');

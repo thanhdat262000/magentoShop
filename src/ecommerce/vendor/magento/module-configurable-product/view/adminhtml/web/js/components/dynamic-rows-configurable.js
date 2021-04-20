@@ -212,13 +212,14 @@ define([
             );
 
             tmpData = data.slice(this.pageSize * (this.currentPage() - 1),
-                                 this.pageSize * (this.currentPage() - 1) + parseInt(this.pageSize, 10));
+                                 this.pageSize * (this.currentPage() - 1) + this.pageSize);
 
             this.source.set(this.dataScope + '.' + this.index, []);
 
             _.each(tmpData, function (row, index) {
                 path = this.dataScope + '.' + this.index + '.' + (this.startIndex + index);
                 row.attributes = $('<i></i>').text(row.attributes).html();
+                row.sku = $('<i></i>').text(row.sku).html();
                 this.source.set(path, row);
             }, this);
 
@@ -226,11 +227,11 @@ define([
             this.parsePagesData(data);
 
             // Render
-            dataCount = tmpData.length;
+            dataCount = data.length;
             elemsCount = this.elems().length;
 
             if (dataCount > elemsCount) {
-                tmpData.each(function (elemData, index) {
+                this.getChildItems().each(function (elemData, index) {
                     this.addChild(elemData, this.startIndex + index);
                 }, this);
             } else {
@@ -240,15 +241,6 @@ define([
             }
 
             this.generateAssociatedProducts();
-        },
-
-        /**
-         * Set initial property to records data
-         *
-         * @returns {Object} Chainable.
-         */
-        setInitialProperty: function () {
-            return this;
         },
 
         /**
@@ -413,7 +405,7 @@ define([
                 'id': row.productId,
                 'product_link': row.productUrl,
                 'name': $('<i></i>').text(row.name).html(),
-                'sku': row.sku,
+                'sku': $('<i></i>').text(row.sku).html(),
                 'status': row.status,
                 'price': row.price,
                 'price_currency': row.priceCurrency,

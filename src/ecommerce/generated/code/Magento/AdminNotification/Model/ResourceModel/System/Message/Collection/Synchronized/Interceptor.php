@@ -20,7 +20,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function _afterLoad()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '_afterLoad');
-        return $pluginInfo ? $this->___callPlugins('_afterLoad', func_get_args(), $pluginInfo) : parent::_afterLoad();
+        if (!$pluginInfo) {
+            return parent::_afterLoad();
+        } else {
+            return $this->___callPlugins('_afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getUnread()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUnread');
-        return $pluginInfo ? $this->___callPlugins('getUnread', func_get_args(), $pluginInfo) : parent::getUnread();
+        if (!$pluginInfo) {
+            return parent::getUnread();
+        } else {
+            return $this->___callPlugins('getUnread', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setSeverity($severity)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setSeverity');
-        return $pluginInfo ? $this->___callPlugins('setSeverity', func_get_args(), $pluginInfo) : parent::setSeverity($severity);
+        if (!$pluginInfo) {
+            return parent::setSeverity($severity);
+        } else {
+            return $this->___callPlugins('setSeverity', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getCountBySeverity($severity)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCountBySeverity');
-        return $pluginInfo ? $this->___callPlugins('getCountBySeverity', func_get_args(), $pluginInfo) : parent::getCountBySeverity($severity);
+        if (!$pluginInfo) {
+            return parent::getCountBySeverity($severity);
+        } else {
+            return $this->___callPlugins('getCountBySeverity', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getMainTable()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMainTable');
-        return $pluginInfo ? $this->___callPlugins('getMainTable', func_get_args(), $pluginInfo) : parent::getMainTable();
+        if (!$pluginInfo) {
+            return parent::getMainTable();
+        } else {
+            return $this->___callPlugins('getMainTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setMainTable($table)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setMainTable');
-        return $pluginInfo ? $this->___callPlugins('setMainTable', func_get_args(), $pluginInfo) : parent::setMainTable($table);
+        if (!$pluginInfo) {
+            return parent::setMainTable($table);
+        } else {
+            return $this->___callPlugins('setMainTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getSelect()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSelect');
-        return $pluginInfo ? $this->___callPlugins('getSelect', func_get_args(), $pluginInfo) : parent::getSelect();
+        if (!$pluginInfo) {
+            return parent::getSelect();
+        } else {
+            return $this->___callPlugins('getSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addFieldToSelect($field, $alias = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addFieldToSelect');
-        return $pluginInfo ? $this->___callPlugins('addFieldToSelect', func_get_args(), $pluginInfo) : parent::addFieldToSelect($field, $alias);
+        if (!$pluginInfo) {
+            return parent::addFieldToSelect($field, $alias);
+        } else {
+            return $this->___callPlugins('addFieldToSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addExpressionFieldToSelect($alias, $expression, $fields)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addExpressionFieldToSelect');
-        return $pluginInfo ? $this->___callPlugins('addExpressionFieldToSelect', func_get_args(), $pluginInfo) : parent::addExpressionFieldToSelect($alias, $expression, $fields);
+        if (!$pluginInfo) {
+            return parent::addExpressionFieldToSelect($alias, $expression, $fields);
+        } else {
+            return $this->___callPlugins('addExpressionFieldToSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function removeFieldFromSelect($field, $isAlias = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeFieldFromSelect');
-        return $pluginInfo ? $this->___callPlugins('removeFieldFromSelect', func_get_args(), $pluginInfo) : parent::removeFieldFromSelect($field, $isAlias);
+        if (!$pluginInfo) {
+            return parent::removeFieldFromSelect($field, $isAlias);
+        } else {
+            return $this->___callPlugins('removeFieldFromSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function removeAllFieldsFromSelect()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeAllFieldsFromSelect');
-        return $pluginInfo ? $this->___callPlugins('removeAllFieldsFromSelect', func_get_args(), $pluginInfo) : parent::removeAllFieldsFromSelect();
+        if (!$pluginInfo) {
+            return parent::removeAllFieldsFromSelect();
+        } else {
+            return $this->___callPlugins('removeAllFieldsFromSelect', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setModel($model)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setModel');
-        return $pluginInfo ? $this->___callPlugins('setModel', func_get_args(), $pluginInfo) : parent::setModel($model);
+        if (!$pluginInfo) {
+            return parent::setModel($model);
+        } else {
+            return $this->___callPlugins('setModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getModelName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getModelName');
-        return $pluginInfo ? $this->___callPlugins('getModelName', func_get_args(), $pluginInfo) : parent::getModelName();
+        if (!$pluginInfo) {
+            return parent::getModelName();
+        } else {
+            return $this->___callPlugins('getModelName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setResourceModel($model)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setResourceModel');
-        return $pluginInfo ? $this->___callPlugins('setResourceModel', func_get_args(), $pluginInfo) : parent::setResourceModel($model);
+        if (!$pluginInfo) {
+            return parent::setResourceModel($model);
+        } else {
+            return $this->___callPlugins('setResourceModel', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getResourceModelName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceModelName');
-        return $pluginInfo ? $this->___callPlugins('getResourceModelName', func_get_args(), $pluginInfo) : parent::getResourceModelName();
+        if (!$pluginInfo) {
+            return parent::getResourceModelName();
+        } else {
+            return $this->___callPlugins('getResourceModelName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getResource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResource');
-        return $pluginInfo ? $this->___callPlugins('getResource', func_get_args(), $pluginInfo) : parent::getResource();
+        if (!$pluginInfo) {
+            return parent::getResource();
+        } else {
+            return $this->___callPlugins('getResource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getTable($table)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTable');
-        return $pluginInfo ? $this->___callPlugins('getTable', func_get_args(), $pluginInfo) : parent::getTable($table);
+        if (!$pluginInfo) {
+            return parent::getTable($table);
+        } else {
+            return $this->___callPlugins('getTable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getAllIds()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAllIds');
-        return $pluginInfo ? $this->___callPlugins('getAllIds', func_get_args(), $pluginInfo) : parent::getAllIds();
+        if (!$pluginInfo) {
+            return parent::getAllIds();
+        } else {
+            return $this->___callPlugins('getAllIds', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function join($table, $cond, $cols = '*')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'join');
-        return $pluginInfo ? $this->___callPlugins('join', func_get_args(), $pluginInfo) : parent::join($table, $cond, $cols);
+        if (!$pluginInfo) {
+            return parent::join($table, $cond, $cols);
+        } else {
+            return $this->___callPlugins('join', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setResetItemsDataChanged($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setResetItemsDataChanged');
-        return $pluginInfo ? $this->___callPlugins('setResetItemsDataChanged', func_get_args(), $pluginInfo) : parent::setResetItemsDataChanged($flag);
+        if (!$pluginInfo) {
+            return parent::setResetItemsDataChanged($flag);
+        } else {
+            return $this->___callPlugins('setResetItemsDataChanged', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function resetItemsDataChanged()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetItemsDataChanged');
-        return $pluginInfo ? $this->___callPlugins('resetItemsDataChanged', func_get_args(), $pluginInfo) : parent::resetItemsDataChanged();
+        if (!$pluginInfo) {
+            return parent::resetItemsDataChanged();
+        } else {
+            return $this->___callPlugins('resetItemsDataChanged', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function save()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save();
+        if (!$pluginInfo) {
+            return parent::save();
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addBindParam($name, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addBindParam');
-        return $pluginInfo ? $this->___callPlugins('addBindParam', func_get_args(), $pluginInfo) : parent::addBindParam($name, $value);
+        if (!$pluginInfo) {
+            return parent::addBindParam($name, $value);
+        } else {
+            return $this->___callPlugins('addBindParam', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getIdFieldName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo) : parent::getIdFieldName();
+        if (!$pluginInfo) {
+            return parent::getIdFieldName();
+        } else {
+            return $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setConnection(\Magento\Framework\DB\Adapter\AdapterInterface $conn)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setConnection');
-        return $pluginInfo ? $this->___callPlugins('setConnection', func_get_args(), $pluginInfo) : parent::setConnection($conn);
+        if (!$pluginInfo) {
+            return parent::setConnection($conn);
+        } else {
+            return $this->___callPlugins('setConnection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getConnection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConnection');
-        return $pluginInfo ? $this->___callPlugins('getConnection', func_get_args(), $pluginInfo) : parent::getConnection();
+        if (!$pluginInfo) {
+            return parent::getConnection();
+        } else {
+            return $this->___callPlugins('getConnection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getSize()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSize');
-        return $pluginInfo ? $this->___callPlugins('getSize', func_get_args(), $pluginInfo) : parent::getSize();
+        if (!$pluginInfo) {
+            return parent::getSize();
+        } else {
+            return $this->___callPlugins('getSize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getSelectCountSql()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSelectCountSql');
-        return $pluginInfo ? $this->___callPlugins('getSelectCountSql', func_get_args(), $pluginInfo) : parent::getSelectCountSql();
+        if (!$pluginInfo) {
+            return parent::getSelectCountSql();
+        } else {
+            return $this->___callPlugins('getSelectCountSql', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getSelectSql($stringMode = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSelectSql');
-        return $pluginInfo ? $this->___callPlugins('getSelectSql', func_get_args(), $pluginInfo) : parent::getSelectSql($stringMode);
+        if (!$pluginInfo) {
+            return parent::getSelectSql($stringMode);
+        } else {
+            return $this->___callPlugins('getSelectSql', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setOrder($field, $direction = 'DESC')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOrder');
-        return $pluginInfo ? $this->___callPlugins('setOrder', func_get_args(), $pluginInfo) : parent::setOrder($field, $direction);
+        if (!$pluginInfo) {
+            return parent::setOrder($field, $direction);
+        } else {
+            return $this->___callPlugins('setOrder', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addOrder($field, $direction = 'DESC')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addOrder');
-        return $pluginInfo ? $this->___callPlugins('addOrder', func_get_args(), $pluginInfo) : parent::addOrder($field, $direction);
+        if (!$pluginInfo) {
+            return parent::addOrder($field, $direction);
+        } else {
+            return $this->___callPlugins('addOrder', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function unshiftOrder($field, $direction = 'DESC')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unshiftOrder');
-        return $pluginInfo ? $this->___callPlugins('unshiftOrder', func_get_args(), $pluginInfo) : parent::unshiftOrder($field, $direction);
+        if (!$pluginInfo) {
+            return parent::unshiftOrder($field, $direction);
+        } else {
+            return $this->___callPlugins('unshiftOrder', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addFieldToFilter($field, $condition = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addFieldToFilter');
-        return $pluginInfo ? $this->___callPlugins('addFieldToFilter', func_get_args(), $pluginInfo) : parent::addFieldToFilter($field, $condition);
+        if (!$pluginInfo) {
+            return parent::addFieldToFilter($field, $condition);
+        } else {
+            return $this->___callPlugins('addFieldToFilter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function distinct($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'distinct');
-        return $pluginInfo ? $this->___callPlugins('distinct', func_get_args(), $pluginInfo) : parent::distinct($flag);
+        if (!$pluginInfo) {
+            return parent::distinct($flag);
+        } else {
+            return $this->___callPlugins('distinct', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function load($printQuery = false, $logQuery = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'load');
-        return $pluginInfo ? $this->___callPlugins('load', func_get_args(), $pluginInfo) : parent::load($printQuery, $logQuery);
+        if (!$pluginInfo) {
+            return parent::load($printQuery, $logQuery);
+        } else {
+            return $this->___callPlugins('load', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function loadWithFilter($printQuery = false, $logQuery = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadWithFilter');
-        return $pluginInfo ? $this->___callPlugins('loadWithFilter', func_get_args(), $pluginInfo) : parent::loadWithFilter($printQuery, $logQuery);
+        if (!$pluginInfo) {
+            return parent::loadWithFilter($printQuery, $logQuery);
+        } else {
+            return $this->___callPlugins('loadWithFilter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function fetchItem()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'fetchItem');
-        return $pluginInfo ? $this->___callPlugins('fetchItem', func_get_args(), $pluginInfo) : parent::fetchItem();
+        if (!$pluginInfo) {
+            return parent::fetchItem();
+        } else {
+            return $this->___callPlugins('fetchItem', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData();
+        if (!$pluginInfo) {
+            return parent::getData();
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function resetData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetData');
-        return $pluginInfo ? $this->___callPlugins('resetData', func_get_args(), $pluginInfo) : parent::resetData();
+        if (!$pluginInfo) {
+            return parent::resetData();
+        } else {
+            return $this->___callPlugins('resetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function loadData($printQuery = false, $logQuery = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'loadData');
-        return $pluginInfo ? $this->___callPlugins('loadData', func_get_args(), $pluginInfo) : parent::loadData($printQuery, $logQuery);
+        if (!$pluginInfo) {
+            return parent::loadData($printQuery, $logQuery);
+        } else {
+            return $this->___callPlugins('loadData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +540,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function printLogQuery($printQuery = false, $logQuery = false, $sql = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'printLogQuery');
-        return $pluginInfo ? $this->___callPlugins('printLogQuery', func_get_args(), $pluginInfo) : parent::printLogQuery($printQuery, $logQuery, $sql);
+        if (!$pluginInfo) {
+            return parent::printLogQuery($printQuery, $logQuery, $sql);
+        } else {
+            return $this->___callPlugins('printLogQuery', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +553,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addFilterToMap($filter, $alias, $group = 'fields')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addFilterToMap');
-        return $pluginInfo ? $this->___callPlugins('addFilterToMap', func_get_args(), $pluginInfo) : parent::addFilterToMap($filter, $alias, $group);
+        if (!$pluginInfo) {
+            return parent::addFilterToMap($filter, $alias, $group);
+        } else {
+            return $this->___callPlugins('addFilterToMap', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +566,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function joinExtensionAttribute(\Magento\Framework\Api\ExtensionAttribute\JoinDataInterface $join, \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $extensionAttributesJoinProcessor)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'joinExtensionAttribute');
-        return $pluginInfo ? $this->___callPlugins('joinExtensionAttribute', func_get_args(), $pluginInfo) : parent::joinExtensionAttribute($join, $extensionAttributesJoinProcessor);
+        if (!$pluginInfo) {
+            return parent::joinExtensionAttribute($join, $extensionAttributesJoinProcessor);
+        } else {
+            return $this->___callPlugins('joinExtensionAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +579,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getItemObjectClass()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getItemObjectClass');
-        return $pluginInfo ? $this->___callPlugins('getItemObjectClass', func_get_args(), $pluginInfo) : parent::getItemObjectClass();
+        if (!$pluginInfo) {
+            return parent::getItemObjectClass();
+        } else {
+            return $this->___callPlugins('getItemObjectClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +592,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addFilter($field, $value, $type = 'and')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addFilter');
-        return $pluginInfo ? $this->___callPlugins('addFilter', func_get_args(), $pluginInfo) : parent::addFilter($field, $value, $type);
+        if (!$pluginInfo) {
+            return parent::addFilter($field, $value, $type);
+        } else {
+            return $this->___callPlugins('addFilter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +605,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getFilter($field)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFilter');
-        return $pluginInfo ? $this->___callPlugins('getFilter', func_get_args(), $pluginInfo) : parent::getFilter($field);
+        if (!$pluginInfo) {
+            return parent::getFilter($field);
+        } else {
+            return $this->___callPlugins('getFilter', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +618,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function isLoaded()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isLoaded');
-        return $pluginInfo ? $this->___callPlugins('isLoaded', func_get_args(), $pluginInfo) : parent::isLoaded();
+        if (!$pluginInfo) {
+            return parent::isLoaded();
+        } else {
+            return $this->___callPlugins('isLoaded', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +631,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getCurPage($displacement = 0)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurPage');
-        return $pluginInfo ? $this->___callPlugins('getCurPage', func_get_args(), $pluginInfo) : parent::getCurPage($displacement);
+        if (!$pluginInfo) {
+            return parent::getCurPage($displacement);
+        } else {
+            return $this->___callPlugins('getCurPage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +644,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getLastPageNumber()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLastPageNumber');
-        return $pluginInfo ? $this->___callPlugins('getLastPageNumber', func_get_args(), $pluginInfo) : parent::getLastPageNumber();
+        if (!$pluginInfo) {
+            return parent::getLastPageNumber();
+        } else {
+            return $this->___callPlugins('getLastPageNumber', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +657,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getPageSize()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPageSize');
-        return $pluginInfo ? $this->___callPlugins('getPageSize', func_get_args(), $pluginInfo) : parent::getPageSize();
+        if (!$pluginInfo) {
+            return parent::getPageSize();
+        } else {
+            return $this->___callPlugins('getPageSize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +670,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getFirstItem()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFirstItem');
-        return $pluginInfo ? $this->___callPlugins('getFirstItem', func_get_args(), $pluginInfo) : parent::getFirstItem();
+        if (!$pluginInfo) {
+            return parent::getFirstItem();
+        } else {
+            return $this->___callPlugins('getFirstItem', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,7 +683,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getLastItem()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getLastItem');
-        return $pluginInfo ? $this->___callPlugins('getLastItem', func_get_args(), $pluginInfo) : parent::getLastItem();
+        if (!$pluginInfo) {
+            return parent::getLastItem();
+        } else {
+            return $this->___callPlugins('getLastItem', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -488,7 +696,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getItems()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getItems');
-        return $pluginInfo ? $this->___callPlugins('getItems', func_get_args(), $pluginInfo) : parent::getItems();
+        if (!$pluginInfo) {
+            return parent::getItems();
+        } else {
+            return $this->___callPlugins('getItems', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -497,7 +709,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getColumnValues($colName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getColumnValues');
-        return $pluginInfo ? $this->___callPlugins('getColumnValues', func_get_args(), $pluginInfo) : parent::getColumnValues($colName);
+        if (!$pluginInfo) {
+            return parent::getColumnValues($colName);
+        } else {
+            return $this->___callPlugins('getColumnValues', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -506,7 +722,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getItemsByColumnValue($column, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getItemsByColumnValue');
-        return $pluginInfo ? $this->___callPlugins('getItemsByColumnValue', func_get_args(), $pluginInfo) : parent::getItemsByColumnValue($column, $value);
+        if (!$pluginInfo) {
+            return parent::getItemsByColumnValue($column, $value);
+        } else {
+            return $this->___callPlugins('getItemsByColumnValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -515,7 +735,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getItemByColumnValue($column, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getItemByColumnValue');
-        return $pluginInfo ? $this->___callPlugins('getItemByColumnValue', func_get_args(), $pluginInfo) : parent::getItemByColumnValue($column, $value);
+        if (!$pluginInfo) {
+            return parent::getItemByColumnValue($column, $value);
+        } else {
+            return $this->___callPlugins('getItemByColumnValue', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -524,7 +748,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function addItem(\Magento\Framework\DataObject $item)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addItem');
-        return $pluginInfo ? $this->___callPlugins('addItem', func_get_args(), $pluginInfo) : parent::addItem($item);
+        if (!$pluginInfo) {
+            return parent::addItem($item);
+        } else {
+            return $this->___callPlugins('addItem', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -533,7 +761,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function removeItemByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeItemByKey');
-        return $pluginInfo ? $this->___callPlugins('removeItemByKey', func_get_args(), $pluginInfo) : parent::removeItemByKey($key);
+        if (!$pluginInfo) {
+            return parent::removeItemByKey($key);
+        } else {
+            return $this->___callPlugins('removeItemByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -542,7 +774,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function removeAllItems()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'removeAllItems');
-        return $pluginInfo ? $this->___callPlugins('removeAllItems', func_get_args(), $pluginInfo) : parent::removeAllItems();
+        if (!$pluginInfo) {
+            return parent::removeAllItems();
+        } else {
+            return $this->___callPlugins('removeAllItems', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -551,7 +787,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function clear()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clear');
-        return $pluginInfo ? $this->___callPlugins('clear', func_get_args(), $pluginInfo) : parent::clear();
+        if (!$pluginInfo) {
+            return parent::clear();
+        } else {
+            return $this->___callPlugins('clear', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -560,7 +800,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function walk($callback, array $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'walk');
-        return $pluginInfo ? $this->___callPlugins('walk', func_get_args(), $pluginInfo) : parent::walk($callback, $args);
+        if (!$pluginInfo) {
+            return parent::walk($callback, $args);
+        } else {
+            return $this->___callPlugins('walk', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -569,7 +813,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function each($objMethod, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'each');
-        return $pluginInfo ? $this->___callPlugins('each', func_get_args(), $pluginInfo) : parent::each($objMethod, $args);
+        if (!$pluginInfo) {
+            return parent::each($objMethod, $args);
+        } else {
+            return $this->___callPlugins('each', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -578,7 +826,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setDataToAll($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataToAll');
-        return $pluginInfo ? $this->___callPlugins('setDataToAll', func_get_args(), $pluginInfo) : parent::setDataToAll($key, $value);
+        if (!$pluginInfo) {
+            return parent::setDataToAll($key, $value);
+        } else {
+            return $this->___callPlugins('setDataToAll', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -587,7 +839,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setCurPage($page)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCurPage');
-        return $pluginInfo ? $this->___callPlugins('setCurPage', func_get_args(), $pluginInfo) : parent::setCurPage($page);
+        if (!$pluginInfo) {
+            return parent::setCurPage($page);
+        } else {
+            return $this->___callPlugins('setCurPage', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -596,7 +852,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setPageSize($size)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setPageSize');
-        return $pluginInfo ? $this->___callPlugins('setPageSize', func_get_args(), $pluginInfo) : parent::setPageSize($size);
+        if (!$pluginInfo) {
+            return parent::setPageSize($size);
+        } else {
+            return $this->___callPlugins('setPageSize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -605,7 +865,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setItemObjectClass($className)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setItemObjectClass');
-        return $pluginInfo ? $this->___callPlugins('setItemObjectClass', func_get_args(), $pluginInfo) : parent::setItemObjectClass($className);
+        if (!$pluginInfo) {
+            return parent::setItemObjectClass($className);
+        } else {
+            return $this->___callPlugins('setItemObjectClass', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -614,7 +878,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getNewEmptyItem()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getNewEmptyItem');
-        return $pluginInfo ? $this->___callPlugins('getNewEmptyItem', func_get_args(), $pluginInfo) : parent::getNewEmptyItem();
+        if (!$pluginInfo) {
+            return parent::getNewEmptyItem();
+        } else {
+            return $this->___callPlugins('getNewEmptyItem', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -623,7 +891,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function toXml()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml();
+        if (!$pluginInfo) {
+            return parent::toXml();
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -632,7 +904,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function toArray($arrRequiredFields = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($arrRequiredFields);
+        if (!$pluginInfo) {
+            return parent::toArray($arrRequiredFields);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -641,7 +917,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function toOptionArray()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toOptionArray');
-        return $pluginInfo ? $this->___callPlugins('toOptionArray', func_get_args(), $pluginInfo) : parent::toOptionArray();
+        if (!$pluginInfo) {
+            return parent::toOptionArray();
+        } else {
+            return $this->___callPlugins('toOptionArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -650,7 +930,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function toOptionHash()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toOptionHash');
-        return $pluginInfo ? $this->___callPlugins('toOptionHash', func_get_args(), $pluginInfo) : parent::toOptionHash();
+        if (!$pluginInfo) {
+            return parent::toOptionHash();
+        } else {
+            return $this->___callPlugins('toOptionHash', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -659,7 +943,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getItemById($idValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getItemById');
-        return $pluginInfo ? $this->___callPlugins('getItemById', func_get_args(), $pluginInfo) : parent::getItemById($idValue);
+        if (!$pluginInfo) {
+            return parent::getItemById($idValue);
+        } else {
+            return $this->___callPlugins('getItemById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -668,7 +956,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getIterator()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIterator');
-        return $pluginInfo ? $this->___callPlugins('getIterator', func_get_args(), $pluginInfo) : parent::getIterator();
+        if (!$pluginInfo) {
+            return parent::getIterator();
+        } else {
+            return $this->___callPlugins('getIterator', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -677,7 +969,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function count()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'count');
-        return $pluginInfo ? $this->___callPlugins('count', func_get_args(), $pluginInfo) : parent::count();
+        if (!$pluginInfo) {
+            return parent::count();
+        } else {
+            return $this->___callPlugins('count', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -686,7 +982,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function getFlag($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFlag');
-        return $pluginInfo ? $this->___callPlugins('getFlag', func_get_args(), $pluginInfo) : parent::getFlag($flag);
+        if (!$pluginInfo) {
+            return parent::getFlag($flag);
+        } else {
+            return $this->___callPlugins('getFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -695,7 +995,11 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function setFlag($flag, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setFlag');
-        return $pluginInfo ? $this->___callPlugins('setFlag', func_get_args(), $pluginInfo) : parent::setFlag($flag, $value);
+        if (!$pluginInfo) {
+            return parent::setFlag($flag, $value);
+        } else {
+            return $this->___callPlugins('setFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -704,6 +1008,10 @@ class Interceptor extends \Magento\AdminNotification\Model\ResourceModel\System\
     public function hasFlag($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasFlag');
-        return $pluginInfo ? $this->___callPlugins('hasFlag', func_get_args(), $pluginInfo) : parent::hasFlag($flag);
+        if (!$pluginInfo) {
+            return parent::hasFlag($flag);
+        } else {
+            return $this->___callPlugins('hasFlag', func_get_args(), $pluginInfo);
+        }
     }
 }

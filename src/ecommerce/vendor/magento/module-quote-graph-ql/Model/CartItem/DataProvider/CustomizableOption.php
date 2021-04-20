@@ -7,9 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\QuoteGraphQl\Model\CartItem\DataProvider;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Quote\Model\Quote\Item as QuoteItem;
 
 /**
@@ -18,29 +16,17 @@ use Magento\Quote\Model\Quote\Item as QuoteItem;
 class CustomizableOption
 {
     /**
-     * Option type name
-     */
-    private const OPTION_TYPE = 'custom-option';
-
-    /**
      * @var CustomizableOptionValueInterface
      */
     private $customizableOptionValue;
 
-    /** @var Uid */
-    private $uidEncoder;
-
     /**
      * @param CustomizableOptionValueInterface $customOptionValueDataProvider
-     * @param Uid|null $uidEncoder
      */
     public function __construct(
-        CustomizableOptionValueInterface $customOptionValueDataProvider,
-        Uid $uidEncoder = null
+        CustomizableOptionValueInterface $customOptionValueDataProvider
     ) {
         $this->customizableOptionValue = $customOptionValueDataProvider;
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
     }
 
     /**
@@ -70,7 +56,6 @@ class CustomizableOption
 
         return [
             'id' => $option->getId(),
-            'customizable_option_uid' => $this->uidEncoder->encode((string) self::OPTION_TYPE . '/' . $option->getId()),
             'label' => $option->getTitle(),
             'type' => $option->getType(),
             'values' => $selectedOptionValueData,

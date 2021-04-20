@@ -6,27 +6,23 @@
 define([
     'jquery',
     'ko',
+    'mage/translate',
     'uiRegistry',
     'uiComponent',
-    'Vertex_AddressValidation/js/validation-messages',
     'Vertex_AddressValidation/js/action/address-validation-request',
     'Vertex_AddressValidation/js/model/customer/address-resolver',
     'Vertex_AddressValidation/js/view/validation-message',
-    'Vertex_AddressValidation/js/view/customer/address-form',
-    'Vertex_AddressValidation/js/model/difference-determiner',
-    'Vertex_AddressValidation/uiRegistry!addressValidationMessage'
+    'Vertex_AddressValidation/js/view/customer/address-form'
 ], function (
     $,
     ko,
+    $t,
     registry,
     Component,
-    validationMessages,
     addressValidationRequest,
     addressResolver,
     message,
-    addressForm,
-    differenceDeterminer,
-    addressValidationMessage
+    addressForm
 ) {
     'use strict';
 
@@ -38,13 +34,12 @@ define([
         isAddressValid: false,
         updateAddress: false,
         addressResolver: addressResolver,
-        correctAddress: null,
 
         initialize: function () {
             this._super();
 
-            this.message = addressValidationMessage;
-            addressForm.formUpdated.extend({notify: 'always'}).subscribe(this.addressUpdated.bind(this));
+            this.message = registry.get('addressValidationMessage');
+            addressForm.formUpdated.extend({notify:'always'}).subscribe(this.addressUpdated.bind(this));
 
             return this;
         },
@@ -83,17 +78,14 @@ define([
             addressValidationRequest(formAddressData)
                 .done(function (response) {
                     this.isAddressValid = true;
-                    this.correctAddress = response;
                     if (this.handleAddressDifferenceResponse(response) === true) {
                         deferred.resolve();
-                    } else {
-                        addressForm.stopLoader();
                     }
                 }.bind(this)).fail(function () {
-                deferred.reject();
-            }).fail(function () {
-                addressForm.stopLoader();
-            });
+                    deferred.reject();
+                }).always(function () {
+                    addressForm.stopLoader();
+                });
 
             return deferred;
         },
@@ -114,36 +106,31 @@ define([
         /**
          * Get the message with the differences
          *
-         * @param {?CleanAddress} response
+         * @param {Object} response
          */
         handleAddressDifferenceResponse: function (response) {
-            if (response === null || !Object.keys(response).length) {
-                addressForm.renameSubmitButton(config.saveAsIsButtonText);
-                this.message.setWarningMessage(validationMessages.noAddressFound);
-                return;
-            }
+            var difference = this.addressResolver.resolveAddressDifference(response, this.formAddressData);
 
-            const differences = differenceDeterminer(this.formAddressData, response);
-
-            if (differences.length === 0 && config.showSuccessMessage) {
+            if (difference === true && config.showSuccessMessage) {
                 this.message.showSuccessMessage = true;
-                return true;
-            } else if (differences.length > 0) {
+            } else if (difference.length === 0) {
+                addressForm.renameSubmitButton(config.saveAsIsButtonText);
+                this.message.setWarningMessage($t('We did not find a valid address'));
+            } else if (difference !== true) {
                 this.updateAddress = true;
                 addressForm.renameSubmitButton(config.updateButtonText);
                 addressForm.showSaveAsIsButton();
-                this.message.setWarningMessage(validationMessages.changesFound, differences, response);
-            } else {
-                return true;
+                this.message.setWarningMessage($t('The address is not valid'), difference);
             }
+            return difference;
         },
 
         /**
          * Get the update message
          */
         updateVertexAddress: function () {
-            addressForm.updateAddress(differenceDeterminer(this.formAddressData, this.correctAddress));
-            this.message.setSuccessMessage(validationMessages.addressUpdated);
+            this.addressResolver.resolveAddressUpdate();
+            this.message.setSuccessMessage($t('The address was updated'));
 
             if (config.showSuccessMessage) {
                 this.message.showSuccessMessage = true;

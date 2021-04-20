@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Cms\Controller\Index\Index implements \Magent
     public function execute($coreRoute = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'execute');
-        return $pluginInfo ? $this->___callPlugins('execute', func_get_args(), $pluginInfo) : parent::execute($coreRoute);
+        if (!$pluginInfo) {
+            return parent::execute($coreRoute);
+        } else {
+            return $this->___callPlugins('execute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Cms\Controller\Index\Index implements \Magent
     public function dispatch(\Magento\Framework\App\RequestInterface $request)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'dispatch');
-        return $pluginInfo ? $this->___callPlugins('dispatch', func_get_args(), $pluginInfo) : parent::dispatch($request);
+        if (!$pluginInfo) {
+            return parent::dispatch($request);
+        } else {
+            return $this->___callPlugins('dispatch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Cms\Controller\Index\Index implements \Magent
     public function getActionFlag()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActionFlag');
-        return $pluginInfo ? $this->___callPlugins('getActionFlag', func_get_args(), $pluginInfo) : parent::getActionFlag();
+        if (!$pluginInfo) {
+            return parent::getActionFlag();
+        } else {
+            return $this->___callPlugins('getActionFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Cms\Controller\Index\Index implements \Magent
     public function getRequest()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequest');
-        return $pluginInfo ? $this->___callPlugins('getRequest', func_get_args(), $pluginInfo) : parent::getRequest();
+        if (!$pluginInfo) {
+            return parent::getRequest();
+        } else {
+            return $this->___callPlugins('getRequest', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,6 +72,10 @@ class Interceptor extends \Magento\Cms\Controller\Index\Index implements \Magent
     public function getResponse()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResponse');
-        return $pluginInfo ? $this->___callPlugins('getResponse', func_get_args(), $pluginInfo) : parent::getResponse();
+        if (!$pluginInfo) {
+            return parent::getResponse();
+        } else {
+            return $this->___callPlugins('getResponse', func_get_args(), $pluginInfo);
+        }
     }
 }

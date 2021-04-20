@@ -3,7 +3,6 @@
 namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
-use Codeception\Lib\Notification;
 use Codeception\Lib\ParamsLoader;
 use Codeception\Util\Autoload;
 use Codeception\Util\Template;
@@ -79,15 +78,13 @@ class Configuration
             'commands' => [],
         ],
         'reporters'  => [
-            'xml'         => 'Codeception\PHPUnit\Log\JUnit',
-            'html'        => 'Codeception\PHPUnit\ResultPrinter\HTML',
-            'report'      => 'Codeception\PHPUnit\ResultPrinter\Report',
-            'tap'         => 'PHPUnit\Util\Log\TAP',
-            'json'        => 'PHPUnit\Util\Log\JSON',
-            'phpunit-xml' => 'Codeception\PHPUnit\Log\PhpUnit',
+            'xml'    => 'Codeception\PHPUnit\Log\JUnit',
+            'html'   => 'Codeception\PHPUnit\ResultPrinter\HTML',
+            'report' => 'Codeception\PHPUnit\ResultPrinter\Report',
+            'tap'    => 'PHPUnit\Util\Log\TAP',
+            'json'   => 'PHPUnit\Util\Log\JSON',
         ],
         'groups'     => [],
-        'bootstrap'  => false,
         'settings'   => [
             'colors'                    => true,
             'bootstrap'                 => false,
@@ -97,8 +94,7 @@ class Configuration
             'log_incomplete_skipped'    => false,
             'report_useless_tests'      => false,
             'disallow_test_output'      => false,
-            'be_strict_about_changes_to_global_state' => false,
-            'shuffle'     => false,
+            'be_strict_about_changes_to_global_state' => false
         ],
         'coverage'   => [],
         'params'     => [],
@@ -113,7 +109,6 @@ class Configuration
             'config'  => [],
             'depends' => []
         ],
-        'step_decorators' => 'Codeception\Step\ConditionalAssertion',
         'path'        => null,
         'extends'     => null,
         'namespace'   => null,
@@ -253,37 +248,21 @@ class Configuration
         }
 
         Autoload::addNamespace(self::$config['namespace'], self::supportDir());
-
-        if ($config['settings']['bootstrap']) {
-            $bootstrap = self::$config['settings']['bootstrap'];
-            Notification::deprecate("'settings: bootstrap: $bootstrap' option is deprecated! Replace it with: 'bootstrap: $bootstrap' (not under settings section). See https://bit.ly/2YrRzVc ");
-            try {
-                self::loadBootstrap($bootstrap, self::testsDir());
-            } catch (ConfigurationException $exception) {
-                Notification::deprecate("Bootstrap file ($bootstrap) is defined in configuration but can't be loaded. Disable 'settings: bootstrap:' configuration to remove this message");
-            }
-        }
-        self::loadBootstrap($config['bootstrap'], self::testsDir());
+        self::loadBootstrap($config['settings']['bootstrap']);
         self::loadSuites();
 
         return $config;
     }
 
-    public static function loadBootstrap($bootstrap, $path)
+    protected static function loadBootstrap($bootstrap)
     {
         if (!$bootstrap) {
             return;
         }
-
-        $bootstrap = \Codeception\Util\PathResolver::isPathAbsolute($bootstrap)
-            ? $bootstrap
-            : rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $bootstrap;
-
-
-        if (!file_exists($bootstrap)) {
-            throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
+        $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR . $bootstrap;
+        if (file_exists($bootstrap)) {
+            include_once $bootstrap;
         }
-        require_once $bootstrap;
     }
 
     protected static function loadSuites()
@@ -443,7 +422,6 @@ class Configuration
      * @param string $filename filename
      * @param mixed $nonExistentValue value used if filename is not found
      * @return array
-     * @throws ConfigurationException
      */
     protected static function getConfFromFile($filename, $nonExistentValue = [])
     {
@@ -452,6 +430,31 @@ class Configuration
             return self::getConfFromContents($yaml, $filename);
         }
         return $nonExistentValue;
+    }
+
+    /**
+     * Returns all possible suite configurations according environment rules.
+     * Suite configurations will contain `current_environment` key which specifies what environment used.
+     *
+     * @param $suite
+     * @return array
+     */
+    public static function suiteEnvironments($suite)
+    {
+        $settings = self::suiteSettings($suite, self::config());
+
+        if (!isset($settings['env']) || !is_array($settings['env'])) {
+            return [];
+        }
+
+        $environments = [];
+
+        foreach ($settings['env'] as $env => $envConfig) {
+            $environments[$env] = $envConfig ? self::mergeConfigs($settings, $envConfig) : $settings;
+            $environments[$env]['current_environment'] = $env;
+        }
+
+        return $environments;
     }
 
     public static function suites()
@@ -486,7 +489,7 @@ class Configuration
 
     public static function isExtensionEnabled($extensionName)
     {
-        return isset(self::$config['extensions']['enabled'])
+        return isset(self::$config['extensions'], self::$config['extensions']['enabled'])
         && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
@@ -526,7 +529,7 @@ class Configuration
         }
 
         $dir = self::$outputDir . DIRECTORY_SEPARATOR;
-        if (!codecept_is_path_absolute($dir)) {
+        if (strcmp(self::$outputDir[0], "/") !== 0) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
@@ -540,7 +543,7 @@ class Configuration
 
         if (!is_writable($dir)) {
             throw new ConfigurationException(
-                "Path for output is not writable. Please, set appropriate access mode for output path: {$dir}"
+                "Path for output is not writable. Please, set appropriate access mode for output path."
             );
         }
 
@@ -550,7 +553,6 @@ class Configuration
     /**
      * Compatibility alias to `Configuration::logDir()`
      * @return string
-     * @throws ConfigurationException
      */
     public static function logDir()
     {
@@ -644,7 +646,7 @@ class Configuration
 
         // for sequential arrays
         if (isset($a1[0], $a2[0])) {
-            return array_values(array_unique(array_merge_recursive($a2, $a1), SORT_REGULAR));
+            return array_merge_recursive($a2, $a1);
         }
 
         // for associative arrays
@@ -673,7 +675,6 @@ class Configuration
      * @param $path
      * @param $settings
      * @return array
-     * @throws ConfigurationException
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
@@ -709,7 +710,6 @@ class Configuration
      *
      * @param $includes
      * @return array
-     * @throws ConfigurationException
      */
     protected static function expandWildcardedIncludes(array $includes)
     {

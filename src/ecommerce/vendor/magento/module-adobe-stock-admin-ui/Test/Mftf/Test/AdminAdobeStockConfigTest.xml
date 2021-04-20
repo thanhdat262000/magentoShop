@@ -18,15 +18,16 @@
             <description value="Admin should be able to configure Adobe Stock Integration"/>
             <severity value="CRITICAL"/>
             <group value="adobe_stock_integration_configuration"/>
+            <group value="adobe_stock_integration"/>
         </annotations>
         <before>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginGetFromGeneralFile"/>
+            <actionGroup ref="LoginActionGroup" stepKey="loginGetFromGeneralFile"/>
         </before>
         <after>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
         <actionGroup ref="AdminOpenAdobeStockConfigActionGroup" stepKey="navigateToAdobeStockConfigurationFieldset"/>
-        <actionGroup ref="AssertAdminAdobeStockConfigFieldsActionGroup" stepKey="checkAdobeStockConfigurationFields"/>
-        <actionGroup ref="AssertAdminAdobeStockConnectionTestActionGroup" stepKey="testConnection"/>
+        <actionGroup ref="AdminAssertAdobeStockConfigFieldsActionGroup" stepKey="checkAdobeStockConfigurationFields"/>
+        <actionGroup ref="AdminAssertAdobeStockConnectionTestActionGroup" stepKey="testConnection"/>
     </test>
 </tests>

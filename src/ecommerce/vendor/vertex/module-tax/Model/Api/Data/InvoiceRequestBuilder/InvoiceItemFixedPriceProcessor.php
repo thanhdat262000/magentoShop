@@ -12,35 +12,56 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Stdlib\StringUtils;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\InvoiceItemInterface;
+use Magento\Sales\Api\OrderAddressRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Vertex\Data\CustomerInterface;
 use Vertex\Data\LineItemInterface;
 use Vertex\Data\LineItemInterfaceFactory;
 use Vertex\Services\Invoice\RequestInterface;
+use Vertex\Tax\Model\Api\Data\CustomerBuilder;
+use Vertex\Tax\Model\Api\Utility\IsVirtualLineItemDeterminer;
 use Vertex\Tax\Model\Api\Utility\MapperFactoryProxy;
 use Vertex\Tax\Model\Config;
+use Vertex\Tax\Model\ExceptionLogger;
 use Vertex\Tax\Model\Repository\TaxClassNameRepository;
 
 class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
 {
-    /** @var Config */
-    private $config;
-
-    /** @var FixedPriceProcessor */
-    private $fixedPriceProcessor;
-
     /** @var ItemProcessor */
     private $itemProcessor;
 
     /** @var LineItemInterfaceFactory */
     private $lineItemFactory;
 
-    /** @var MapperFactoryProxy */
-    private $mapperFactory;
+    /** @var TaxClassNameRepository */
+    private $taxClassNameRepository;
 
     /** @var StringUtils */
     private $stringUtilities;
 
-    /** @var TaxClassNameRepository */
-    private $taxClassNameRepository;
+    /** @var MapperFactoryProxy */
+    private $mapperFactory;
+
+    /** @var FixedPriceProcessor  */
+    private $fixedPriceProcessor;
+
+    /** @var Config */
+    private $config;
+
+    /** @var CustomerBuilder */
+    private $customerBuilder;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /** @var OrderAddressRepositoryInterface */
+    private $orderAddressRepository;
+
+    /** @var IsVirtualLineItemDeterminer */
+    private $virtualLineItemDeterminer;
+
+    /** @var ExceptionLogger */
+    private $logger;
 
     public function __construct(
         ItemProcessor $itemProcessor,
@@ -49,7 +70,12 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
         StringUtils $stringUtils,
         MapperFactoryProxy $mapperFactory,
         FixedPriceProcessor $fixedPriceProcessor,
-        Config $config
+        Config $config,
+        CustomerBuilder $customerBuilder,
+        OrderRepositoryInterface $orderRepository,
+        OrderAddressRepositoryInterface $orderAddressRepository,
+        IsVirtualLineItemDeterminer $virtualLineItemDeterminer,
+        ExceptionLogger $logger
     ) {
         $this->itemProcessor = $itemProcessor;
         $this->lineItemFactory = $lineItemFactory;
@@ -58,12 +84,18 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
         $this->mapperFactory = $mapperFactory;
         $this->fixedPriceProcessor = $fixedPriceProcessor;
         $this->config = $config;
+        $this->customerBuilder = $customerBuilder;
+        $this->orderRepository = $orderRepository;
+        $this->orderAddressRepository = $orderAddressRepository;
+        $this->virtualLineItemDeterminer = $virtualLineItemDeterminer;
+        $this->logger = $logger;
+        $this->virtualLineItemDeterminer = $virtualLineItemDeterminer;
     }
 
     /**
      * @inheritdoc
      */
-    public function process(RequestInterface $request, InvoiceInterface $invoice): RequestInterface
+    public function process(RequestInterface $request, InvoiceInterface $invoice) :RequestInterface
     {
         /** @var InvoiceItemInterface[] $invoiceItems All InvoiceItems indexed by id */
         $invoiceItems = [];
@@ -84,13 +116,13 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
             $productSku[] = $item->getSku();
         }
 
-        $orderId = $invoice->getOrderId();
-        $products = $this->itemProcessor->getProductsIndexedBySku($productSku, $orderId);
+        $products = $this->itemProcessor->getProductsIndexedBySku($productSku);
 
         /** @var int[] $taxClasses Key is InvoiceItem ID, Value is Tax Class ID */
         $taxClasses = [];
 
         $storeId = $invoice->getStoreId();
+        $orderId = $invoice->getOrderId();
 
         $lineItemMapper = $this->mapperFactory->getForClass(LineItemInterface::class, $storeId);
 
@@ -122,6 +154,12 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
             $lineItem->setExtendedPrice($fixedProductPriceTaxRow);
             $lineItem->setLineItemId($item->getOrderItemId());
 
+            if ($this->virtualLineItemDeterminer->isInvoiceItemVirtual($item)
+                && $customer = $this->buildCustomerWithBillingAddress($orderId)
+            ) {
+                $lineItem->setCustomer($customer);
+            }
+
             $taxClasses[$item->getOrderItemId()] = $taxClassId;
 
             if ($lineItem->getExtendedPrice() == 0) {
@@ -152,6 +190,18 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
         return $request;
     }
 
+    private function buildCustomerWithBillingAddress($orderId):? CustomerInterface
+    {
+        try {
+            $order = $this->orderRepository->get($orderId);
+            $billingAddress = $this->orderAddressRepository->get($order->getBillingAddressId());
+            return $this->customerBuilder->buildFromOrderAddress($billingAddress);
+        } catch (\Exception $e) {
+            $this->logger->critical($e);
+            return null;
+        }
+    }
+
     private function getFptTaxClassByProduct(Product $product): int
     {
         $taxClassAttribute = $product ? $product->getCustomAttribute('tax_class_id') : false;
@@ -167,6 +217,6 @@ class InvoiceItemFixedPriceProcessor implements InvoiceProcessorInterface
             $taxClassId = $config->vertexTaxClassUsedForFixedProductTax();
         }
 
-        return (int)$taxClassId;
+        return (int) $taxClassId;
     }
 }

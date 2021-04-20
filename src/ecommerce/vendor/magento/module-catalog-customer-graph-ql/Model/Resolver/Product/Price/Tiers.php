@@ -77,7 +77,7 @@ class Tiers
      *
      * @param int $productId
      */
-    public function addProductFilter(int $productId): void
+    public function addProductFilter($productId): void
     {
         $this->filterProductIds[] = $productId;
     }

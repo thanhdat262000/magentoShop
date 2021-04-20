@@ -27,7 +27,7 @@ class AccountcallbackTest extends AbstractController
      */
     private $trialSetup;
 
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
 

@@ -12,7 +12,6 @@ use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Phrase;
-use Magento\Framework\Stdlib\DateTime\Intl\DateFormatterFactory;
 
 /**
  * Timezone library
@@ -62,18 +61,12 @@ class Timezone implements TimezoneInterface
     protected $_localeResolver;
 
     /**
-     * @var DateFormatterFactory
-     */
-    private $dateFormatterFactory;
-
-    /**
      * @param ScopeResolverInterface $scopeResolver
      * @param ResolverInterface $localeResolver
      * @param \Magento\Framework\Stdlib\DateTime $dateTime
      * @param ScopeConfigInterface $scopeConfig
      * @param string $scopeType
      * @param string $defaultTimezonePath
-     * @param DateFormatterFactory $dateFormatterFactory
      */
     public function __construct(
         ScopeResolverInterface $scopeResolver,
@@ -81,8 +74,7 @@ class Timezone implements TimezoneInterface
         \Magento\Framework\Stdlib\DateTime $dateTime,
         ScopeConfigInterface $scopeConfig,
         $scopeType,
-        $defaultTimezonePath,
-        DateFormatterFactory $dateFormatterFactory
+        $defaultTimezonePath
     ) {
         $this->_scopeResolver = $scopeResolver;
         $this->_localeResolver = $localeResolver;
@@ -90,7 +82,6 @@ class Timezone implements TimezoneInterface
         $this->_defaultTimezonePath = $defaultTimezonePath;
         $this->_scopeConfig = $scopeConfig;
         $this->_scopeType = $scopeType;
-        $this->dateFormatterFactory = $dateFormatterFactory;
     }
 
     /**
@@ -126,15 +117,11 @@ class Timezone implements TimezoneInterface
      */
     public function getDateFormat($type = \IntlDateFormatter::SHORT)
     {
-        $formatter = $this->dateFormatterFactory->create(
-            (string)$this->_localeResolver->getLocale(),
-            (int)$type,
-            \IntlDateFormatter::NONE,
-            null,
-            false
-        );
-
-        return $formatter->getPattern();
+        return (new \IntlDateFormatter(
+            $this->_localeResolver->getLocale(),
+            $type,
+            \IntlDateFormatter::NONE
+        ))->getPattern();
     }
 
     /**
@@ -142,13 +129,11 @@ class Timezone implements TimezoneInterface
      */
     public function getDateFormatWithLongYear()
     {
-        $formatter = $this->dateFormatterFactory->create(
-            (string)$this->_localeResolver->getLocale(),
-            \IntlDateFormatter::SHORT,
-            \IntlDateFormatter::NONE
+        return preg_replace(
+            '/(?<!y)yy(?!y)/',
+            'Y',
+            $this->getDateFormat()
         );
-
-        return $formatter->getPattern();
     }
 
     /**
@@ -156,13 +141,11 @@ class Timezone implements TimezoneInterface
      */
     public function getTimeFormat($type = \IntlDateFormatter::SHORT)
     {
-        $formatter = $this->dateFormatterFactory->create(
-            (string)$this->_localeResolver->getLocale(),
+        return (new \IntlDateFormatter(
+            $this->_localeResolver->getLocale(),
             \IntlDateFormatter::NONE,
-            (int)$type
-        );
-
-        return $formatter->getPattern();
+            $type
+        ))->getPattern();
     }
 
     /**
@@ -178,8 +161,10 @@ class Timezone implements TimezoneInterface
      */
     public function date($date = null, $locale = null, $useTimezone = true, $includeTime = true)
     {
-        $locale = (string)($locale ?: $this->_localeResolver->getLocale());
-        $timezone = (string)($useTimezone ? $this->getConfigTimezone() : date_default_timezone_get());
+        $locale = $locale ?: $this->_localeResolver->getLocale();
+        $timezone = $useTimezone
+            ? $this->getConfigTimezone()
+            : date_default_timezone_get();
 
         switch (true) {
             case (empty($date)):
@@ -189,13 +174,15 @@ class Timezone implements TimezoneInterface
             case ($date instanceof \DateTimeImmutable):
                 return new \DateTime($date->format('Y-m-d H:i:s'), $date->getTimezone());
             case (!is_numeric($date)):
-                $date = $this->appendTimeIfNeeded((string)$date, (bool)$includeTime, $timezone, $locale);
-                $formatter = $this->dateFormatterFactory->create(
+                $timeType = $includeTime ? \IntlDateFormatter::SHORT : \IntlDateFormatter::NONE;
+                $formatter = new \IntlDateFormatter(
                     $locale,
                     \IntlDateFormatter::SHORT,
-                    $includeTime ? \IntlDateFormatter::SHORT : \IntlDateFormatter::NONE,
-                    $timezone
+                    $timeType,
+                    new \DateTimeZone($timezone)
                 );
+
+                $date = $this->appendTimeIfNeeded($date, $includeTime);
                 $date = $formatter->parse($date) ?: (new \DateTime($date))->getTimestamp();
                 break;
         }
@@ -219,9 +206,25 @@ class Timezone implements TimezoneInterface
             case ($date instanceof \DateTimeImmutable):
                 $date = $date->setTimezone($timezone);
                 break;
+            case (!is_numeric($date)):
+                $timeType = $includeTime ? \IntlDateFormatter::SHORT : \IntlDateFormatter::NONE;
+                $formatter = new \IntlDateFormatter(
+                    $this->_localeResolver->getLocale(),
+                    \IntlDateFormatter::SHORT,
+                    $timeType,
+                    $timezone
+                );
+                $timestamp = $formatter->parse($date);
+                $date = $timestamp
+                    ? (new \DateTime('@' . $timestamp))->setTimezone($timezone)
+                    : new \DateTime($date, $timezone);
+                break;
+            case (is_numeric($date)):
+                $date = new \DateTime('@' . $date);
+                $date = $date->setTimezone($timezone);
+                break;
             default:
-                $date = new \DateTime(is_numeric($date) ? '@' . $date : $date);
-                $date->setTimezone($timezone);
+                $date = new \DateTime($date, $timezone);
                 break;
         }
 
@@ -294,6 +297,7 @@ class Timezone implements TimezoneInterface
         if (!($date instanceof \DateTimeInterface)) {
             $date = new \DateTime($date);
         }
+
         if ($timezone === null) {
             if ($date->getTimezone() == null || $date->getTimezone()->getName() == 'UTC'
                 || $date->getTimezone()->getName() == '+00:00'
@@ -304,20 +308,14 @@ class Timezone implements TimezoneInterface
             }
         }
 
-        $formatter = $this->dateFormatterFactory->create(
-            (string)($locale ?: $this->_localeResolver->getLocale()),
-            (int)($dateType ?? \IntlDateFormatter::SHORT),
-            (int)($timeType ?? \IntlDateFormatter::SHORT),
+        $formatter = new \IntlDateFormatter(
+            $locale ?: $this->_localeResolver->getLocale(),
+            $dateType,
+            $timeType,
+            $timezone,
             null,
-            false
+            $pattern
         );
-        if ($timezone) {
-            $formatter->setTimeZone($timezone);
-        }
-        if ($pattern) {
-            $formatter->setPattern($pattern);
-        }
-
         return $formatter->format($date);
     }
 
@@ -337,7 +335,7 @@ class Timezone implements TimezoneInterface
                 throw new LocalizedException(
                     new Phrase(
                         'The DateTime object timezone needs to be the same as the "%1" timezone in config.',
-                        [$this->getConfigTimezone()]
+                        $this->getConfigTimezone()
                     )
                 );
             }
@@ -349,42 +347,17 @@ class Timezone implements TimezoneInterface
     }
 
     /**
-     * Append time to DateTime
+     * Retrieve date with time
      *
      * @param string $date
-     * @param boolean $includeTime
-     * @param string $timezone
-     * @param string $locale
+     * @param bool $includeTime
      * @return string
-     * @throws LocalizedException
      */
-    private function appendTimeIfNeeded(string $date, bool $includeTime, string $timezone, string $locale)
+    private function appendTimeIfNeeded($date, $includeTime)
     {
         if ($includeTime && !preg_match('/\d{1}:\d{2}/', $date)) {
-            $formatter = $this->dateFormatterFactory->create(
-                $locale,
-                \IntlDateFormatter::SHORT,
-                \IntlDateFormatter::NONE,
-                $timezone
-            );
-            $timestamp = $formatter->parse($date);
-            if (!$timestamp) {
-                throw new LocalizedException(
-                    new Phrase(
-                        'Could not append time to DateTime'
-                    )
-                );
-            }
-
-            $formatterWithHour = $this->dateFormatterFactory->create(
-                $locale,
-                \IntlDateFormatter::SHORT,
-                \IntlDateFormatter::SHORT,
-                $timezone
-            );
-            $date = $formatterWithHour->format($timestamp);
+            $date .= " 0:00am";
         }
-
         return $date;
     }
 }

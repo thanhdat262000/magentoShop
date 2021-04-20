@@ -3,18 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Quote\Model;
 
+use Magento\Customer\Api\CustomerRepositoryInterface as CustomerRepository;
 use Magento\Customer\Api\AccountManagementInterface as AccountManagement;
 use Magento\Customer\Api\AddressRepositoryInterface as CustomerAddressRepository;
-use Magento\Customer\Api\CustomerRepositoryInterface as CustomerRepository;
-use Magento\Customer\Model\AddressFactory;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Validator\Exception as ValidatorException;
-use Magento\Framework\Validator\Factory as ValidatorFactory;
 use Magento\Quote\Model\Quote as QuoteEntity;
+use Magento\Framework\App\ObjectManager;
 
 /**
  * Class Customer
@@ -37,12 +33,12 @@ class CustomerManagement
     protected $accountManagement;
 
     /**
-     * @var ValidatorFactory
+     * @var \Magento\Framework\Validator\Factory
      */
     private $validatorFactory;
 
     /**
-     * @var AddressFactory
+     * @var \Magento\Customer\Model\AddressFactory
      */
     private $addressFactory;
 
@@ -51,23 +47,23 @@ class CustomerManagement
      * @param CustomerRepository $customerRepository
      * @param CustomerAddressRepository $customerAddressRepository
      * @param AccountManagement $accountManagement
-     * @param ValidatorFactory|null $validatorFactory
-     * @param AddressFactory|null $addressFactory
+     * @param \Magento\Framework\Validator\Factory|null $validatorFactory
+     * @param \Magento\Customer\Model\AddressFactory|null $addressFactory
      */
     public function __construct(
         CustomerRepository $customerRepository,
         CustomerAddressRepository $customerAddressRepository,
         AccountManagement $accountManagement,
-        ValidatorFactory $validatorFactory = null,
-        AddressFactory $addressFactory = null
+        \Magento\Framework\Validator\Factory $validatorFactory = null,
+        \Magento\Customer\Model\AddressFactory $addressFactory = null
     ) {
         $this->customerRepository = $customerRepository;
         $this->customerAddressRepository = $customerAddressRepository;
         $this->accountManagement = $accountManagement;
         $this->validatorFactory = $validatorFactory ?: ObjectManager::getInstance()
-            ->get(ValidatorFactory::class);
+            ->get(\Magento\Framework\Validator\Factory::class);
         $this->addressFactory = $addressFactory ?: ObjectManager::getInstance()
-            ->get(AddressFactory::class);
+            ->get(\Magento\Customer\Model\AddressFactory::class);
     }
 
     /**
@@ -86,7 +82,6 @@ class CustomerManagement
                 $quote->getPasswordHash()
             );
             $quote->setCustomer($customer);
-            $this->fillCustomerAddressId($quote);
         }
         if (!$quote->getBillingAddress()->getId() && $customer->getDefaultBilling()) {
             $quote->getBillingAddress()->importCustomerAddressData(
@@ -106,35 +101,10 @@ class CustomerManagement
     }
 
     /**
-     * Filling 'CustomerAddressId' in quote for a newly created customer.
-     *
-     * @param QuoteEntity $quote
-     * @return void
-     */
-    private function fillCustomerAddressId(QuoteEntity $quote): void
-    {
-        $customer = $quote->getCustomer();
-
-        $customer->getDefaultBilling() ?
-            $quote->getBillingAddress()->setCustomerAddressId($customer->getDefaultBilling()) :
-            $quote->getBillingAddress()->setCustomerAddressId(0);
-
-        if ($customer->getDefaultShipping() || $customer->getDefaultBilling()) {
-            if ($quote->getShippingAddress()->getSameAsBilling()) {
-                $quote->getShippingAddress()->setCustomerAddressId($customer->getDefaultBilling());
-            } else {
-                $quote->getShippingAddress()->setCustomerAddressId($customer->getDefaultShipping());
-            }
-        } else {
-            $quote->getShippingAddress()->setCustomerAddressId(0);
-        }
-    }
-
-    /**
      * Validate Quote Addresses
      *
      * @param Quote $quote
-     * @throws ValidatorException
+     * @throws \Magento\Framework\Validator\Exception
      * @return void
      */
     public function validateAddresses(QuoteEntity $quote)
@@ -156,7 +126,7 @@ class CustomerManagement
                 $addressModel = $this->addressFactory->create();
                 $addressModel->updateData($address);
                 if (!$validator->isValid($addressModel)) {
-                    throw new ValidatorException(
+                    throw new \Magento\Framework\Validator\Exception(
                         null,
                         null,
                         $validator->getMessages()

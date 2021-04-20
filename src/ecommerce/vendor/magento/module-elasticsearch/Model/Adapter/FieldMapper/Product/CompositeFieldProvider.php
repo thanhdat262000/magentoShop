@@ -43,9 +43,9 @@ class CompositeFieldProvider implements FieldProviderInterface
         $allAttributes = [];
 
         foreach ($this->providers as $provider) {
-            $allAttributes[] = $provider->getFields($context);
+            $allAttributes = array_merge($allAttributes, $provider->getFields($context));
         }
 
-        return array_merge([], ...$allAttributes);
+        return $allAttributes;
     }
 }

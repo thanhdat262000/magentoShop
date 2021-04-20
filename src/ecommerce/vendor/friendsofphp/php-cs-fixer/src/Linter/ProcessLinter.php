@@ -96,7 +96,7 @@ final class ProcessLinter implements LinterInterface
      */
     public function lintFile($path)
     {
-        return new ProcessLintingResult($this->createProcessForFile($path), $path);
+        return new ProcessLintingResult($this->createProcessForFile($path));
     }
 
     /**
@@ -104,7 +104,7 @@ final class ProcessLinter implements LinterInterface
      */
     public function lintSource($source)
     {
-        return new ProcessLintingResult($this->createProcessForSource($source), $this->temporaryFile);
+        return new ProcessLintingResult($this->createProcessForSource($source));
     }
 
     /**
@@ -136,7 +136,7 @@ final class ProcessLinter implements LinterInterface
     private function createProcessForSource($source)
     {
         if (null === $this->temporaryFile) {
-            $this->temporaryFile = tempnam(sys_get_temp_dir(), 'cs_fixer_tmp_');
+            $this->temporaryFile = tempnam('.', 'cs_fixer_tmp_');
             $this->fileRemoval->observe($this->temporaryFile);
         }
 

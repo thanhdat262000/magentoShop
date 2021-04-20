@@ -36,9 +36,9 @@ class ImagesGenerator
 
     /**
      * Generates image from $data and puts its to /tmp folder
-     * @param array $config
+     *
+     * @param string $config
      * @return string $imagePath
-     * @throws \Exception
      */
     public function generate($config)
     {
@@ -70,15 +70,9 @@ class ImagesGenerator
         $relativePathToMedia = $mediaDirectory->getRelativePath($this->mediaConfig->getBaseTmpMediaPath());
         $mediaDirectory->create($relativePathToMedia);
 
-        $imagePath = $relativePathToMedia . DIRECTORY_SEPARATOR . $config['image-name'];
-        $imagePath = preg_replace('|/{2,}|', '/', $imagePath);
-        $memory = fopen('php://memory', 'r+');
-        if(!imagejpeg($image, $memory)) {
-            throw new \Exception('Could not create picture ' . $imagePath);
-        }
-        $mediaDirectory->writeFile($imagePath, stream_get_contents($memory, -1, 0));
-        fclose($memory);
-        imagedestroy($image);
+        $absolutePathToMedia = $mediaDirectory->getAbsolutePath($this->mediaConfig->getBaseTmpMediaPath());
+        $imagePath = $absolutePathToMedia . DIRECTORY_SEPARATOR . $config['image-name'];
+        imagejpeg($image, $imagePath, 100);
         // phpcs:enable
 
         return $imagePath;

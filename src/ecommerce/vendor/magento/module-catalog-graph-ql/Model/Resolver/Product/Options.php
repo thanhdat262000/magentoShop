@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\CatalogGraphQl\Model\Resolver\Product;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Option;
@@ -22,23 +20,6 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
  */
 class Options implements ResolverInterface
 {
-    /**
-     * Option type name
-     */
-    private const OPTION_TYPE = 'custom-option';
-
-    /** @var Uid */
-    private $uidEncoder;
-
-    /**
-     * Uid|null $uidEncoder
-     */
-    public function __construct(Uid $uidEncoder = null)
-    {
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
-    }
-
     /**
      * @inheritdoc
      *
@@ -74,9 +55,7 @@ class Options implements ResolverInterface
                 $options[$key] = $option->getData();
                 $options[$key]['required'] = $option->getIsRequire();
                 $options[$key]['product_sku'] = $option->getProductSku();
-                $options[$key]['uid'] = $this->uidEncoder->encode(
-                    self::OPTION_TYPE . '/' . $option->getOptionId()
-                );
+
                 $values = $option->getValues() ?: [];
                 /** @var Option\Value $value */
                 foreach ($values as $valueKey => $value) {

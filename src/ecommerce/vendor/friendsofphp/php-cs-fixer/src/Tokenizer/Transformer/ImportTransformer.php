@@ -33,6 +33,14 @@ final class ImportTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
+    public function getCustomTokens()
+    {
+        return [CT::T_CONST_IMPORT, CT::T_FUNCTION_IMPORT];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredPhpVersionId()
     {
         return 50600;
@@ -55,13 +63,5 @@ final class ImportTransformer extends AbstractTransformer
                 $token->getContent(),
             ]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDeprecatedCustomTokens()
-    {
-        return [CT::T_CONST_IMPORT, CT::T_FUNCTION_IMPORT];
     }
 }

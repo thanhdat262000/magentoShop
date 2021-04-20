@@ -3,39 +3,25 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\SampleData\Test\Unit\Console\Command;
 
 use Magento\SampleData\Console\Command\SampleDataRemoveCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
-/**
- * Tests for command `sampledata:remove`
- */
 class SampleDataRemoveCommandTest extends AbstractSampleDataCommandTest
 {
+
     /**
-     * @param array $sampleDataPackages
-     * @param int $appRunResult - int 0 if everything went fine, or an error code
-     * @param array $composerJsonContent
-     * @param string $expectedMsg
-     * @return void
+     * @param array     $sampleDataPackages
+     * @param int       $appRunResult - int 0 if everything went fine, or an error code
+     * @param string    $expectedMsg
+     * @return          void
      *
      * @dataProvider processDataProvider
      */
-    public function testExecute(
-        array $sampleDataPackages,
-        int $appRunResult,
-        array $composerJsonContent,
-        string $expectedMsg
-    ): void {
-        $this->setupMocks(
-            $sampleDataPackages,
-            '/path/to/composer.json',
-            $appRunResult,
-            $composerJsonContent
-        );
+    public function testExecute(array $sampleDataPackages, $appRunResult, $expectedMsg)
+    {
+        $this->setupMocks($sampleDataPackages, '/path/to/composer.json', $appRunResult);
         $commandTester = $this->createCommandTester();
         $commandTester->execute([]);
 
@@ -43,25 +29,19 @@ class SampleDataRemoveCommandTest extends AbstractSampleDataCommandTest
     }
 
     /**
-     * @param array $sampleDataPackages
-     * @param int $appRunResult - int 0 if everything went fine, or an error code
-     * @param array $composerJsonContent
-     * @param string $expectedMsg
-     * @return void
+     * @param array     $sampleDataPackages
+     * @param int       $appRunResult - int 0 if everything went fine, or an error code
+     * @param string    $expectedMsg
+     * @return          void
      *
      * @dataProvider processDataProvider
      */
-    public function testExecuteWithNoUpdate(
-        array $sampleDataPackages,
-        int $appRunResult,
-        array $composerJsonContent,
-        string $expectedMsg
-    ): void {
+    public function testExecuteWithNoUpdate(array $sampleDataPackages, $appRunResult, $expectedMsg)
+    {
         $this->setupMocks(
             $sampleDataPackages,
             '/path/to/composer.json',
             $appRunResult,
-            $composerJsonContent,
             ['--no-update' => 1]
         );
         $commandInput = ['--no-update' => 1];
@@ -73,51 +53,32 @@ class SampleDataRemoveCommandTest extends AbstractSampleDataCommandTest
     }
 
     /**
-     * Data provider
-     *
      * @return array
      */
-    public function processDataProvider(): array
+    public function processDataProvider()
     {
         return [
-            'No sample data found in require' => [
-                'sampleDataPackages' => [
-                    'magento/module-cms-sample-data' => '1.0.0-beta',
-                ],
+            'No sample data found' => [
+                'sampleDataPackages' => [],
                 'appRunResult' => 1,
-                'composerJsonContent' => [
-                    "require" => [
-                        "magento/product-community-edition" => "0.0.1",
-                    ],
-                    "version" => "0.0.1"
-                ],
-                'expectedMsg' => 'There is an error during remove sample data.' . PHP_EOL,
+                'expectedMsg' => 'There is no sample data for current set of modules.' . PHP_EOL,
             ],
-            'Successful sample data removing' => [
+            'Successful sample data installation' => [
                 'sampleDataPackages' => [
                     'magento/module-cms-sample-data' => '1.0.0-beta',
                 ],
                 'appRunResult' => 0,
-                'composerJsonContent' => [
-                    "require" => [
-                        "magento/product-community-edition" => "0.0.1",
-                        "magento/module-cms-sample-data" => "1.0.0-beta",
-                    ],
-                    "version" => "0.0.1"
-                ],
                 'expectedMsg' => '',
             ],
         ];
     }
 
     /**
-     * Creates command tester
-     *
      * @return CommandTester
      */
     private function createCommandTester(): CommandTester
     {
-        return new CommandTester(
+        $commandTester = new CommandTester(
             new SampleDataRemoveCommand(
                 $this->filesystemMock,
                 $this->sampleDataDependencyMock,
@@ -125,16 +86,15 @@ class SampleDataRemoveCommandTest extends AbstractSampleDataCommandTest
                 $this->applicationFactoryMock
             )
         );
+        return $commandTester;
     }
 
     /**
-     * Returns expected arguments for command `composer remove`
-     *
      * @param $sampleDataPackages
      * @param $pathToComposerJson
      * @return array
      */
-    protected function expectedComposerArgumentsSampleDataCommands(
+    protected function expectedComposerArguments(
         array $sampleDataPackages,
         string $pathToComposerJson
     ) : array {

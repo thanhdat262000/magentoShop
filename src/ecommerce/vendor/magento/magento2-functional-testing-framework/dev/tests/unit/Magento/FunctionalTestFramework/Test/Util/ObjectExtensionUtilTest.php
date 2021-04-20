@@ -28,7 +28,7 @@ class ObjectExtensionUtilTest extends TestCase
      * Before test functionality
      * @return void
      */
-    public function setUp(): void
+    public function setUp()
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
         $resolverMock = new MockModuleResolverBuilder();
@@ -39,7 +39,7 @@ class ObjectExtensionUtilTest extends TestCase
      * After class functionality
      * @return void
      */
-    public static function tearDownAfterClass(): void
+    public static function tearDownAfterClass()
     {
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
@@ -344,41 +344,6 @@ class ObjectExtensionUtilTest extends TestCase
 
             throw $e;
         }
-    }
-
-    /**
-     * Tests generating a test that extends a skipped parent test
-     *
-     * @throws \Exception
-     */
-    public function testExtendedTestSkippedParent()
-    {
-        $testDataArrayBuilder = new TestDataArrayBuilder();
-        $mockParentTest = $testDataArrayBuilder
-            ->withName('baseTest')
-            ->withAnnotations([
-                'skip' => ['nodeName' => 'skip', 'issueId' => [['nodeName' => 'issueId', 'value' => 'someIssue']]]
-            ])
-            ->build();
-
-        $testDataArrayBuilder->reset();
-        $mockExtendedTest = $testDataArrayBuilder
-            ->withName('extendTest')
-            ->withTestReference("baseTest")
-            ->build();
-
-        $mockTestData = array_merge($mockParentTest, $mockExtendedTest);
-        $this->setMockTestOutput($mockTestData);
-
-        // parse and generate test object with mocked data
-        TestObjectHandler::getInstance()->getObject('extendTest');
-
-        // validate log statement
-        TestLoggingUtil::getInstance()->validateMockLogStatement(
-            'debug',
-            "extendTest is skipped due to ParentTestIsSkipped",
-            []
-        );
     }
 
     /**

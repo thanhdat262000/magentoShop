@@ -49,10 +49,6 @@ class DirSetupUtil
      */
     public static function rmdirRecursive($directory)
     {
-        if (!is_dir($directory)) {
-            return;
-        }
-
         $it = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
 
         while ($it->valid()) {

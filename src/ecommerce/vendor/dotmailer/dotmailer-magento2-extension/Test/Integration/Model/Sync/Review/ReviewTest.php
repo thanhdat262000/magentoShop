@@ -12,7 +12,6 @@ use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\TestFramework\Workaround\Override\Fixture\Resolver;
 
 class ReviewTest extends \PHPUnit\Framework\TestCase
 {
@@ -78,7 +77,6 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
      * @var \Magento\Store\Api\Data\StoreInterface
      */
     private $reviewStore;
-
     /**
      * @var \Magento\Store\Api\Data\WebsiteInterface
      */
@@ -89,9 +87,8 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
      */
     private $reviewProduct;
 
-    public function setUp() :void
+    public function setUp()
     {
-        $this->markTestSkipped("Test skipped in 2.4.0");
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
         $this->importerCollection = $this->objectManager->create(
@@ -143,6 +140,7 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @magentoDataFixture loadFixture
      * @magentoAppIsolation enabled
      */
     public function testThatInTwoWebsiteInstanceWeAreSyncingTheCorrectDataForBaseWebsite()
@@ -189,15 +187,18 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
 
     public static function loadFixture()
     {
-        Resolver::getInstance()->requireDataFixture(
-            'Magento/Review/_files/customer_review_with_rating.php'
-        );
-        Resolver::getInstance()->requireDataFixture(
-            'Dotdigitalgroup_Email::Test/Integration/_files/customer_review_with_rating_second_website.php'
-        );
+        $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+        $filesystem = $objectManager->create(Filesystem::class);
+        $directoryList = $filesystem->getDirectoryWrite(DirectoryList::ROOT);
+        $reviewRating1 = 'dev/tests/integration/testsuite/Magento/Review/_files/customer_review_with_rating.php';
+        $reviewRating2 = '/../../../_files/customer_review_with_rating_second_website.php';
+
+        require $directoryList->getAbsolutePath() . $reviewRating1;
+        require __DIR__ . $reviewRating2;
     }
 
     /**
+     * @magentoDataFixture loadFixture
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
      */
@@ -244,6 +245,7 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @magentoDataFixture loadFixture
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
      */
@@ -270,6 +272,7 @@ class ReviewTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @magentoDataFixture loadFixture
      * @magentoAppIsolation enabled
      * @magentoDbIsolation enabled
      */

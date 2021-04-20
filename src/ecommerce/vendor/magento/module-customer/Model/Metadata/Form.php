@@ -9,8 +9,6 @@ use Magento\Customer\Api\AddressMetadataInterface;
 use Magento\Customer\Api\CustomerMetadataInterface;
 
 /**
- * Customer Form metadata model
- *
  * @api
  * @since 100.0.2
  */
@@ -365,9 +363,9 @@ class Form
         if (!$validator->isValid(false)) {
             $messages = [];
             foreach ($validator->getMessages() as $errorMessages) {
-                $messages[] = (array)$errorMessages;
+                $messages = array_merge($messages, (array)$errorMessages);
             }
-            return array_merge([], ...$messages);
+            return $messages;
         }
         return true;
     }

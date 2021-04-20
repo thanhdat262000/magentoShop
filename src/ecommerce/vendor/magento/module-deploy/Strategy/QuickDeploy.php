@@ -5,11 +5,9 @@
  */
 namespace Magento\Deploy\Strategy;
 
-use Magento\Deploy\Console\DeployStaticOptions as Options;
-use Magento\Deploy\Package\Package;
 use Magento\Deploy\Package\PackagePool;
+use Magento\Deploy\Package\Package;
 use Magento\Deploy\Process\Queue;
-use function array_key_exists;
 
 /**
  * Quick deployment strategy implementation
@@ -53,6 +51,7 @@ class QuickDeploy implements StrategyInterface
         $groupedPackages = $deployPackages = [];
         $packages = $this->packagePool->getPackagesForDeployment($options);
         foreach ($packages as $package) {
+            /** @var Package $package */
             if ($package->isVirtual()) {
                 // skip packages which can not be referenced directly
                 continue;
@@ -67,17 +66,10 @@ class QuickDeploy implements StrategyInterface
             $this->preparePackages($level, $levelPackages);
         }
 
-        $parentCompilationRequested = $options[Options::NO_PARENT] !== true;
-        $includeThemesMap = array_flip($options[Options::THEME] ?? []);
-        $excludeThemesMap = array_flip($options[Options::EXCLUDE_THEME] ?? []);
-
         foreach ($groupedPackages as $levelPackages) {
             foreach ($levelPackages as $package) {
-                if ($parentCompilationRequested
-                    || $this->canDeployTheme($package->getTheme(), $includeThemesMap, $excludeThemesMap)) {
-                    $this->queue->add($package);
-                    $deployPackages[] = $package;
-                }
+                $this->queue->add($package);
+                $deployPackages[] = $package;
             }
         }
 
@@ -87,13 +79,11 @@ class QuickDeploy implements StrategyInterface
     }
 
     /**
-     * Prepare packages before deploying
-     *
      * @param int $level
      * @param Package[] $levelPackages
      * @return void
      */
-    private function preparePackages(int $level, array $levelPackages): void
+    private function preparePackages($level, array $levelPackages)
     {
         foreach ($levelPackages as $package) {
             $package->aggregate();
@@ -130,7 +120,7 @@ class QuickDeploy implements StrategyInterface
      * @param Package $package
      * @return int
      */
-    private function getInheritanceLevel(Package $package): int
+    private function getInheritanceLevel(Package $package)
     {
         $level = $package->getInheritanceLevel();
         $packageId = $package->getArea() . '/' . $package->getTheme();
@@ -140,29 +130,5 @@ class QuickDeploy implements StrategyInterface
             ++$level;
         }
         return $level;
-    }
-
-    /**
-     * Verify if specified theme should be deployed
-     *
-     * @param string $theme
-     * @param array $includedThemesMap
-     * @param array $excludedEntitiesMap
-     * @return bool
-     */
-    private function canDeployTheme(string $theme, array $includedThemesMap, array $excludedEntitiesMap): bool
-    {
-        $includesAllThemes = array_key_exists('all', $includedThemesMap);
-        $excludesNoneThemes = array_key_exists('none', $excludedEntitiesMap);
-
-        if ($includesAllThemes && $excludesNoneThemes) {
-            return true;
-        } elseif (!$excludesNoneThemes) {
-            return !array_key_exists($theme, $excludedEntitiesMap);
-        } elseif (!$includesAllThemes) {
-            return array_key_exists($theme, $includedThemesMap);
-        }
-
-        return true;
     }
 }

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getWidgetByClassType($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWidgetByClassType');
-        return $pluginInfo ? $this->___callPlugins('getWidgetByClassType', func_get_args(), $pluginInfo) : parent::getWidgetByClassType($type);
+        if (!$pluginInfo) {
+            return parent::getWidgetByClassType($type);
+        } else {
+            return $this->___callPlugins('getWidgetByClassType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getConfigAsXml($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfigAsXml');
-        return $pluginInfo ? $this->___callPlugins('getConfigAsXml', func_get_args(), $pluginInfo) : parent::getConfigAsXml($type);
+        if (!$pluginInfo) {
+            return parent::getConfigAsXml($type);
+        } else {
+            return $this->___callPlugins('getConfigAsXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getConfigAsObject($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfigAsObject');
-        return $pluginInfo ? $this->___callPlugins('getConfigAsObject', func_get_args(), $pluginInfo) : parent::getConfigAsObject($type);
+        if (!$pluginInfo) {
+            return parent::getConfigAsObject($type);
+        } else {
+            return $this->___callPlugins('getConfigAsObject', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getWidgets($filters = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWidgets');
-        return $pluginInfo ? $this->___callPlugins('getWidgets', func_get_args(), $pluginInfo) : parent::getWidgets($filters);
+        if (!$pluginInfo) {
+            return parent::getWidgets($filters);
+        } else {
+            return $this->___callPlugins('getWidgets', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getWidgetsArray($filters = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWidgetsArray');
-        return $pluginInfo ? $this->___callPlugins('getWidgetsArray', func_get_args(), $pluginInfo) : parent::getWidgetsArray($filters);
+        if (!$pluginInfo) {
+            return parent::getWidgetsArray($filters);
+        } else {
+            return $this->___callPlugins('getWidgetsArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getWidgetDeclaration($type, $params = [], $asIs = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWidgetDeclaration');
-        return $pluginInfo ? $this->___callPlugins('getWidgetDeclaration', func_get_args(), $pluginInfo) : parent::getWidgetDeclaration($type, $params, $asIs);
+        if (!$pluginInfo) {
+            return parent::getWidgetDeclaration($type, $params, $asIs);
+        } else {
+            return $this->___callPlugins('getWidgetDeclaration', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getPlaceholderImageUrl($type)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPlaceholderImageUrl');
-        return $pluginInfo ? $this->___callPlugins('getPlaceholderImageUrl', func_get_args(), $pluginInfo) : parent::getPlaceholderImageUrl($type);
+        if (!$pluginInfo) {
+            return parent::getPlaceholderImageUrl($type);
+        } else {
+            return $this->___callPlugins('getPlaceholderImageUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,6 +111,10 @@ class Interceptor extends \Magento\Widget\Model\Widget implements \Magento\Frame
     public function getPlaceholderImageUrls()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPlaceholderImageUrls');
-        return $pluginInfo ? $this->___callPlugins('getPlaceholderImageUrls', func_get_args(), $pluginInfo) : parent::getPlaceholderImageUrls();
+        if (!$pluginInfo) {
+            return parent::getPlaceholderImageUrls();
+        } else {
+            return $this->___callPlugins('getPlaceholderImageUrls', func_get_args(), $pluginInfo);
+        }
     }
 }

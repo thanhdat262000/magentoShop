@@ -15,13 +15,13 @@ use Magento\Framework\Communication\ConfigInterface as CommunicationConfig;
 class ConsumerConfiguration implements ConsumerConfigurationInterface
 {
     /**
-     * @deprecated Should be used constant from ConsumerConfigurationInterface
+     * @deprecated
      * @see ConsumerConfigurationInterface::TOPIC_TYPE
      */
     const CONSUMER_TYPE = "consumer_type";
 
     /**
-     * @deprecated Should be used constant from ConsumerConfigurationInterface
+     * @deprecated
      * @see ConsumerConfigurationInterface::TOPIC_HANDLERS
      */
     const HANDLERS = 'handlers';
@@ -62,7 +62,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConsumerName()
     {
@@ -70,7 +70,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMaxMessages()
     {
@@ -78,7 +78,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getQueueName()
     {
@@ -86,7 +86,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -108,7 +108,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getHandlers($topicName)
     {
@@ -116,7 +116,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTopicNames()
     {
@@ -125,31 +125,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getMaxIdleTime()
-    {
-        return $this->getData(self::MAX_IDLE_TIME);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSleep()
-    {
-        return $this->getData(self::SLEEP);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOnlySpawnWhenMessageAvailable()
-    {
-        return $this->getData(self::ONLY_SPAWN_WHEN_MESSAGE_AVAILABLE);
-    }
-
-    /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getQueue()
     {
@@ -158,7 +134,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMessageSchemaType($topicName)
     {
@@ -167,7 +143,6 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
 
     /**
      * Get topic configuration for current consumer.
-     *
      * @param string $topicName
      * @return array
      * @throws \LogicException
@@ -199,7 +174,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
      *
      * @return ConsumerConfig
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getConsumerConfig()
     {
@@ -214,7 +189,7 @@ class ConsumerConfiguration implements ConsumerConfigurationInterface
      *
      * @return CommunicationConfig
      *
-     * @deprecated 103.0.0
+     * @deprecated 102.0.5
      */
     private function getCommunicationConfig()
     {

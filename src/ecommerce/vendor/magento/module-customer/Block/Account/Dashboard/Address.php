@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\Customer\Block\Account\Dashboard;
 
 use Magento\Customer\Api\Data\AddressInterface;

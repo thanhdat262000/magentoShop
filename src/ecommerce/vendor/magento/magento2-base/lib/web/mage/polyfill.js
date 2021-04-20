@@ -1,21 +1,19 @@
-(function (root, doc) {
-    'use strict';
+try {
+    if (!window.localStorage || !window.sessionStorage) {
+        throw new Error();
+    }
 
-    var Storage;
+    localStorage.setItem('storage_test', 1);
+    localStorage.removeItem('storage_test');
+} catch (e) {
+    (function () {
+        'use strict';
 
-    try {
-        if (!root.localStorage || !root.sessionStorage) {
-            throw new Error();
-        }
-
-        localStorage.setItem('storage_test', 1);
-        localStorage.removeItem('storage_test');
-    } catch (e) {
         /**
          * Returns a storage object to shim local or sessionStorage
          * @param {String} type - either 'local' or 'session'
          */
-        Storage = function (type) {
+        var Storage = function (type) {
             var data;
 
             /**
@@ -34,7 +32,7 @@
                 } else {
                     expires = '';
                 }
-                doc.cookie = name + '=' + value + expires + '; path=/';
+                document.cookie = name + '=' + value + expires + '; path=/';
             }
 
             /**
@@ -43,7 +41,7 @@
              */
             function readCookie(name) {
                 var nameEQ = name + '=',
-                    ca = doc.cookie.split(';'),
+                    ca = document.cookie.split(';'),
                     i = 0,
                     c;
 
@@ -72,11 +70,11 @@
                     return 'localstorage';
                 }
 
-                if (!root.name) {
-                    root.name = new Date().getTime();
+                if (!window.name) {
+                    window.name = new Date().getTime();
                 }
 
-                return 'sessionStorage' + root.name;
+                return 'sessionStorage' + window.name;
             }
 
             /**
@@ -172,7 +170,7 @@
             };
         };
 
-        root.localStorage.prototype = root.localStorage = new Storage('local');
-        root.sessionStorage.prototype = root.sessionStorage = new Storage('session');
-    }
-})(window, document);
+        window.localStorage.prototype = window.localStorage = new Storage('local');
+        window.sessionStorage.prototype = window.sessionStorage = new Storage('session');
+    })();
+}

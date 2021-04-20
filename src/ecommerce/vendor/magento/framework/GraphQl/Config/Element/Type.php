@@ -73,15 +73,7 @@ class Type implements TypeInterface
     /**
      * Get interfaces the type implements, if any. Return an empty array if none are configured.
      *
-     * Example return array(
-     *     array(
-     *         'interface' => 'SomeDefinedTypeInterface',
-     *         'copyFields' => true
-     *     ),
-     *     ...
-     * ),
-     *
-     * @return array
+     * @return string[]
      */
     public function getInterfaces() : array
     {

@@ -61,60 +61,6 @@ class OrderExtension extends \Magento\Framework\Api\AbstractSimpleObject impleme
     }
 
     /**
-     * @return string|null
-     */
-    public function getPickupLocationCode()
-    {
-        return $this->_get('pickup_location_code');
-    }
-
-    /**
-     * @param string $pickupLocationCode
-     * @return $this
-     */
-    public function setPickupLocationCode($pickupLocationCode)
-    {
-        $this->setData('pickup_location_code', $pickupLocationCode);
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getNotificationSent()
-    {
-        return $this->_get('notification_sent');
-    }
-
-    /**
-     * @param int $notificationSent
-     * @return $this
-     */
-    public function setNotificationSent($notificationSent)
-    {
-        $this->setData('notification_sent', $notificationSent);
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getSendNotification()
-    {
-        return $this->_get('send_notification');
-    }
-
-    /**
-     * @param int $sendNotification
-     * @return $this
-     */
-    public function setSendNotification($sendNotification)
-    {
-        $this->setData('send_notification', $sendNotification);
-        return $this;
-    }
-
-    /**
      * @return \Magento\Tax\Api\Data\OrderTaxDetailsAppliedTaxInterface[]|null
      */
     public function getAppliedTaxes()

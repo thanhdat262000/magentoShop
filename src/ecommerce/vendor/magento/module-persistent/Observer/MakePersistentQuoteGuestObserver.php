@@ -1,14 +1,16 @@
 <?php
 /**
+ *
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magento\Persistent\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
 /**
- * Make persistent quote to be guest
+ *  Make persistent quote to be guest
  *
  * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
@@ -36,26 +38,26 @@ class MakePersistentQuoteGuestObserver implements ObserverInterface
     protected $_persistentData = null;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var \Magento\Persistent\Model\QuoteManager
      */
-    private $checkoutSession;
+    protected $quoteManager;
 
     /**
      * @param \Magento\Persistent\Helper\Session $persistentSession
      * @param \Magento\Persistent\Helper\Data $persistentData
      * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Persistent\Model\QuoteManager $quoteManager
      */
     public function __construct(
         \Magento\Persistent\Helper\Session $persistentSession,
         \Magento\Persistent\Helper\Data $persistentData,
         \Magento\Customer\Model\Session $customerSession,
-        \Magento\Checkout\Model\Session $checkoutSession
+        \Magento\Persistent\Model\QuoteManager $quoteManager
     ) {
         $this->_persistentSession = $persistentSession;
         $this->_persistentData = $persistentData;
         $this->_customerSession = $customerSession;
-        $this->checkoutSession = $checkoutSession;
+        $this->quoteManager = $quoteManager;
     }
 
     /**
@@ -72,7 +74,7 @@ class MakePersistentQuoteGuestObserver implements ObserverInterface
             if (($this->_persistentSession->isPersistent() && !$this->_customerSession->isLoggedIn())
                 || $this->_persistentData->isShoppingCartPersist()
             ) {
-                $this->checkoutSession->clearQuote()->clearStorage();
+                $this->quoteManager->setGuest(true);
             }
         }
     }

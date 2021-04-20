@@ -44,16 +44,6 @@ final class NoUnsetCastFixer extends AbstractFixer
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before BinaryOperatorSpacesFixer.
-     */
-    public function getPriority()
-    {
-        return 0;
-    }
-
-    /**
-     * {@inheritdoc}
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens)
     {
@@ -65,7 +55,8 @@ final class NoUnsetCastFixer extends AbstractFixer
     }
 
     /**
-     * @param int $index
+     * @param Tokens $tokens
+     * @param int    $index
      */
     private function fixUnsetCast(Tokens $tokens, $index)
     {

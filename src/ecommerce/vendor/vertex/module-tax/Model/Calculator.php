@@ -6,6 +6,8 @@
 
 namespace Vertex\Tax\Model;
 
+use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Tax\Api\Data\AppliedTaxInterface;
@@ -50,6 +52,12 @@ class Calculator
     /** @var Config */
     private $config;
 
+    /** @var IncompleteAddressDeterminer */
+    private $incompleteAddressDeterminer;
+
+    /** @var QuoteIsVirtualDeterminer */
+    private $isVirtualDeterminer;
+
     /** @var ExceptionLogger */
     private $logger;
 
@@ -86,7 +94,9 @@ class Calculator
         Config $config,
         ManagerInterface $messageManager,
         PriceForTax $priceForTaxCalculation,
+        QuoteIsVirtualDeterminer $isVirtualDeterminer,
         AddressDeterminer $addressDeterminer,
+        IncompleteAddressDeterminer $incompleteAddressDeterminer,
         bool $addMessageToVertexGroup = true
     ) {
         $this->taxDetailsFactory = $taxDetailsFactory;
@@ -101,7 +111,9 @@ class Calculator
         $this->messageManager = $messageManager;
         $this->addMessageToVertexGroup = $addMessageToVertexGroup;
         $this->priceForTaxCalculation = $priceForTaxCalculation;
+        $this->isVirtualDeterminer = $isVirtualDeterminer;
         $this->addressDeterminer = $addressDeterminer;
+        $this->incompleteAddressDeterminer = $incompleteAddressDeterminer;
     }
 
     /**
@@ -117,26 +129,20 @@ class Calculator
         bool $round = true
     ): TaxDetailsInterface {
         $items = $quoteDetails->getItems();
-
-        $destination = $this->addressDeterminer->determineDestination(
-            $quoteDetails->getShippingAddress(),
-            $quoteDetails->getCustomerId()
-        );
-
-        if ($destination === null) {
-            $administrativeDestination = $this->addressDeterminer->determineAdministrativeDestination(
-                $quoteDetails->getBillingAddress(),
-                $quoteDetails->getCustomerId()
-            );
-
-            // Don't perform calculation when administrativeDestination is null and destination is also null
-            if ($administrativeDestination === null) {
-                return $this->createEmptyDetails($quoteDetails);
-            }
-        }
-
-        // Don't perform calculation when there are no items or the only item is shipping
-        if (empty($items) || $this->onlyShipping($items)) {
+        if (empty($items)
+            || $this->onlyShipping($items)
+            || $this->addressDeterminer->determineAddress(
+                !$this->incompleteAddressDeterminer->isIncompleteAddress($quoteDetails->getShippingAddress())
+                    ? $quoteDetails->getShippingAddress()
+                    : $quoteDetails->getBillingAddress()
+            ) === null
+        ) {
+            /*
+             * Don't perform calculation when:
+             * - There are no items
+             * - There is no address
+             * - The only item is shipping
+             */
             return $this->createEmptyDetails($quoteDetails);
         }
 
@@ -280,8 +286,6 @@ class Calculator
                     ->setAmount($itemAppliedTax->getAmount())
                     ->setTaxRateKey($itemAppliedTax->getTaxRateKey())
                     ->setRates($rates);
-
-                $appliedTaxes[$taxId] = $appliedTax;
             } else {
                 $appliedTaxes[$taxId]->setAmount($appliedTaxes[$taxId]->getAmount() + $itemAppliedTax->getAmount());
             }

@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function execute()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'execute');
-        return $pluginInfo ? $this->___callPlugins('execute', func_get_args(), $pluginInfo) : parent::execute();
+        if (!$pluginInfo) {
+            return parent::execute();
+        } else {
+            return $this->___callPlugins('execute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function dispatch(\Magento\Framework\App\RequestInterface $request)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'dispatch');
-        return $pluginInfo ? $this->___callPlugins('dispatch', func_get_args(), $pluginInfo) : parent::dispatch($request);
+        if (!$pluginInfo) {
+            return parent::dispatch($request);
+        } else {
+            return $this->___callPlugins('dispatch', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function _processUrlKeys()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '_processUrlKeys');
-        return $pluginInfo ? $this->___callPlugins('_processUrlKeys', func_get_args(), $pluginInfo) : parent::_processUrlKeys();
+        if (!$pluginInfo) {
+            return parent::_processUrlKeys();
+        } else {
+            return $this->___callPlugins('_processUrlKeys', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function getUrl($route = '', $params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUrl');
-        return $pluginInfo ? $this->___callPlugins('getUrl', func_get_args(), $pluginInfo) : parent::getUrl($route, $params);
+        if (!$pluginInfo) {
+            return parent::getUrl($route, $params);
+        } else {
+            return $this->___callPlugins('getUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function getActionFlag()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getActionFlag');
-        return $pluginInfo ? $this->___callPlugins('getActionFlag', func_get_args(), $pluginInfo) : parent::getActionFlag();
+        if (!$pluginInfo) {
+            return parent::getActionFlag();
+        } else {
+            return $this->___callPlugins('getActionFlag', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function getRequest()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRequest');
-        return $pluginInfo ? $this->___callPlugins('getRequest', func_get_args(), $pluginInfo) : parent::getRequest();
+        if (!$pluginInfo) {
+            return parent::getRequest();
+        } else {
+            return $this->___callPlugins('getRequest', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,6 +98,10 @@ class Interceptor extends \Magento\Catalog\Controller\Adminhtml\Category\Index i
     public function getResponse()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResponse');
-        return $pluginInfo ? $this->___callPlugins('getResponse', func_get_args(), $pluginInfo) : parent::getResponse();
+        if (!$pluginInfo) {
+            return parent::getResponse();
+        } else {
+            return $this->___callPlugins('getResponse', func_get_args(), $pluginInfo);
+        }
     }
 }

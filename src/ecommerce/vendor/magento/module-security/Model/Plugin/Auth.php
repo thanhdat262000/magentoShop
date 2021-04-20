@@ -35,8 +35,6 @@ class Auth
     }
 
     /**
-     * Add warning message if other sessions terminated
-     *
      * @param \Magento\Backend\Model\Auth $authModel
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -45,13 +43,11 @@ class Auth
     {
         $this->sessionsManager->processLogin();
         if ($this->sessionsManager->getCurrentSession()->isOtherSessionsTerminated()) {
-            $this->messageManager->addWarningMessage(__('All other open sessions for this account were terminated.'));
+            $this->messageManager->addWarning(__('All other open sessions for this account were terminated.'));
         }
     }
 
     /**
-     * Handle logout process
-     *
      * @param \Magento\Backend\Model\Auth $authModel
      * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

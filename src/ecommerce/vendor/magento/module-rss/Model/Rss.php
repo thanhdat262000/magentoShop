@@ -8,13 +8,10 @@ declare(strict_types=1);
 
 namespace Magento\Rss\Model;
 
-use Magento\Framework\App\CacheInterface;
-use Magento\Framework\App\FeedFactoryInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Rss\DataProviderInterface;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Framework\App\FeedFactoryInterface;
 
 /**
  * Provides functionality to work with RSS feeds
@@ -30,12 +27,12 @@ class Rss
     protected $dataProvider;
 
     /**
-     * @var CacheInterface
+     * @var \Magento\Framework\App\CacheInterface
      */
     protected $cache;
 
     /**
-     * @var FeedFactoryInterface
+     * @var \Magento\Framework\App\FeedFactoryInterface
      */
     private $feedFactory;
 
@@ -47,12 +44,12 @@ class Rss
     /**
      * Rss constructor
      *
-     * @param CacheInterface $cache
+     * @param \Magento\Framework\App\CacheInterface $cache
      * @param SerializerInterface|null $serializer
      * @param FeedFactoryInterface|null $feedFactory
      */
     public function __construct(
-        CacheInterface $cache,
+        \Magento\Framework\App\CacheInterface $cache,
         SerializerInterface $serializer = null,
         FeedFactoryInterface $feedFactory = null
     ) {
@@ -62,8 +59,6 @@ class Rss
     }
 
     /**
-     * Returns feeds
-     *
      * @return array
      */
     public function getFeeds()
@@ -71,48 +66,47 @@ class Rss
         if ($this->dataProvider === null) {
             return [];
         }
-        $cacheKey = $this->dataProvider->getCacheKey();
-        $cacheLifeTime = $this->dataProvider->getCacheLifetime();
+        $cache = false;
+        if ($this->dataProvider->getCacheKey() && $this->dataProvider->getCacheLifetime()) {
+            $cache = $this->cache->load($this->dataProvider->getCacheKey());
+        }
 
-        $cache = $cacheKey && $cacheLifeTime ? $this->cache->load($cacheKey) : false;
         if ($cache) {
             return $this->serializer->unserialize($cache);
         }
 
-        // serializing data to make sure all Phrase objects converted to a string
-        $serializedData = $this->serializer->serialize($this->dataProvider->getRssData());
+        $data = $this->dataProvider->getRssData();
 
-        if ($cacheKey && $cacheLifeTime) {
-            $this->cache->save($serializedData, $cacheKey, ['rss'], $cacheLifeTime);
+        if ($this->dataProvider->getCacheKey() && $this->dataProvider->getCacheLifetime()) {
+            $this->cache->save(
+                $this->serializer->serialize($data),
+                $this->dataProvider->getCacheKey(),
+                ['rss'],
+                $this->dataProvider->getCacheLifetime()
+            );
         }
 
-        return $this->serializer->unserialize($serializedData);
+        return $data;
     }
 
     /**
-     * Sets data provider
-     *
      * @param DataProviderInterface $dataProvider
      * @return $this
      */
     public function setDataProvider(DataProviderInterface $dataProvider)
     {
         $this->dataProvider = $dataProvider;
-
         return $this;
     }
 
     /**
-     * Returns rss xml
-     *
      * @return string
-     * @throws InputException
-     * @throws RuntimeException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\RuntimeException
      */
     public function createRssXml()
     {
         $feed = $this->feedFactory->create($this->getFeeds(), FeedFactoryInterface::FORMAT_RSS);
-
         return $feed->getFormattedContent();
     }
 }

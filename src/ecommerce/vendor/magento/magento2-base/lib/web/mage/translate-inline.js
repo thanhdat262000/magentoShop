@@ -6,10 +6,9 @@
 define([
     'jquery',
     'mage/template',
-    'mage/utils/misc',
-    'mage/translate',
-    'jquery-ui-modules/dialog'
-], function ($, mageTemplate, miscUtils) {
+    'jquery-ui-modules/dialog',
+    'mage/translate'
+], function ($, mageTemplate) {
     'use strict';
 
     $.widget('mage.translateInline', $.ui.dialog, {
@@ -60,12 +59,11 @@ define([
              * Open.
              */
             open: function () {
-                var $uiDialog = $(this).closest('.ui-dialog'),
-                    topMargin = $uiDialog.children('.ui-dialog-titlebar').outerHeight() + 45;
+                var topMargin;
 
-                $uiDialog
-                    .addClass('ui-dialog-active')
-                    .css('margin-top', topMargin);
+                $(this).closest('.ui-dialog').addClass('ui-dialog-active');
+                topMargin = jQuery(this).closest('.ui-dialog').children('.ui-dialog-titlebar').outerHeight() + 45;
+                jQuery(this).closest('.ui-dialog').css('margin-top', topMargin);
             },
 
             /**
@@ -81,15 +79,11 @@ define([
          * @protected
          */
         _create: function () {
-            var $translateArea = $(this.options.translateArea);
-
-            if (!$translateArea.length) {
-                $translateArea = $('body');
-            }
-            $translateArea.on('edit.editTrigger', $.proxy(this._onEdit, this));
-
             this.tmpl = mageTemplate(this.options.translateForm.template);
-
+            (this.options.translateArea && $(this.options.translateArea).length ?
+                $(this.options.translateArea) :
+                this.element.closest('body'))
+                    .on('edit.editTrigger', $.proxy(this._onEdit, this));
             this._super();
         },
 
@@ -101,7 +95,7 @@ define([
         _prepareContent: function (templateData) {
             var data = $.extend({
                 items: templateData,
-                escape: miscUtils.escape
+                escape: $.mage.escapeHTML
             }, this.options.translateForm.data);
 
             this.data = data;
@@ -137,11 +131,12 @@ define([
          * @protected
          */
         _formSubmit: function () {
-            var parameters = $.param({
-                    area: this.options.area
-                }) + '&' + $('#' + this.options.translateForm.data.id).serialize();
+            var parameters;
 
             this.formIsSubmitted = true;
+            parameters = $.param({
+                area: this.options.area
+            }) + '&' + $('#' + this.options.translateForm.data.id).serialize();
 
             $.ajax({
                 url: this.options.ajaxUrl,
@@ -167,13 +162,11 @@ define([
          * @private
          */
         _updatePlaceholder: function (newValue) {
-            var $target = $(this.target),
-                translateObject = $target.data('translate')[0];
+            var target = jQuery(this.target);
 
-            translateObject.shown = newValue;
-            translateObject.translated = newValue;
-
-            $target.html(newValue);
+            target.data('translate')[0].shown = newValue;
+            target.data('translate')[0].translated = newValue;
+            target.html(newValue);
         },
 
         /**
@@ -182,6 +175,20 @@ define([
         destroy: function () {
             this.element.off('.editTrigger');
             this._super();
+        }
+    });
+    // @TODO move the "escapeHTML" method into the file with global utility functions
+    $.extend(true, $, {
+        mage: {
+            /**
+             * @param {String} str
+             * @return {Boolean}
+             */
+            escapeHTML: function (str) {
+                return str ?
+                    jQuery('<div/>').text(str).html().replace(/"/g, '&quot;') :
+                    false;
+            }
         }
     });
 

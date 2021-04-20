@@ -7,13 +7,10 @@ declare(strict_types=1);
 
 namespace Magento\Framework\File\Test\Unit;
 
-use Magento\Framework\File\Uploader;
-use PHPUnit\Framework\TestCase;
-
 /**
  * Unit Test class for \Magento\Framework\File\Uploader
  */
-class UploaderTest extends TestCase
+class UploaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param string $fileName
@@ -26,12 +23,12 @@ class UploaderTest extends TestCase
         $isExceptionExpected = $expectedCorrectedFileName === true;
 
         if ($isExceptionExpected) {
-            $this->expectException(\LengthException::class);
+            $this->expectException(\InvalidArgumentException::class);
         }
 
         $this->assertEquals(
             $expectedCorrectedFileName,
-            Uploader::getCorrectFileName($fileName)
+            \Magento\Framework\File\Uploader::getCorrectFileName($fileName)
         );
     }
 
@@ -62,7 +59,7 @@ class UploaderTest extends TestCase
                 'a.' . str_repeat('b', 88)
             ],
             [
-                'a.' . str_repeat('b', 199), // 201 characters
+                'a.' . str_repeat('b', 89),
                 true
             ]
         ];

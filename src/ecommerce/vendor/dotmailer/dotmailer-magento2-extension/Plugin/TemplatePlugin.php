@@ -12,14 +12,14 @@ class TemplatePlugin
     private $transactionalHelper;
 
     /**
-     * @var bool
+     * @var
      */
-    private $isSaving = false;
+    private $templateCode;
 
     /**
      * @var bool
      */
-    private $isLoading = false;
+    private $isSaving = false;
 
     /**
      * TemplatePlugin constructor.
@@ -31,59 +31,116 @@ class TemplatePlugin
         $this->transactionalHelper = $transactionalHelper;
     }
 
-    //@codingStandardsIgnoreStart
     /**
      * @param \Magento\Email\Model\Template $subject
-     * @param $method
-     * @param $args
-     * @return array|void
-     */
-    public function before__call(\Magento\Email\Model\Template $subject, $method, $args)
-    {
-        if ($method == 'setTemplateText') {
-            if (isset($args[0])) {
-                if ($this->transactionalHelper->isDotmailerTemplate($subject['template_code'])) {
-                    $args[0] = $this->compressString($args[0]);
-                }
-                return [$method, $args];
-            }
-        }
-    }
-
-    /**
-     * @param \Magento\Email\Model\Template $subject
-     * @param $result
-     * @param $method
-     * @return string
-     */
-    public function after__call(\Magento\Email\Model\Template $subject, $result, $method)
-    {
-        if ($method == 'getTemplateText') {
-            if ($this->transactionalHelper->isDotmailerTemplate($subject['template_code'])) {
-                return $this->decompressString($result);
-            }
-        }
-        //leave everything unchanged
-        return $result;
-    }
-    //@codingStandardsIgnoreEnd
-
-    /**
-     * @param \Magento\Email\Model\Template $subject
-     * @param $result
-     * @param mixed ...$args
+     * @param array $result
+     * @param array ...$args
      * @return mixed
      */
     public function afterGetData(\Magento\Email\Model\Template $subject, $result, ...$args)
     {
-        if (empty($args)) {
-            if ($this->transactionalHelper->isDotmailerTemplate($subject['template_code']) && $this->isSaving) {
-                $result["template_text"] = $this->compressString($result["template_text"]);
-            }
-            if ($this->transactionalHelper->isDotmailerTemplate($subject['template_code']) && !$this->isLoading) {
-                $result["template_text"] = $this->decompressString($result["template_text"]);
+        //get the template code value
+        if (! empty($args)) {
+            if ($args[0] == 'template_code') {
+                $this->templateCode = $result;
             }
         }
+
+        if ($this->isSaving) {
+            $result = $this->processTemplateBeforeSave($result, $args);
+        } else {
+            $result = $this->processTemplateOnLoadPreviewAndSend($result, $args);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get data before saving
+     *
+     * @param mixed $result
+     * @param array $args
+     * @return mixed
+     */
+    private function processTemplateBeforeSave($result, $args)
+    {
+        //saving array values
+        if (empty($args)) {
+            $this->getResultIfArgsEmptyForBeforeSave($result);
+        } else {
+            //saving string value
+            if ($args[0] != 'template_text') {
+                return $result;
+            }
+
+            //compress the text body when is a dotmailer template
+            if (!$this->isStringCompressed($result) &&
+                $this->transactionalHelper->isDotmailerTemplate($this->templateCode)
+            ) {
+                $result = $this->compressString($result);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return mixed
+     */
+    private function getResultIfArgsEmptyForBeforeSave($result)
+    {
+        if (isset($result['template_text'])) {
+            $templateText = $result['template_text'];
+            if (!$this->isStringCompressed($templateText) &&
+                $this->transactionalHelper->isDotmailerTemplate($result['template_code'])) {
+                $result['template_text'] = $this->compressString($templateText);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * preview/other/load
+     *
+     * @param mixed $result
+     * @param array $args
+     *
+     * @return mixed
+     */
+    private function processTemplateOnLoadPreviewAndSend($result, $args)
+    {
+        if (empty($args)) {
+            $result = $this->getResultIfArgsEmptyForLoadPreviewAndSend($result);
+        } else {
+            if ($args[0] != 'template_text') {
+                return $result;
+            }
+
+            if ($this->isStringCompressed($result)) {
+                $result = $this->decompressString($result);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param mixed $result
+     *
+     * @return mixed
+     */
+    private function getResultIfArgsEmptyForLoadPreviewAndSend($result)
+    {
+        if (isset($result['template_text'])) {
+            $templateText = $result['template_text'];
+            if ($this->isStringCompressed($templateText)) {
+                $result['template_text'] = $this->decompressString($templateText);
+            }
+        }
+
         return $result;
     }
 
@@ -96,19 +153,15 @@ class TemplatePlugin
     }
 
     /**
-     * @param \Magento\Email\Model\AbstractTemplate $subject
+     * Determine if the supplied string has been compressed,
+     * by testing to see if it can be uncompressed.
+     *
+     * @param string $string
+     * @return bool
      */
-    public function afterBeforeLoad(\Magento\Email\Model\AbstractTemplate $subject)
+    private function isStringCompressed($string)
     {
-        $this->isLoading = true;
-    }
-
-    /**
-     * @param \Magento\Email\Model\AbstractTemplate $subject
-     */
-    public function afterAfterLoad(\Magento\Email\Model\AbstractTemplate $subject)
-    {
-        $this->isLoading = false;
+        return @gzuncompress(base64_decode($string)) !== false;
     }
 
     /**
@@ -117,7 +170,6 @@ class TemplatePlugin
      */
     private function compressString($templateText)
     {
-        //@codingStandardsIgnoreLine
         return base64_encode(gzcompress($templateText, 9));
     }
 
@@ -127,7 +179,6 @@ class TemplatePlugin
      */
     private function decompressString($templateText)
     {
-        //@codingStandardsIgnoreLine
         return gzuncompress(base64_decode($templateText));
     }
 }

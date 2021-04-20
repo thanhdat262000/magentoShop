@@ -8,20 +8,12 @@ namespace Magento\Catalog\Model\Product\Option\Type;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Catalog\Api\Data\ProductCustomOptionInterface;
-use Magento\Catalog\Model\Product\Option;
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface;
-use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
-use Magento\Catalog\Model\Product\Option\Value;
-use Magento\Catalog\Pricing\Price\CalculateCustomOptionCatalogRule;
-use Magento\Framework\App\ObjectManager;
 
 /**
  * Catalog product option default type
  *
  * @api
  * @author     Magento Core Team <core@magentocommerce.com>
- * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @since 100.0.2
  */
@@ -30,14 +22,14 @@ class DefaultType extends \Magento\Framework\DataObject
     /**
      * Option Instance
      *
-     * @var Option
+     * @var \Magento\Catalog\Model\Product\Option
      */
     protected $_option;
 
     /**
      * Product Instance
      *
-     * @var Product
+     * @var \Magento\Catalog\Model\Product
      */
     protected $_product;
 
@@ -63,35 +55,26 @@ class DefaultType extends \Magento\Framework\DataObject
     protected $_checkoutSession;
 
     /**
-     * @var CalculateCustomOptionCatalogRule
-     */
-    private $calculateCustomOptionCatalogRule;
-
-    /**
      * Construct
      *
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param array $data
-     * @param CalculateCustomOptionCatalogRule|null $calculateCustomOptionCatalogRule
      */
     public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        array $data = [],
-        CalculateCustomOptionCatalogRule $calculateCustomOptionCatalogRule = null
+        array $data = []
     ) {
         $this->_checkoutSession = $checkoutSession;
         parent::__construct($data);
         $this->_scopeConfig = $scopeConfig;
-        $this->calculateCustomOptionCatalogRule = $calculateCustomOptionCatalogRule ?? ObjectManager::getInstance()
-                ->get(CalculateCustomOptionCatalogRule::class);
     }
 
     /**
      * Option Instance setter
      *
-     * @param Option $option
+     * @param \Magento\Catalog\Model\Product\Option $option
      * @return $this
      */
     public function setOption($option)
@@ -104,7 +87,7 @@ class DefaultType extends \Magento\Framework\DataObject
      * Option Instance getter
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @return Option
+     * @return \Magento\Catalog\Model\Product\Option
      */
     public function getOption()
     {
@@ -117,7 +100,7 @@ class DefaultType extends \Magento\Framework\DataObject
     /**
      * Product Instance setter
      *
-     * @param Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return $this
      */
     public function setProduct($product)
@@ -130,11 +113,11 @@ class DefaultType extends \Magento\Framework\DataObject
      * Product Instance getter
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @return Product
+     * @return \Magento\Catalog\Model\Product
      */
     public function getProduct()
     {
-        if ($this->_product instanceof Product) {
+        if ($this->_product instanceof \Magento\Catalog\Model\Product) {
             return $this->_product;
         }
         throw new LocalizedException(__('The product instance type in options group is incorrect.'));
@@ -143,12 +126,15 @@ class DefaultType extends \Magento\Framework\DataObject
     /**
      * Getter for Configuration Item Option
      *
-     * @return OptionInterface
+     * @return \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface
      * @throws LocalizedException
      */
     public function getConfigurationItemOption()
     {
-        if ($this->_getData('configuration_item_option') instanceof OptionInterface) {
+        if ($this->_getData(
+            'configuration_item_option'
+        ) instanceof \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface
+        ) {
             return $this->_getData('configuration_item_option');
         }
 
@@ -163,12 +149,15 @@ class DefaultType extends \Magento\Framework\DataObject
     /**
      * Getter for Configuration Item
      *
-     * @return ItemInterface
+     * @return \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getConfigurationItem()
     {
-        if ($this->_getData('configuration_item') instanceof ItemInterface) {
+        if ($this->_getData(
+            'configuration_item'
+        ) instanceof \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface
+        ) {
             return $this->_getData('configuration_item');
         }
 
@@ -352,20 +341,7 @@ class DefaultType extends \Magento\Framework\DataObject
     {
         $option = $this->getOption();
 
-        $catalogPriceValue = $this->calculateCustomOptionCatalogRule->execute(
-            $option->getProduct(),
-            (float)$option->getPrice(),
-            $option->getPriceType() === Value::TYPE_PERCENT
-        );
-        if ($catalogPriceValue !== null) {
-            return $catalogPriceValue;
-        } else {
-            return $this->_getChargeableOptionPrice(
-                $option->getPrice(),
-                $option->getPriceType() === Value::TYPE_PERCENT,
-                $basePrice
-            );
-        }
+        return $this->_getChargeableOptionPrice($option->getPrice(), $option->getPriceType() == 'percent', $basePrice);
     }
 
     /**
@@ -392,14 +368,14 @@ class DefaultType extends \Magento\Framework\DataObject
             $options = $this->getProduct()->getOptions();
             if ($options != null) {
                 foreach ($options as $_option) {
-                    /* @var $option Option */
+                    /* @var $option \Magento\Catalog\Model\Product\Option */
                     $this->_productOptions[$this->getProduct()->getId()][$_option->getTitle()] = [
                         'option_id' => $_option->getId(),
                     ];
                     if ($_option->getGroupByType() == ProductCustomOptionInterface::OPTION_GROUP_SELECT) {
                         $optionValues = [];
                         foreach ($_option->getValues() as $_value) {
-                            /* @var $value Value */
+                            /* @var $value \Magento\Catalog\Model\Product\Option\Value */
                             $optionValues[$_value->getTitle()] = $_value->getId();
                         }
                         $this->_productOptions[$this

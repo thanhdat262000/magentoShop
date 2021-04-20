@@ -23,7 +23,7 @@ class MassDelete extends MassDeleteCsrf
     /**
      * @var
      */
-    protected $collectionFactory;
+    protected $abandonedCollection;
 
     /**
      * @var \Magento\Framework\Message\ManagerInterface
@@ -40,16 +40,16 @@ class MassDelete extends MassDeleteCsrf
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned $collectionResource
      * @param \Magento\Backend\App\Action\Context $context
      * @param Filter $filter
-     * @param \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned\CollectionFactory $collectionFactory
+     * @param \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned\CollectionFactory $abandonedCollection
      */
     public function __construct(
         \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned $collectionResource,
         \Magento\Backend\App\Action\Context $context,
         Filter $filter,
-        \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned\CollectionFactory $collectionFactory
+        \Dotdigitalgroup\Email\Model\ResourceModel\Abandoned\CollectionFactory $abandonedCollection
     ) {
         $this->filter = $filter;
-        $this->collectionFactory = $collectionFactory;
+        $this->abandonedCollection = $abandonedCollection->create();
         $this->collectionResource = $collectionResource;
         parent::__construct($context);
     }

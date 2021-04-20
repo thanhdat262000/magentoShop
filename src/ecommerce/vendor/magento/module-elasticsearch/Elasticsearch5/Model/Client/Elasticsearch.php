@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Elasticsearch\Elasticsearch5\Model\Client;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -49,10 +48,8 @@ class Elasticsearch implements ClientInterface
         $options = [],
         $elasticsearchClient = null
     ) {
-        if (empty($options['hostname'])
-            || ((!empty($options['enableAuth']) && ($options['enableAuth'] == 1))
-                && (empty($options['username']) || empty($options['password'])))
-        ) {
+        if (empty($options['hostname']) || ((!empty($options['enableAuth']) &&
+                    ($options['enableAuth'] == 1)) && (empty($options['username']) || empty($options['password'])))) {
             throw new LocalizedException(
                 __('The search failed because of a search engine misconfiguration.')
             );
@@ -159,23 +156,6 @@ class Elasticsearch implements ClientInterface
     public function createIndex($index, $settings)
     {
         $this->getClient()->indices()->create(
-            [
-                'index' => $index,
-                'body' => $settings,
-            ]
-        );
-    }
-
-    /**
-     * Add/update an Elasticsearch index settings.
-     *
-     * @param string $index
-     * @param array $settings
-     * @return void
-     */
-    public function putIndexSettings(string $index, array $settings): void
-    {
-        $this->getClient()->indices()->putSettings(
             [
                 'index' => $index,
                 'body' => $settings,
@@ -296,7 +276,7 @@ class Elasticsearch implements ClientInterface
                                 'match' => 'price_*',
                                 'match_mapping_type' => 'string',
                                 'mapping' => [
-                                    'type' => 'double',
+                                    'type' => 'float',
                                     'store' => true,
                                 ],
                             ],
@@ -322,15 +302,7 @@ class Elasticsearch implements ClientInterface
                                     ]
                                 ),
                             ],
-                        ],
-                        [
-                            'integer_mapping' => [
-                                'match_mapping_type' => 'long',
-                                'mapping' => [
-                                    'type' => 'integer',
-                                ],
-                            ],
-                        ],
+                        ]
                     ],
                 ],
             ],
@@ -351,6 +323,7 @@ class Elasticsearch implements ClientInterface
      */
     private function prepareFieldInfo($fieldInfo)
     {
+
         if (strcmp($this->getServerVersion(), '5') < 0) {
             if ($fieldInfo['type'] == 'keyword') {
                 $fieldInfo['type'] = 'string';
@@ -363,17 +336,6 @@ class Elasticsearch implements ClientInterface
         }
 
         return $fieldInfo;
-    }
-
-    /**
-     * Get mapping from Elasticsearch index.
-     *
-     * @param array $params
-     * @return array
-     */
-    public function getMapping(array $params): array
-    {
-        return $this->getClient()->indices()->getMapping($params);
     }
 
     /**

@@ -7,13 +7,11 @@
 namespace Vertex\Tax\Model\Plugin;
 
 use Closure;
-use InvalidArgumentException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Api\Data\QuoteDetailsInterface;
-use Magento\Tax\Api\Data\TaxDetailsInterface;
 use Magento\Tax\Api\TaxCalculationInterface;
 use Vertex\Tax\Model\Calculator;
+use Vertex\Tax\Model\QuoteIsVirtualDeterminer;
 use Vertex\Tax\Model\VertexUsageDeterminer;
 
 /**
@@ -24,6 +22,9 @@ class TaxCalculationPlugin
     /** @var Calculator */
     private $calculator;
 
+    /** @var QuoteIsVirtualDeterminer */
+    private $isVirtualDeterminer;
+
     /** @var StoreManagerInterface */
     private $storeManager;
 
@@ -33,16 +34,19 @@ class TaxCalculationPlugin
     /**
      * @param StoreManagerInterface $storeManager
      * @param Calculator $calculator
+     * @param QuoteIsVirtualDeterminer $isVirtualDeterminer
      * @param VertexUsageDeterminer $usageDeterminer
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         Calculator $calculator,
+        QuoteIsVirtualDeterminer $isVirtualDeterminer,
         VertexUsageDeterminer $usageDeterminer
     ) {
         $this->storeManager = $storeManager;
         $this->calculator = $calculator;
         $this->usageDeterminer = $usageDeterminer;
+        $this->isVirtualDeterminer = $isVirtualDeterminer;
     }
 
     /**
@@ -54,9 +58,9 @@ class TaxCalculationPlugin
      * @param QuoteDetailsInterface $quoteDetails
      * @param string|null $storeId
      * @param bool $round
-     * @return TaxDetailsInterface
-     * @throws NoSuchEntityException
-     * @throws InvalidArgumentException
+     * @return \Magento\Tax\Api\Data\TaxDetailsInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \InvalidArgumentException
      */
     public function aroundCalculateTax(
         TaxCalculationInterface $subject,
@@ -66,7 +70,7 @@ class TaxCalculationPlugin
         $round = true
     ) {
         $storeId = $this->getStoreId($storeId);
-        if (!$this->useVertex($quoteDetails, $storeId, true)) {
+        if (!$this->useVertex($quoteDetails, $storeId, $this->isVirtualDeterminer->isVirtual($quoteDetails), true)) {
             return $super($quoteDetails, $storeId, $round);
         }
 
@@ -78,7 +82,7 @@ class TaxCalculationPlugin
      *
      * @param string|null $storeId
      * @return string
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getStoreId($storeId)
     {
@@ -93,16 +97,25 @@ class TaxCalculationPlugin
      *
      * @param QuoteDetailsInterface $quoteDetails
      * @param string|null $storeId
+     * @param bool $isVirtual
      * @param bool $checkCalculation
      * @return bool
      */
-    private function useVertex(QuoteDetailsInterface $quoteDetails, $storeId, $checkCalculation = false)
+    private function useVertex(QuoteDetailsInterface $quoteDetails, $storeId, $isVirtual, $checkCalculation = false)
     {
-        return $this->usageDeterminer->shouldUseVertex(
-            $storeId,
-            $quoteDetails->getShippingAddress(),
-            $quoteDetails->getCustomerId() === null ? null : (int)$quoteDetails->getCustomerId(),
-            $checkCalculation
-        );
+        $anItemHasPrice = false;
+        foreach ($quoteDetails->getItems() as $item) {
+            if ($item->getUnitPrice()) {
+                $anItemHasPrice = true;
+            }
+        }
+        return $anItemHasPrice
+            && $this->usageDeterminer->shouldUseVertex(
+                $storeId,
+                $quoteDetails->getShippingAddress(),
+                $quoteDetails->getCustomerId(),
+                $isVirtual,
+                $checkCalculation
+            );
     }
 }

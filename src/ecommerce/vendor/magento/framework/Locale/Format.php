@@ -16,17 +16,6 @@ class Format implements \Magento\Framework\Locale\FormatInterface
     private const JAPAN_LOCALE_CODE = 'ja_JP';
 
     /**
-     * Arab locale code
-     */
-    private const ARABIC_LOCALE_CODES = [
-        'ar_DZ',
-        'ar_EG',
-        'ar_KW',
-        'ar_MA',
-        'ar_SA',
-    ];
-
-    /**
      * @var \Magento\Framework\App\ScopeResolverInterface
      */
     protected $_scopeResolver;
@@ -82,11 +71,6 @@ class Format implements \Magento\Framework\Locale\FormatInterface
 
         if (!is_string($value)) {
             return (float)$value;
-        }
-
-        /** Normalize for Arabic locale */
-        if (in_array($this->_localeResolver->getLocale(), self::ARABIC_LOCALE_CODES)) {
-            $value = $this->normalizeArabicLocale($value);
         }
 
         //trim spaces and apostrophes
@@ -178,23 +162,5 @@ class Format implements \Magento\Framework\Locale\FormatInterface
         ];
 
         return $result;
-    }
-
-    /**
-     * Normalizes the number of Arabic locale.
-     *
-     * Substitutes Arabic thousands grouping and Arabic decimal separator symbols (U+066C, U+066B)
-     * with common grouping and decimal separator
-     *
-     * @param string $value
-     * @return string
-     */
-    private function normalizeArabicLocale($value): string
-    {
-        $arabicGroupSymbol = '٬';
-        $arabicDecimalSymbol = '٫';
-        $value = str_replace([$arabicGroupSymbol, $arabicDecimalSymbol], [',', '.'], $value);
-
-        return $value;
     }
 }

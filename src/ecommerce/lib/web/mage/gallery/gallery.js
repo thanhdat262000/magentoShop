@@ -270,10 +270,7 @@ define([
                     next: $t('Next'),
                     previous: $t('Previous')
                 }),
-                mainImageIndex,
-                $element = settings.$element,
-                $fotoramaElement,
-                $fotoramaStage;
+                mainImageIndex;
 
             if (settings.breakpoints) {
                 _.each(_.values(settings.breakpoints), function (breakpoint) {
@@ -288,38 +285,17 @@ define([
                 settings.breakpoints = breakpoints;
             }
 
-            _.extend(config, config.options,
-                {
-                    options: undefined,
-                    click: false,
-                    breakpoints: null
-                }
-            );
+            _.extend(config, config.options);
+            config.options = undefined;
+
+            config.click = false;
+            config.breakpoints = null;
             settings.currentConfig = config;
-
-            $element
-                .css('min-height', settings.$element.height())
-                .append(tpl);
-
-            $fotoramaElement = $element.find('[data-gallery-role="gallery"]');
-
-            $fotoramaStage = $fotoramaElement.find('.fotorama__stage');
-            $fotoramaStage.css('position', 'absolute');
-
-            $fotoramaElement.fotorama(config);
-            $fotoramaElement.find('.fotorama__stage__frame.fotorama__active')
-                    .one('f:load', function () {
-                        // Remove placeholder when main gallery image loads.
-                        $element.find('.gallery-placeholder__image').remove();
-                        $element
-                            .removeClass('_block-content-loading')
-                            .css('min-height', '');
-
-                        $fotoramaStage.css('position', '');
-                    });
-            settings.$elementF = $fotoramaElement;
-            settings.fotoramaApi = $fotoramaElement.data('fotorama');
-
+            settings.$element.html(tpl);
+            settings.$element.removeClass('_block-content-loading');
+            settings.$elementF = $(settings.$element.children()[0]);
+            settings.$elementF.fotorama(config);
+            settings.fotoramaApi = settings.$elementF.data('fotorama');
             $.extend(true, config, this.startConfig);
 
             mainImageIndex = getMainImageIndex(config.data);
@@ -340,17 +316,13 @@ define([
                 settings = this.settings,
                 config = this.config,
                 startConfig = this.startConfig,
-                isInitialized = {},
                 isTouchEnabled = this.isTouchEnabled;
 
             if (_.isObject(settings.breakpoints)) {
                 pairs = _.pairs(settings.breakpoints);
                 _.each(pairs, function (pair) {
-                    var mediaQuery = pair[0];
-
-                    isInitialized[mediaQuery] = false;
                     mediaCheck({
-                        media: mediaQuery,
+                        media: pair[0],
 
                         /**
                          * Is triggered when breakpoint enties.
@@ -365,35 +337,29 @@ define([
                             }
 
                             if (isTouchEnabled) {
-                                settings.breakpoints[mediaQuery].options.arrows = false;
+                                settings.breakpoints[pair[0]].options.arrows = false;
 
-                                if (settings.breakpoints[mediaQuery].options.fullscreen) {
-                                    settings.breakpoints[mediaQuery].options.fullscreen.arrows = false;
+                                if (settings.breakpoints[pair[0]].options.fullscreen) {
+                                    settings.breakpoints[pair[0]].options.fullscreen.arrows = false;
                                 }
                             }
 
-                            settings.api.updateOptions(settings.breakpoints[mediaQuery].options, true);
-                            $.extend(true, config, settings.breakpoints[mediaQuery]);
-                            settings.activeBreakpoint = settings.breakpoints[mediaQuery];
-
-                            isInitialized[mediaQuery] = true;
+                            settings.api.updateOptions(settings.breakpoints[pair[0]].options, true);
+                            $.extend(true, config, settings.breakpoints[pair[0]]);
+                            settings.activeBreakpoint = settings.breakpoints[pair[0]];
                         },
 
                         /**
                          * Is triggered when breakpoint exits.
                          */
                         exit: function () {
-                            if (isInitialized[mediaQuery]) {
-                                $.extend(true, config, _.clone(startConfig));
-                                settings.api.updateOptions(settings.defaultConfig.options, true);
+                            $.extend(true, config, _.clone(startConfig));
+                            settings.api.updateOptions(settings.defaultConfig.options, true);
 
-                                if (settings.isFullscreen) {
-                                    settings.api.updateOptions(settings.fullscreenConfig, true);
-                                }
-                                settings.activeBreakpoint = {};
-                            } else {
-                                isInitialized[mediaQuery] = true;
+                            if (settings.isFullscreen) {
+                                settings.api.updateOptions(settings.fullscreenConfig, true);
                             }
+                            settings.activeBreakpoint = {};
                         }
                     });
                 });
@@ -512,7 +478,7 @@ define([
                             settings.fotoramaApi.load(data);
                             mainImageIndex = getMainImageIndex(data);
 
-                            if (settings.fotoramaApi.activeIndex !== mainImageIndex) {
+                            if (mainImageIndex) {
                                 settings.fotoramaApi.show({
                                     index: mainImageIndex,
                                     time: 0

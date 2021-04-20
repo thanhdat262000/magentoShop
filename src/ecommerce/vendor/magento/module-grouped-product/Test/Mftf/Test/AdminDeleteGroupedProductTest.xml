@@ -18,7 +18,7 @@
             <group value="mtf_migrated"/>
         </annotations>
         <before>
-            <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
             <createData entity="ApiProductWithDescription" stepKey="createSimpleProduct"/>
             <createData entity="_defaultCategory" stepKey="createCategory"/>
             <createData entity="ApiGroupedProduct2" stepKey="createGroupedProduct">
@@ -31,9 +31,9 @@
         </before>
         <after>
             <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
-            <actionGroup ref="AdminLogoutActionGroup" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="logout"/>
         </after>
-        <actionGroup ref="DeleteProductUsingProductGridActionGroup" stepKey="deleteGroupedProductFilteredBySkuAndName">
+        <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteGroupedProductFilteredBySkuAndName">
             <argument name="product" value="$$createGroupedProduct$$"/>
         </actionGroup>
         <deleteData createDataKey="createSimpleProduct" stepKey="deleteSimpleProduct"/>
@@ -42,9 +42,10 @@
         <amOnPage url="{{StorefrontProductPage.url($$createGroupedProduct.name$$)}}" stepKey="amOnGroupedProductPage"/>
         <see selector="{{StorefrontProductInfoMainSection.productName}}" userInput="Whoops, our bad..." stepKey="seeWhoops"/>
         <!--Search for the product by sku-->
-        <actionGroup ref="StoreFrontQuickSearchActionGroup" stepKey="searchByCreatedTerm">
-            <argument name="query" value="$$createGroupedProduct.sku$$"/>
-        </actionGroup>
+        <fillField selector="{{StorefrontQuickSearchSection.searchPhrase}}" userInput="$$createGroupedProduct.sku$$" stepKey="fillSearchBarByProductSku"/>
+        <waitForPageLoad stepKey="waitForSearchButton"/>
+        <click selector="{{StorefrontQuickSearchSection.searchButton}}" stepKey="clickSearchButton"/>
+        <waitForPageLoad stepKey="waitForSearchResults"/>
         <!-- Should not see any search results -->
         <dontSee userInput="$$createGroupedProduct.sku$$" selector="{{StorefrontCatalogSearchMainSection.searchResults}}" stepKey="dontSeeProduct"/>
         <see selector="{{StorefrontCatalogSearchMainSection.message}}" userInput="Your search returned no results." stepKey="seeCantFindProductOneMessage"/>

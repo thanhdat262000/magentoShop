@@ -39,9 +39,6 @@ class Prices
         $finalPrice = $priceInfo->getPrice('final_price');
 
         return [
-            'baseOldPrice' => [
-                'amount' => $this->localeFormat->getNumber($regularPrice->getAmount()->getBaseAmount()),
-            ],
             'oldPrice' => [
                 'amount' => $this->localeFormat->getNumber($regularPrice->getAmount()->getValue()),
             ],

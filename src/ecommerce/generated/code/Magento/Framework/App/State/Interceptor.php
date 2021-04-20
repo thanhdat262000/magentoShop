@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function getMode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getMode');
-        return $pluginInfo ? $this->___callPlugins('getMode', func_get_args(), $pluginInfo) : parent::getMode();
+        if (!$pluginInfo) {
+            return parent::getMode();
+        } else {
+            return $this->___callPlugins('getMode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function setIsDownloader($flag = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsDownloader');
-        return $pluginInfo ? $this->___callPlugins('setIsDownloader', func_get_args(), $pluginInfo) : parent::setIsDownloader($flag);
+        if (!$pluginInfo) {
+            return parent::setIsDownloader($flag);
+        } else {
+            return $this->___callPlugins('setIsDownloader', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function setAreaCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setAreaCode');
-        return $pluginInfo ? $this->___callPlugins('setAreaCode', func_get_args(), $pluginInfo) : parent::setAreaCode($code);
+        if (!$pluginInfo) {
+            return parent::setAreaCode($code);
+        } else {
+            return $this->___callPlugins('setAreaCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function getAreaCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAreaCode');
-        return $pluginInfo ? $this->___callPlugins('getAreaCode', func_get_args(), $pluginInfo) : parent::getAreaCode();
+        if (!$pluginInfo) {
+            return parent::getAreaCode();
+        } else {
+            return $this->___callPlugins('getAreaCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function isAreaCodeEmulated()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAreaCodeEmulated');
-        return $pluginInfo ? $this->___callPlugins('isAreaCodeEmulated', func_get_args(), $pluginInfo) : parent::isAreaCodeEmulated();
+        if (!$pluginInfo) {
+            return parent::isAreaCodeEmulated();
+        } else {
+            return $this->___callPlugins('isAreaCodeEmulated', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,6 +85,10 @@ class Interceptor extends \Magento\Framework\App\State implements \Magento\Frame
     public function emulateAreaCode($areaCode, $callback, $params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'emulateAreaCode');
-        return $pluginInfo ? $this->___callPlugins('emulateAreaCode', func_get_args(), $pluginInfo) : parent::emulateAreaCode($areaCode, $callback, $params);
+        if (!$pluginInfo) {
+            return parent::emulateAreaCode($areaCode, $callback, $params);
+        } else {
+            return $this->___callPlugins('emulateAreaCode', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -7,21 +7,18 @@ declare(strict_types=1);
 
 namespace Magento\CatalogGraphQl\Model\Resolver\Products\Query;
 
+use Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\InputException;
-use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\Product as ProductProvider;
 use Magento\CatalogGraphQl\Model\Resolver\Products\SearchResult;
 use Magento\CatalogGraphQl\Model\Resolver\Products\SearchResultFactory;
-use Magento\GraphQl\Model\Query\ContextInterface;
 use Magento\Search\Model\Query;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\GraphQl\Query\Resolver\ArgumentsProcessorInterface;
 
 /**
  * Retrieve filtered product data based off given search criteria in a format that GraphQL can interpret.
@@ -39,6 +36,11 @@ class Filter implements ProductQueryInterface
     private $productDataProvider;
 
     /**
+     * @var LayerResolver
+     */
+    private $layerResolver;
+
+    /**
      * FieldSelection
      */
     private $fieldSelection;
@@ -54,33 +56,27 @@ class Filter implements ProductQueryInterface
     private $scopeConfig;
 
     /**
-     * @var ArgumentsProcessorInterface
-     */
-    private $argsSelection;
-
-    /**
      * @param SearchResultFactory $searchResultFactory
      * @param ProductProvider $productDataProvider
+     * @param LayerResolver $layerResolver
      * @param FieldSelection $fieldSelection
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param ScopeConfigInterface $scopeConfig
-     * @param ArgumentsProcessorInterface|null $argsSelection
      */
     public function __construct(
         SearchResultFactory $searchResultFactory,
         ProductProvider $productDataProvider,
+        LayerResolver $layerResolver,
         FieldSelection $fieldSelection,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        ScopeConfigInterface $scopeConfig,
-        ArgumentsProcessorInterface $argsSelection = null
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->searchResultFactory = $searchResultFactory;
         $this->productDataProvider = $productDataProvider;
+        $this->layerResolver = $layerResolver;
         $this->fieldSelection = $fieldSelection;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->scopeConfig = $scopeConfig;
-        $this->argsSelection = $argsSelection ? : ObjectManager::getInstance()
-            ->get(ArgumentsProcessorInterface::class);
     }
 
     /**
@@ -88,21 +84,18 @@ class Filter implements ProductQueryInterface
      *
      * @param array $args
      * @param ResolveInfo $info
-     * @param ContextInterface $context
      * @return SearchResult
-     * @throws GraphQlInputException
      */
     public function getResult(
         array $args,
-        ResolveInfo $info,
-        ContextInterface $context
+        ResolveInfo $info
     ): SearchResult {
         $fields = $this->fieldSelection->getProductsFieldSelection($info);
         try {
-            $searchCriteria = $this->buildSearchCriteria($info->fieldName, $args);
-            $searchResults = $this->productDataProvider->getList($searchCriteria, $fields, false, false, $context);
+            $searchCriteria = $this->buildSearchCriteria($args, $info);
+            $searchResults = $this->productDataProvider->getList($searchCriteria, $fields);
         } catch (InputException $e) {
-            return $this->createEmptyResult((int)$args['pageSize'], (int)$args['currentPage']);
+            return $this->createEmptyResult($args);
         }
 
         $productArray = [];
@@ -133,22 +126,19 @@ class Filter implements ProductQueryInterface
     /**
      * Build search criteria from query input args
      *
-     * @param string $fieldName
      * @param array $args
+     * @param ResolveInfo $info
      * @return SearchCriteriaInterface
-     * @throws GraphQlInputException
-     * @throws InputException
      */
-    private function buildSearchCriteria(string $fieldName, array $args): SearchCriteriaInterface
+    private function buildSearchCriteria(array $args, ResolveInfo $info): SearchCriteriaInterface
     {
-        $processedArgs = $this->argsSelection->process($fieldName, $args);
-        if (!empty($processedArgs['filter'])) {
-            $processedArgs['filter'] = $this->formatFilters($processedArgs['filter']);
+        if (!empty($args['filter'])) {
+            $args['filter'] = $this->formatFilters($args['filter']);
         }
 
-        $criteria = $this->searchCriteriaBuilder->build($fieldName, $processedArgs);
-        $criteria->setCurrentPage($processedArgs['currentPage']);
-        $criteria->setPageSize($processedArgs['pageSize']);
+        $criteria = $this->searchCriteriaBuilder->build($info->fieldName, $args);
+        $criteria->setCurrentPage($args['currentPage']);
+        $criteria->setPageSize($args['pageSize']);
 
         return $criteria;
     }
@@ -191,18 +181,17 @@ class Filter implements ProductQueryInterface
      *
      * Used for handling exceptions gracefully
      *
-     * @param int $pageSize
-     * @param int $currentPage
+     * @param array $args
      * @return SearchResult
      */
-    private function createEmptyResult(int $pageSize, int $currentPage): SearchResult
+    private function createEmptyResult(array $args): SearchResult
     {
         return $this->searchResultFactory->create(
             [
                 'totalCount' => 0,
                 'productsSearchResult' => [],
-                'pageSize' => $pageSize,
-                'currentPage' => $currentPage,
+                'pageSize' => $args['pageSize'],
+                'currentPage' => $args['currentPage'],
                 'totalPages' => 0,
             ]
         );

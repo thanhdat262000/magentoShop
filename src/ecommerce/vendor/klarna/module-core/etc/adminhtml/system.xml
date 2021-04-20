@@ -16,7 +16,7 @@
             <group id="klarna_section" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
                 <comment><![CDATA[<div class="klarna-payment-logo"></div><div class="klarna-payment-text">Offer more ways to pay with Klarna. <br/>It's the smooothest way to boost sales and increase your average order value. <br/>You get more customers who buy more and do it more often. And you always get paid in full upfront while your customers pay at a later date.</div>]]></comment>
                 <fieldset_css>complex klarna-section</fieldset_css>
-                <frontend_model>Klarna\Core\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
                 <group id="api" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0"
                        translate="label">
                     <label>API Configuration</label>
@@ -33,16 +33,14 @@
                     <field id="merchant_id" sortOrder="20" translate="label" type="text" showInDefault="1"
                            showInWebsite="1"
                            showInStore="0">
-                        <label>Klarna API username</label>
-                        <comment>Use the API username you downloaded in the Klarna Merchant Portal. Don’t use your email address.</comment>
+                        <label>Merchant ID</label>
                         <config_path>klarna/api/merchant_id</config_path>
                     </field>
                     <field id="shared_secret" sortOrder="30" translate="label" type="obscure" showInDefault="1"
                            showInWebsite="1"
                            showInStore="0">
-                        <label>Klarna API password</label>
+                        <label>Password</label>
                         <config_path>klarna/api/shared_secret</config_path>
-                        <comment>Use the API password you downloaded in the Klarna Merchant Portal.</comment>
                         <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     </field>
                     <field id="test_mode" sortOrder="40" translate="label" type="select" showInDefault="1"

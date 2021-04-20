@@ -33,7 +33,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
      */
     private $catalog;
 
-    public function setUp() :void
+    public function setUp()
     {
         $this->mockClientFactory();
 

@@ -12,7 +12,7 @@
 
 namespace PhpCsFixer\Fixer\FunctionNotation;
 
-use PhpCsFixer\AbstractPhpdocToTypeDeclarationFixer;
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\DocBlock\Annotation;
 use PhpCsFixer\DocBlock\DocBlock;
 use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
@@ -29,19 +29,19 @@ use PhpCsFixer\Tokenizer\Tokens;
 /**
  * @author Filippo Tessarotto <zoeslam@gmail.com>
  */
-final class PhpdocToReturnTypeFixer extends AbstractPhpdocToTypeDeclarationFixer implements ConfigurationDefinitionFixerInterface
+final class PhpdocToReturnTypeFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface
 {
     /**
-     * @var array<int, array<int, int|string>>
+     * @var array
      */
-    private $excludeFuncNames = [
+    private $blacklistFuncNames = [
         [T_STRING, '__construct'],
         [T_STRING, '__destruct'],
         [T_STRING, '__clone'],
     ];
 
     /**
-     * @var array<string, int>
+     * @var array
      */
     private $versionSpecificTypes = [
         'void' => 70100,
@@ -50,19 +50,17 @@ final class PhpdocToReturnTypeFixer extends AbstractPhpdocToTypeDeclarationFixer
     ];
 
     /**
-     * @var array<string, string>
+     * @var array
      */
     private $scalarTypes = [
-        'bool' => 'bool',
-        'true' => 'bool',
-        'false' => 'bool',
-        'float' => 'float',
-        'int' => 'int',
-        'string' => 'string',
+        'bool' => true,
+        'float' => true,
+        'int' => true,
+        'string' => true,
     ];
 
     /**
-     * @var array<string, bool>
+     * @var array
      */
     private $skippedTypes = [
         'mixed' => true,
@@ -110,32 +108,9 @@ function my_foo()
 ',
                     new VersionSpecification(70200)
                 ),
-                new VersionSpecificCodeSample(
-                    '<?php
-/** @return Foo */
-function foo() {}
-/** @return string */
-function bar() {}
-',
-                    new VersionSpecification(70100),
-                    ['scalar_types' => false]
-                ),
-                new VersionSpecificCodeSample(
-                    '<?php
-final class Foo {
-    /**
-     * @return static
-     */
-    public function create($prototype) {
-        return new static($prototype);
-    }
-}
-',
-                    new VersionSpecification(80000)
-                ),
             ],
             null,
-            'This rule is EXPERIMENTAL and [1] is not covered with backward compatibility promise. [2] `@return` annotation is mandatory for the fixer to make changes, signatures of methods without it (no docblock, inheritdocs) will not be fixed. [3] Manual actions are required if inherited signatures are not properly documented. [4] `@inheritdocs` support is under construction.'
+            '[1] This rule is EXPERIMENTAL and is not covered with backward compatibility promise. [2] `@return` annotation is mandatory for the fixer to make changes, signatures of methods without it (no docblock, inheritdocs) will not be fixed. [3] Manual actions are required if inherited signatures are not properly documented. [4] `@inheritdocs` support is under construction.'
         );
     }
 
@@ -144,22 +119,17 @@ final class Foo {
      */
     public function isCandidate(Tokens $tokens)
     {
-        if (\PHP_VERSION_ID >= 70400 && $tokens->isTokenKindFound(T_FN)) {
-            return true;
-        }
-
         return \PHP_VERSION_ID >= 70000 && $tokens->isTokenKindFound(T_FUNCTION);
     }
 
     /**
      * {@inheritdoc}
-     *
-     * Must run before FullyQualifiedStrictTypesFixer, NoSuperfluousPhpdocTagsFixer, PhpdocAlignFixer, ReturnTypeDeclarationFixer.
-     * Must run after CommentToPhpdocFixer, PhpdocIndentFixer, PhpdocScalarFixer, PhpdocScalarFixer, PhpdocToCommentFixer, PhpdocTypesFixer, PhpdocTypesFixer.
      */
     public function getPriority()
     {
-        return 13;
+        // should be run after PhpdocScalarFixer.
+        // should be run before ReturnTypeDeclarationFixer, FullyQualifiedStrictTypesFixer, NoSuperfluousPhpdocTagsFixer.
+        return 8;
     }
 
     /**
@@ -188,41 +158,29 @@ final class Foo {
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens)
     {
-        if (\PHP_VERSION_ID >= 80000) {
-            unset($this->skippedTypes['mixed']);
-        }
-
         for ($index = $tokens->count() - 1; 0 < $index; --$index) {
-            if (
-                !$tokens[$index]->isGivenKind(T_FUNCTION)
-                && (\PHP_VERSION_ID < 70400 || !$tokens[$index]->isGivenKind(T_FN))
-            ) {
+            if (!$tokens[$index]->isGivenKind(T_FUNCTION)) {
                 continue;
             }
 
             $funcName = $tokens->getNextMeaningfulToken($index);
-
-            if ($tokens[$funcName]->equalsAny($this->excludeFuncNames, false)) {
+            if ($tokens[$funcName]->equalsAny($this->blacklistFuncNames, false)) {
                 continue;
             }
 
             $returnTypeAnnotation = $this->findReturnAnnotations($tokens, $index);
-
             if (1 !== \count($returnTypeAnnotation)) {
                 continue;
             }
-
             $returnTypeAnnotation = current($returnTypeAnnotation);
             $types = array_values($returnTypeAnnotation->getTypes());
             $typesCount = \count($types);
-
             if (1 > $typesCount || 2 < $typesCount) {
                 continue;
             }
 
             $isNullable = false;
             $returnType = current($types);
-
             if (2 === $typesCount) {
                 $null = $types[0];
                 $returnType = $types[1];
@@ -247,7 +205,7 @@ final class Foo {
             }
 
             if ('static' === $returnType) {
-                $returnType = \PHP_VERSION_ID < 80000 ? 'self' : 'static';
+                $returnType = 'self';
             }
 
             if (isset($this->skippedTypes[$returnType])) {
@@ -258,29 +216,21 @@ final class Foo {
                 continue;
             }
 
-            if (isset($this->scalarTypes[$returnType])) {
-                if (false === $this->configuration['scalar_types']) {
-                    continue;
-                }
+            if (isset($this->scalarTypes[$returnType]) && false === $this->configuration['scalar_types']) {
+                continue;
+            }
 
-                $returnType = $this->scalarTypes[$returnType];
-            } else {
-                if (1 !== Preg::match($this->classRegex, $returnType, $matches)) {
-                    continue;
-                }
+            if (1 !== Preg::match($this->classRegex, $returnType, $matches)) {
+                continue;
+            }
 
-                if (isset($matches['array'])) {
-                    $returnType = 'array';
-                }
+            if (isset($matches['array'])) {
+                $returnType = 'array';
             }
 
             $startIndex = $tokens->getNextTokenOfKind($index, ['{', ';']);
 
             if ($this->hasReturnTypeHint($tokens, $startIndex)) {
-                continue;
-            }
-
-            if (!$this->isValidSyntax(sprintf('<?php function f():%s {}', $returnType))) {
                 continue;
             }
 
@@ -291,7 +241,8 @@ final class Foo {
     /**
      * Determine whether the function already has a return type hint.
      *
-     * @param int $index The index of the end of the function definition line, EG at { or ;
+     * @param Tokens $tokens
+     * @param int    $index  The index of the end of the function definition line, EG at { or ;
      *
      * @return bool
      */
@@ -304,6 +255,7 @@ final class Foo {
     }
 
     /**
+     * @param Tokens $tokens
      * @param int    $index      The index of the end of the function definition line, EG at { or ;
      * @param bool   $isNullable
      * @param string $returnType
@@ -313,14 +265,11 @@ final class Foo {
         static $specialTypes = [
             'array' => [CT::T_ARRAY_TYPEHINT, 'array'],
             'callable' => [T_CALLABLE, 'callable'],
-            'static' => [T_STATIC, 'static'],
         ];
-
         $newTokens = [
             new Token([CT::T_TYPE_COLON, ':']),
             new Token([T_WHITESPACE, ' ']),
         ];
-
         if (true === $isNullable) {
             $newTokens[] = new Token([CT::T_NULLABLE_TYPE, '?']);
         }
@@ -328,23 +277,15 @@ final class Foo {
         if (isset($specialTypes[$returnType])) {
             $newTokens[] = new Token($specialTypes[$returnType]);
         } else {
-            $returnTypeUnqualified = ltrim($returnType, '\\');
-
-            if (isset($this->scalarTypes[$returnTypeUnqualified]) || isset($this->versionSpecificTypes[$returnTypeUnqualified])) {
-                // 'scalar's, 'void', 'iterable' and 'object' must be unqualified
-                $newTokens[] = new Token([T_STRING, $returnTypeUnqualified]);
-            } else {
-                foreach (explode('\\', $returnType) as $nsIndex => $value) {
-                    if (0 === $nsIndex && '' === $value) {
-                        continue;
-                    }
-
-                    if (0 < $nsIndex) {
-                        $newTokens[] = new Token([T_NS_SEPARATOR, '\\']);
-                    }
-
-                    $newTokens[] = new Token([T_STRING, $value]);
+            foreach (explode('\\', $returnType) as $nsIndex => $value) {
+                if (0 === $nsIndex && '' === $value) {
+                    continue;
                 }
+
+                if (0 < $nsIndex) {
+                    $newTokens[] = new Token([T_NS_SEPARATOR, '\\']);
+                }
+                $newTokens[] = new Token([T_STRING, $value]);
             }
         }
 
@@ -355,7 +296,8 @@ final class Foo {
     /**
      * Find all the return annotations in the function's PHPDoc comment.
      *
-     * @param int $index The index of the function token
+     * @param Tokens $tokens
+     * @param int    $index  The index of the function token
      *
      * @return Annotation[]
      */

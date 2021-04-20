@@ -1,27 +1,21 @@
 <?php
-declare(strict_types=1);
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\Framework\Stdlib\Test\Unit\DateTime;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ScopeResolverInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Stdlib\DateTime;
-use Magento\Framework\Stdlib\DateTime\Intl\DateFormatterFactory;
 use Magento\Framework\Stdlib\DateTime\Timezone;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Test for @see Timezone
  */
-class TimezoneTest extends TestCase
+class TimezoneTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string|null
@@ -44,24 +38,24 @@ class TimezoneTest extends TestCase
     private $objectManager;
 
     /**
-     * @var ScopeResolverInterface|MockObject
+     * @var ScopeResolverInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $scopeResolver;
 
     /**
-     * @var ResolverInterface|MockObject
+     * @var ResolverInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $localeResolver;
 
     /**
-     * @var ScopeConfigInterface|MockObject
+     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $scopeConfig;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->defaultTimeZone = date_default_timezone_get();
         date_default_timezone_set('UTC');
@@ -69,18 +63,15 @@ class TimezoneTest extends TestCase
         $this->defaultTimezonePath = 'default/timezone/path';
 
         $this->objectManager = new ObjectManager($this);
-        $this->scopeResolver = $this->getMockBuilder(ScopeResolverInterface::class)
-            ->getMock();
-        $this->localeResolver = $this->getMockBuilder(ResolverInterface::class)
-            ->getMock();
-        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
-            ->getMock();
+        $this->scopeResolver = $this->getMockBuilder(ScopeResolverInterface::class)->getMock();
+        $this->localeResolver = $this->getMockBuilder(ResolverInterface::class)->getMock();
+        $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->getMock();
     }
 
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         date_default_timezone_set($this->defaultTimeZone);
     }
@@ -91,24 +82,18 @@ class TimezoneTest extends TestCase
      * @param string $date
      * @param string $locale
      * @param bool $includeTime
-     * @param int|string $expectedTime
-     * @param string|null $timeZone
+     * @param int $expectedTimestamp
      * @dataProvider dateIncludeTimeDataProvider
      */
-    public function testDateIncludeTime($date, $locale, $includeTime, $expectedTime, $timeZone = 'America/Chicago')
+    public function testDateIncludeTime($date, $locale, $includeTime, $expectedTimestamp)
     {
-        if ($timeZone !== null) {
-            $this->scopeConfig->method('getValue')->willReturn($timeZone);
-        }
+        $this->scopeConfig->method('getValue')->willReturn('America/Chicago');
+        /** @var Timezone $timezone */
+        $timezone = $this->objectManager->getObject(Timezone::class, ['scopeConfig' => $this->scopeConfig]);
 
         /** @var \DateTime $dateTime */
-        $dateTime = $this->getTimezone()->date($date, $locale, $timeZone !== null, $includeTime);
-        if (is_numeric($expectedTime)) {
-            $this->assertEquals($expectedTime, $dateTime->getTimestamp());
-        } else {
-            $format = $includeTime ? DateTime::DATETIME_PHP_FORMAT : DateTime::DATE_PHP_FORMAT;
-            $this->assertEquals($expectedTime, date($format, $dateTime->getTimestamp()));
-        }
+        $dateTime = $timezone->date($date, $locale, true, $includeTime);
+        $this->assertEquals($expectedTimestamp, $dateTime->getTimestamp());
     }
 
     /**
@@ -118,16 +103,6 @@ class TimezoneTest extends TestCase
      */
     public function dateIncludeTimeDataProvider(): array
     {
-        /**
-         * Greek locale needs to be installed on the system, to pass.
-         *
-         * 'Parse greek d/m/y date with time' => [
-         * '30/10/2021, 12:01 π.μ.', // datetime
-         * 'el_GR', // locale
-         * true, // include time
-         * 1635570060 // expected timestamp
-         * ],
-         */
         return [
             'Parse d/m/y date without time' => [
                 '19/05/2017', // date
@@ -153,97 +128,6 @@ class TimezoneTest extends TestCase
                 true, // include time
                 1495170060 // expected timestamp
             ],
-            'Parse greek d/m/y date without time' => [
-                '30/10/2021', // datetime
-                'el_GR', // locale
-                false, // include time
-                1635570000 // expected timestamp
-            ],
-            'Parse Saudi Arabia date without time' => [
-                '4/09/2020',
-                'ar_SA',
-                false,
-                '2020-09-04'
-            ],
-            'Parse Saudi Arabia date with time' => [
-                '4/09/2020 10:10 مساء',
-                'ar_SA',
-                true,
-                '2020-09-04 22:10:00',
-                null
-            ],
-            'Parse Saudi Arabia date with zero time' => [
-                '4/09/2020',
-                'ar_SA',
-                true,
-                '2020-09-04 00:00:00',
-                null
-            ],
-            'Parse date in short style with long year 1999' => [
-                '8/11/1999',
-                'en_US',
-                false,
-                '1999-08-11'
-            ],
-            'Parse date in short style with long year 2099' => [
-                '9/2/2099',
-                'en_US',
-                false,
-                '2099-09-02'
-            ],
-            'Parse date in short style with short year 1999' => [
-                '8/11/99',
-                'en_US',
-                false,
-                '1999-08-11'
-            ],
-        ];
-    }
-
-    /**
-     * @param string $locale
-     * @param int $style
-     * @param string $expectedFormat
-     * @dataProvider getDatetimeFormatDataProvider
-     */
-    public function testGetDatetimeFormat(string $locale, int $style, string $expectedFormat): void
-    {
-        /** @var Timezone $timezone */
-        $this->localeResolver->method('getLocale')->willReturn($locale);
-        $this->assertEquals($expectedFormat, $this->getTimezone()->getDateTimeFormat($style));
-    }
-
-    /**
-     * @return array
-     */
-    public function getDatetimeFormatDataProvider(): array
-    {
-        return [
-            ['en_US', \IntlDateFormatter::SHORT, 'M/d/yy h:mm a'],
-            ['ar_SA', \IntlDateFormatter::SHORT, 'd/MM/y h:mm a']
-        ];
-    }
-
-    /**
-     * @param string $locale
-     * @param int $style
-     * @param string $expectedFormat
-     * @dataProvider getDateFormatWithLongYearDataProvider
-     */
-    public function testGetDateFormatWithLongYear(string $locale, string $expectedFormat): void
-    {
-        /** @var Timezone $timezone */
-        $this->localeResolver->method('getLocale')->willReturn($locale);
-        $this->assertEquals($expectedFormat, $this->getTimezone()->getDateFormatWithLongYear());
-    }
-
-    /**
-     * @return array
-     */
-    public function getDateFormatWithLongYearDataProvider(): array
-    {
-        return [
-            ['en_US', 'M/d/y'],
         ];
     }
 
@@ -288,41 +172,25 @@ class TimezoneTest extends TestCase
 
     /**
      * Test configuration of the different timezones.
-     * @dataProvider getDateFixtures
      */
-    public function testDate($expectedResult, $timezone, $date)
+    public function testDate()
     {
-        $this->localeResolver->method('getLocale')->willReturn('en_GB');
-        $this->scopeConfigWillReturnConfiguredTimezone($timezone);
+        $dateFixtures = $this->getDateFixtures();
+        foreach ($dateFixtures as $dateFixture) {
+            $expectedResult = $dateFixture[0];
+            $timezone = $dateFixture[1];
+            $date = $dateFixture[2];
 
-        $this->assertEquals(
-            $expectedResult()->format('DATE_ISO8601'),
-            $this->getTimezone()->date($date)->format('DATE_ISO8601')
-        );
-    }
+            $this->localeResolver->method('getLocale')->willReturn('en_GB');
+            $this->scopeConfigWillReturnConfiguredTimezone($timezone);
 
-    /**
-     * Data provider for testException
-     *
-     * @return array
-     */
-    public function getConvertConfigTimeToUTCDataFixtures()
-    {
-        return [
-            'datetime' => [
-                new \DateTime('2016-10-10 10:00:00', new \DateTimeZone('UTC'))
-            ]
-        ];
-    }
-
-    /**
-     * @dataProvider getConvertConfigTimeToUTCDataFixtures
-     */
-    public function testConvertConfigTimeToUtcException($date)
-    {
-        $this->expectException(LocalizedException::class);
-
-        $this->getTimezone()->convertConfigTimeToUtc($date);
+            $this->assertEquals(
+                $expectedResult(),
+                $this->getTimezone()->date($date, null, true),
+                '',
+                1
+            );
+        }
     }
 
     /**
@@ -330,7 +198,7 @@ class TimezoneTest extends TestCase
      *
      * @return array
      */
-    public function getDateFixtures(): array
+    private function getDateFixtures(): array
     {
         return [
             'now_datetime_utc' => [
@@ -345,7 +213,7 @@ class TimezoneTest extends TestCase
                     return new \DateTime('2017-01-01 10:00:00', new \DateTimeZone('UTC'));
                 },
                 'UTC',
-                new \DateTime('2017-01-01 10:00:00', new \DateTimeZone('UTC'))
+                new \DateTime('2017-01-01 10:00:00')
             ],
             'now_datetime_vancouver' => [
                 function () {
@@ -366,7 +234,7 @@ class TimezoneTest extends TestCase
                     return new \DateTime('2017-01-01 10:00:00', new \DateTimeZone('UTC'));
                 },
                 'UTC',
-                new \DateTimeImmutable('2017-01-01 10:00:00', new \DateTimeZone('UTC'))
+                new \DateTimeImmutable('2017-01-01 10:00:00')
             ],
             'now_datetimeimmutable_vancouver' => [
                 function () {
@@ -389,8 +257,7 @@ class TimezoneTest extends TestCase
             $this->createMock(DateTime::class),
             $this->scopeConfig,
             $this->scopeType,
-            $this->defaultTimezonePath,
-            new DateFormatterFactory()
+            $this->defaultTimezonePath
         );
     }
 
@@ -435,15 +302,14 @@ class TimezoneTest extends TestCase
 
         return [
             ['2018-10-20 00:00:00', 'UTC', 'en_US', '2018-10-20 00:00:00'],
-            ['2018-10-20 00:00:00', 'America/Los_Angeles', 'en_US', '2018-10-19 17:00:00'],
-            ['2018-10-20 00:00:00', 'Asia/Qatar', 'en_US', '2018-10-20 03:00:00'],
-            ['2018-10-20 00:00:00', 'America/Los_Angeles', 'en_GB', '2018-10-19 17:00:00'],
+            ['2018-10-20 00:00:00', 'America/Los_Angeles', 'en_US', '2018-10-20 00:00:00'],
+            ['2018-10-20 00:00:00', 'Asia/Qatar', 'en_US', '2018-10-20 00:00:00'],
             ['10/20/18 00:00', 'UTC', 'en_US', '2018-10-20 00:00:00'],
-            ['10/20/18 00:00', 'America/Los_Angeles', 'en_US', '2018-10-19 17:00:00'],
-            ['10/20/18 00:00', 'Asia/Qatar', 'en_US', '2018-10-20 03:00:00'],
-            ['10/20/18 00:00', 'UTC', 'fr_FR', '2018-10-20 00:00:00'],
-            ['10/20/18 00:00', 'America/Los_Angeles', 'fr_FR', '2018-10-19 17:00:00'],
-            ['10/20/18 00:00', 'Asia/Qatar', 'fr_FR', '2018-10-20 03:00:00'],
+            ['10/20/18 00:00', 'America/Los_Angeles', 'en_US', '2018-10-20 00:00:00'],
+            ['10/20/18 00:00', 'Asia/Qatar', 'en_US', '2018-10-20 00:00:00'],
+            ['20/10/18 00:00', 'UTC', 'fr_FR', '2018-10-20 00:00:00'],
+            ['20/10/18 00:00', 'America/Los_Angeles', 'fr_FR', '2018-10-20 00:00:00'],
+            ['20/10/18 00:00', 'Asia/Qatar', 'fr_FR', '2018-10-20 00:00:00'],
             [1539993600, 'UTC', 'en_US', '2018-10-20 00:00:00'],
             [1539993600, 'America/Los_Angeles', 'en_US', '2018-10-19 17:00:00'],
             [1539993600, 'Asia/Qatar', 'en_US', '2018-10-20 03:00:00'],

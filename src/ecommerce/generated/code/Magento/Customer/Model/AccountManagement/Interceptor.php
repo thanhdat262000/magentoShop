@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function resendConfirmation($email, $websiteId = null, $redirectUrl = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resendConfirmation');
-        return $pluginInfo ? $this->___callPlugins('resendConfirmation', func_get_args(), $pluginInfo) : parent::resendConfirmation($email, $websiteId, $redirectUrl);
+        if (!$pluginInfo) {
+            return parent::resendConfirmation($email, $websiteId, $redirectUrl);
+        } else {
+            return $this->___callPlugins('resendConfirmation', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function activate($email, $confirmationKey)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'activate');
-        return $pluginInfo ? $this->___callPlugins('activate', func_get_args(), $pluginInfo) : parent::activate($email, $confirmationKey);
+        if (!$pluginInfo) {
+            return parent::activate($email, $confirmationKey);
+        } else {
+            return $this->___callPlugins('activate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function activateById($customerId, $confirmationKey)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'activateById');
-        return $pluginInfo ? $this->___callPlugins('activateById', func_get_args(), $pluginInfo) : parent::activateById($customerId, $confirmationKey);
+        if (!$pluginInfo) {
+            return parent::activateById($customerId, $confirmationKey);
+        } else {
+            return $this->___callPlugins('activateById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function authenticate($username, $password)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'authenticate');
-        return $pluginInfo ? $this->___callPlugins('authenticate', func_get_args(), $pluginInfo) : parent::authenticate($username, $password);
+        if (!$pluginInfo) {
+            return parent::authenticate($username, $password);
+        } else {
+            return $this->___callPlugins('authenticate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function validateResetPasswordLinkToken($customerId, $resetPasswordLinkToken)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validateResetPasswordLinkToken');
-        return $pluginInfo ? $this->___callPlugins('validateResetPasswordLinkToken', func_get_args(), $pluginInfo) : parent::validateResetPasswordLinkToken($customerId, $resetPasswordLinkToken);
+        if (!$pluginInfo) {
+            return parent::validateResetPasswordLinkToken($customerId, $resetPasswordLinkToken);
+        } else {
+            return $this->___callPlugins('validateResetPasswordLinkToken', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function initiatePasswordReset($email, $template, $websiteId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'initiatePasswordReset');
-        return $pluginInfo ? $this->___callPlugins('initiatePasswordReset', func_get_args(), $pluginInfo) : parent::initiatePasswordReset($email, $template, $websiteId);
+        if (!$pluginInfo) {
+            return parent::initiatePasswordReset($email, $template, $websiteId);
+        } else {
+            return $this->___callPlugins('initiatePasswordReset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function resetPassword($email, $resetToken, $newPassword)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetPassword');
-        return $pluginInfo ? $this->___callPlugins('resetPassword', func_get_args(), $pluginInfo) : parent::resetPassword($email, $resetToken, $newPassword);
+        if (!$pluginInfo) {
+            return parent::resetPassword($email, $resetToken, $newPassword);
+        } else {
+            return $this->___callPlugins('resetPassword', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function getConfirmationStatus($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfirmationStatus');
-        return $pluginInfo ? $this->___callPlugins('getConfirmationStatus', func_get_args(), $pluginInfo) : parent::getConfirmationStatus($customerId);
+        if (!$pluginInfo) {
+            return parent::getConfirmationStatus($customerId);
+        } else {
+            return $this->___callPlugins('getConfirmationStatus', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function createAccount(\Magento\Customer\Api\Data\CustomerInterface $customer, $password = null, $redirectUrl = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'createAccount');
-        return $pluginInfo ? $this->___callPlugins('createAccount', func_get_args(), $pluginInfo) : parent::createAccount($customer, $password, $redirectUrl);
+        if (!$pluginInfo) {
+            return parent::createAccount($customer, $password, $redirectUrl);
+        } else {
+            return $this->___callPlugins('createAccount', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function createAccountWithPasswordHash(\Magento\Customer\Api\Data\CustomerInterface $customer, $hash, $redirectUrl = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'createAccountWithPasswordHash');
-        return $pluginInfo ? $this->___callPlugins('createAccountWithPasswordHash', func_get_args(), $pluginInfo) : parent::createAccountWithPasswordHash($customer, $hash, $redirectUrl);
+        if (!$pluginInfo) {
+            return parent::createAccountWithPasswordHash($customer, $hash, $redirectUrl);
+        } else {
+            return $this->___callPlugins('createAccountWithPasswordHash', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function getDefaultBillingAddress($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultBillingAddress');
-        return $pluginInfo ? $this->___callPlugins('getDefaultBillingAddress', func_get_args(), $pluginInfo) : parent::getDefaultBillingAddress($customerId);
+        if (!$pluginInfo) {
+            return parent::getDefaultBillingAddress($customerId);
+        } else {
+            return $this->___callPlugins('getDefaultBillingAddress', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function getDefaultShippingAddress($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultShippingAddress');
-        return $pluginInfo ? $this->___callPlugins('getDefaultShippingAddress', func_get_args(), $pluginInfo) : parent::getDefaultShippingAddress($customerId);
+        if (!$pluginInfo) {
+            return parent::getDefaultShippingAddress($customerId);
+        } else {
+            return $this->___callPlugins('getDefaultShippingAddress', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function changePassword($email, $currentPassword, $newPassword)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'changePassword');
-        return $pluginInfo ? $this->___callPlugins('changePassword', func_get_args(), $pluginInfo) : parent::changePassword($email, $currentPassword, $newPassword);
+        if (!$pluginInfo) {
+            return parent::changePassword($email, $currentPassword, $newPassword);
+        } else {
+            return $this->___callPlugins('changePassword', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function changePasswordById($customerId, $currentPassword, $newPassword)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'changePasswordById');
-        return $pluginInfo ? $this->___callPlugins('changePasswordById', func_get_args(), $pluginInfo) : parent::changePasswordById($customerId, $currentPassword, $newPassword);
+        if (!$pluginInfo) {
+            return parent::changePasswordById($customerId, $currentPassword, $newPassword);
+        } else {
+            return $this->___callPlugins('changePasswordById', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function validate(\Magento\Customer\Api\Data\CustomerInterface $customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validate');
-        return $pluginInfo ? $this->___callPlugins('validate', func_get_args(), $pluginInfo) : parent::validate($customer);
+        if (!$pluginInfo) {
+            return parent::validate($customer);
+        } else {
+            return $this->___callPlugins('validate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function isEmailAvailable($customerEmail, $websiteId = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmailAvailable');
-        return $pluginInfo ? $this->___callPlugins('isEmailAvailable', func_get_args(), $pluginInfo) : parent::isEmailAvailable($customerEmail, $websiteId);
+        if (!$pluginInfo) {
+            return parent::isEmailAvailable($customerEmail, $websiteId);
+        } else {
+            return $this->___callPlugins('isEmailAvailable', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function isCustomerInStore($customerWebsiteId, $storeId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isCustomerInStore');
-        return $pluginInfo ? $this->___callPlugins('isCustomerInStore', func_get_args(), $pluginInfo) : parent::isCustomerInStore($customerWebsiteId, $storeId);
+        if (!$pluginInfo) {
+            return parent::isCustomerInStore($customerWebsiteId, $storeId);
+        } else {
+            return $this->___callPlugins('isCustomerInStore', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function validateCustomerStoreIdByWebsiteId(\Magento\Customer\Api\Data\CustomerInterface $customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validateCustomerStoreIdByWebsiteId');
-        return $pluginInfo ? $this->___callPlugins('validateCustomerStoreIdByWebsiteId', func_get_args(), $pluginInfo) : parent::validateCustomerStoreIdByWebsiteId($customer);
+        if (!$pluginInfo) {
+            return parent::validateCustomerStoreIdByWebsiteId($customer);
+        } else {
+            return $this->___callPlugins('validateCustomerStoreIdByWebsiteId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function isReadonly($customerId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isReadonly');
-        return $pluginInfo ? $this->___callPlugins('isReadonly', func_get_args(), $pluginInfo) : parent::isReadonly($customerId);
+        if (!$pluginInfo) {
+            return parent::isReadonly($customerId);
+        } else {
+            return $this->___callPlugins('isReadonly', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function isResetPasswordLinkTokenExpired($rpToken, $rpTokenCreatedAt)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isResetPasswordLinkTokenExpired');
-        return $pluginInfo ? $this->___callPlugins('isResetPasswordLinkTokenExpired', func_get_args(), $pluginInfo) : parent::isResetPasswordLinkTokenExpired($rpToken, $rpTokenCreatedAt);
+        if (!$pluginInfo) {
+            return parent::isResetPasswordLinkTokenExpired($rpToken, $rpTokenCreatedAt);
+        } else {
+            return $this->___callPlugins('isResetPasswordLinkTokenExpired', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function changeResetPasswordLinkToken($customer, $passwordLinkToken)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'changeResetPasswordLinkToken');
-        return $pluginInfo ? $this->___callPlugins('changeResetPasswordLinkToken', func_get_args(), $pluginInfo) : parent::changeResetPasswordLinkToken($customer, $passwordLinkToken);
+        if (!$pluginInfo) {
+            return parent::changeResetPasswordLinkToken($customer, $passwordLinkToken);
+        } else {
+            return $this->___callPlugins('changeResetPasswordLinkToken', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function sendPasswordReminderEmail($customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendPasswordReminderEmail');
-        return $pluginInfo ? $this->___callPlugins('sendPasswordReminderEmail', func_get_args(), $pluginInfo) : parent::sendPasswordReminderEmail($customer);
+        if (!$pluginInfo) {
+            return parent::sendPasswordReminderEmail($customer);
+        } else {
+            return $this->___callPlugins('sendPasswordReminderEmail', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function sendPasswordResetConfirmationEmail($customer)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'sendPasswordResetConfirmationEmail');
-        return $pluginInfo ? $this->___callPlugins('sendPasswordResetConfirmationEmail', func_get_args(), $pluginInfo) : parent::sendPasswordResetConfirmationEmail($customer);
+        if (!$pluginInfo) {
+            return parent::sendPasswordResetConfirmationEmail($customer);
+        } else {
+            return $this->___callPlugins('sendPasswordResetConfirmationEmail', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,6 +319,10 @@ class Interceptor extends \Magento\Customer\Model\AccountManagement implements \
     public function getPasswordHash($password)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getPasswordHash');
-        return $pluginInfo ? $this->___callPlugins('getPasswordHash', func_get_args(), $pluginInfo) : parent::getPasswordHash($password);
+        if (!$pluginInfo) {
+            return parent::getPasswordHash($password);
+        } else {
+            return $this->___callPlugins('getPasswordHash', func_get_args(), $pluginInfo);
+        }
     }
 }

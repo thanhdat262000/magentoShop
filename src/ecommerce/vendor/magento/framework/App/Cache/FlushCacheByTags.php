@@ -56,19 +56,17 @@ class FlushCacheByTags
     }
 
     /**
-     * Clean cache when object is saved
+     * Clean cache on save object
      *
      * @param AbstractResource $subject
-     * @param AbstractResource $result
+     * @param \Closure $proceed
      * @param AbstractModel $object
      * @return AbstractResource
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterSave(
-        AbstractResource $subject,
-        AbstractResource $result,
-        AbstractModel $object
-    ): AbstractResource {
+    public function aroundSave(AbstractResource $subject, \Closure $proceed, AbstractModel $object): AbstractResource
+    {
+        $result = $proceed($object);
         $tags = $this->tagResolver->getTags($object);
         $this->cleanCacheByTags($tags);
 
@@ -76,20 +74,18 @@ class FlushCacheByTags
     }
 
     /**
-     * Clean cache when object is deleted
+     * Clean cache on delete object
      *
      * @param AbstractResource $subject
-     * @param AbstractResource $result
+     * @param \Closure $proceed
      * @param AbstractModel $object
      * @return AbstractResource
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function afterDelete(
-        AbstractResource $subject,
-        AbstractResource $result,
-        AbstractModel $object
-    ): AbstractResource {
+    public function aroundDelete(AbstractResource $subject, \Closure $proceed, AbstractModel $object): AbstractResource
+    {
         $tags = $this->tagResolver->getTags($object);
+        $result = $proceed($object);
         $this->cleanCacheByTags($tags);
 
         return $result;
@@ -106,12 +102,11 @@ class FlushCacheByTags
         if (!$tags) {
             return;
         }
-        $uniqueTags = null;
         foreach ($this->cacheList as $cacheType) {
             if ($this->cacheState->isEnabled($cacheType)) {
                 $this->cachePool->get($cacheType)->clean(
                     \Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG,
-                    $uniqueTags = $uniqueTags ?? \array_unique($tags)
+                    \array_unique($tags)
                 );
             }
         }

@@ -7,12 +7,7 @@ declare(strict_types=1);
 
 namespace Magento\Eav\Model\Entity\Attribute;
 
-use Magento\Eav\Api\AttributeOptionManagementInterface;
-use Magento\Eav\Api\AttributeOptionUpdateInterface;
 use Magento\Eav\Api\Data\AttributeInterface as EavAttributeInterface;
-use Magento\Eav\Api\Data\AttributeOptionInterface;
-use Magento\Eav\Model\AttributeRepository;
-use Magento\Eav\Model\ResourceModel\Entity\Attribute;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
@@ -20,26 +15,26 @@ use Magento\Framework\Exception\StateException;
 /**
  * Eav Option Management
  */
-class OptionManagement implements AttributeOptionManagementInterface, AttributeOptionUpdateInterface
+class OptionManagement implements \Magento\Eav\Api\AttributeOptionManagementInterface
 {
     /**
-     * @var AttributeRepository
+     * @var \Magento\Eav\Model\AttributeRepository
      */
     protected $attributeRepository;
 
     /**
-     * @var Attribute
+     * @var \Magento\Eav\Model\ResourceModel\Entity\Attribute
      */
     protected $resourceModel;
 
     /**
-     * @param AttributeRepository $attributeRepository
-     * @param Attribute $resourceModel
+     * @param \Magento\Eav\Model\AttributeRepository $attributeRepository
+     * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute $resourceModel
      * @codeCoverageIgnore
      */
     public function __construct(
-        AttributeRepository $attributeRepository,
-        Attribute $resourceModel
+        \Magento\Eav\Model\AttributeRepository $attributeRepository,
+        \Magento\Eav\Model\ResourceModel\Entity\Attribute $resourceModel
     ) {
         $this->attributeRepository = $attributeRepository;
         $this->resourceModel = $resourceModel;
@@ -50,100 +45,45 @@ class OptionManagement implements AttributeOptionManagementInterface, AttributeO
      *
      * @param int $entityType
      * @param string $attributeCode
-     * @param AttributeOptionInterface $option
+     * @param \Magento\Eav\Api\Data\AttributeOptionInterface $option
      * @return string
      * @throws InputException
      * @throws NoSuchEntityException
      * @throws StateException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function add($entityType, $attributeCode, $option)
     {
-        $attribute = $this->loadAttribute($entityType, (string)$attributeCode);
-
-        $label = trim($option->getLabel() ?: '');
-        if (empty($label)) {
-            throw new InputException(__('The attribute option label is empty. Enter the value and try again.'));
+        if (empty($attributeCode)) {
+            throw new InputException(__('The attribute code is empty. Enter the code and try again.'));
         }
 
-        if ($attribute->getSource()->getOptionId($label) !== null) {
-            throw new InputException(
-                __(
-                    'Admin store attribute option label "%1" is already exists.',
-                    $option->getLabel()
-                )
-            );
+        $attribute = $this->attributeRepository->get($entityType, $attributeCode);
+        if (!$attribute->usesSource()) {
+            throw new StateException(__('The "%1" attribute doesn\'t work with options.', $attributeCode));
         }
 
-        $optionId = $this->getNewOptionId($option);
-        $this->saveOption($attribute, $option, $optionId);
-
-        return $this->retrieveOptionId($attribute, $option);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function update(
-        string $entityType,
-        string $attributeCode,
-        int $optionId,
-        AttributeOptionInterface $option
-    ): bool {
-        $attribute = $this->loadAttribute($entityType, (string)$attributeCode);
-        if (empty($optionId)) {
-            throw new InputException(__('The option id is empty. Enter the value and try again.'));
-        }
-        $label = trim($option->getLabel() ?: '');
-        if (empty($label)) {
-            throw new InputException(__('The attribute option label is empty. Enter the value and try again.'));
-        }
-        if ($attribute->getSource()->getOptionText($optionId) === false) {
-            throw new InputException(
-                __(
-                    'The \'%1\' attribute doesn\'t include an option id \'%2\'.',
-                    $attribute->getAttributeCode(),
-                    $optionId
-                )
-            );
-        }
-        $optionIdByLabel = $attribute->getSource()->getOptionId($label);
-        if (!empty($optionIdByLabel) && (int)$optionIdByLabel !== (int)$optionId) {
-            throw new InputException(
-                __(
-                    'Admin store attribute option label \'%1\' is already exists.',
-                    $option->getLabel()
-                )
-            );
-        }
-
-        $this->saveOption($attribute, $option, $optionId);
-
-        return true;
-    }
-
-    /**
-     * Save attribute option
-     *
-     * @param EavAttributeInterface $attribute
-     * @param AttributeOptionInterface $option
-     * @param int|string $optionId
-     * @return AttributeOptionInterface
-     * @throws StateException
-     */
-    private function saveOption(
-        EavAttributeInterface $attribute,
-        AttributeOptionInterface $option,
-        $optionId
-    ): AttributeOptionInterface {
-        $optionLabel = trim($option->getLabel());
+        $optionLabel = $option->getLabel();
+        $optionId = $this->getOptionId($option);
         $options = [];
         $options['value'][$optionId][0] = $optionLabel;
         $options['order'][$optionId] = $option->getSortOrder();
+
         if (is_array($option->getStoreLabels())) {
             foreach ($option->getStoreLabels() as $label) {
                 $options['value'][$optionId][$label->getStoreId()] = $label->getLabel();
             }
         }
+
+        if (!$this->isAttributeOptionLabelExists($attribute, (string) $options['value'][$optionId][0])) {
+            throw new InputException(
+                __(
+                    'Admin store attribute option label "%1" is already exists.',
+                    $options['value'][$optionId][0]
+                )
+            );
+        }
+
         if ($option->getIsDefault()) {
             $attribute->setDefault([$optionId]);
         }
@@ -151,27 +91,14 @@ class OptionManagement implements AttributeOptionManagementInterface, AttributeO
         $attribute->setOption($options);
         try {
             $this->resourceModel->save($attribute);
+            if ($optionLabel && $attribute->getAttributeCode()) {
+                $this->setOptionValue($option, $attribute, $optionLabel);
+            }
         } catch (\Exception $e) {
-            throw new StateException(__('The "%1" attribute can\'t be saved.', $attribute->getAttributeCode()));
+            throw new StateException(__('The "%1" attribute can\'t be saved.', $attributeCode));
         }
 
-        return $option;
-    }
-
-    /**
-     * Get option id to create new option
-     *
-     * @param AttributeOptionInterface $option
-     * @return string
-     */
-    private function getNewOptionId(AttributeOptionInterface $option): string
-    {
-        $optionId = trim($option->getValue() ?: '');
-        if (empty($optionId)) {
-            $optionId = 'new_option';
-        }
-
-        return 'id_' . $optionId;
+        return $this->getOptionId($option);
     }
 
     /**
@@ -179,7 +106,14 @@ class OptionManagement implements AttributeOptionManagementInterface, AttributeO
      */
     public function delete($entityType, $attributeCode, $optionId)
     {
-        $attribute = $this->loadAttribute($entityType, $attributeCode);
+        if (empty($attributeCode)) {
+            throw new InputException(__('The attribute code is empty. Enter the code and try again.'));
+        }
+
+        $attribute = $this->attributeRepository->get($entityType, $attributeCode);
+        if (!$attribute->usesSource()) {
+            throw new StateException(__('The "%1" attribute has no option.', $attributeCode));
+        }
         $this->validateOption($attribute, $optionId);
 
         $removalMarker = [
@@ -239,55 +173,63 @@ class OptionManagement implements AttributeOptionManagementInterface, AttributeO
     }
 
     /**
-     * Load attribute
+     * Returns option id
      *
-     * @param string|int $entityType
-     * @param string $attributeCode
-     * @return EavAttributeInterface
-     * @throws InputException
-     * @throws NoSuchEntityException
-     * @throws StateException
+     * @param \Magento\Eav\Api\Data\AttributeOptionInterface $option
+     * @return string
      */
-    private function loadAttribute($entityType, string $attributeCode): EavAttributeInterface
+    private function getOptionId(\Magento\Eav\Api\Data\AttributeOptionInterface $option) : string
     {
-        if (empty($attributeCode)) {
-            throw new InputException(__('The attribute code is empty. Enter the code and try again.'));
-        }
-
-        $attribute = $this->attributeRepository->get($entityType, $attributeCode);
-        if (!$attribute->usesSource()) {
-            throw new StateException(__('The "%1" attribute doesn\'t work with options.', $attributeCode));
-        }
-
-        $attribute->setStoreId(0);
-
-        return $attribute;
+        return 'id_' . ($option->getValue() ?: 'new_option');
     }
 
     /**
-     * Retrieve option id
+     * Set option value
      *
+     * @param \Magento\Eav\Api\Data\AttributeOptionInterface $option
      * @param EavAttributeInterface $attribute
-     * @param AttributeOptionInterface $option
-     * @return string
+     * @param string $optionLabel
+     * @return void
      */
-    private function retrieveOptionId(
+    private function setOptionValue(
+        \Magento\Eav\Api\Data\AttributeOptionInterface $option,
         EavAttributeInterface $attribute,
-        AttributeOptionInterface $option
-    ) : string {
-        $label = trim($option->getLabel());
-        $optionId = $attribute->getSource()->getOptionId($label);
+        string $optionLabel
+    ) {
+        $optionId = $attribute->getSource()->getOptionId($optionLabel);
         if ($optionId) {
-            $option->setValue($optionId);
+            $option->setValue($attribute->getSource()->getOptionId($optionId));
         } elseif (is_array($option->getStoreLabels())) {
             foreach ($option->getStoreLabels() as $label) {
-                $optionId = $attribute->getSource()->getOptionId($label->getLabel());
-                if ($optionId) {
+                if ($optionId = $attribute->getSource()->getOptionId($label->getLabel())) {
+                    $option->setValue($attribute->getSource()->getOptionId($optionId));
                     break;
                 }
             }
         }
+    }
 
-        return (string) $optionId;
+    /**
+     * Checks if the incoming attribute option label for admin store is already exists.
+     *
+     * @param EavAttributeInterface $attribute
+     * @param string $adminStoreLabel
+     * @param int $storeId
+     * @return bool
+     */
+    private function isAttributeOptionLabelExists(
+        EavAttributeInterface $attribute,
+        string $adminStoreLabel,
+        int $storeId = 0
+    ) :bool {
+        $attribute->setStoreId($storeId);
+
+        foreach ($attribute->getSource()->toOptionArray() as $existingAttributeOption) {
+            if ($existingAttributeOption['label'] === $adminStoreLabel) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

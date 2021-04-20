@@ -6,10 +6,10 @@
 
 namespace Magento\Framework\Api\Code\Generator;
 
-use Magento\Framework\Code\Generator\CodeGeneratorInterface;
+use Magento\Framework\ObjectManager\Code\Generator\Factory;
 use Magento\Framework\Code\Generator\DefinedClasses;
 use Magento\Framework\Code\Generator\Io;
-use Magento\Framework\ObjectManager\Code\Generator\Factory;
+use Magento\Framework\Code\Generator\CodeGeneratorInterface;
 
 class ExtensionAttributesInterfaceFactoryGenerator extends Factory
 {
@@ -17,6 +17,11 @@ class ExtensionAttributesInterfaceFactoryGenerator extends Factory
      * {@inheritdoc}
      */
     const ENTITY_TYPE = 'extensionInterfaceFactory';
+
+    /**
+     * @var string
+     */
+    private static $suffix = 'InterfaceFactory';
 
     /**
      * Initialize dependencies.
@@ -45,10 +50,21 @@ class ExtensionAttributesInterfaceFactoryGenerator extends Factory
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    protected function getResultClassSuffix()
+    protected function _validateData()
     {
-        return 'InterfaceFactory';
+        $result = true;
+        $sourceClassName = $this->getSourceClassName();
+        $resultClassName = $this->_getResultClassName();
+
+        if ($resultClassName !== $sourceClassName . self::$suffix) {
+            $this->_addError(
+                'Invalid Factory class name [' . $resultClassName . ']. Use ' . $sourceClassName . self::$suffix
+            );
+            $result = false;
+        }
+
+        return $result;
     }
 }

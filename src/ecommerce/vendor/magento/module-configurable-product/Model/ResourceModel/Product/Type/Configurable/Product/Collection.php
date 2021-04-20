@@ -8,7 +8,7 @@
 namespace Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable\Product;
 
 /**
- * Collection of configurable product variation
+ * Class Collection
  *
  * @api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -85,7 +85,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             $parentIds[] = $product->getData($metadata->getLinkField());
         }
 
-        $this->getSelect()->where('link_table.parent_id in (?)', $parentIds, \Zend_Db::INT_TYPE);
+        $this->getSelect()->where('link_table.parent_id in (?)', $parentIds);
 
         return $this;
     }

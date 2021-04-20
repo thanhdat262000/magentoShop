@@ -17,8 +17,6 @@ use Magento\Framework\GraphQlSchemaStitching\GraphQlReader\MetaReader\CacheAnnot
  */
 class InterfaceType implements TypeMetaReaderInterface
 {
-    public const GRAPHQL_INTERFACE = 'graphql_interface';
-
     /**
      * @var FieldMetaReader
      */
@@ -51,7 +49,7 @@ class InterfaceType implements TypeMetaReaderInterface
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function read(\GraphQL\Type\Definition\Type $typeMeta) : array
     {
@@ -59,7 +57,7 @@ class InterfaceType implements TypeMetaReaderInterface
             $typeName = $typeMeta->name;
             $result = [
                 'name' => $typeName,
-                'type' => self::GRAPHQL_INTERFACE,
+                'type' => 'graphql_interface',
                 'fields' => []
             ];
 

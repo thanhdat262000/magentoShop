@@ -5,15 +5,13 @@
  */
 namespace Magento\CheckoutAgreements\Model;
 
-use Magento\Checkout\Api\AgreementsValidatorInterface;
-
 /**
- * Validator for Checkout Agreements
+ * Class AgreementsValidator
  */
-class AgreementsValidator implements AgreementsValidatorInterface
+class AgreementsValidator implements \Magento\Checkout\Api\AgreementsValidatorInterface
 {
     /**
-     * @var AgreementsProviderInterface[]
+     * @var \Magento\CheckoutAgreements\Model\AgreementsProviderInterface[]
      */
     protected $agreementsProviders;
 
@@ -37,11 +35,9 @@ class AgreementsValidator implements AgreementsValidatorInterface
         $agreementIds = $agreementIds === null ? [] : $agreementIds;
         $requiredAgreements = [];
         foreach ($this->agreementsProviders as $agreementsProvider) {
-            $requiredAgreements[] = $agreementsProvider->getRequiredAgreementIds();
+            $requiredAgreements = array_merge($requiredAgreements, $agreementsProvider->getRequiredAgreementIds());
         }
-
-        $agreementsDiff = array_diff(array_merge([], ...$requiredAgreements), $agreementIds);
-
+        $agreementsDiff = array_diff($requiredAgreements, $agreementIds);
         return empty($agreementsDiff);
     }
 }

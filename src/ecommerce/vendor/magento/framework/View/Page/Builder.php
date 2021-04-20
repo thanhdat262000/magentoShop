@@ -6,13 +6,11 @@
 namespace Magento\Framework\View\Page;
 
 use Magento\Framework\App;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event;
 use Magento\Framework\View;
-use Magento\Framework\View\Model\PageLayout\Config\BuilderInterface;
 
 /**
- * Page Layout Builder
+ * Class Builder
  */
 class Builder extends View\Layout\Builder
 {
@@ -27,30 +25,22 @@ class Builder extends View\Layout\Builder
     protected $pageLayoutReader;
 
     /**
-     * @var BuilderInterface|mixed
-     */
-    private $pageLayoutBuilder;
-
-    /**
      * @param View\LayoutInterface $layout
      * @param App\Request\Http $request
      * @param Event\ManagerInterface $eventManager
      * @param Config $pageConfig
      * @param Layout\Reader $pageLayoutReader
-     * @param BuilderInterface|null $pageLayoutBuilder
      */
     public function __construct(
         View\LayoutInterface $layout,
         App\Request\Http $request,
         Event\ManagerInterface $eventManager,
         Config $pageConfig,
-        Layout\Reader $pageLayoutReader,
-        ?BuilderInterface $pageLayoutBuilder = null
+        Layout\Reader $pageLayoutReader
     ) {
         parent::__construct($layout, $request, $eventManager);
         $this->pageConfig = $pageConfig;
         $this->pageLayoutReader = $pageLayoutReader;
-        $this->pageLayoutBuilder = $pageLayoutBuilder ?? ObjectManager::getInstance()->get(BuilderInterface::class);
         $this->pageConfig->setBuilder($this);
     }
 
@@ -67,7 +57,6 @@ class Builder extends View\Layout\Builder
 
     /**
      * Read page layout and write structure to ReadContext
-     *
      * @return void
      */
     protected function readPageLayout()
@@ -80,16 +69,10 @@ class Builder extends View\Layout\Builder
     }
 
     /**
-     * Get current page layout or fallback to default
-     *
      * @return string
      */
     protected function getPageLayout()
     {
-        $pageLayout = $this->pageConfig->getPageLayout();
-
-        return ($pageLayout && $this->pageLayoutBuilder->getPageLayoutsConfig()->hasPageLayout($pageLayout))
-            ? $pageLayout
-            : $this->layout->getUpdate()->getPageLayout();
+        return $this->pageConfig->getPageLayout() ?: $this->layout->getUpdate()->getPageLayout();
     }
 }

@@ -20,6 +20,10 @@ class Interceptor extends \Magento\Framework\Authorization implements \Magento\F
     public function isAllowed($resource, $privilege = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isAllowed');
-        return $pluginInfo ? $this->___callPlugins('isAllowed', func_get_args(), $pluginInfo) : parent::isAllowed($resource, $privilege);
+        if (!$pluginInfo) {
+            return parent::isAllowed($resource, $privilege);
+        } else {
+            return $this->___callPlugins('isAllowed', func_get_args(), $pluginInfo);
+        }
     }
 }

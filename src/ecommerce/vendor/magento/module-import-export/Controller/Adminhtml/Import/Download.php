@@ -3,71 +3,62 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\ImportExport\Controller\Adminhtml\Import;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Component\ComponentRegistrar;
-use Magento\Framework\Controller\Result\Raw;
-use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Filesystem\Directory\ReadFactory;
 use Magento\ImportExport\Controller\Adminhtml\Import as ImportController;
-use Magento\ImportExport\Model\Import\SampleFileProvider;
 
 /**
  * Download sample file controller
  */
-class Download extends ImportController implements HttpGetActionInterface
+class Download extends ImportController
 {
     const SAMPLE_FILES_MODULE = 'Magento_ImportExport';
 
     /**
-     * @var RawFactory
+     * @var \Magento\Framework\Controller\Result\RawFactory
      */
     protected $resultRawFactory;
 
     /**
-     * @var ReadFactory
+     * @var \Magento\Framework\Filesystem\Directory\ReadFactory
      */
     protected $readFactory;
 
     /**
-     * @var ComponentRegistrar
+     * @var \Magento\Framework\Component\ComponentRegistrar
      */
     protected $componentRegistrar;
 
     /**
-     * @var FileFactory
+     * @var \Magento\Framework\App\Response\Http\FileFactory
      */
     protected $fileFactory;
 
     /**
-     * @var SampleFileProvider
+     * @var \Magento\ImportExport\Model\Import\SampleFileProvider
      */
     private $sampleFileProvider;
 
     /**
-     * @param Context $context
-     * @param FileFactory $fileFactory
-     * @param RawFactory $resultRawFactory
-     * @param ReadFactory $readFactory
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
+     * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
+     * @param \Magento\Framework\Filesystem\Directory\ReadFactory $readFactory
+     * @param \Magento\ImportExport\Model\Import\SampleFileProvider $sampleFileProvider
      * @param ComponentRegistrar $componentRegistrar
-     * @param SampleFileProvider|null $sampleFileProvider
+     * @param \Magento\ImportExport\Model\Import\SampleFileProvider|null $sampleFileProvider
      */
     public function __construct(
-        Context $context,
-        FileFactory $fileFactory,
-        RawFactory $resultRawFactory,
-        ReadFactory $readFactory,
-        ComponentRegistrar $componentRegistrar,
-        SampleFileProvider $sampleFileProvider = null
+        \Magento\Backend\App\Action\Context $context,
+        \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
+        \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
+        \Magento\Framework\Filesystem\Directory\ReadFactory $readFactory,
+        \Magento\Framework\Component\ComponentRegistrar $componentRegistrar,
+        \Magento\ImportExport\Model\Import\SampleFileProvider $sampleFileProvider = null
     ) {
         parent::__construct(
             $context
@@ -77,14 +68,14 @@ class Download extends ImportController implements HttpGetActionInterface
         $this->readFactory = $readFactory;
         $this->componentRegistrar = $componentRegistrar;
         $this->sampleFileProvider = $sampleFileProvider
-            ?: ObjectManager::getInstance()
-            ->get(SampleFileProvider::class);
+            ?: \Magento\Framework\App\ObjectManager::getInstance()
+            ->get(\Magento\ImportExport\Model\Import\SampleFileProvider::class);
     }
 
     /**
      * Download sample file action
      *
-     * @return Raw
+     * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
     {
@@ -98,7 +89,7 @@ class Download extends ImportController implements HttpGetActionInterface
         try {
             $fileContents = $this->sampleFileProvider->getFileContents($entityName);
         } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('There is no sample file for this entity.'));
+            $this->messageManager->addError(__('There is no sample file for this entity.'));
 
             return $this->getResultRedirect();
         }
@@ -109,20 +100,18 @@ class Download extends ImportController implements HttpGetActionInterface
         $this->fileFactory->create(
             $fileName,
             null,
-            DirectoryList::VAR_IMPORT_EXPORT,
+            DirectoryList::VAR_DIR,
             'application/octet-stream',
             $fileSize
         );
 
+        /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultRawFactory->create();
         $resultRaw->setContents($fileContents);
-
         return $resultRaw;
     }
 
     /**
-     * Get redirect result
-     *
      * @return Redirect
      */
     private function getResultRedirect(): Redirect

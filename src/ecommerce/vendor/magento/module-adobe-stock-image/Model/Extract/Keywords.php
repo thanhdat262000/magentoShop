@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\AdobeStockImage\Model\Extract;
 
-use Magento\Framework\Api\Search\Document;
 use Magento\MediaGalleryApi\Api\Data\KeywordInterface;
+use Magento\Framework\Api\Search\Document;
 use Magento\MediaGalleryApi\Api\Data\KeywordInterfaceFactory;
 
 /**
@@ -53,7 +53,10 @@ class Keywords
         foreach ($attribute->getValue() as $keywordData) {
             $keywords[] = $this->keywordFactory->create(
                 [
-                    self::KEYWORD_FIELD_KEYWORD_NAME => $keywordData[self::DOCUMENT_FIELD_KEYWORD_NAME]
+                    'data' => [
+                        self::KEYWORD_FIELD_KEYWORD_NAME => $keywordData[self::DOCUMENT_FIELD_KEYWORD_NAME]
+
+                    ]
                 ]
             );
         }

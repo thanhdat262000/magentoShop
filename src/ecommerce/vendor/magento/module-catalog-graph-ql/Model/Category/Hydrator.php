@@ -10,8 +10,6 @@ namespace Magento\CatalogGraphQl\Model\Category;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\CatalogGraphQl\Model\Resolver\Products\DataProvider\CustomAttributesFlattener;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Framework\Reflection\DataObjectProcessor;
 
 /**
@@ -29,23 +27,16 @@ class Hydrator
      */
     private $dataObjectProcessor;
 
-    /** @var Uid */
-    private $uidEncoder;
-
     /**
      * @param CustomAttributesFlattener $flattener
      * @param DataObjectProcessor $dataObjectProcessor
-     * @param Uid|null $uidEncoder
      */
     public function __construct(
         CustomAttributesFlattener $flattener,
-        DataObjectProcessor $dataObjectProcessor,
-        Uid $uidEncoder = null
+        DataObjectProcessor $dataObjectProcessor
     ) {
         $this->flattener = $flattener;
         $this->dataObjectProcessor = $dataObjectProcessor;
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
     }
 
     /**
@@ -63,7 +54,6 @@ class Hydrator
             $categoryData = $this->dataObjectProcessor->buildOutputDataArray($category, CategoryInterface::class);
         }
         $categoryData['id'] = $category->getId();
-        $categoryData['uid'] = $this->uidEncoder->encode((string) $category->getId());
         $categoryData['children'] = [];
         $categoryData['available_sort_by'] = $category->getAvailableSortBy();
         $categoryData['model'] = $category;

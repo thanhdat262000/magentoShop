@@ -4,7 +4,9 @@
  */
 
 /* global WeakMap */
-define([], function () {
+define([
+    'es6-collections'
+], function () {
     'use strict';
 
     var processMap = new WeakMap(),

@@ -67,7 +67,7 @@ class AnchorUrlRewriteGenerator
             $anchorCategoryIds = $category->getAnchorsAbove();
             if ($anchorCategoryIds) {
                 foreach ($anchorCategoryIds as $anchorCategoryId) {
-                    $anchorCategory = $this->categoryRepository->get($anchorCategoryId, $storeId);
+                    $anchorCategory = $this->categoryRepository->get($anchorCategoryId);
                     if ((int)$anchorCategory->getParentId() === Category::TREE_ROOT_ID) {
                         continue;
                     }

@@ -48,12 +48,14 @@ class Website extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     {
         $websites = [];
         $tableName = $this->getMainTable();
-        $select = $this->getConnection()
-            ->select()
-            ->from($tableName);
+        if ($this->getConnection()->isTableExists($tableName)) {
+            $select = $this->getConnection()
+                ->select()
+                ->from($tableName);
 
-        foreach ($this->getConnection()->fetchAll($select) as $websiteData) {
-            $websites[$websiteData['code']] = $websiteData;
+            foreach ($this->getConnection()->fetchAll($select) as $websiteData) {
+                $websites[$websiteData['code']] = $websiteData;
+            }
         }
 
         return $websites;

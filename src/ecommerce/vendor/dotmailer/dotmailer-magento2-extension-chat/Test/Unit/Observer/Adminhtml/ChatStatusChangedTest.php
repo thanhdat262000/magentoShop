@@ -12,7 +12,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\Website;
-use Dotdigitalgroup\Email\Logger\Logger;
 use PHPUnit\Framework\TestCase;
 
 class ChatStatusChangedTest extends TestCase
@@ -67,12 +66,7 @@ class ChatStatusChangedTest extends TestCase
      */
     private $websiteMock;
 
-    /**
-     * @var Logger
-     */
-    private $loggerMock;
-
-    protected function setUp() :void
+    protected function setUp()
     {
         $this->configMock = $this->createMock(Config::class);
         $this->clientMock = $this->createMock(Client::class);
@@ -86,14 +80,12 @@ class ChatStatusChangedTest extends TestCase
             ->getMockForAbstractClass();
         $this->helperMock = $this->createMock(Data::class);
         $this->websiteMock = $this->createMock(Website::class);
-        $this->loggerMock = $this->createMock(Logger::class);
 
         $this->chatStatusChanged = new ChatStatusChanged(
             $this->contextMock,
             $this->configMock,
             $this->managerInterfaceMock,
-            $this->helperMock,
-            $this->loggerMock
+            $this->helperMock
         );
     }
 
@@ -130,11 +122,7 @@ class ChatStatusChangedTest extends TestCase
             ->willReturn($this->getResponse(true));
 
         $this->configMock->expects($this->once())
-            ->method('saveChatApiSpaceId')
-            ->willReturn($this->configMock);
-
-        $this->configMock->expects($this->once())
-            ->method('saveChatApiToken')
+            ->method('saveChatApiSpaceIdAndToken')
             ->willReturn(new class() {
                 public function reinitialiseConfig()
                 {

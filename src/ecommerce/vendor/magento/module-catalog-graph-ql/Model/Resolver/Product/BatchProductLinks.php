@@ -22,15 +22,7 @@ class BatchProductLinks implements BatchServiceContractResolverInterface
     /**
      * @var string[]
      */
-    private $linkTypes;
-
-    /**
-     * @param array $linkTypes
-     */
-    public function __construct(array $linkTypes)
-    {
-        $this->linkTypes = $linkTypes;
-    }
+    private static $linkTypes = ['related', 'upsell', 'crosssell'];
 
     /**
      * @inheritDoc
@@ -52,7 +44,7 @@ class BatchProductLinks implements BatchServiceContractResolverInterface
         /** @var \Magento\Catalog\Model\Product $product */
         $product = $value['model'];
 
-        return new ListCriteria((string)$product->getId(), $this->linkTypes, $product);
+        return new ListCriteria((string)$product->getId(), self::$linkTypes, $product);
     }
 
     /**

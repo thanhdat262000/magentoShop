@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\InventoryCatalog\Model\ResourceModel;
 
-use Magento\InventoryCatalog\Model\Cache\ProductTypesBySkusStorage;
 use Magento\InventoryCatalogApi\Model\GetProductTypesBySkusInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * @inheritdoc
@@ -21,20 +21,25 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
     private $getProductTypesBySkus;
 
     /**
-     * @var ProductTypesBySkusStorage
+     * @var Json
      */
-    private $cache;
+    private $jsonSerializer;
+
+    /**
+     * @var array
+     */
+    private $productTypesBySkus = [];
 
     /**
      * @param GetProductTypesBySkus $getProductTypesBySkus
-     * @param ProductTypesBySkusStorage $cache
+     * @param Json $jsonSerializer
      */
     public function __construct(
         GetProductTypesBySkus $getProductTypesBySkus,
-        ProductTypesBySkusStorage $cache
+        Json $jsonSerializer
     ) {
         $this->getProductTypesBySkus = $getProductTypesBySkus;
-        $this->cache = $cache;
+        $this->jsonSerializer = $jsonSerializer;
     }
 
     /**
@@ -42,25 +47,11 @@ class GetProductTypesBySkusCache implements GetProductTypesBySkusInterface
      */
     public function execute(array $skus): array
     {
-        $typesBySkus = [];
-        $loadSkus = [];
-        foreach ($skus as $sku) {
-            $type = $this->cache->get((string) $sku);
-            if ($type !== null) {
-                $typesBySkus[$sku] = $type;
-            } else {
-                $loadSkus[] = $sku;
-                $typesBySkus[$sku] = null;
-            }
-        }
-        if ($loadSkus) {
-            $loadedTypesBySkus = $this->getProductTypesBySkus->execute($loadSkus);
-            foreach ($loadedTypesBySkus as $sku => $type) {
-                $typesBySkus[$sku] = (string) $type;
-                $this->cache->set((string) $sku, (string) $type);
-            }
+        $cacheKey = $this->jsonSerializer->serialize($skus);
+        if (!isset($this->productTypesBySkus[$cacheKey])) {
+            $this->productTypesBySkus[$cacheKey] = $this->getProductTypesBySkus->execute($skus);
         }
 
-        return $typesBySkus;
+        return $this->productTypesBySkus[$cacheKey];
     }
 }

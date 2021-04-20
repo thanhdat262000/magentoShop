@@ -67,7 +67,7 @@ class DataTest extends TestCase
      */
     private $storeInterfaceMock;
 
-    protected function setUp() :void
+    protected function setUp()
     {
         $this->customerSessionMock = $this->createMock(Session::class);
         $this->customerRepositoryMock = $this->createMock(CustomerRepositoryInterface::class);

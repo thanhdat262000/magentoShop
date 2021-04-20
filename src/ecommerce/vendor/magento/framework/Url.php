@@ -426,10 +426,8 @@ class Url extends \Magento\Framework\DataObject implements \Magento\Framework\Ur
      */
     public function setScope($params)
     {
-        $scope = $this->_scopeResolver->getScope($params);
-        $this->setData('scope', $scope);
-        $this->getRouteParamsResolver()->setScope($scope);
-
+        $this->setData('scope', $this->_scopeResolver->getScope($params));
+        $this->getRouteParamsResolver()->setScope($this->_scopeResolver->getScope($params));
         return $this;
     }
 
@@ -935,7 +933,7 @@ class Url extends \Magento\Framework\DataObject implements \Magento\Framework\Ur
             if (is_string($query)) {
                 $this->_setQuery($query);
             } elseif (is_array($query)) {
-                $this->addQueryParams($query);
+                $this->addQueryParams($query, !empty($routeParams['_current']));
             }
             if ($query === false) {
                 $this->addQueryParams([]);

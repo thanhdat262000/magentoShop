@@ -14,6 +14,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Config Set Command
+ */
 class ConfigSetCommand extends AbstractSetupCommand
 {
     /**
@@ -69,7 +72,6 @@ class ConfigSetCommand extends AbstractSetupCommand
 
     /**
      * @inheritdoc
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -82,10 +84,7 @@ class ConfigSetCommand extends AbstractSetupCommand
             $commandOptions[$option->getName()] = false;
 
             $currentValue = $this->deploymentConfig->get($option->getConfigPath());
-            $needOverwrite = ($currentValue !== null) &&
-                ($inputOptions[$option->getName()] !== null) &&
-                ($inputOptions[$option->getName()] !== $currentValue);
-            if ($needOverwrite) {
+            if (($currentValue !== null) && ($inputOptions[$option->getName()] !== null)) {
                 $dialog = $this->getHelperSet()->get('question');
                 $question = new Question(
                     '<question>Overwrite the existing configuration for ' . $option->getName() . '?[Y/n]</question>',

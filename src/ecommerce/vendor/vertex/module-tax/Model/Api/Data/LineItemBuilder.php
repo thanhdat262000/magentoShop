@@ -125,12 +125,6 @@ class LineItemBuilder
 
         $lineItem->setFlexibleFields($this->flexFieldBuilder->buildAllFromQuoteDetailsItem($item));
 
-        $commodityCode = $item->getExtensionAttributes()->getVertexCommodityCode();
-        if ($commodityCode) {
-            $lineItem->setCommodityCode($commodityCode->getCode());
-            $lineItem->setCommodityCodeType($commodityCode->getType());
-        }
-
         return $lineItem;
     }
 

@@ -6,11 +6,9 @@
 namespace Magento\Cms\Helper\Wysiwyg;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Exception\ValidatorException;
 
 /**
  * Wysiwyg Images Helper.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Images extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -67,11 +65,6 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
     protected $escaper;
 
     /**
-     * @var \Magento\Framework\Filesystem\Directory\Read
-     */
-    private $_readDirectory;
-
-    /**
      * Construct
      *
      * @param \Magento\Framework\App\Helper\Context $context
@@ -94,7 +87,6 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
 
         $this->_directory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->_directory->create($this->getStorageRoot());
-        $this->_readDirectory = $filesystem->getDirectoryReadByPath($this->getStorageRoot());
     }
 
     /**
@@ -166,7 +158,7 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @param string $id
      * @return string
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException When path contains restricted symbols.
      */
     public function convertIdToPath($id)
     {
@@ -174,10 +166,7 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
             return $this->getStorageRoot();
         } else {
             $path = $this->getStorageRoot() . $this->idDecode($id);
-
-            try {
-                $this->_readDirectory->getAbsolutePath($path);
-            } catch (\Exception $e) {
+            if (preg_match('/\.\.(\\\|\/)/', $path)) {
                 throw new \InvalidArgumentException('Path is invalid');
             }
 
@@ -235,7 +224,8 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * Return path of the root directory for startup. Also try to create target directory if it doesn't exist
+     * Return path of the current selected directory or root directory for startup
+     * Try to create target directory if it doesn't exist
      *
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -251,40 +241,18 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
                     $currentPath = $path;
                 }
             }
-
-            $currentTreePath = $this->_getRequest()->getParam('current_tree_path');
-            if ($currentTreePath) {
-                $currentTreePath = $this->convertIdToPath($currentTreePath);
-                $this->createSubDirIfNotExist($currentTreePath);
-            }
-
-            $this->_currentPath = $currentPath;
-        }
-
-        return $this->_currentPath;
-    }
-
-    /**
-     * Create subdirectory if doesn't exist
-     *
-     * @param string $absPath Path of subdirectory to create
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function createSubDirIfNotExist(string $absPath)
-    {
-        $relPath = $this->_directory->getRelativePath($absPath);
-        if (!$this->_directory->isExist($relPath)) {
             try {
-                $this->_directory->create($relPath);
+                $currentDir = $this->_directory->getRelativePath($currentPath);
+                if (!$this->_directory->isExist($currentDir)) {
+                    $this->_directory->create($currentDir);
+                }
             } catch (\Magento\Framework\Exception\FileSystemException $e) {
-                $message = __(
-                    'Can\'t create %1 as subdirectory of %2, you might have some permission issue.',
-                    $relPath,
-                    $this->_directory->getAbsolutePath()
-                );
+                $message = __('The directory %1 is not writable by server.', $currentPath);
                 throw new \Magento\Framework\Exception\LocalizedException($message);
             }
+            $this->_currentPath = $currentPath;
         }
+        return $this->_currentPath;
     }
 
     /**
@@ -326,8 +294,6 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
     public function idDecode($string)
     {
         $string = strtr($string, ':_-', '+/=');
-
-        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         return base64_decode($string);
     }
 
@@ -349,7 +315,7 @@ class Images extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Set user-traversable image directory subpath relative to media directory and relative to nested storage root
      *
-     * @param string $subpath
+     * @var string $subpath
      * @return void
      */
     public function setImageDirectorySubpath($subpath)

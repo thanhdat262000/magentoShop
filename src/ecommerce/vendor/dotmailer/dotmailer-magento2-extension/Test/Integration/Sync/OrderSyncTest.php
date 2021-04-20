@@ -84,7 +84,7 @@ class OrderSyncTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * @return void
      */
-    public function setUp() :void
+    public function setUp()
     {
         parent::setUp();
 

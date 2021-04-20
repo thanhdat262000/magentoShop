@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getTabs()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTabs');
-        return $pluginInfo ? $this->___callPlugins('getTabs', func_get_args(), $pluginInfo) : parent::getTabs();
+        if (!$pluginInfo) {
+            return parent::getTabs();
+        } else {
+            return $this->___callPlugins('getTabs', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getSectionList()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getSectionList');
-        return $pluginInfo ? $this->___callPlugins('getSectionList', func_get_args(), $pluginInfo) : parent::getSectionList();
+        if (!$pluginInfo) {
+            return parent::getSectionList();
+        } else {
+            return $this->___callPlugins('getSectionList', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getElement($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getElement');
-        return $pluginInfo ? $this->___callPlugins('getElement', func_get_args(), $pluginInfo) : parent::getElement($path);
+        if (!$pluginInfo) {
+            return parent::getElement($path);
+        } else {
+            return $this->___callPlugins('getElement', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getElementByConfigPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getElementByConfigPath');
-        return $pluginInfo ? $this->___callPlugins('getElementByConfigPath', func_get_args(), $pluginInfo) : parent::getElementByConfigPath($path);
+        if (!$pluginInfo) {
+            return parent::getElementByConfigPath($path);
+        } else {
+            return $this->___callPlugins('getElementByConfigPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getFirstSection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFirstSection');
-        return $pluginInfo ? $this->___callPlugins('getFirstSection', func_get_args(), $pluginInfo) : parent::getFirstSection();
+        if (!$pluginInfo) {
+            return parent::getFirstSection();
+        } else {
+            return $this->___callPlugins('getFirstSection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getElementByPathParts(array $pathParts)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getElementByPathParts');
-        return $pluginInfo ? $this->___callPlugins('getElementByPathParts', func_get_args(), $pluginInfo) : parent::getElementByPathParts($pathParts);
+        if (!$pluginInfo) {
+            return parent::getElementByPathParts($pathParts);
+        } else {
+            return $this->___callPlugins('getElementByPathParts', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getFieldPathsByAttribute($attributeName, $attributeValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFieldPathsByAttribute');
-        return $pluginInfo ? $this->___callPlugins('getFieldPathsByAttribute', func_get_args(), $pluginInfo) : parent::getFieldPathsByAttribute($attributeName, $attributeValue);
+        if (!$pluginInfo) {
+            return parent::getFieldPathsByAttribute($attributeName, $attributeValue);
+        } else {
+            return $this->___callPlugins('getFieldPathsByAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,6 +111,10 @@ class Interceptor extends \Magento\Config\Model\Config\Structure implements \Mag
     public function getFieldPaths()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFieldPaths');
-        return $pluginInfo ? $this->___callPlugins('getFieldPaths', func_get_args(), $pluginInfo) : parent::getFieldPaths();
+        if (!$pluginInfo) {
+            return parent::getFieldPaths();
+        } else {
+            return $this->___callPlugins('getFieldPaths', func_get_args(), $pluginInfo);
+        }
     }
 }

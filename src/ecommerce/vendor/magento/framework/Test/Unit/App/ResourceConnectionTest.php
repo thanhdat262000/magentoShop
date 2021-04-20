@@ -3,8 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Framework\Test\Unit\App;
 
 use Magento\Framework\App\DeploymentConfig;
@@ -13,10 +11,8 @@ use Magento\Framework\App\ResourceConnection\ConfigInterface;
 use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\Model\ResourceModel\Type\Db\ConnectionFactoryInterface;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class ResourceConnectionTest extends TestCase
+class ResourceConnectionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResourceConnection
@@ -24,12 +20,12 @@ class ResourceConnectionTest extends TestCase
     private $unit;
 
     /**
-     * @var ResourceConnection|MockObject
+     * @var ResourceConnection|\PHPUnit_Framework_MockObject_MockObject
      */
     private $deploymentConfigMock;
 
     /**
-     * @var ConnectionFactoryInterface|MockObject
+     * @var ConnectionFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $connectionFactoryMock;
 
@@ -39,11 +35,11 @@ class ResourceConnectionTest extends TestCase
     private $objectManager;
 
     /**
-     * @var ConfigInterface|MockObject
+     * @var ConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $configMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->deploymentConfigMock = $this->getMockBuilder(DeploymentConfig::class)
             ->disableOriginalConstructor()
@@ -52,8 +48,7 @@ class ResourceConnectionTest extends TestCase
         $this->connectionFactoryMock = $this->getMockBuilder(ConnectionFactoryInterface::class)
             ->getMock();
 
-        $this->configMock = $this->getMockBuilder(ConfigInterface::class)
-            ->getMock();
+        $this->configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
 
         $this->objectManager = (new ObjectManager($this));
         $this->unit = $this->objectManager->getObject(
@@ -84,7 +79,7 @@ class ResourceConnectionTest extends TestCase
 
     public function testGetTablePrefix()
     {
-        $this->deploymentConfigMock->expects($this->once())
+        $this->deploymentConfigMock->expects(self::once())
             ->method('get')
             ->with(ConfigOptionsListConstants::CONFIG_PATH_DB_PREFIX)
             ->willReturn('pref_');
@@ -93,10 +88,10 @@ class ResourceConnectionTest extends TestCase
 
     public function testGetConnectionByName()
     {
-        $this->deploymentConfigMock->expects($this->once())->method('get')
+        $this->deploymentConfigMock->expects(self::once())->method('get')
             ->with(ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTIONS . '/default')
             ->willReturn(['config']);
-        $this->connectionFactoryMock->expects($this->once())->method('create')
+        $this->connectionFactoryMock->expects(self::once())->method('create')
             ->with(['config'])
             ->willReturn('connection');
 
@@ -112,38 +107,15 @@ class ResourceConnectionTest extends TestCase
                 'connections' => ['default_process_' . getmypid() => 'existing_connection']
             ]
         );
-        $this->deploymentConfigMock->expects($this->never())->method('get');
+        $this->deploymentConfigMock->expects(self::never())->method('get');
 
         self::assertEquals('existing_connection', $unit->getConnectionByName('default'));
     }
 
     public function testCloseConnection()
     {
-        $this->configMock->expects($this->once())->method('getConnectionName')->with('default');
+        $this->configMock->expects(self::once())->method('getConnectionName')->with('default');
 
         $this->unit->closeConnection('default');
-    }
-
-    public function testGetTableNameWithBoolParam()
-    {
-        $this->deploymentConfigMock->expects($this->at(0))
-            ->method('get')
-            ->with(ConfigOptionsListConstants::CONFIG_PATH_DB_PREFIX)
-            ->willReturn('pref_');
-        $this->deploymentConfigMock->expects($this->at(1))->method('get')
-            ->with('db/connection/default')
-            ->willReturn(['config']);
-        $this->configMock->expects($this->atLeastOnce())
-            ->method('getConnectionName')
-            ->with('default')
-            ->willReturn('default');
-
-        $connection = $this->getMockBuilder(\Magento\Framework\DB\Adapter\AdapterInterface::class)->getMock();
-        $connection->expects($this->once())->method('getTableName')->with('pref_1');
-        $this->connectionFactoryMock->expects($this->once())->method('create')
-            ->with(['config'])
-            ->willReturn($connection);
-
-        $this->unit->getTableName(true);
     }
 }

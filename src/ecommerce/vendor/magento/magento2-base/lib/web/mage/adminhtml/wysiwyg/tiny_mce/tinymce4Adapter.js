@@ -205,7 +205,6 @@ define([
                 plugins: this.config.tinymce4.plugins,
                 toolbar: this.config.tinymce4.toolbar,
                 adapter: this,
-                'body_id': 'html-body',
 
                 /**
                  * @param {Object} editor
@@ -609,6 +608,7 @@ define([
             }
 
             this.addContentEditableAttributeBackToNonEditableNodes();
+            this.fixRangeSelection(editor);
 
             content = editor.getContent();
             content = this.decodeContent(content);
@@ -749,13 +749,6 @@ define([
          */
         addContentEditableAttributeBackToNonEditableNodes: function () {
             jQuery('.mceNonEditable', this.activeEditor().getDoc()).attr('contenteditable', false);
-        },
-
-        /**
-         * Calls the save method on all editor instances in the collection.
-         */
-        triggerSave: function () {
-            tinyMCE4.triggerSave();
         }
     };
 

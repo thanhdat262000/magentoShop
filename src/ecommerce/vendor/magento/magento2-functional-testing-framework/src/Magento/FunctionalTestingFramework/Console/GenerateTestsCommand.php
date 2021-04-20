@@ -8,13 +8,9 @@ declare(strict_types = 1);
 namespace Magento\FunctionalTestingFramework\Console;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
-use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
-use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
@@ -76,11 +72,12 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return void|integer
      * @throws TestFrameworkException
-     * @throws FastFailException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->setIOStyle($input, $output);
+        $this->setOutputStyle($input, $output);
         $tests = $input->getArgument('name');
         $config = $input->getOption('config');
         $json = $input->getOption('tests'); // for backward compatibility
@@ -110,6 +107,9 @@ class GenerateTestsCommand extends BaseGenerateCommand
             return 1;
         }
 
+        $this->setOutputStyle($input, $output);
+        $this->showMftfNotices($output);
+
         if (!empty($tests)) {
             $json = $this->getTestAndSuiteConfiguration($tests);
         }
@@ -126,7 +126,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
         // Remove previous GENERATED_DIR if --remove option is used
         if ($remove) {
-            $this->removeGeneratedDirectory($output, $verbose);
+            $this->removeGeneratedDirectory($output, $verbose ||
+                ($debug !== MftfApplicationConfig::LEVEL_NONE));
         }
 
         try {
@@ -135,23 +136,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             // create our manifest file here
             $testManifest = TestManifestFactory::makeManifest($config, $testConfiguration['suites']);
 
-            try {
-                if (empty($tests) || !empty($testConfiguration['tests'])) {
-                    // $testConfiguration['tests'] cannot be empty if $tests is not empty
-                    TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
-                } elseif (empty($testConfiguration['suites'])) {
-                    throw new FastFailException(
-                        !empty(GenerationErrorHandler::getInstance()->getAllErrors())
-                            ?
-                            GenerationErrorHandler::getInstance()->getAllErrorMessages()
-                            :
-                            'Invalid input'
-                    );
-                }
-            } catch (FastFailException $e) {
-                throw $e;
-            } catch (\Exception $e) {
-            }
+            TestGenerator::getInstance(null, $testConfiguration['tests'])->createAllTestFiles($testManifest);
 
             if ($config == 'parallel') {
                 /** @var ParallelTestManifest $testManifest */
@@ -162,9 +147,6 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
             $testManifest->generate();
         } catch (\Exception $e) {
-            if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
-                GenerationErrorHandler::getInstance()->printErrorSummary();
-            }
             $message = $e->getMessage() . PHP_EOL;
             $message .= !empty($filters) ? 'Filter(s): ' . implode(', ', $filters) . PHP_EOL : '';
             $message .= !empty($tests) ? 'Test name(s): ' . implode(', ', $tests) . PHP_EOL : '';
@@ -174,14 +156,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             return 1;
         }
 
-        if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
-            $output->writeln("Generate Tests Command Run" . PHP_EOL);
-            return 0;
-        } else {
-            GenerationErrorHandler::getInstance()->printErrorSummary();
-            $output->writeln("Generate Tests Command Run (with errors)" . PHP_EOL);
-            return 1;
-        }
+        $output->writeln("Generate Tests Command Run");
     }
 
     /**
@@ -190,8 +165,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @param string $json
      * @param array  $tests
      * @return array
-     * @throws FastFailException
-     * @throws TestFrameworkException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\XmlException
      */
     private function createTestConfiguration(
         $json,
@@ -208,19 +183,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $testObjects = [];
 
             foreach ($testConfiguration['tests'] as $test) {
-                try {
-                    $testObjects[$test] = TestObjectHandler::getInstance()->getObject($test);
-                } catch (FastFailException $e) {
-                    throw $e;
-                } catch (\Exception $e) {
-                    $message = "Unable to create test object {$test} from test configuration. " . $e->getMessage();
-                    LoggingUtil::getInstance()->getLogger(self::class)->error($message);
-                    if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                        && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
-                        print($message);
-                    }
-                    GenerationErrorHandler::getInstance()->addError('test', $test, $message);
-                }
+                $testObjects[$test] = TestObjectHandler::getInstance()->getObject($test);
             }
 
             $testConfiguration['tests'] = $testObjects;

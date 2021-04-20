@@ -9,8 +9,6 @@ namespace Magento\BundleGraphQl\Model\Cart;
 
 use Magento\Bundle\Helper\Catalog\Product\Configuration;
 use Magento\Catalog\Model\Product;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\GraphQl\Query\Uid;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -20,11 +18,6 @@ use Magento\Framework\Serialize\SerializerInterface;
  */
 class BundleOptionDataProvider
 {
-    /**
-     * Option type name
-     */
-    private const OPTION_TYPE = 'bundle';
-
     /**
      * @var Data
      */
@@ -40,26 +33,19 @@ class BundleOptionDataProvider
      */
     private $configuration;
 
-    /** @var Uid */
-    private $uidEncoder;
-
     /**
      * @param Data $pricingHelper
      * @param SerializerInterface $serializer
      * @param Configuration $configuration
-     * @param Uid|null $uidEncoder
      */
     public function __construct(
         Data $pricingHelper,
         SerializerInterface $serializer,
-        Configuration $configuration,
-        Uid $uidEncoder = null
+        Configuration $configuration
     ) {
         $this->pricingHelper = $pricingHelper;
         $this->serializer = $serializer;
         $this->configuration = $configuration;
-        $this->uidEncoder = $uidEncoder ?: ObjectManager::getInstance()
-            ->get(Uid::class);
     }
 
     /**
@@ -117,7 +103,6 @@ class BundleOptionDataProvider
 
             $options[] = [
                 'id' => $bundleOption->getId(),
-                'uid' => $this->uidEncoder->encode(self::OPTION_TYPE . '/' . $bundleOption->getId()),
                 'label' => $bundleOption->getTitle(),
                 'type' => $bundleOption->getType(),
                 'values' => $this->buildBundleOptionValues($bundleOption->getSelections(), $item),
@@ -146,15 +131,9 @@ class BundleOptionDataProvider
             }
 
             $selectionPrice = $this->configuration->getSelectionFinalPrice($item, $selection);
-            $optionDetails = [
-                self::OPTION_TYPE,
-                $selection->getData('option_id'),
-                $selection->getData('selection_id'),
-                (int) $selection->getData('selection_qty')
-            ];
+
             $values[] = [
                 'id' => $selection->getSelectionId(),
-                'uid' => $this->uidEncoder->encode(implode('/', $optionDetails)),
                 'label' => $selection->getName(),
                 'quantity' => $qty,
                 'price' => $this->pricingHelper->currency($selectionPrice, false, false),

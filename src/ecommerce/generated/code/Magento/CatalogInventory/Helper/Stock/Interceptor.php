@@ -20,7 +20,11 @@ class Interceptor extends \Magento\CatalogInventory\Helper\Stock implements \Mag
     public function assignStatusToProduct(\Magento\Catalog\Model\Product $product, $status = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'assignStatusToProduct');
-        return $pluginInfo ? $this->___callPlugins('assignStatusToProduct', func_get_args(), $pluginInfo) : parent::assignStatusToProduct($product, $status);
+        if (!$pluginInfo) {
+            return parent::assignStatusToProduct($product, $status);
+        } else {
+            return $this->___callPlugins('assignStatusToProduct', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\CatalogInventory\Helper\Stock implements \Mag
     public function addStockStatusToProducts(\Magento\Catalog\Model\ResourceModel\Collection\AbstractCollection $productCollection)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addStockStatusToProducts');
-        return $pluginInfo ? $this->___callPlugins('addStockStatusToProducts', func_get_args(), $pluginInfo) : parent::addStockStatusToProducts($productCollection);
+        if (!$pluginInfo) {
+            return parent::addStockStatusToProducts($productCollection);
+        } else {
+            return $this->___callPlugins('addStockStatusToProducts', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\CatalogInventory\Helper\Stock implements \Mag
     public function addInStockFilterToCollection($collection)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addInStockFilterToCollection');
-        return $pluginInfo ? $this->___callPlugins('addInStockFilterToCollection', func_get_args(), $pluginInfo) : parent::addInStockFilterToCollection($collection);
+        if (!$pluginInfo) {
+            return parent::addInStockFilterToCollection($collection);
+        } else {
+            return $this->___callPlugins('addInStockFilterToCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,6 +59,10 @@ class Interceptor extends \Magento\CatalogInventory\Helper\Stock implements \Mag
     public function addIsInStockFilterToCollection($collection)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addIsInStockFilterToCollection');
-        return $pluginInfo ? $this->___callPlugins('addIsInStockFilterToCollection', func_get_args(), $pluginInfo) : parent::addIsInStockFilterToCollection($collection);
+        if (!$pluginInfo) {
+            return parent::addIsInStockFilterToCollection($collection);
+        } else {
+            return $this->___callPlugins('addIsInStockFilterToCollection', func_get_args(), $pluginInfo);
+        }
     }
 }

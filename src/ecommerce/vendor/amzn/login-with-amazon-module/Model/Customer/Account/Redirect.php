@@ -22,19 +22,10 @@ use Magento\Customer\Model\Url as CustomerUrl;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Url\DecoderInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * @deprecated As of February 2021, this Legacy Amazon Pay plugin has been
- * deprecated, in favor of a newer Amazon Pay version available through GitHub
- * and Magento Marketplace. Please download the new plugin for automatic
- * updates and to continue providing your customers with a seamless checkout
- * experience. Please see https://pay.amazon.com/help/E32AAQBC2FY42HS for details
- * and installation instructions.
- */
 class Redirect extends BaseRedirect
 {
     /**
@@ -56,7 +47,6 @@ class Redirect extends BaseRedirect
         DecoderInterface $urlDecoder,
         CustomerUrl $customerUrl,
         ResultFactory $resultFactory,
-        CookieMetadataFactory $cookieMetadataFactory,
         CheckoutSession $checkoutSession
     ) {
         parent::__construct(
@@ -67,8 +57,7 @@ class Redirect extends BaseRedirect
             $url,
             $urlDecoder,
             $customerUrl,
-            $resultFactory,
-            $cookieMetadataFactory
+            $resultFactory
         );
 
         $this->customerSession = $customerSession;

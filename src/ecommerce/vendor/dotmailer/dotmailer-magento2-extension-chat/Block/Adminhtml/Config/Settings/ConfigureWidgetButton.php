@@ -10,6 +10,6 @@ class ConfigureWidgetButton extends ButtonField
      */
     protected function getButtonUrl()
     {
-        return $this->getEcAuthorisedUrl($this->config->getConfigureChatWidgetUrl());
+        return $this->config->getConfigureChatWidgetButtonUrl();
     }
 }

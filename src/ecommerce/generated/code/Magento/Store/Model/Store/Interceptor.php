@@ -20,7 +20,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function load($key, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'load');
-        return $pluginInfo ? $this->___callPlugins('load', func_get_args(), $pluginInfo) : parent::load($key, $field);
+        if (!$pluginInfo) {
+            return parent::load($key, $field);
+        } else {
+            return $this->___callPlugins('load', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -29,7 +33,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCode');
-        return $pluginInfo ? $this->___callPlugins('getCode', func_get_args(), $pluginInfo) : parent::getCode();
+        if (!$pluginInfo) {
+            return parent::getCode();
+        } else {
+            return $this->___callPlugins('getCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -38,7 +46,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCode');
-        return $pluginInfo ? $this->___callPlugins('setCode', func_get_args(), $pluginInfo) : parent::setCode($code);
+        if (!$pluginInfo) {
+            return parent::setCode($code);
+        } else {
+            return $this->___callPlugins('setCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -47,7 +59,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getName');
-        return $pluginInfo ? $this->___callPlugins('getName', func_get_args(), $pluginInfo) : parent::getName();
+        if (!$pluginInfo) {
+            return parent::getName();
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -56,7 +72,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setName');
-        return $pluginInfo ? $this->___callPlugins('setName', func_get_args(), $pluginInfo) : parent::setName($name);
+        if (!$pluginInfo) {
+            return parent::setName($name);
+        } else {
+            return $this->___callPlugins('setName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -65,7 +85,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getConfig($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getConfig');
-        return $pluginInfo ? $this->___callPlugins('getConfig', func_get_args(), $pluginInfo) : parent::getConfig($path);
+        if (!$pluginInfo) {
+            return parent::getConfig($path);
+        } else {
+            return $this->___callPlugins('getConfig', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -74,7 +98,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setWebsite(\Magento\Store\Model\Website $website)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setWebsite');
-        return $pluginInfo ? $this->___callPlugins('setWebsite', func_get_args(), $pluginInfo) : parent::setWebsite($website);
+        if (!$pluginInfo) {
+            return parent::setWebsite($website);
+        } else {
+            return $this->___callPlugins('setWebsite', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -83,7 +111,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getWebsite()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWebsite');
-        return $pluginInfo ? $this->___callPlugins('getWebsite', func_get_args(), $pluginInfo) : parent::getWebsite();
+        if (!$pluginInfo) {
+            return parent::getWebsite();
+        } else {
+            return $this->___callPlugins('getWebsite', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -92,7 +124,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getUrl($route = '', $params = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getUrl');
-        return $pluginInfo ? $this->___callPlugins('getUrl', func_get_args(), $pluginInfo) : parent::getUrl($route, $params);
+        if (!$pluginInfo) {
+            return parent::getUrl($route, $params);
+        } else {
+            return $this->___callPlugins('getUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -101,7 +137,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getBaseUrl($type = 'link', $secure = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseUrl');
-        return $pluginInfo ? $this->___callPlugins('getBaseUrl', func_get_args(), $pluginInfo) : parent::getBaseUrl($type, $secure);
+        if (!$pluginInfo) {
+            return parent::getBaseUrl($type, $secure);
+        } else {
+            return $this->___callPlugins('getBaseUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -110,7 +150,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getBaseMediaDir()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseMediaDir');
-        return $pluginInfo ? $this->___callPlugins('getBaseMediaDir', func_get_args(), $pluginInfo) : parent::getBaseMediaDir();
+        if (!$pluginInfo) {
+            return parent::getBaseMediaDir();
+        } else {
+            return $this->___callPlugins('getBaseMediaDir', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -119,7 +163,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getBaseStaticDir()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseStaticDir');
-        return $pluginInfo ? $this->___callPlugins('getBaseStaticDir', func_get_args(), $pluginInfo) : parent::getBaseStaticDir();
+        if (!$pluginInfo) {
+            return parent::getBaseStaticDir();
+        } else {
+            return $this->___callPlugins('getBaseStaticDir', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -128,7 +176,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isUseStoreInUrl()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isUseStoreInUrl');
-        return $pluginInfo ? $this->___callPlugins('isUseStoreInUrl', func_get_args(), $pluginInfo) : parent::isUseStoreInUrl();
+        if (!$pluginInfo) {
+            return parent::isUseStoreInUrl();
+        } else {
+            return $this->___callPlugins('isUseStoreInUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -137,7 +189,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getId');
-        return $pluginInfo ? $this->___callPlugins('getId', func_get_args(), $pluginInfo) : parent::getId();
+        if (!$pluginInfo) {
+            return parent::getId();
+        } else {
+            return $this->___callPlugins('getId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -146,7 +202,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isFrontUrlSecure()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isFrontUrlSecure');
-        return $pluginInfo ? $this->___callPlugins('isFrontUrlSecure', func_get_args(), $pluginInfo) : parent::isFrontUrlSecure();
+        if (!$pluginInfo) {
+            return parent::isFrontUrlSecure();
+        } else {
+            return $this->___callPlugins('isFrontUrlSecure', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -155,7 +215,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isUrlSecure()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isUrlSecure');
-        return $pluginInfo ? $this->___callPlugins('isUrlSecure', func_get_args(), $pluginInfo) : parent::isUrlSecure();
+        if (!$pluginInfo) {
+            return parent::isUrlSecure();
+        } else {
+            return $this->___callPlugins('isUrlSecure', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -164,7 +228,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isCurrentlySecure()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isCurrentlySecure');
-        return $pluginInfo ? $this->___callPlugins('isCurrentlySecure', func_get_args(), $pluginInfo) : parent::isCurrentlySecure();
+        if (!$pluginInfo) {
+            return parent::isCurrentlySecure();
+        } else {
+            return $this->___callPlugins('isCurrentlySecure', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -173,7 +241,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getBaseCurrencyCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseCurrencyCode');
-        return $pluginInfo ? $this->___callPlugins('getBaseCurrencyCode', func_get_args(), $pluginInfo) : parent::getBaseCurrencyCode();
+        if (!$pluginInfo) {
+            return parent::getBaseCurrencyCode();
+        } else {
+            return $this->___callPlugins('getBaseCurrencyCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -182,7 +254,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getBaseCurrency()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getBaseCurrency');
-        return $pluginInfo ? $this->___callPlugins('getBaseCurrency', func_get_args(), $pluginInfo) : parent::getBaseCurrency();
+        if (!$pluginInfo) {
+            return parent::getBaseCurrency();
+        } else {
+            return $this->___callPlugins('getBaseCurrency', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -191,7 +267,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDefaultCurrencyCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultCurrencyCode');
-        return $pluginInfo ? $this->___callPlugins('getDefaultCurrencyCode', func_get_args(), $pluginInfo) : parent::getDefaultCurrencyCode();
+        if (!$pluginInfo) {
+            return parent::getDefaultCurrencyCode();
+        } else {
+            return $this->___callPlugins('getDefaultCurrencyCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -200,7 +280,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDefaultCurrency()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultCurrency');
-        return $pluginInfo ? $this->___callPlugins('getDefaultCurrency', func_get_args(), $pluginInfo) : parent::getDefaultCurrency();
+        if (!$pluginInfo) {
+            return parent::getDefaultCurrency();
+        } else {
+            return $this->___callPlugins('getDefaultCurrency', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -209,7 +293,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setCurrentCurrencyCode($code)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCurrentCurrencyCode');
-        return $pluginInfo ? $this->___callPlugins('setCurrentCurrencyCode', func_get_args(), $pluginInfo) : parent::setCurrentCurrencyCode($code);
+        if (!$pluginInfo) {
+            return parent::setCurrentCurrencyCode($code);
+        } else {
+            return $this->___callPlugins('setCurrentCurrencyCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -218,7 +306,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCurrentCurrencyCode()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurrentCurrencyCode');
-        return $pluginInfo ? $this->___callPlugins('getCurrentCurrencyCode', func_get_args(), $pluginInfo) : parent::getCurrentCurrencyCode();
+        if (!$pluginInfo) {
+            return parent::getCurrentCurrencyCode();
+        } else {
+            return $this->___callPlugins('getCurrentCurrencyCode', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -227,7 +319,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAvailableCurrencyCodes');
-        return $pluginInfo ? $this->___callPlugins('getAvailableCurrencyCodes', func_get_args(), $pluginInfo) : parent::getAvailableCurrencyCodes($skipBaseNotAllowed);
+        if (!$pluginInfo) {
+            return parent::getAvailableCurrencyCodes($skipBaseNotAllowed);
+        } else {
+            return $this->___callPlugins('getAvailableCurrencyCodes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -236,7 +332,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getAllowedCurrencies()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getAllowedCurrencies');
-        return $pluginInfo ? $this->___callPlugins('getAllowedCurrencies', func_get_args(), $pluginInfo) : parent::getAllowedCurrencies();
+        if (!$pluginInfo) {
+            return parent::getAllowedCurrencies();
+        } else {
+            return $this->___callPlugins('getAllowedCurrencies', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -245,7 +345,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCurrentCurrency()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurrentCurrency');
-        return $pluginInfo ? $this->___callPlugins('getCurrentCurrency', func_get_args(), $pluginInfo) : parent::getCurrentCurrency();
+        if (!$pluginInfo) {
+            return parent::getCurrentCurrency();
+        } else {
+            return $this->___callPlugins('getCurrentCurrency', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -254,7 +358,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCurrentCurrencyRate()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurrentCurrencyRate');
-        return $pluginInfo ? $this->___callPlugins('getCurrentCurrencyRate', func_get_args(), $pluginInfo) : parent::getCurrentCurrencyRate();
+        if (!$pluginInfo) {
+            return parent::getCurrentCurrencyRate();
+        } else {
+            return $this->___callPlugins('getCurrentCurrencyRate', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -263,7 +371,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getRootCategoryId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getRootCategoryId');
-        return $pluginInfo ? $this->___callPlugins('getRootCategoryId', func_get_args(), $pluginInfo) : parent::getRootCategoryId();
+        if (!$pluginInfo) {
+            return parent::getRootCategoryId();
+        } else {
+            return $this->___callPlugins('getRootCategoryId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -272,7 +384,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setGroup(\Magento\Store\Model\Group $group)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setGroup');
-        return $pluginInfo ? $this->___callPlugins('setGroup', func_get_args(), $pluginInfo) : parent::setGroup($group);
+        if (!$pluginInfo) {
+            return parent::setGroup($group);
+        } else {
+            return $this->___callPlugins('setGroup', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -281,7 +397,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getGroup()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getGroup');
-        return $pluginInfo ? $this->___callPlugins('getGroup', func_get_args(), $pluginInfo) : parent::getGroup();
+        if (!$pluginInfo) {
+            return parent::getGroup();
+        } else {
+            return $this->___callPlugins('getGroup', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -290,7 +410,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getWebsiteId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getWebsiteId');
-        return $pluginInfo ? $this->___callPlugins('getWebsiteId', func_get_args(), $pluginInfo) : parent::getWebsiteId();
+        if (!$pluginInfo) {
+            return parent::getWebsiteId();
+        } else {
+            return $this->___callPlugins('getWebsiteId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -299,7 +423,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function afterSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterSave');
-        return $pluginInfo ? $this->___callPlugins('afterSave', func_get_args(), $pluginInfo) : parent::afterSave();
+        if (!$pluginInfo) {
+            return parent::afterSave();
+        } else {
+            return $this->___callPlugins('afterSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -308,7 +436,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setWebsiteId($websiteId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setWebsiteId');
-        return $pluginInfo ? $this->___callPlugins('setWebsiteId', func_get_args(), $pluginInfo) : parent::setWebsiteId($websiteId);
+        if (!$pluginInfo) {
+            return parent::setWebsiteId($websiteId);
+        } else {
+            return $this->___callPlugins('setWebsiteId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -317,7 +449,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getGroupId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getGroupId');
-        return $pluginInfo ? $this->___callPlugins('getGroupId', func_get_args(), $pluginInfo) : parent::getGroupId();
+        if (!$pluginInfo) {
+            return parent::getGroupId();
+        } else {
+            return $this->___callPlugins('getGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -326,7 +462,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getStoreGroupId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoreGroupId');
-        return $pluginInfo ? $this->___callPlugins('getStoreGroupId', func_get_args(), $pluginInfo) : parent::getStoreGroupId();
+        if (!$pluginInfo) {
+            return parent::getStoreGroupId();
+        } else {
+            return $this->___callPlugins('getStoreGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -335,7 +475,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setStoreGroupId($storeGroupId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setStoreGroupId');
-        return $pluginInfo ? $this->___callPlugins('setStoreGroupId', func_get_args(), $pluginInfo) : parent::setStoreGroupId($storeGroupId);
+        if (!$pluginInfo) {
+            return parent::setStoreGroupId($storeGroupId);
+        } else {
+            return $this->___callPlugins('setStoreGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -344,7 +488,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getIsActive()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIsActive');
-        return $pluginInfo ? $this->___callPlugins('getIsActive', func_get_args(), $pluginInfo) : parent::getIsActive();
+        if (!$pluginInfo) {
+            return parent::getIsActive();
+        } else {
+            return $this->___callPlugins('getIsActive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -353,7 +501,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setIsActive($isActive)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIsActive');
-        return $pluginInfo ? $this->___callPlugins('setIsActive', func_get_args(), $pluginInfo) : parent::setIsActive($isActive);
+        if (!$pluginInfo) {
+            return parent::setIsActive($isActive);
+        } else {
+            return $this->___callPlugins('setIsActive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -362,7 +514,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDefaultGroupId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDefaultGroupId');
-        return $pluginInfo ? $this->___callPlugins('getDefaultGroupId', func_get_args(), $pluginInfo) : parent::getDefaultGroupId();
+        if (!$pluginInfo) {
+            return parent::getDefaultGroupId();
+        } else {
+            return $this->___callPlugins('getDefaultGroupId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -371,7 +527,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isCanDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isCanDelete');
-        return $pluginInfo ? $this->___callPlugins('isCanDelete', func_get_args(), $pluginInfo) : parent::isCanDelete();
+        if (!$pluginInfo) {
+            return parent::isCanDelete();
+        } else {
+            return $this->___callPlugins('isCanDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -380,7 +540,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isDefault()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDefault');
-        return $pluginInfo ? $this->___callPlugins('isDefault', func_get_args(), $pluginInfo) : parent::isDefault();
+        if (!$pluginInfo) {
+            return parent::isDefault();
+        } else {
+            return $this->___callPlugins('isDefault', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -389,7 +553,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCurrentUrl($fromStore = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCurrentUrl');
-        return $pluginInfo ? $this->___callPlugins('getCurrentUrl', func_get_args(), $pluginInfo) : parent::getCurrentUrl($fromStore);
+        if (!$pluginInfo) {
+            return parent::getCurrentUrl($fromStore);
+        } else {
+            return $this->___callPlugins('getCurrentUrl', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -398,7 +566,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isActive()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isActive');
-        return $pluginInfo ? $this->___callPlugins('isActive', func_get_args(), $pluginInfo) : parent::isActive();
+        if (!$pluginInfo) {
+            return parent::isActive();
+        } else {
+            return $this->___callPlugins('isActive', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -407,7 +579,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function beforeDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeDelete');
-        return $pluginInfo ? $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo) : parent::beforeDelete();
+        if (!$pluginInfo) {
+            return parent::beforeDelete();
+        } else {
+            return $this->___callPlugins('beforeDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -416,7 +592,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function afterDelete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDelete');
-        return $pluginInfo ? $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo) : parent::afterDelete();
+        if (!$pluginInfo) {
+            return parent::afterDelete();
+        } else {
+            return $this->___callPlugins('afterDelete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -425,7 +605,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function resetConfig()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'resetConfig');
-        return $pluginInfo ? $this->___callPlugins('resetConfig', func_get_args(), $pluginInfo) : parent::resetConfig();
+        if (!$pluginInfo) {
+            return parent::resetConfig();
+        } else {
+            return $this->___callPlugins('resetConfig', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -434,7 +618,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isReadOnly($value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isReadOnly');
-        return $pluginInfo ? $this->___callPlugins('isReadOnly', func_get_args(), $pluginInfo) : parent::isReadOnly($value);
+        if (!$pluginInfo) {
+            return parent::isReadOnly($value);
+        } else {
+            return $this->___callPlugins('isReadOnly', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -443,7 +631,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getFrontendName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFrontendName');
-        return $pluginInfo ? $this->___callPlugins('getFrontendName', func_get_args(), $pluginInfo) : parent::getFrontendName();
+        if (!$pluginInfo) {
+            return parent::getFrontendName();
+        } else {
+            return $this->___callPlugins('getFrontendName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -452,7 +644,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getFormattedAddress()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getFormattedAddress');
-        return $pluginInfo ? $this->___callPlugins('getFormattedAddress', func_get_args(), $pluginInfo) : parent::getFormattedAddress();
+        if (!$pluginInfo) {
+            return parent::getFormattedAddress();
+        } else {
+            return $this->___callPlugins('getFormattedAddress', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -461,7 +657,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getIdentities()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdentities');
-        return $pluginInfo ? $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo) : parent::getIdentities();
+        if (!$pluginInfo) {
+            return parent::getIdentities();
+        } else {
+            return $this->___callPlugins('getIdentities', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -470,7 +670,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getStorePath()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStorePath');
-        return $pluginInfo ? $this->___callPlugins('getStorePath', func_get_args(), $pluginInfo) : parent::getStorePath();
+        if (!$pluginInfo) {
+            return parent::getStorePath();
+        } else {
+            return $this->___callPlugins('getStorePath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -479,7 +683,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getScopeType()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getScopeType');
-        return $pluginInfo ? $this->___callPlugins('getScopeType', func_get_args(), $pluginInfo) : parent::getScopeType();
+        if (!$pluginInfo) {
+            return parent::getScopeType();
+        } else {
+            return $this->___callPlugins('getScopeType', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -488,7 +696,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getScopeTypeName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getScopeTypeName');
-        return $pluginInfo ? $this->___callPlugins('getScopeTypeName', func_get_args(), $pluginInfo) : parent::getScopeTypeName();
+        if (!$pluginInfo) {
+            return parent::getScopeTypeName();
+        } else {
+            return $this->___callPlugins('getScopeTypeName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -497,7 +709,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getExtensionAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo) : parent::getExtensionAttributes();
+        if (!$pluginInfo) {
+            return parent::getExtensionAttributes();
+        } else {
+            return $this->___callPlugins('getExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -506,7 +722,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setExtensionAttributes(\Magento\Store\Api\Data\StoreExtensionInterface $extensionAttributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setExtensionAttributes');
-        return $pluginInfo ? $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo) : parent::setExtensionAttributes($extensionAttributes);
+        if (!$pluginInfo) {
+            return parent::setExtensionAttributes($extensionAttributes);
+        } else {
+            return $this->___callPlugins('setExtensionAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -515,7 +735,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCustomAttributes()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo) : parent::getCustomAttributes();
+        if (!$pluginInfo) {
+            return parent::getCustomAttributes();
+        } else {
+            return $this->___callPlugins('getCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -524,7 +748,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCustomAttribute($attributeCode)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo) : parent::getCustomAttribute($attributeCode);
+        if (!$pluginInfo) {
+            return parent::getCustomAttribute($attributeCode);
+        } else {
+            return $this->___callPlugins('getCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -533,7 +761,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setCustomAttributes(array $attributes)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttributes');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo) : parent::setCustomAttributes($attributes);
+        if (!$pluginInfo) {
+            return parent::setCustomAttributes($attributes);
+        } else {
+            return $this->___callPlugins('setCustomAttributes', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -542,7 +774,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setCustomAttribute($attributeCode, $attributeValue)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setCustomAttribute');
-        return $pluginInfo ? $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo) : parent::setCustomAttribute($attributeCode, $attributeValue);
+        if (!$pluginInfo) {
+            return parent::setCustomAttribute($attributeCode, $attributeValue);
+        } else {
+            return $this->___callPlugins('setCustomAttribute', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -551,7 +787,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setData($key, $value = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setData');
-        return $pluginInfo ? $this->___callPlugins('setData', func_get_args(), $pluginInfo) : parent::setData($key, $value);
+        if (!$pluginInfo) {
+            return parent::setData($key, $value);
+        } else {
+            return $this->___callPlugins('setData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -560,7 +800,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function unsetData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'unsetData');
-        return $pluginInfo ? $this->___callPlugins('unsetData', func_get_args(), $pluginInfo) : parent::unsetData($key);
+        if (!$pluginInfo) {
+            return parent::unsetData($key);
+        } else {
+            return $this->___callPlugins('unsetData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -569,7 +813,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getData($key = '', $index = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getData');
-        return $pluginInfo ? $this->___callPlugins('getData', func_get_args(), $pluginInfo) : parent::getData($key, $index);
+        if (!$pluginInfo) {
+            return parent::getData($key, $index);
+        } else {
+            return $this->___callPlugins('getData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -578,7 +826,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setId($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setId');
-        return $pluginInfo ? $this->___callPlugins('setId', func_get_args(), $pluginInfo) : parent::setId($value);
+        if (!$pluginInfo) {
+            return parent::setId($value);
+        } else {
+            return $this->___callPlugins('setId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -587,7 +839,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setIdFieldName($name)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo) : parent::setIdFieldName($name);
+        if (!$pluginInfo) {
+            return parent::setIdFieldName($name);
+        } else {
+            return $this->___callPlugins('setIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -596,7 +852,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getIdFieldName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getIdFieldName');
-        return $pluginInfo ? $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo) : parent::getIdFieldName();
+        if (!$pluginInfo) {
+            return parent::getIdFieldName();
+        } else {
+            return $this->___callPlugins('getIdFieldName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -605,7 +865,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isDeleted($isDeleted = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isDeleted');
-        return $pluginInfo ? $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo) : parent::isDeleted($isDeleted);
+        if (!$pluginInfo) {
+            return parent::isDeleted($isDeleted);
+        } else {
+            return $this->___callPlugins('isDeleted', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -614,7 +878,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function hasDataChanges()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo) : parent::hasDataChanges();
+        if (!$pluginInfo) {
+            return parent::hasDataChanges();
+        } else {
+            return $this->___callPlugins('hasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -623,7 +891,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setDataChanges($value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo) : parent::setDataChanges($value);
+        if (!$pluginInfo) {
+            return parent::setDataChanges($value);
+        } else {
+            return $this->___callPlugins('setDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -632,7 +904,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getOrigData($key = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getOrigData');
-        return $pluginInfo ? $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo) : parent::getOrigData($key);
+        if (!$pluginInfo) {
+            return parent::getOrigData($key);
+        } else {
+            return $this->___callPlugins('getOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -641,7 +917,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setOrigData($key = null, $data = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setOrigData');
-        return $pluginInfo ? $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo) : parent::setOrigData($key, $data);
+        if (!$pluginInfo) {
+            return parent::setOrigData($key, $data);
+        } else {
+            return $this->___callPlugins('setOrigData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -650,7 +930,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function dataHasChangedFor($field)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'dataHasChangedFor');
-        return $pluginInfo ? $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo) : parent::dataHasChangedFor($field);
+        if (!$pluginInfo) {
+            return parent::dataHasChangedFor($field);
+        } else {
+            return $this->___callPlugins('dataHasChangedFor', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -659,7 +943,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getResourceName()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceName');
-        return $pluginInfo ? $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo) : parent::getResourceName();
+        if (!$pluginInfo) {
+            return parent::getResourceName();
+        } else {
+            return $this->___callPlugins('getResourceName', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -668,7 +956,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getResourceCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResourceCollection');
-        return $pluginInfo ? $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo) : parent::getResourceCollection();
+        if (!$pluginInfo) {
+            return parent::getResourceCollection();
+        } else {
+            return $this->___callPlugins('getResourceCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -677,7 +969,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCollection()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCollection');
-        return $pluginInfo ? $this->___callPlugins('getCollection', func_get_args(), $pluginInfo) : parent::getCollection();
+        if (!$pluginInfo) {
+            return parent::getCollection();
+        } else {
+            return $this->___callPlugins('getCollection', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -686,7 +982,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function beforeLoad($identifier, $field = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeLoad');
-        return $pluginInfo ? $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo) : parent::beforeLoad($identifier, $field);
+        if (!$pluginInfo) {
+            return parent::beforeLoad($identifier, $field);
+        } else {
+            return $this->___callPlugins('beforeLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -695,7 +995,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function afterLoad()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterLoad');
-        return $pluginInfo ? $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo) : parent::afterLoad();
+        if (!$pluginInfo) {
+            return parent::afterLoad();
+        } else {
+            return $this->___callPlugins('afterLoad', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -704,7 +1008,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isSaveAllowed()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isSaveAllowed');
-        return $pluginInfo ? $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo) : parent::isSaveAllowed();
+        if (!$pluginInfo) {
+            return parent::isSaveAllowed();
+        } else {
+            return $this->___callPlugins('isSaveAllowed', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -713,7 +1021,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setHasDataChanges($flag)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setHasDataChanges');
-        return $pluginInfo ? $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo) : parent::setHasDataChanges($flag);
+        if (!$pluginInfo) {
+            return parent::setHasDataChanges($flag);
+        } else {
+            return $this->___callPlugins('setHasDataChanges', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -722,7 +1034,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function save()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'save');
-        return $pluginInfo ? $this->___callPlugins('save', func_get_args(), $pluginInfo) : parent::save();
+        if (!$pluginInfo) {
+            return parent::save();
+        } else {
+            return $this->___callPlugins('save', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -731,7 +1047,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function afterCommitCallback()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterCommitCallback');
-        return $pluginInfo ? $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo) : parent::afterCommitCallback();
+        if (!$pluginInfo) {
+            return parent::afterCommitCallback();
+        } else {
+            return $this->___callPlugins('afterCommitCallback', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -740,7 +1060,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isObjectNew($flag = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isObjectNew');
-        return $pluginInfo ? $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo) : parent::isObjectNew($flag);
+        if (!$pluginInfo) {
+            return parent::isObjectNew($flag);
+        } else {
+            return $this->___callPlugins('isObjectNew', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -749,7 +1073,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function beforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'beforeSave');
-        return $pluginInfo ? $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo) : parent::beforeSave();
+        if (!$pluginInfo) {
+            return parent::beforeSave();
+        } else {
+            return $this->___callPlugins('beforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -758,7 +1086,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function validateBeforeSave()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'validateBeforeSave');
-        return $pluginInfo ? $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo) : parent::validateBeforeSave();
+        if (!$pluginInfo) {
+            return parent::validateBeforeSave();
+        } else {
+            return $this->___callPlugins('validateBeforeSave', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -767,7 +1099,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getCacheTags()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getCacheTags');
-        return $pluginInfo ? $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo) : parent::getCacheTags();
+        if (!$pluginInfo) {
+            return parent::getCacheTags();
+        } else {
+            return $this->___callPlugins('getCacheTags', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -776,7 +1112,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function cleanModelCache()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'cleanModelCache');
-        return $pluginInfo ? $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo) : parent::cleanModelCache();
+        if (!$pluginInfo) {
+            return parent::cleanModelCache();
+        } else {
+            return $this->___callPlugins('cleanModelCache', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -785,7 +1125,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function delete()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'delete');
-        return $pluginInfo ? $this->___callPlugins('delete', func_get_args(), $pluginInfo) : parent::delete();
+        if (!$pluginInfo) {
+            return parent::delete();
+        } else {
+            return $this->___callPlugins('delete', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -794,7 +1138,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function afterDeleteCommit()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'afterDeleteCommit');
-        return $pluginInfo ? $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo) : parent::afterDeleteCommit();
+        if (!$pluginInfo) {
+            return parent::afterDeleteCommit();
+        } else {
+            return $this->___callPlugins('afterDeleteCommit', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -803,7 +1151,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getResource()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getResource');
-        return $pluginInfo ? $this->___callPlugins('getResource', func_get_args(), $pluginInfo) : parent::getResource();
+        if (!$pluginInfo) {
+            return parent::getResource();
+        } else {
+            return $this->___callPlugins('getResource', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -812,7 +1164,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getEntityId()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEntityId');
-        return $pluginInfo ? $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo) : parent::getEntityId();
+        if (!$pluginInfo) {
+            return parent::getEntityId();
+        } else {
+            return $this->___callPlugins('getEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -821,7 +1177,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setEntityId($entityId)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setEntityId');
-        return $pluginInfo ? $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo) : parent::setEntityId($entityId);
+        if (!$pluginInfo) {
+            return parent::setEntityId($entityId);
+        } else {
+            return $this->___callPlugins('setEntityId', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -830,7 +1190,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function clearInstance()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'clearInstance');
-        return $pluginInfo ? $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo) : parent::clearInstance();
+        if (!$pluginInfo) {
+            return parent::clearInstance();
+        } else {
+            return $this->___callPlugins('clearInstance', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -839,7 +1203,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getStoredData()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getStoredData');
-        return $pluginInfo ? $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo) : parent::getStoredData();
+        if (!$pluginInfo) {
+            return parent::getStoredData();
+        } else {
+            return $this->___callPlugins('getStoredData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -848,7 +1216,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getEventPrefix()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getEventPrefix');
-        return $pluginInfo ? $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo) : parent::getEventPrefix();
+        if (!$pluginInfo) {
+            return parent::getEventPrefix();
+        } else {
+            return $this->___callPlugins('getEventPrefix', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -857,7 +1229,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function addData(array $arr)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'addData');
-        return $pluginInfo ? $this->___callPlugins('addData', func_get_args(), $pluginInfo) : parent::addData($arr);
+        if (!$pluginInfo) {
+            return parent::addData($arr);
+        } else {
+            return $this->___callPlugins('addData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -866,7 +1242,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDataByPath($path)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByPath');
-        return $pluginInfo ? $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo) : parent::getDataByPath($path);
+        if (!$pluginInfo) {
+            return parent::getDataByPath($path);
+        } else {
+            return $this->___callPlugins('getDataByPath', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -875,7 +1255,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDataByKey($key)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataByKey');
-        return $pluginInfo ? $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo) : parent::getDataByKey($key);
+        if (!$pluginInfo) {
+            return parent::getDataByKey($key);
+        } else {
+            return $this->___callPlugins('getDataByKey', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -884,7 +1268,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function setDataUsingMethod($key, $args = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'setDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo) : parent::setDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::setDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('setDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -893,7 +1281,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function getDataUsingMethod($key, $args = null)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getDataUsingMethod');
-        return $pluginInfo ? $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo) : parent::getDataUsingMethod($key, $args);
+        if (!$pluginInfo) {
+            return parent::getDataUsingMethod($key, $args);
+        } else {
+            return $this->___callPlugins('getDataUsingMethod', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -902,7 +1294,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function hasData($key = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'hasData');
-        return $pluginInfo ? $this->___callPlugins('hasData', func_get_args(), $pluginInfo) : parent::hasData($key);
+        if (!$pluginInfo) {
+            return parent::hasData($key);
+        } else {
+            return $this->___callPlugins('hasData', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -911,7 +1307,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function toArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toArray');
-        return $pluginInfo ? $this->___callPlugins('toArray', func_get_args(), $pluginInfo) : parent::toArray($keys);
+        if (!$pluginInfo) {
+            return parent::toArray($keys);
+        } else {
+            return $this->___callPlugins('toArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -920,7 +1320,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function convertToArray(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToArray');
-        return $pluginInfo ? $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo) : parent::convertToArray($keys);
+        if (!$pluginInfo) {
+            return parent::convertToArray($keys);
+        } else {
+            return $this->___callPlugins('convertToArray', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -929,7 +1333,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toXml');
-        return $pluginInfo ? $this->___callPlugins('toXml', func_get_args(), $pluginInfo) : parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::toXml($keys, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('toXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -938,7 +1346,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function convertToXml(array $arrAttributes = [], $rootName = 'item', $addOpenTag = false, $addCdata = true)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToXml');
-        return $pluginInfo ? $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo) : parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        if (!$pluginInfo) {
+            return parent::convertToXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
+        } else {
+            return $this->___callPlugins('convertToXml', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -947,7 +1359,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function toJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toJson');
-        return $pluginInfo ? $this->___callPlugins('toJson', func_get_args(), $pluginInfo) : parent::toJson($keys);
+        if (!$pluginInfo) {
+            return parent::toJson($keys);
+        } else {
+            return $this->___callPlugins('toJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -956,7 +1372,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function convertToJson(array $keys = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'convertToJson');
-        return $pluginInfo ? $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo) : parent::convertToJson($keys);
+        if (!$pluginInfo) {
+            return parent::convertToJson($keys);
+        } else {
+            return $this->___callPlugins('convertToJson', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -965,7 +1385,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function toString($format = '')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'toString');
-        return $pluginInfo ? $this->___callPlugins('toString', func_get_args(), $pluginInfo) : parent::toString($format);
+        if (!$pluginInfo) {
+            return parent::toString($format);
+        } else {
+            return $this->___callPlugins('toString', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -974,7 +1398,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function __call($method, $args)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, '__call');
-        return $pluginInfo ? $this->___callPlugins('__call', func_get_args(), $pluginInfo) : parent::__call($method, $args);
+        if (!$pluginInfo) {
+            return parent::__call($method, $args);
+        } else {
+            return $this->___callPlugins('__call', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -983,7 +1411,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function isEmpty()
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'isEmpty');
-        return $pluginInfo ? $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo) : parent::isEmpty();
+        if (!$pluginInfo) {
+            return parent::isEmpty();
+        } else {
+            return $this->___callPlugins('isEmpty', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -992,7 +1424,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'serialize');
-        return $pluginInfo ? $this->___callPlugins('serialize', func_get_args(), $pluginInfo) : parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        if (!$pluginInfo) {
+            return parent::serialize($keys, $valueSeparator, $fieldSeparator, $quote);
+        } else {
+            return $this->___callPlugins('serialize', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1001,7 +1437,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function debug($data = null, &$objects = [])
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'debug');
-        return $pluginInfo ? $this->___callPlugins('debug', func_get_args(), $pluginInfo) : parent::debug($data, $objects);
+        if (!$pluginInfo) {
+            return parent::debug($data, $objects);
+        } else {
+            return $this->___callPlugins('debug', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1010,7 +1450,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function offsetSet($offset, $value)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetSet');
-        return $pluginInfo ? $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo) : parent::offsetSet($offset, $value);
+        if (!$pluginInfo) {
+            return parent::offsetSet($offset, $value);
+        } else {
+            return $this->___callPlugins('offsetSet', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1019,7 +1463,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function offsetExists($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetExists');
-        return $pluginInfo ? $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo) : parent::offsetExists($offset);
+        if (!$pluginInfo) {
+            return parent::offsetExists($offset);
+        } else {
+            return $this->___callPlugins('offsetExists', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1028,7 +1476,11 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function offsetUnset($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetUnset');
-        return $pluginInfo ? $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo) : parent::offsetUnset($offset);
+        if (!$pluginInfo) {
+            return parent::offsetUnset($offset);
+        } else {
+            return $this->___callPlugins('offsetUnset', func_get_args(), $pluginInfo);
+        }
     }
 
     /**
@@ -1037,6 +1489,10 @@ class Interceptor extends \Magento\Store\Model\Store implements \Magento\Framewo
     public function offsetGet($offset)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'offsetGet');
-        return $pluginInfo ? $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo) : parent::offsetGet($offset);
+        if (!$pluginInfo) {
+            return parent::offsetGet($offset);
+        } else {
+            return $this->___callPlugins('offsetGet', func_get_args(), $pluginInfo);
+        }
     }
 }

@@ -9,9 +9,7 @@
  */
 namespace Magento\Config\Block\System\Config\Form;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 /**
  * @api
@@ -38,28 +36,20 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
     protected $isCollapsedDefault = false;
 
     /**
-     * @var SecureHtmlRenderer
-     */
-    private $secureRenderer;
-
-    /**
      * @param \Magento\Backend\Block\Context $context
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\View\Helper\Js $jsHelper
      * @param array $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         \Magento\Backend\Block\Context $context,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\View\Helper\Js $jsHelper,
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     ) {
         $this->_jsHelper = $jsHelper;
         $this->_authSession = $authSession;
         parent::__construct($context, $data);
-        $this->secureRenderer = $secureRenderer ?? ObjectManager::getInstance()->get(SecureHtmlRenderer::class);
     }
 
     /**
@@ -81,8 +71,6 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
     }
 
     /**
-     * Return children elements html.
-     *
      * @param AbstractElement $element
      * @return string
      * @since 100.1.0
@@ -96,8 +84,6 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
                     . '<td colspan="4">' . $field->toHtml() . '</td></tr>';
             } else {
                 $elements .= $field->toHtml();
-                $styleTag = $this->addVisibilityTag($field);
-                $elements .= $styleTag;
             }
         }
 
@@ -170,20 +156,16 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
      */
     protected function _getHeaderTitleHtml($element)
     {
-        $styleTag = $this->addVisibilityTag($element);
         return '<a id="' .
             $element->getHtmlId() .
             '-head" href="#' .
             $element->getHtmlId() .
-            '-link">' . $element->getLegend() . '</a>' .
-            $styleTag .
-            /* @noEscape */ $this->secureRenderer->renderEventListenerAsTag(
-                'onclick',
-                'event.preventDefault();' .
-                "Fieldset.toggleCollapse('" . $element->getHtmlId() . "', '" .
-                 $this->_urlBuilder->getUrl('*/*/state') . "'); return false;",
-                'a#' . $element->getHtmlId() . '-head'
-            );
+            '-link" onclick="Fieldset.toggleCollapse(\'' .
+            $element->getHtmlId() .
+            '\', \'' .
+            $this->getUrl(
+                '*/*/state'
+            ) . '\'); return false;">' . $element->getLegend() . '</a>';
     }
 
     /**
@@ -212,7 +194,6 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
 
     /**
      * Return footer html for fieldset
-     *
      * Add extra tooltip comments to elements
      *
      * @param AbstractElement $element
@@ -224,13 +205,9 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
         foreach ($element->getElements() as $field) {
             if ($field->getTooltip()) {
                 $html .= sprintf(
-                    '<div id="row_%s_comment" class="system-tooltip-box">%s</div>',
+                    '<div id="row_%s_comment" class="system-tooltip-box" style="display:none;">%s</div>',
                     $field->getId(),
                     $field->getTooltip()
-                );
-                $html .= $this->secureRenderer->renderStyleAsTag(
-                    'display:none;',
-                    '#row_' . $field->getId() . '_comment'
                 );
             }
         }
@@ -256,7 +233,6 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
     {
         $htmlId = $element->getHtmlId();
         $output = "require(['prototype'], function(){Fieldset.applyCollapse('{$htmlId}');});";
-
         return $this->_jsHelper->getScript($output);
     }
 
@@ -274,70 +250,10 @@ class Fieldset extends \Magento\Backend\Block\AbstractBlock implements
             return true;
         }
 
-        if ($this->isCollapseStateByDependentField($element)) {
-            return false;
-        }
-
         $extra = $this->_authSession->getUser()->getExtra();
-
         if (isset($extra['configState'][$element->getId()])) {
             return $extra['configState'][$element->getId()];
         }
         return $this->isCollapsedDefault;
-    }
-
-    /**
-     * Check if element should be collapsed by dependent field value.
-     *
-     * @param AbstractElement $element
-     * @return bool
-     */
-    private function isCollapseStateByDependentField(AbstractElement $element): bool
-    {
-        if (!empty($element->getGroup()['depends']['fields'])) {
-            foreach ($element->getGroup()['depends']['fields'] as $dependFieldData) {
-                if (is_array($dependFieldData) && isset($dependFieldData['value'], $dependFieldData['id'])) {
-                    $fieldSetForm = $this->getForm();
-                    $dependentFieldConfigValue = $this->_scopeConfig->getValue(
-                        $dependFieldData['id'],
-                        $fieldSetForm->getScope(),
-                        $fieldSetForm->getScopeCode()
-                    );
-
-                    if ($dependFieldData['value'] !== $dependentFieldConfigValue) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * If element or it's parent depends on other element we hide it during page load.
-     *
-     * @param AbstractElement $field
-     * @return string
-     */
-    private function addVisibilityTag(AbstractElement $field): string
-    {
-        $elementId = '';
-        $styleTag = '';
-
-        if (!empty($field->getFieldConfig()['depends']['fields'])) {
-            $elementId = '#row_' . $field->getHtmlId();
-        } elseif (!empty($field->getGroup()['depends']['fields'])) {
-            $elementId = '#' . $field->getHtmlId() . '-head';
-        }
-
-        if (!empty($elementId)) {
-            $styleTag .= $this->secureRenderer->renderStyleAsTag(
-                'display: none;',
-                $elementId
-            );
-        }
-
-        return $styleTag;
     }
 }

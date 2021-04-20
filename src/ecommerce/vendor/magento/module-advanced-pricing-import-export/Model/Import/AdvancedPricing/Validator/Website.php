@@ -3,39 +3,42 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\AdvancedPricingImportExport\Model\Import\AdvancedPricing\Validator;
 
 use Magento\AdvancedPricingImportExport\Model\Import\AdvancedPricing;
-use Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface;
-use Magento\CatalogImportExport\Model\Import\Product\StoreResolver;
 use Magento\CatalogImportExport\Model\Import\Product\Validator\AbstractImportValidator;
-use Magento\Store\Model\Website as WebsiteModel;
+use Magento\CatalogImportExport\Model\Import\Product\RowValidatorInterface;
 
 class Website extends AbstractImportValidator implements RowValidatorInterface
 {
     /**
-     * @var StoreResolver
+     * @var \Magento\CatalogImportExport\Model\Import\Product\StoreResolver
      */
     protected $storeResolver;
 
     /**
-     * @var WebsiteModel
+     * @var \Magento\Store\Model\Website
      */
     protected $websiteModel;
 
     /**
-     * @param StoreResolver $storeResolver
-     * @param WebsiteModel $websiteModel
+     * @param \Magento\CatalogImportExport\Model\Import\Product\StoreResolver $storeResolver
+     * @param \Magento\Store\Model\Website $websiteModel
      */
     public function __construct(
-        StoreResolver $storeResolver,
-        WebsiteModel $websiteModel
+        \Magento\CatalogImportExport\Model\Import\Product\StoreResolver $storeResolver,
+        \Magento\Store\Model\Website $websiteModel
     ) {
         $this->storeResolver = $storeResolver;
         $this->websiteModel = $websiteModel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function init($context)
+    {
+        return parent::init($context);
     }
 
     /**
@@ -43,7 +46,6 @@ class Website extends AbstractImportValidator implements RowValidatorInterface
      *
      * @param array $value
      * @param string $websiteCode
-     *
      * @return bool
      */
     protected function isWebsiteValid($value, $websiteCode)
@@ -60,8 +62,7 @@ class Website extends AbstractImportValidator implements RowValidatorInterface
     /**
      * Validate value
      *
-     * @param array $value
-     *
+     * @param mixed $value
      * @return bool
      */
     public function isValid($value)
@@ -84,7 +85,6 @@ class Website extends AbstractImportValidator implements RowValidatorInterface
      */
     public function getAllWebsitesValue()
     {
-        return AdvancedPricing::VALUE_ALL_WEBSITES .
-            ' [' . $this->websiteModel->getBaseCurrency()->getCurrencyCode() . ']';
+        return AdvancedPricing::VALUE_ALL_WEBSITES . ' ['.$this->websiteModel->getBaseCurrency()->getCurrencyCode().']';
     }
 }

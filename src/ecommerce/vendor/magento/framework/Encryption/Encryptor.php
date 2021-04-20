@@ -39,17 +39,11 @@ class Encryptor implements EncryptorInterface
     public const HASH_VERSION_ARGON2ID13 = 2;
 
     /**
-     * Key of Argon2ID13 algorithm that works on any PHP and libsodium version.
-     */
-    public const HASH_VERSION_ARGON2ID13_AGNOSTIC = 3;
-
-    /**
      * Key of latest used algorithm
-     *
-     * @deprecated Latest version is dynamic based on current setup.
+     * @deprecated
      * @see \Magento\Framework\Encryption\Encryptor::getLatestHashVersion
      */
-    const HASH_VERSION_LATEST = 3;
+    const HASH_VERSION_LATEST = 2;
 
     /**
      * Default length of salt in bytes
@@ -89,13 +83,20 @@ class Encryptor implements EncryptorInterface
     const DELIMITER = ':';
 
     /**
-     * Map of simple hash versions
-     *
-     * @var array
+     * @var array map of hash versions
      */
     private $hashVersionMap = [
         self::HASH_VERSION_MD5 => 'md5',
         self::HASH_VERSION_SHA256 => 'sha256'
+    ];
+
+    /**
+     * @var array map of password hash
+     */
+    private $passwordHashMap = [
+        self::PASSWORD_HASH => '',
+        self::PASSWORD_SALT => '',
+        self::PASSWORD_VERSION => self::HASH_VERSION_SHA256
     ];
 
     /**
@@ -147,6 +148,11 @@ class Encryptor implements EncryptorInterface
         $this->keys = preg_split('/\s+/s', trim((string)$deploymentConfig->get(self::PARAM_CRYPT_KEY)));
         $this->keyVersion = count($this->keys) - 1;
         $this->keyValidator = $keyValidator ?: ObjectManager::getInstance()->get(KeyValidator::class);
+        $latestHashVersion = $this->getLatestHashVersion();
+        if ($latestHashVersion === self::HASH_VERSION_ARGON2ID13) {
+            $this->hashVersionMap[self::HASH_VERSION_ARGON2ID13] = SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13;
+            $this->passwordHashMap[self::PASSWORD_VERSION] = self::HASH_VERSION_ARGON2ID13;
+        }
     }
 
     /**
@@ -156,7 +162,11 @@ class Encryptor implements EncryptorInterface
      */
     public function getLatestHashVersion(): int
     {
-        return self::HASH_VERSION_ARGON2ID13_AGNOSTIC;
+        if (extension_loaded('sodium') && defined('SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13')) {
+            return self::HASH_VERSION_ARGON2ID13;
+        }
+
+        return self::HASH_VERSION_SHA256;
     }
 
     /**
@@ -187,44 +197,31 @@ class Encryptor implements EncryptorInterface
 
     /**
      * @inheritdoc
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getHash($password, $salt = false, $version = self::HASH_VERSION_LATEST)
     {
-        if ($version < 0 || $version > $this->getLatestHashVersion()) {
-            $version = $this->getLatestHashVersion();
+        if (!isset($this->hashVersionMap[$version])) {
+            $version = self::HASH_VERSION_SHA256;
         }
-        $isArgon = $version === self::HASH_VERSION_ARGON2ID13 || $version === self::HASH_VERSION_ARGON2ID13_AGNOSTIC;
 
         if ($salt === false) {
-            //Generating a simple hash without salt.
-            if ($isArgon) {
-                $version = self::HASH_VERSION_SHA256;
-            }
-
+            $version = $version === self::HASH_VERSION_ARGON2ID13 ? self::HASH_VERSION_SHA256 : $version;
             return $this->hash($password, $version);
         }
         if ($salt === true) {
-            //Generate random default length salt
             $salt = self::DEFAULT_SALT_LENGTH;
         }
         if (is_integer($salt)) {
-            //Generate salt of given length.
+            $salt = $version === self::HASH_VERSION_ARGON2ID13 ?
+                SODIUM_CRYPTO_PWHASH_SALTBYTES :
+                $salt;
             $salt = $this->random->getRandomString($salt);
         }
 
-        if ($isArgon) {
-            $seedBytes = SODIUM_CRYPTO_SIGN_SEEDBYTES;
-            $opsLimit = SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE;
-            $memLimit = SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE;
-            if ($version === self::HASH_VERSION_ARGON2ID13_AGNOSTIC) {
-                $version = implode('_', [self::HASH_VERSION_ARGON2ID13_AGNOSTIC, $seedBytes, $opsLimit, $memLimit]);
-            }
-
-            $hash = $this->getArgonHash($password, $seedBytes, $opsLimit, $memLimit, $salt);
+        if ($version === self::HASH_VERSION_ARGON2ID13) {
+            $hash = $this->getArgonHash($password, $salt);
         } else {
-            $hash = $this->generateSimpleHash($salt . $password, (int)$version);
+            $hash = $this->generateSimpleHash($salt . $password, $version);
         }
 
         return implode(
@@ -246,10 +243,6 @@ class Encryptor implements EncryptorInterface
      */
     private function generateSimpleHash(string $data, int $version): string
     {
-        if (!array_key_exists($version, $this->hashVersionMap)) {
-            throw new \InvalidArgumentException('Unknown hashing algorithm');
-        }
-
         return hash($this->hashVersionMap[$version], (string)$data);
     }
 
@@ -260,9 +253,6 @@ class Encryptor implements EncryptorInterface
     {
         if (empty($this->keys[$this->keyVersion])) {
             throw new \RuntimeException('No key available');
-        }
-        if (!array_key_exists($version, $this->hashVersionMap)) {
-            throw new \InvalidArgumentException('Unknown hashing algorithm');
         }
 
         return hash_hmac($this->hashVersionMap[$version], (string)$data, $this->keys[$this->keyVersion], false);
@@ -281,35 +271,18 @@ class Encryptor implements EncryptorInterface
      */
     public function isValidHash($password, $hash)
     {
-        $agnosticArgonRegEx = '/^' .self::HASH_VERSION_ARGON2ID13_AGNOSTIC
-            .'\_(?<seed>\d+)\_(?<ops>\d+)\_(?<mem>\d+)$/';
         try {
-            [$hash, $hashSalt, $hashVersions] = $this->explodePasswordHash($hash);
+            $this->explodePasswordHash($hash);
             $recreated = $password;
-            //Upgraded hashes would have been hashed with multiple algorithms.
-            //Hashing the test string with every algorithm the original string has been hashed with.
-            foreach ($hashVersions as $hashVersion) {
-                if (is_string($hashVersion) && preg_match($agnosticArgonRegEx, $hashVersion, $argonParams)) {
-                    $recreated = $this->getArgonHash(
-                        $recreated,
-                        (int)$argonParams['seed'],
-                        (int)$argonParams['ops'],
-                        (int)$argonParams['mem'],
-                        $hashSalt
-                    );
-                } elseif ((int)$hashVersion === self::HASH_VERSION_ARGON2ID13) {
-                    $recreated = $this->getArgonHash(
-                        $recreated,
-                        SODIUM_CRYPTO_SIGN_SEEDBYTES,
-                        SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-                        SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
-                        $hashSalt
-                    );
+            foreach ($this->getPasswordVersion() as $hashVersion) {
+                if ($hashVersion === self::HASH_VERSION_ARGON2ID13) {
+                    $recreated = $this->getArgonHash($recreated, $this->getPasswordSalt());
                 } else {
-                    $recreated = $this->generateSimpleHash($hashSalt . $recreated, (int)$hashVersion);
+                    $recreated = $this->generateSimpleHash($this->getPasswordSalt() . $recreated, $hashVersion);
                 }
+                $hash = $this->getPasswordHash();
             }
-        } catch (\Throwable $exception) {
+        } catch (\RuntimeException $exception) {
             //Hash is not a password hash.
             $recreated = $this->hash($password);
         }
@@ -326,22 +299,16 @@ class Encryptor implements EncryptorInterface
     public function validateHashVersion($hash, $validateCount = false)
     {
         try {
-            $hashVersions = $this->explodePasswordHash($hash)[2];
+            $this->explodePasswordHash($hash);
         } catch (\RuntimeException $exception) {
             //Not a password hash.
             return true;
         }
-        if ($this->getLatestHashVersion() === self::HASH_VERSION_ARGON2ID13_AGNOSTIC) {
-            //Agnostic Argon also stores Argon parameters.
-            $validVersion = preg_match(
-                '/^' .self::HASH_VERSION_ARGON2ID13_AGNOSTIC .'\_\d+\_\d+\_\d+$/',
-                end($hashVersions)
-            );
-        } else {
-            $validVersion = end($hashVersions) === $this->getLatestHashVersion();
-        }
+        $hashVersions = $this->getPasswordVersion();
 
-        return $validVersion && (!$validateCount || count($hashVersions) === 1);
+        return $validateCount
+            ? end($hashVersions) === $this->getLatestHashVersion() && count($hashVersions) === 1
+            : end($hashVersions) === $this->getLatestHashVersion();
     }
 
     /**
@@ -358,13 +325,47 @@ class Encryptor implements EncryptorInterface
             throw new \RuntimeException('Hash is not a password hash');
         }
 
-        //Hashes that have been upgraded will have algorithm version history starting from the oldest one used.
-        $explodedPassword[self::PASSWORD_VERSION] = explode(
-            self::DELIMITER,
-            $explodedPassword[self::PASSWORD_VERSION]
-        );
+        foreach ($this->passwordHashMap as $key => $defaultValue) {
+            $this->passwordHashMap[$key] = (isset($explodedPassword[$key])) ? $explodedPassword[$key] : $defaultValue;
+        }
 
-        return $explodedPassword;
+        return $this->passwordHashMap;
+    }
+
+    /**
+     * Get password hash
+     *
+     * @return string
+     */
+    private function getPasswordHash()
+    {
+        return (string)$this->passwordHashMap[self::PASSWORD_HASH];
+    }
+
+    /**
+     * Get password salt
+     *
+     * @return string
+     */
+    private function getPasswordSalt()
+    {
+        return (string)$this->passwordHashMap[self::PASSWORD_SALT];
+    }
+
+    /**
+     * Get password version
+     *
+     * @return array
+     */
+    private function getPasswordVersion()
+    {
+        return array_map(
+            'intval',
+            explode(
+                self::DELIMITER,
+                (string)$this->passwordHashMap[self::PASSWORD_VERSION]
+            )
+        );
     }
 
     /**
@@ -513,7 +514,6 @@ class Encryptor implements EncryptorInterface
         int $cipherVersion = null,
         string $initVector = null
     ): ?EncryptionAdapterInterface {
-        //phpcs:disable PHPCompatibility.Constants.RemovedConstants
         if (null === $key && null === $cipherVersion) {
             $cipherVersion = $this->getCipherVersion();
         }
@@ -545,7 +545,6 @@ class Encryptor implements EncryptorInterface
             $cipher = MCRYPT_BLOWFISH;
             $mode = MCRYPT_MODE_ECB;
         }
-        //phpcs:enable PHPCompatibility.Constants.RemovedConstants
 
         return new Mcrypt($key, $cipher, $mode, $initVector);
     }
@@ -557,41 +556,39 @@ class Encryptor implements EncryptorInterface
      */
     private function getCipherVersion()
     {
-        return $this->cipher;
+        if (extension_loaded('sodium')) {
+            return $this->cipher;
+        } else {
+            return self::CIPHER_RIJNDAEL_256;
+        }
     }
 
     /**
      * Generate Argon2ID13 hash.
      *
      * @param string $data
-     * @param int $seedBytes
-     * @param int $opsLimit
-     * @param int $memLimit
      * @param string $salt
      * @return string
      * @throws \SodiumException
      */
-    private function getArgonHash(
-        string $data,
-        int $seedBytes,
-        int $opsLimit,
-        int $memLimit,
-        string $salt
-    ): string {
+    private function getArgonHash($data, $salt = ''): string
+    {
+        $salt = empty($salt) ?
+            random_bytes(SODIUM_CRYPTO_PWHASH_SALTBYTES) :
+            substr($salt, 0, SODIUM_CRYPTO_PWHASH_SALTBYTES);
+
         if (strlen($salt) < SODIUM_CRYPTO_PWHASH_SALTBYTES) {
             $salt = str_pad($salt, SODIUM_CRYPTO_PWHASH_SALTBYTES, $salt);
-        } elseif (strlen($salt) > SODIUM_CRYPTO_PWHASH_SALTBYTES) {
-            $salt = substr($salt, 0, SODIUM_CRYPTO_PWHASH_SALTBYTES);
         }
 
         return bin2hex(
             sodium_crypto_pwhash(
-                $seedBytes,
+                SODIUM_CRYPTO_SIGN_SEEDBYTES,
                 $data,
                 $salt,
-                $opsLimit,
-                $memLimit,
-                SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
+                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
+                $this->hashVersionMap[self::HASH_VERSION_ARGON2ID13]
             )
         );
     }
