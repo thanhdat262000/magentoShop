@@ -1,1 +1,0 @@
-/var/www/html/ecommerce/vendor/boolfly/module-momo-wallet/view/frontend/web/js/view/payment/method-renderer/momo-wallet.js

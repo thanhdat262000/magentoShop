@@ -184,3 +184,49 @@
     'signature' => '4cc3667fc801f5dc12cf9c8b4f13bff16c9e93caa8619196ad308ec74f606332',
   ),
 ) [] []
+[2021-04-24 04:53:51] main.DEBUG: array (
+  'request' => 
+  array (
+    'appid' => NULL,
+    'apptime' => 1619240031000,
+    'apptransid' => '210424_000000011',
+    'appuser' => NULL,
+    'item' => '[{"itemid":"inspiron 3567-8gb-256gb ssd","itemname":"Inspiron 3567","itemprice":20696622,"itemquantity":"1.0000"},{"itemid":"e402wa-ga010t (e2-6110\\/2gb\\/32gb\\/w10)","itemname":"E402WA-GA010T (E2-6110\\/2GB\\/32GB\\/W10)","itemprice":5528359,"itemquantity":"1.0000"}]',
+    'embeddata' => '{"merchantinfo":"boolfly"}',
+    'amount' => 26224991,
+    'description' => 'ZaloPay Integration for Magento 2',
+    'bankcode' => 'zalopayapp',
+    'mac' => 'cf9b3f63163b360dbd428f49ae3f4198d10ce689e40e5e85b038dbede6fbd88b',
+  ),
+  'request_uri' => 'https://zalopay.com.vn/v001/tpe/createorder',
+  'response' => 
+  array (
+    'zptranstoken' => '',
+    'orderurl' => '',
+    'returncode' => -2,
+    'returnmessage' => '',
+  ),
+) [] []
+[2021-04-24 05:00:10] main.DEBUG: array (
+  'request' => 
+  array (
+    'appid' => '2554',
+    'apptime' => 1619240410000,
+    'apptransid' => '210424_000000012',
+    'appuser' => 'Thanh Dat',
+    'item' => '[{"itemid":"satellite pro-4gb-500gb hdd2","itemname":"Satellite Pro","itemprice":12417973,"itemquantity":"1.0000"}]',
+    'embeddata' => '{"merchantinfo":"boolfly"}',
+    'amount' => 12417978,
+    'description' => 'ZaloPay Integration for Magento 2',
+    'bankcode' => 'zalopayapp',
+    'mac' => '954ac4d5479d75dd9e2d9330c89043e376b3d8597da3ffec70ef8ce3743abdda',
+  ),
+  'request_uri' => 'https://sandbox.zalopay.com.vn/v001/tpe/createorder',
+  'response' => 
+  array (
+    'zptranstoken' => '2104240000002532u9xv1S',
+    'orderurl' => 'https://sbgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiIyMTA0MjQwMDAwMDAyNTMydTl4djFTIiwiYXBwaWQiOjI1NTR9',
+    'returncode' => 1,
+    'returnmessage' => '',
+  ),
+) [] []
