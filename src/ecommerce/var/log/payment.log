@@ -230,3 +230,26 @@
     'returnmessage' => '',
   ),
 ) [] []
+[2021-05-07 04:00:13] main.DEBUG: array (
+  'request' => 
+  array (
+    'appid' => '2554',
+    'apptime' => 1620360013000,
+    'apptransid' => '210507_000000013',
+    'appuser' => 'Thanh Dat',
+    'item' => '[{"itemid":"rog strix","itemname":"Rog Strix","itemprice":36087129,"itemquantity":"2.0000"}]',
+    'embeddata' => '{"merchantinfo":"boolfly"}',
+    'amount' => 72174268,
+    'description' => 'ZaloPay Integration for Magento 2',
+    'bankcode' => 'zalopayapp',
+    'mac' => 'b61c1ec8ec15d9fbbc9386239e19c8e6ba59d82853d729298ab26d401a826c9b',
+  ),
+  'request_uri' => 'https://sandbox.zalopay.com.vn/v001/tpe/createorder',
+  'response' => 
+  array (
+    'zptranstoken' => '2105070000005859kw0Ufz',
+    'orderurl' => 'https://sbgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiIyMTA1MDcwMDAwMDA1ODU5a3cwVWZ6IiwiYXBwaWQiOjI1NTR9',
+    'returncode' => 1,
+    'returnmessage' => '',
+  ),
+) [] []
