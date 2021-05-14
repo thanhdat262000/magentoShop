@@ -15,6 +15,6 @@
         <referenceContainer name="header.panel" remove="true"/>
         <referenceBlock name="catalog.compare.link" remove="true"/>
         <referenceBlock name="et.top.promotion" remove="true"/>
-        <move element="logo" destination="theme_header"/>
+        <move element="logo" destination="header-wrapper"/>
     </body>
 </page>
