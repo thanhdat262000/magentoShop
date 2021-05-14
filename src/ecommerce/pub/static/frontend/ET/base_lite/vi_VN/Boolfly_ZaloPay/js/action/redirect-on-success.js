@@ -1,0 +1,1 @@
+/var/www/html/ecommerce/vendor/boolfly/module-zalopay/view/frontend/web/js/action/redirect-on-success.js

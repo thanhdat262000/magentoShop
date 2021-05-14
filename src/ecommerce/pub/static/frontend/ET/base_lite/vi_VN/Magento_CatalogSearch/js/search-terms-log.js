@@ -1,0 +1,1 @@
+/var/www/html/ecommerce/vendor/magento/module-catalog-search/view/frontend/web/js/search-terms-log.js
