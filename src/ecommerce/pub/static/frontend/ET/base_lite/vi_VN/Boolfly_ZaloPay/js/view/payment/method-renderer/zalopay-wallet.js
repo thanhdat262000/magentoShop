@@ -1,1 +1,0 @@
-/var/www/html/ecommerce/vendor/boolfly/module-zalopay/view/frontend/web/js/view/payment/method-renderer/zalopay-wallet.js

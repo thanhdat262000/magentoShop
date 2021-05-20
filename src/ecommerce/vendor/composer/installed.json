@@ -163,12 +163,6 @@
         "name": "amzn/amazon-pay-and-login-magento-2-module",
         "version": "3.4.1",
         "version_normalized": "3.4.1.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/amzn/amazon-pay-and-login-magento-2-module/amzn-amazon-pay-and-login-magento-2-module-3.4.1.0.zip",
-            "reference": null,
-            "shasum": "46e79d698c277f6d61bad4f87a18d7a1195e1670"
-        },
         "require": {
             "amzn/amazon-pay-and-login-with-amazon-core-module": "3.4.1",
             "amzn/amazon-pay-module": "3.4.1",
@@ -2250,12 +2244,6 @@
         "name": "dotmailer/dotmailer-magento2-extension-package",
         "version": "4.4.0",
         "version_normalized": "4.4.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/dotmailer/dotmailer-magento2-extension-package/dotmailer-dotmailer-magento2-extension-package-4.4.0.0.zip",
-            "reference": null,
-            "shasum": "2d49ed099b07985806a76cd8c67cbc379f4d9361"
-        },
         "require": {
             "dotmailer/dotmailer-magento2-extension": "4.4.0",
             "dotmailer/dotmailer-magento2-extension-chat": "1.0.1"
@@ -3245,12 +3233,6 @@
         "name": "klarna/m2-payments",
         "version": "7.5.0",
         "version_normalized": "7.5.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/klarna/m2-payments/klarna-m2-payments-7.5.0.0.zip",
-            "reference": null,
-            "shasum": "dbf16872ef89126af34f2ed5b004bbb43e4b5dd0"
-        },
         "require": {
             "klarna/module-core": "5.3.0",
             "klarna/module-kp": "6.5.0",
@@ -6136,12 +6118,6 @@
         "name": "magento/adobe-stock-integration",
         "version": "1.0.1",
         "version_normalized": "1.0.1.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/magento/adobe-stock-integration/magento-adobe-stock-integration-1.0.1.0.zip",
-            "reference": null,
-            "shasum": "207f0141051c92fb777509ee7deb894471a6dbd7"
-        },
         "require": {
             "magento/module-adobe-ims": "1.0.0",
             "magento/module-adobe-ims-api": "1.0.0",
@@ -6423,12 +6399,6 @@
         "name": "magento/inventory-composer-metapackage",
         "version": "1.1.5",
         "version_normalized": "1.1.5.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/magento/inventory-composer-metapackage/magento-inventory-composer-metapackage-1.1.5.0.zip",
-            "reference": null,
-            "shasum": "02a2350c24d00860aa55f15e5057f5ee85f0aa1e"
-        },
         "require": {
             "magento/inventory-composer-installer": "1.1.0",
             "magento/module-inventory": "1.0.8",
@@ -15898,12 +15868,6 @@
         "name": "magento/product-community-edition",
         "version": "2.3.5-p1",
         "version_normalized": "2.3.5.0-patch1",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/magento/product-community-edition/magento-product-community-edition-2.3.5.0-patch1.zip",
-            "reference": null,
-            "shasum": "65e12583702e5ee8a5daa8eaab4d8c5d77e8113c"
-        },
         "require": {
             "amzn/amazon-pay-and-login-magento-2-module": "3.4.1",
             "braintree/braintree_php": "3.35.0",
@@ -20842,17 +20806,6 @@
         "name": "symfony/polyfill-php56",
         "version": "v1.20.0",
         "version_normalized": "1.20.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-php56.git",
-            "reference": "54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675",
-            "reference": "54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675",
-            "shasum": ""
-        },
         "require": {
             "php": ">=7.1"
         },
@@ -20894,17 +20847,6 @@
         "name": "symfony/polyfill-php70",
         "version": "v1.20.0",
         "version_normalized": "1.20.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-php70.git",
-            "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/5f03a781d984aae42cebd18e7912fa80f02ee644",
-            "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644",
-            "shasum": ""
-        },
         "require": {
             "php": ">=7.1"
         },
@@ -21609,12 +21551,6 @@
         "name": "temando/module-shipping",
         "version": "2.0.0",
         "version_normalized": "2.0.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/temando/module-shipping/temando-module-shipping-2.0.0.0.zip",
-            "reference": null,
-            "shasum": "78974a6f6a2bfb214e96882562111d35163971b1"
-        },
         "require": {
             "temando/module-shipping-remover": "1.0.0"
         },
@@ -21960,12 +21896,6 @@
         "name": "vertex/product-magento-module",
         "version": "3.4.0",
         "version_normalized": "3.4.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/vertex/product-magento-module/vertex-product-magento-module-3.4.0.0.zip",
-            "reference": null,
-            "shasum": "2e22c0e3ce6d60cfcacc90274027d695fc4de537"
-        },
         "require": {
             "vertex/module-address-validation": "1.1.0",
             "vertex/module-tax": "3.4.0"
@@ -22400,12 +22330,6 @@
         "name": "yotpo/magento2-module-yotpo-reviews-bundle",
         "version": "3.1.0",
         "version_normalized": "3.1.0.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://repo.magento.com/archives/yotpo/magento2-module-yotpo-reviews-bundle/yotpo-magento2-module-yotpo-reviews-bundle-3.1.0.0.zip",
-            "reference": null,
-            "shasum": "3d820b829e62d13dc2423ab0721988435e383af9"
-        },
         "require": {
             "yotpo/magento2-module-yotpo-reviews": "3.1.0"
         },
